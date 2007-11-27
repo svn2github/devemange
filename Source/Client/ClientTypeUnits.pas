@@ -1,0 +1,80 @@
+unit ClientTypeUnits;
+
+interface
+
+type
+
+  TModuleType = (mtFile=100,mtBug=200,mtProject=300,mtUser=400);
+  //文件的子模块
+  TFileSubModuleStype = (fsmfile,fsmDir);
+  //BUG项目管理
+  TBugSubModuleStype = (bsBugTree=1
+                         );
+  //项目管理
+  TProjectSubModuleStype = (psVersion=1
+    );
+
+  //权限操作权限
+  TActionType = (atView,atUpdate,atInsert,atDelete);
+  TActionTypes = set of  TActionType;
+
+  //BUG的状态
+  TBugStatus = (bgsAction,bgsDeath); //活动的，已修改的
+
+  PFileTreeNode = ^TFileTreeNode;
+  TFileTreeNode = record
+    fParent : PFileTreeNode;   //父对象
+    fID   : integer;
+    fPID  : integer;
+    fName : String;
+    fNote : String;
+    fhasChild : Boolean;
+    fOpenInherit  : Boolean; //=True 表示继承上级的打开方式
+    fOpenExe      : String;  // Exe的路径
+    fOpenExt      : String;  // 打开的扩展
+  end;
+
+  PFileItem = ^TFileItem;
+  TFileItem = record
+    fTreeID : integer;
+    fID : integer;
+    fVer : integer;
+    fName : String;
+    fEditer_id : integer; //编辑人的id
+    fEditer : String;     //编辑人的名称
+    fFilePath : String;
+    fStatus : integer;    //状态
+    fExt : String;
+    fEditDateTime : TDateTime;
+    fStructVer : integer;
+    fType : integer;      //类型
+    fSzie : integer;      //文件大小
+  end;
+
+  PBugTreeNode = ^TBugTreeNode;
+  TBugTreeNode = record
+    fParent : PBugTreeNode;
+    fID     : integer;
+    fPID    : integer;
+    fPRO_ID : integer; //项目ID值
+    fName   : string;
+    fAddDate: TDateTime;
+    fSort   : integer;
+    fhasChild : Boolean;
+    fhasLoad : Boolean; //表示已加载了子级
+    fPageIndex : integer; //当前的页数,默认为1;
+    fPageCount : integer; //页总数
+  end;
+
+
+const
+  gcActionView   = 1;
+  gcActionUpdate = 2;
+  acActionInsert = 4;
+  acActionDelete = 8;
+
+
+implementation
+
+
+end.
