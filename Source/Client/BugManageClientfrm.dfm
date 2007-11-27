@@ -22,7 +22,6 @@ inherited BugManageDlg: TBugManageDlg
       Height = 705
       ActivePage = tsBugItem
       Align = alClient
-      TabIndex = 0
       TabOrder = 0
       OnChanging = pcBugChanging
       object tsBugItem: TTabSheet
@@ -32,7 +31,6 @@ inherited BugManageDlg: TBugManageDlg
           Top = 0
           Width = 8
           Height = 675
-          Cursor = crHSplit
           Beveled = True
         end
         object tvProject: TTreeView
@@ -494,7 +492,7 @@ inherited BugManageDlg: TBugManageDlg
           object Label15: TLabel
             Left = 251
             Top = 142
-            Width = 70
+            Width = 75
             Height = 15
             Caption = #35299#20915#26102#38388#65306
           end
@@ -775,9 +773,8 @@ inherited BugManageDlg: TBugManageDlg
               Left = 1
               Top = 1
               Width = 1081
-              Height = 409
+              Height = 408
               Align = alClient
-              ColCount = 1
               DataSource = dsBugBugHistory
               PanelHeight = 102
               PanelWidth = 1064
@@ -825,7 +822,7 @@ inherited BugManageDlg: TBugManageDlg
               object Label10: TLabel
                 Left = 7
                 Top = 4
-                Width = 55
+                Width = 60
                 Height = 15
                 Caption = #22238#22797#20154#65306
               end
@@ -840,19 +837,22 @@ inherited BugManageDlg: TBugManageDlg
               object DBText3: TDBText
                 Left = 349
                 Top = 79
-                Width = 83
+                Width = 476
                 Height = 17
+                Cursor = crHandPoint
+                Hint = #21452#20987#25171#24320#38468#20214
                 Anchors = [akLeft, akBottom]
                 Color = clBtnFace
-                DataField = 'ZANNEXFILE_ID'
+                DataField = 'ZANNEXFILENAME'
                 DataSource = dsBugBugHistory
                 Font.Charset = GB2312_CHARSET
-                Font.Color = clBlack
+                Font.Color = clBlue
                 Font.Height = -15
                 Font.Name = #23435#20307
                 Font.Style = []
                 ParentColor = False
                 ParentFont = False
+                OnDblClick = DBText3DblClick
               end
               object Label12: TLabel
                 Left = 7
@@ -1055,6 +1055,12 @@ inherited BugManageDlg: TBugManageDlg
       Caption = #30001#25105#35299#20915
       ImageIndex = 2
       OnExecute = actBug_ResoMeExecute
+    end
+    object actBugHistory_OpenFile: TAction
+      Category = #38382#39064#20869#23481
+      Caption = #25171#24320#38468#20214
+      OnExecute = actBugHistory_OpenFileExecute
+      OnUpdate = actBugHistory_OpenFileUpdate
     end
   end
   object pmBugTree: TPopupMenu

@@ -139,6 +139,7 @@ type
     actBug_ResoMe: TAction;
     cbFindVer: TComboBox;
     DBLookupComboBox7: TDBLookupComboBox;
+    actBugHistory_OpenFile: TAction;
     procedure actBug_AddDirExecute(Sender: TObject);
     procedure tvProjectExpanding(Sender: TObject; Node: TTreeNode;
       var AllowExpansion: Boolean);
@@ -187,11 +188,15 @@ type
     procedure actBug_MeBuildExecute(Sender: TObject);
     procedure actBug_AssingToMeExecute(Sender: TObject);
     procedure actBug_ResoMeExecute(Sender: TObject);
+    procedure DBText3DblClick(Sender: TObject);
+    procedure actBugHistory_OpenFileExecute(Sender: TObject);
+    procedure actBugHistory_OpenFileUpdate(Sender: TObject);
   private
     procedure ClearNode(AParent:TTreeNode);
     function  GetBugItemPageCount(APageIndex:integer;AWhereStr:String):integer; //取出页总数
     procedure LoadBugItem(APageIndex:integer;AWhereStr:String);
     procedure LoadBugHistory(ABugID:integer); //加载bug的回复
+    function  UpBugFile(AFileName:String;var AFileID:integer):Boolean; //上传文件并返回文件的ID号
   public
     { Public declarations }
     procedure initBase; override;
@@ -204,6 +209,7 @@ var
 
 implementation
 uses
+  ShellAPI,
   AddBugTreeNodefrm,          {增加BUG项目}
   ClinetSystemUnits,
   SelectBugStatusfrm,
@@ -1051,6 +1057,7 @@ begin
         cdsBugHistory.RecNo := myRecNo;
         Exit;
       end;
+      cdsBugHistory.FieldByName('ZFILEPATH').AsString := edPath.Text;
     finally
       free;
     end;
@@ -1119,6 +1126,7 @@ begin
         cdsBugHistory.RecNo := myRecNo;
         Exit;
       end;
+      cdsBugHistory.FieldByName('ZFILEPATH').AsString := edPath.Text;
     finally
       free;
     end;
@@ -1184,6 +1192,11 @@ begin
         myfield := FieldDefs.AddFieldDef;
         myfield.Name :='ZISNEW';
         myfield.DataType := ftBoolean;
+        myfield := FieldDefs.AddFieldDef;
+        myfield.Name :='ZFILEPATH';
+        myfield.DataType := ftString;
+        myfield.Size := 100; //附件的路径
+
         //因为 ZID只读有问题，所以去掉 ,并将自动计算去掉
         for i:=0 to FieldDefs.Count -1 do
         begin
@@ -1251,7 +1264,7 @@ begin
         cdsBugHistory.Post;
         mycds.Next;
       end;
-      cdsBugHistory.First;
+      //cdsBugHistory.Last;  //这位到最后
     finally
       cdsBugHistory.EnableControls;
     end;
@@ -1281,6 +1294,7 @@ begin
         cdsBugHistory.RecNo := myRecNo;
         Exit;
       end;
+      cdsBugHistory.FieldByName('ZFILEPATH').AsString := edPath.Text;
     finally
       free;
     end;
@@ -1302,11 +1316,13 @@ end;
 
 procedure TBugManageDlg.cdsBugHistoryBeforePost(DataSet: TDataSet);
 var
+  myFileName : String;
+  myFileID : integer;
   mySQL : string;
 const
   glSQL  =  'insert TB_BUG_HISTORY (ZBUG_ID,ZUSER_ID,ZSTATUS,ZCONTEXT,' +
-            'ZACTIONDATE,ZANNEXFILE_ID) ' +
-            'values(%d,%d,%d,''%s'',''%s'',%d)';
+            'ZACTIONDATE,ZANNEXFILE_ID,ZANNEXFILENAME) ' +
+            'values(%d,%d,%d,''%s'',''%s'',%d,''%s'')';
   glSQL2 = 'update TB_BUG_HISTORY set ZCONTEXT=''%s'',ZACTIONDATE=getdate() '+
            'where ZID=%d';
 
@@ -1363,13 +1379,28 @@ begin
       end;
     end;
 
+    myFileID := -1;
+    //要上传附件文件,如存在则上传
+    if FileExists(DataSet.FieldByName('ZFILEPATH').AsString) then
+    begin
+      myFileName := DataSet.FieldByName('ZFILEPATH').AsString;
+      if not UpBugFile(myFileName,myFileID) then
+      begin
+        MessageBox(Handle,'上传附件有问题。','提示',MB_ICONERROR+MB_OK);
+        Exit;
+      end;
+      DataSet.FieldByName('ZANNEXFILENAME').AsString :=ExtractFileName(myfileName);
+      DataSet.FieldByName('ZANNEXFILE_ID').AsInteger := myFileID;
+    end;
+
     mySQL := format(glSQL,[
-    DataSet.FieldByName('ZBUG_ID').AsInteger,
-    DataSet.FieldByName('ZUSER_ID').AsInteger,
-    DataSet.FieldByName('ZSTATUS').AsInteger,
-    DataSet.FieldByName('ZCONTEXT').AsString,
-    DataSet.FieldByName('ZACTIONDATE').AsString,
-    DataSet.FieldByName('ZANNEXFILE_ID').AsInteger]);
+      DataSet.FieldByName('ZBUG_ID').AsInteger,
+      DataSet.FieldByName('ZUSER_ID').AsInteger,
+      DataSet.FieldByName('ZSTATUS').AsInteger,
+      DataSet.FieldByName('ZCONTEXT').AsString,
+      DataSet.FieldByName('ZACTIONDATE').AsString,
+      DataSet.FieldByName('ZANNEXFILE_ID').AsInteger,
+      DataSet.FieldByName('ZANNEXFILENAME').AsString]);
 
     ClientSystem.fDbOpr.BeginTrans;
     try
@@ -1425,6 +1456,8 @@ begin
         cdsBugItem.Post;
       end;
     except
+      if myFileID >=0 then  //如已上传了附件，则要删除掉。
+        ClientSystem.fdbOpr.DeleteFile(myFileID);
       ClientSystem.fDbOpr.RollbackTrans;
     end;
   end;
@@ -1550,6 +1583,45 @@ begin
     myData^.fPageCount]);
   lbProjectName.Caption := format('%s  =>第%d共%d页',[
     myData^.fName,myData^.fPageIndex,myData^.fPageCount]);
+end;
+
+function TBugManageDlg.UpBugFile(AFileName: String;
+  var AFileID: integer): Boolean;
+begin
+  Result :=ClientSystem.UpFile(ftdBug,AFileName,AfileID);
+end;
+
+procedure TBugManageDlg.DBText3DblClick(Sender: TObject);
+begin
+  if actBugHistory_OpenFile.Enabled then
+    actBugHistory_OpenFile.Execute;
+end;
+
+procedure TBugManageDlg.actBugHistory_OpenFileExecute(Sender: TObject);
+var
+  myfileid : integer;
+  myfilename : string;
+  r    : HINST;
+begin
+  myfileid := cdsBugHistory.FieldByName('ZANNEXFILE_ID').AsInteger;
+  myfilename := cdsBugHistory.FieldByName('ZANNEXFILEName').AsString;
+  if ClientSystem.DonwFileToFileName(myfileid,myfilename) then
+  begin
+    //打开文件
+    r:=ShellExecute(Handle,'open',PChar(myfilename),
+      nil,PChar(ExtractFileDir(myfilename)),SW_SHOW);
+
+    //调用打开方式对话框
+    if r =SE_ERR_NOASSOC then//如果没有关联的打开方式
+      ShellExecute(Handle, 'open', 'Rundll32.exe',
+        PChar('shell32.dll,OpenAs_RunDLL ' + myfilename), nil, SW_SHOWNORMAL);
+  end;
+end;
+
+procedure TBugManageDlg.actBugHistory_OpenFileUpdate(Sender: TObject);
+begin
+  (Sender as TAction).Enabled := not cdsBugHistory.IsEmpty
+  and (cdsBugHistory.FieldByName('ZANNEXFILE_ID').AsInteger >=0);
 end;
 
 end.

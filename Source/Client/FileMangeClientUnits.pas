@@ -145,7 +145,6 @@ type
     fLoading  : Boolean;
     fColumnToSort : integer; //列的排序索引
     fbSort : Boolean;        //=True 表示升序
-    fDeleteFiles : TStringList; //浏览文件时要删除的内容
 
     procedure initform;
     procedure freeform;
@@ -167,7 +166,6 @@ type
   public
     fIconList:TStringList;   //有于保存文件图标
     //重载方法
-    procedure freeBase; override;
     class function GetModuleID : integer;override;
   end;
 
@@ -178,82 +176,13 @@ uses
   FileHistoryListfrm,
   FileEditNotefrm,
   SetFileOpenModefrm,
-  DelTempFilefrm,       //删除临时文件
   SendMailUnits,        //发送邮件
   NewFilefrm,           //新建
   ShellAPI,
-  ZLibEx, DmUints, BugManageClientfrm;
-
-const
-  gcSoftChar    = '↑';
-  gcDecSoftChar = '↓';
-  gcfiledir     = '文件夹';
+  ZLibEx, DmUints, BugManageClientfrm, Loginfrm;
 
 
 {$R *.dfm}
-
-  procedure SplitStr(AStr:String;ASl:TStringList;AChar:Char=';');
-  var
-    mystr : string;
-    i,len : integer;
-  begin
-    len := length(AStr);
-    mystr := '';
-    for i:=1 to len do
-    begin
-      if AStr[i] = AChar then
-      begin
-        ASl.Add(mystr);
-        mystr := '';
-      end
-      else
-        mystr := mystr + AStr[i];
-    end;
-    if mystr <> '' then ASl.Add(mystr);
-  end;
-//-------------------------
-//取出文件大小
-//-------------------------
-  function GetFileSize(const FileName: String): LongInt;
-  var
-    SearchRec: TSearchRec;
-  begin
-    if FindFirst(ExpandFileName(FileName), faAnyFile, SearchRec) = 0 then
-      Result := SearchRec.Size div 1024
-    else
-     Result := 0;
-  end;
-
-//-------------------------
-//获取文件版本号
-//-------------------------
-  function GetVersionNumber: string;
-  var
-    FFileName: string;
-    Handle: THandle;
-    Size, Len: Cardinal;
-    RezBuffer, P: PChar;
-    sTemp: string;
-    TransTable: PLongint;
-  begin
-    Result := '';
-    FFileName := ParamStr(0);
-    Size := GetFileVersionInfoSize(PChar(FFileName), Handle);
-    if Size = 0 then Exit;
-    GetMem(RezBuffer, Size);
-    try
-      if not GetFileVersionInfo(PChar(FFileName),
-        Handle, Size, RezBuffer) then Exit;
-      if not VerQueryValue(RezBuffer, '\VarFileInfo\Translation',
-        Pointer(TransTable), Len) then Exit;
-      sTemp := Format('%s%.4x%.4x\%s%s', ['\StringFileInfo\',
-        LoWord(TransTable^), HiWord(TransTable^), 'FileVersion', #0]);
-      if VerQueryValue(RezBuffer, PChar(sTemp), Pointer(P), Len) then
-        Result := string(P);
-    finally
-      FreeMem(RezBuffer);
-    end;
-  end;
 
 type
    TByteArray = array of byte;
@@ -297,7 +226,6 @@ begin
   end;
 
   initLocalDataSet;
-  fDeleteFiles := TStringList.Create;
 end;
 
 function TFileManageDlg.HasNodeChild(AParentID: integer):Boolean;
@@ -347,7 +275,6 @@ begin
   fIconList.Free;
   //清空列表内的
   ClearItem;
-  fDeleteFiles.Free;
 end;
 
 procedure TFileManageDlg.FormDestroy(Sender: TObject);
@@ -764,7 +691,7 @@ begin
       0,
       1,
       myfilenote,
-      GetFileSize(myfilename)])));
+      ClientSystem.GetFileSize(myfilename)])));
 
     if not ClientSystem.UpFile(myfileid,1,myfilename) then
     begin
@@ -842,9 +769,6 @@ procedure TFileManageDlg.actFile_DeleteFIleExecute(Sender: TObject);
 var
   myItemData : PFileItem;
   mycount,mynetcount : word;
-const
-  glSQL  = 'delete * from TB_FILE_CONTEXT where ZFILE_ID=%d';
-  glSQL2 = 'delete * from TB_FILE_ITEM where ZID=%d';
 begin
   //删除文件
   mycount := gettickcount;
@@ -963,7 +887,7 @@ begin
 
     //2.增加新行
     myver := ClientSystem.fDBOpr.ReadInt(PChar(format(glSQL2,[myItemData^.fID])));
-    mysize := GetFileSize(myfilename);
+    mysize := ClientSystem.GetFileSize(myfilename);
     ClientSystem.fDBOpr.ExeSQL(PChar(
       format(glSQL1,[
       myItemData^.fTreeID,
@@ -1401,7 +1325,7 @@ begin
   if (Trim(myExt) <> '') and (Trim(myExe)<>'') then
   begin
     mysl := TStringList.Create;
-    SplitStr(myExt,mysl);
+    ClientSystem.SplitStr(myExt,mysl);
     for i:= 0 to mysl.Count -1 do
     begin
       if CompareText(mysl[i],'*'+myItemData^.fExt) = 0 then
@@ -1566,7 +1490,7 @@ begin
       0,
       1,
       myfilenote,
-      GetFileSize(myfilename)])));
+      ClientSystem.GetFileSize(myfilename)])));
 
     //3.增加文件内容
     if not ClientSystem.UpFile(myItemData^.fID,myItemData^.fVer,myfilename) then
@@ -1580,7 +1504,7 @@ begin
     begin
       myItemData^.fStatus := 0;
       myItemData^.fEditer_id := -1;
-      myItemData^.fSzie   := GetFileSize(myfilename); 
+      myItemData^.fSzie   := ClientSystem.GetFileSize(myfilename); 
       LoadFileListItem(lvFileItem.Selected,myItemData);
     end;
 
@@ -1686,7 +1610,7 @@ begin
   if (Trim(myExt) <> '') and (Trim(myExe)<>'') then
   begin
     mysl := TStringList.Create;
-    SplitStr(myExt,mysl);
+    ClientSystem.SplitStr(myExt,mysl);
     for i:= 0 to mysl.Count -1 do
     begin
       if CompareText(mysl[i],'*'+myItemData^.fExt) = 0 then
@@ -1709,7 +1633,7 @@ begin
   end;
 
   //Deletefile(myfilename);
-  fDeleteFiles.Add(myfilename);
+  ClientSystem.fDeleteFiles.Add(myfilename);
 
 end;
 
@@ -1782,7 +1706,7 @@ begin
     myMail.Free;
   end;
   
-  fDeleteFiles.Add(myfilename);
+  ClientSystem.fDeleteFiles.Add(myfilename);
 
 end;
 
@@ -1918,39 +1842,6 @@ begin
   end;
 end;
 
-procedure TFileManageDlg.freeBase;
-var
-  i : integer;
-begin
-  inherited;
-
-  if fDeleteFiles.Count > 0 then
-  begin
-    with TDelTempFileDlg.Create(Application) do
-    try
-      clbfiles.Items.Assign(fDeleteFiles);
-      for i:=0 to clbfiles.Count -1 do
-        clbfiles.Checked[i] := True;
-      if ShowModal = mrOK then
-      begin
-        while clbfiles.Count > 0 do
-        begin
-          if clbfiles.Checked[0] then
-          begin
-            //将只读转化为读写
-            SetFileAttributes(pchar(clbfiles.Items[0]),
-              FILE_SHARE_WRITE );
-            Deletefile(clbfiles.Items[0]);
-          end;
-          clbfiles.Items.Delete(0);
-        end;
-      end;
-    finally
-      free;
-    end;
-  end;
-
-end;
 
 class function TFileManageDlg.GetModuleID: integer;
 begin

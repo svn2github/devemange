@@ -216,10 +216,10 @@ inherited BugAeplyDlg: TBugAeplyDlg
       TabOrder = 1
       OnClick = btbnOpenAnnixClick
     end
-    object edAnnis: TEdit
-      Left = 335
-      Top = 308
-      Width = 209
+    object edPath: TEdit
+      Left = 329
+      Top = 309
+      Width = 215
       Height = 23
       TabOrder = 2
     end

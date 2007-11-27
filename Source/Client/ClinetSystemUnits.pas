@@ -16,6 +16,7 @@ type
     fHost   : String;             //服务器名
     fcdsUsePriv : TClientDataSet; //用户权限表
     fGauge  : TGauge;
+    fDeleteFiles : TStringList; //浏览文件时要删除的内容
 
     constructor Create;
     destructor Destroy; override;
@@ -24,10 +25,16 @@ type
     function HasModuleAction(AStype:integer;ASubStype:integer;AID:integer;AAction:TActionType):Boolean;      //操作权限
 
     //文件的上传与下载
-    function UpFile(AFile_ID,AVer:integer;AfileName:String):Boolean; //上传文件
-    function DonwFileToFileName(Afile_id,Aver:integer;AfileName:String):Boolean; //保存到文件
+    function UpFile(AFile_ID,AVer:integer;AfileName:String):Boolean;overload; //上传文件
+    function UpFile(ATreeStyle:TFileTreeDirStype;AFileName:String;var AFileID:integer):Boolean;overload;
+    function DonwFileToFileName(Afile_id,Aver:integer;AfileName:String):Boolean;overload; //保存到文件
+    function DonwFileToFileName(Afile_id:integer;var AfileName:String):Boolean;overload; //保存到文件
     procedure OleVariantToStream(var Input: OleVariant; Stream: TStream);
     function StreamToOleVariant(Stream: TStream; Count: Integer): OleVariant;
+
+    //其他
+    function GetFileSize(const FileName: String): LongInt;
+    procedure SplitStr(AStr:String;ASl:TStringList;AChar:Char=';');  //折分字符
   end;
 
 var
@@ -54,10 +61,12 @@ begin
   fcdsUsePriv := TClientDataSet.Create(nil);
   fEditer_id := -1;
   fGauge  := TGauge.Create(nil);
+  fDeleteFiles := TStringList.Create;
 end;
 
 destructor TClinetSystem.Destroy;
 begin
+  fDeleteFiles.Free;
   fcdsUsePriv.Free;
   fDbOpr := nil;
   fGauge.Free;
@@ -119,6 +128,37 @@ begin
 end;
 
 
+function TClinetSystem.DonwFileToFileName(Afile_id: integer;
+  var AfileName: String): Boolean;
+var
+  myfilename : String;
+  myver : integer;
+const
+  glSQL  = 'select isnull(max(ZVER),0) from  TB_FILE_ITEM where ZID=%d';
+begin
+  Result := False;
+  if not DirectoryExists(fAppDir + '\' +gcfiledir) then
+    if not CreateDir(fAppDir + '\' +gcfiledir) then Exit;
+  myfilename := format('%s\%s\%s',[fAppDir,gcfiledir,AfileName]);
+  myver := self.fDbOpr.ReadInt(PChar(Format(glSQL,[AFile_id])));
+  if DonwFileToFileName(Afile_id,myver,myfilename) then
+  begin
+    AfileName := myfilename;
+    Result := True;
+    fDeleteFiles.Add(AfileName); // 加入删除的临时文件
+  end;
+end;
+
+function TClinetSystem.GetFileSize(const FileName: String): LongInt;
+var
+  SearchRec: TSearchRec;
+begin
+  if FindFirst(ExpandFileName(FileName), faAnyFile, SearchRec) = 0 then
+    Result := SearchRec.Size div 1024
+  else
+   Result := 0;
+end;
+
 procedure TClinetSystem.GetUserPriv;
 const
   glSQL = 'select ZSTYLE,ZMODULEID,ZRIGHTMASK from TB_USER_PRIVILEGE ' +
@@ -178,6 +218,27 @@ begin
 end;
 
 
+
+procedure TClinetSystem.SplitStr(AStr: String; ASl: TStringList;
+  AChar: Char);
+var
+  mystr : string;
+  i,len : integer;
+begin
+  len := length(AStr);
+  mystr := '';
+  for i:=1 to len do
+  begin
+    if AStr[i] = AChar then
+    begin
+      ASl.Add(mystr);
+      mystr := '';
+    end
+    else
+      mystr := mystr + AStr[i];
+  end;
+  if mystr <> '' then ASl.Add(mystr);
+end;
 
 function TClinetSystem.StreamToOleVariant(Stream: TStream;
   Count: Integer): OleVariant;
@@ -294,6 +355,58 @@ begin
     OutStream.Free;
   end;
   Result := True;
+end;
+
+
+function TClinetSystem.UpFile(ATreeStyle:TFileTreeDirStype;AFileName: String;
+  var AFileID: integer): Boolean;
+var
+  myfilename : string;
+  myfileid : integer;
+const
+  glSQL =  'insert into TB_FILE_ITEM (ZTREE_ID,ZID,ZVER,ZNAME,ZEDITER_ID,ZFILEPATH, '+
+           'ZSTATUS,ZEXT,ZEDITDATETIME,ZSTRUCTVER,ZTYPE,ZNEWVER,ZNOTE,ZSIZE) ' +
+           'values (%d,%d,%d,''%s'',%d,''%s'',%d,''%s'',''%s'',%d,%d,1,''%s'',%d)';
+  glSQL2 = 'select isnull(max(ZID),0)+1 as mymax from TB_FILE_ITEM ';
+begin
+  //
+  //增加文件
+  //
+  // 这地方必须做回滚操作. 目前暂时没有。
+  //
+  myfilename := AFileName;
+  myfileid := fDBOpr.ReadInt(PChar(glSQL2));
+  AFileID  := myfileid;
+
+  Result := False;
+  fDBOpr.BeginTrans;
+  try
+    fDBOpr.ExeSQL(PChar(format(glSQL,[
+      Ord(ATreeStyle),// myNodeData^.fID,
+      myfileid,
+      1,  //文件版本号
+      ExtractFileName(myfilename),
+      fEditer_id,
+      myfilename,
+      0,
+      ExtractFileExt(myfilename),
+      datetimetostr(now()), //?这地方mssql是不是一样的
+      0,
+      1,
+      '',
+      GetFileSize(myfilename)])));
+
+    if not UpFile(myfileid,1,myfilename) then
+    begin
+      ClientSystem.fDBOpr.RollbackTrans;
+      Exit;
+    end;
+    ClientSystem.fDBOpr.CommitTrans;
+    Result := True;
+  except
+    ClientSystem.fDBOpr.RollbackTrans;
+    Result := False;
+  end;
 end;
 
 

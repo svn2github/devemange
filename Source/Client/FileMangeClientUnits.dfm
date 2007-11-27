@@ -23,7 +23,6 @@ object FileManageDlg: TFileManageDlg
     Top = 78
     Width = 8
     Height = 519
-    Cursor = crHSplit
     Beveled = True
     ResizeStyle = rsLine
   end
@@ -197,6 +196,7 @@ object FileManageDlg: TFileManageDlg
       Height = 517
       Align = alClient
       HideSelection = False
+      Images = DM.ImageListTree
       Indent = 19
       PopupMenu = pmTree
       ReadOnly = True

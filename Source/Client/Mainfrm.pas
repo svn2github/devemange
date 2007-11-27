@@ -63,6 +63,7 @@ type
     procedure freeform;
     procedure DoChangeClient(NewClient: TBaseChildClass);
     procedure ShowStatusBarText(AStr:String);
+    procedure DelTempfile(); //删除临时文件
   public
     property CurrentChildform : TBaseChildDlg read fCurrentChildform;
   end;
@@ -74,10 +75,12 @@ var
 implementation
 uses
   ClinetSystemUnits,
+  DelTempFilefrm,          {删除临时文件}
   FileMangeClientUnits,    {文件管理}
   BugManageClientfrm,      {BUG管理}
   ProjectManageClientfrm,  {项目管理}
   UserManageClientfrm      {用户管理}
+
   ;
 
 {$R *.dfm}
@@ -129,6 +132,7 @@ var
   i : integer;
   myform : TBaseChildDlg;
 begin
+  DelTempfile; //删除临时文件
   for i:=0 to fChildform.Count -1 do
   begin
     myform :=fChildform.items[i];
@@ -222,6 +226,37 @@ end;
 procedure TMainDlg.ShowStatusBarText(AStr: String);
 begin
   StatusBarMain.Panels[0].Text := AStr;
+end;
+
+procedure TMainDlg.DelTempfile;
+var
+  i : integer;
+begin
+  if ClientSystem.fDeleteFiles.Count > 0 then
+  begin
+    with TDelTempFileDlg.Create(Application) do
+    try
+      clbfiles.Items.Assign(ClientSystem.fDeleteFiles);
+      for i:=0 to clbfiles.Count -1 do
+        clbfiles.Checked[i] := True;
+      if ShowModal = mrOK then
+      begin
+        while clbfiles.Count > 0 do
+        begin
+          if (clbfiles.Checked[0]) and FileExists(clbfiles.Items[0]) then
+          begin
+            //将只读转化为读写
+            SetFileAttributes(pchar(clbfiles.Items[0]),
+              FILE_SHARE_WRITE );
+            Deletefile(clbfiles.Items[0]);
+          end;
+          clbfiles.Items.Delete(0);
+        end;
+      end;
+    finally
+      free;
+    end;
+  end;
 end;
 
 end.

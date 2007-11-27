@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, BaseDialogfrm, StdCtrls, Buttons, DBCtrls, ExtCtrls;
+  Dialogs, BaseDialogfrm, StdCtrls, Buttons, DBCtrls, ExtCtrls, Mask;
 
 type
   TBugAeplyDlg = class(TBaseDialog)
@@ -29,7 +29,7 @@ type
     Label1: TLabel;
     btbnOpenAnnix: TBitBtn;
     Label9: TLabel;
-    edAnnis: TEdit;
+    edPath: TEdit;
     procedure btbnOpenAnnixClick(Sender: TObject);
   private
     { Private declarations }
@@ -53,7 +53,7 @@ begin
   if OpenDialog1.Execute then
   begin
     myfilename := OpenDialog1.FileName;
-    edAnnis.Text := myfilename;
+    edPath.Text := myfilename;
   end;
 end;
 

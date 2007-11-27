@@ -14,6 +14,9 @@ type
   TProjectSubModuleStype = (psVersion=1
     );
 
+  //文件管理内的Tree_ID保存Bug的附件Bug值
+  TFileTreeDirStype = (ftdBug=-2);
+
   //权限操作权限
   TActionType = (atView,atUpdate,atInsert,atDelete);
   TActionTypes = set of  TActionType;
@@ -72,6 +75,10 @@ const
   gcActionUpdate = 2;
   acActionInsert = 4;
   acActionDelete = 8;
+const
+  gcSoftChar    = '↑';
+  gcDecSoftChar = '↓';
+  gcfiledir     = '文件夹';
 
 
 implementation

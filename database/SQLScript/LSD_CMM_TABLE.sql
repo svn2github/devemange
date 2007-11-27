@@ -235,7 +235,8 @@ create table TB_BUG_HISTORY(
 	ZSTATUS        int not null,                             /*状态*/ 
 	ZACTIONDATE    datetime not null,                        /*时间*/
 	ZCONTEXT       text,                                     /*内容*/
-	ZANNEXFILE_ID  int                                       /*附件内容，可能是图片这个更直接*/
+	ZANNEXFILE_ID  int,                                      /*附件内容，可能是图片这个更直接*/
+	ZANNEXFILENAME varchar(50),                              /*附件名称*/
 	constraint PK_TB_BUG_HISTORY primary key(ZID,ZBUG_ID)   
 )
 go
