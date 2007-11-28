@@ -5,6 +5,9 @@
 //  创建日期：2007-11-1       作者：龙仕云
 //
 //
+//  修改时间: 2007-11-28 作者: 龙仕云
+//  修改内容: 增加mailto接口
+//  最后修改: 2007-11-29
 //
 //  还处理AppServer接口的问题
 //
@@ -16,7 +19,7 @@
 //   function CreateBfssDBOpr(AConnectStype:Word): IDbOperator; stdcall;
 //    参数: AConnectStype = 0 表示采用DCOM连接
 //                        = 1 表示采用Socke连接
-//   function CreateDbOperator; stdcall; external 'BfssDBOpr.Dll';
+//   function CreateDbOperator; stdcall; external 'DBapi.Dll';
 //
 //
 ////////////////////////////////////////////////////////////////////////////////
@@ -67,7 +70,13 @@ type
     function CopyFile(AFile_ID: Integer; AVer: Integer; ATree_ID: Integer): Integer; safecall;
     function DeleteFile(AFile_ID: Integer): Integer; safecall;
     function UpFileChunk(AFile_ID: Integer; AVer: Integer; AGroupID: Integer; AStream: OleVariant): Integer; safecall;
-
+    //
+    // AStyle 类型，目前只有Bug=0
+    // AMails 表示邮箱列表如 mrlong.com@gmail.com;mrlng_xp@163.com
+    // AContextID 内容，是按类型来确定的。如bug则是bug_id值
+    //
+    procedure MailTo(AStyle: Integer; const AMails: WideString; AContextID: Integer); safecall;
+    
     //5.属性
     function Connected(): Boolean; stdcall;
     function Version : integer;stdcall;

@@ -52,6 +52,15 @@ type
     fTimeout : integer;
   end;
 
+  //邮件服务器参数
+  TSMTPParams = Record
+    fAction   : Boolean;
+    fUserName : String;
+    fPassword : String;
+    fHost     : String;
+    fPort     : integer;  
+  end;
+
 //
 // 用户，当前的用户
 //
@@ -83,6 +92,7 @@ type
     fConnectParam : TConnectParamRec; //连接参数
     fAppCaption : String;  //应用名称
     fHasZipData : Boolean; //是否压缩数据包
+    fSMTPParams : TSMTPParams;
 
     constructor Create ;
     destructor Destroy; override;
@@ -162,6 +172,12 @@ begin
   try
     fAppCaption := ini.ReadString('App','Caption','应用服务器');
     fHasZipData := ini.ReadBool('App','HasZipData',False);
+
+    fSMTPParams.fAction   := ini.ReadBool('SMTP','Action',False);
+    fSMTPParams.fHost     := ini.ReadString('SMTP','Host','');
+    fSMTPParams.fPort     := ini.ReadInteger('SMTP','Port',25);
+    fSMTPParams.fUserName := ini.ReadString('SMTP','Name','');
+    fSMTPParams.fPassword := ini.ReadString('SMTP','Password','');
   finally
     ini.Free;
   end;

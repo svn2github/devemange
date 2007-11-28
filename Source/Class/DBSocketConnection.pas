@@ -7,6 +7,9 @@
 //  目前只能采用TCP方式进行，以后有必要可以增加UCP的方式。
 //
 //
+// 因小于100字节的量比较多,所以小于100或等于100的内容不处理
+//
+//
 ///////////////////////////////////////////////////////////////////////////////
 unit DBSocketConnection;
 
@@ -15,11 +18,17 @@ uses
   Classes,SConnect,ScktComp,WinSock;
 type
 
+  TSendDataEvent = procedure(const Data: IDataBlock) of Object;
+  TReceiveDataEvent = procedure(const Data: IDataBlock) of Object;
+
+  TBffsSocketConnection = class;
+
 //-------------------------
 // 数据发送与接收
 //-------------------------
   TDBSocketTransport = class(TInterfacedObject, ITransport)
   private
+    fOwner : TBffsSocketConnection;
     FEvent: THandle;
     FAddress: string;
     FHost: string;
@@ -52,6 +61,9 @@ type
     FPort: Integer;
     FHost: string;
     FAddress: string;
+    fSendDataEvent : TSendDataEvent;
+    fReceiveDataEvent : TReceiveDataEvent;
+
     function IsAddressStored: Boolean;
     function IsHostStored: Boolean;
     procedure SetAddress(const Value: string);
@@ -67,6 +79,8 @@ type
     property Port: Integer read FPort write FPort default 211;
     property SupportCallbacks;
     property ObjectBroker;
+    property SendDataEvent :TSendDataEvent read fSendDataEvent write fSendDataEvent;
+    property ReceiveDataEvent : TReceiveDataEvent read fReceiveDataEvent write fReceiveDataEvent;
   end;
 
 
@@ -178,6 +192,7 @@ begin
   SocketTransport.Host := FHost;
   SocketTransport.Address := FAddress;
   SocketTransport.Port := FPort;
+  SocketTransport.fOwner := Self;
   Result := SocketTransport as ITransport;
 end;
 
@@ -273,12 +288,16 @@ end;
 
 procedure TDBSocketTransport.InterceptIncoming(const Data: IDataBlock);
 begin
-  //DataIn(Data);  
+  if Assigned(fOwner.fReceiveDataEvent) then
+    fOwner.fReceiveDataEvent(Data);
+  DataIn(Data);
 end;
 
 procedure TDBSocketTransport.InterceptOutgoing(const Data: IDataBlock);
 begin
-  //DataOut(Data);
+  DataOut(Data);
+  if Assigned(fOwner.fSendDataEvent) then
+    fOwner.fSendDataEvent(Data);
 end;
 
 function TDBSocketTransport.Receive(WaitForInput: Boolean;

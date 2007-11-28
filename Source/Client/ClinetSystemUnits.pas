@@ -8,6 +8,8 @@ uses
 
 type
   TClinetSystem = Class(TObject)
+  private
+    fTickCount : word;
   public
     fAppDir : String;
     fDbOpr  : IDbOperator;        //数据接口处理
@@ -20,6 +22,9 @@ type
 
     constructor Create;
     destructor Destroy; override;
+
+    procedure BeginTickCount;  //开始计时
+    procedure EndTickCount;    //结束计时
 
     procedure GetUserPriv(); //取出用户的权限
     function HasModuleAction(AStype:integer;ASubStype:integer;AID:integer;AAction:TActionType):Boolean;      //操作权限
@@ -42,7 +47,7 @@ var
 
 implementation
 uses
-  DB,
+  DB,Forms,
   Variants,
   ZLibEx;
 
@@ -54,6 +59,11 @@ type
 
 { TClinetSystem }
 
+procedure TClinetSystem.BeginTickCount;
+begin
+  fTickCount := gettickcount;
+end;
+
 constructor TClinetSystem.Create;
 begin
   fDbOpr := CreateBfssDBOpr();
@@ -62,6 +72,7 @@ begin
   fEditer_id := -1;
   fGauge  := TGauge.Create(nil);
   fDeleteFiles := TStringList.Create;
+  fTickCount := 0;
 end;
 
 destructor TClinetSystem.Destroy;
@@ -85,6 +96,7 @@ const
   glSQL = 'Select ZSTREAM from TB_FILE_CONTEXT ' +
           ' where ZFILE_ID=%d and ZVer=%d Order by ZGROUPID';
 begin
+  Self.BeginTickCount;
   myfilename := AfileName;
   mycds := TClientDataSet.Create(nil);
   try
@@ -123,6 +135,7 @@ begin
     end;
   finally
     mycds.Free;
+    Self.EndTickCount;
   end;
   Result := True;
 end;
@@ -146,6 +159,20 @@ begin
     AfileName := myfilename;
     Result := True;
     fDeleteFiles.Add(AfileName); // 加入删除的临时文件
+  end;
+end;
+
+procedure TClinetSystem.EndTickCount;
+var
+  myendcount : word;
+begin
+  //这个地主怎么显示出来内容,发信息吗?
+  if Assigned(Application.MainForm) then
+  begin
+    myendcount := gettickcount;
+    SendMessage(Application.MainForm.Handle,
+      gcMSG_TickCount,(myendcount-fTickCount),0);
+    fTickCount := 0;
   end;
 end;
 
@@ -268,6 +295,8 @@ const
 begin
   myStream := TMemoryStream.Create;
   OutStream := TMemoryStream.Create;
+
+  BeginTickCount;
   try
     myStream.LoadFromFile(AfileName);
     //压缩
@@ -288,7 +317,7 @@ begin
     c := 0;
     for i:=0 to count -1 do
     begin
-      //Application.ProcessMessages;
+      Application.ProcessMessages;
       myms := TMemoryStream.Create;
       myms.CopyFrom(OutStream,glBackSize);
       myms.Position := 0;
@@ -353,6 +382,7 @@ begin
   finally
     myStream.Free;
     OutStream.Free;
+    EndTickCount;
   end;
   Result := True;
 end;
@@ -379,6 +409,7 @@ begin
   AFileID  := myfileid;
 
   Result := False;
+  Self.BeginTickCount;
   fDBOpr.BeginTrans;
   try
     fDBOpr.ExeSQL(PChar(format(glSQL,[
@@ -406,6 +437,7 @@ begin
   except
     ClientSystem.fDBOpr.RollbackTrans;
     Result := False;
+    Self.EndTickCount;
   end;
 end;
 

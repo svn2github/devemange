@@ -14,6 +14,7 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, ActnList, ToolWin, ComCtrls, Menus, ExtCtrls,
   DBApiIntf,
+  ClientTypeUnits,
   BaseChildfrm, ImgList, StdCtrls, Buttons, AppEvnts;
 
 type
@@ -64,6 +65,8 @@ type
     procedure DoChangeClient(NewClient: TBaseChildClass);
     procedure ShowStatusBarText(AStr:String);
     procedure DelTempfile(); //É¾³ýÁÙÊ±ÎÄ¼þ
+    procedure WMTickCount (var Msg: TMessage); message gcMSG_TickCount;
+
   public
     property CurrentChildform : TBaseChildDlg read fCurrentChildform;
   end;
@@ -119,7 +122,7 @@ begin
   fCurrentChildform.Parent := plForm;
   fCurrentChildform.Show;
   myBaseform.Showfrm;
-  Caption := Application.Title + '-' + fCurrentChildform.Caption;
+  Caption := Application.Title + '('+ ClientSystem.fHost + ')-' + fCurrentChildform.Caption;
   if Assigned(myoldform) then
     myoldform.Closefrm;
     
@@ -257,6 +260,12 @@ begin
       free;
     end;
   end;
+end;
+
+procedure TMainDlg.WMTickCount(var Msg: TMessage);
+begin
+  StatusBarMain.Panels[4].Text :=
+    floattostr(Msg.WParam/ 1000)+ 's';
 end;
 
 end.

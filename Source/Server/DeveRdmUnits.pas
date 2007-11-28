@@ -21,7 +21,8 @@ uses
   Windows, Messages, SysUtils, Classes, ComServ, ComObj, VCLCom, DataBkr,
   DBClient, BFSS_TLB, StdVcl, DB, ADODB,
 
-  BFSSClassUnits, Provider;
+  BFSSClassUnits, Provider, IdBaseComponent, IdComponent, IdTCPConnection,
+  IdTCPClient, IdMessageClient, IdSMTP, IdMessage;
 
 type
 
@@ -47,6 +48,8 @@ type
     RdmADOConn: TADOConnection;
     dspCommand: TDataSetProvider;
     ADOQuery: TADOQuery;
+    SMTP: TIdSMTP;
+    IdMessage1: TIdMessage;
     procedure RemoteDataModuleCreate(Sender: TObject);
     procedure RemoteDataModuleDestroy(Sender: TObject);
     function dspCommandDataRequest(Sender: TObject;
@@ -66,6 +69,7 @@ type
     function CopyFile(AFile_ID: Integer; AVer: Integer; ATree_ID: Integer): Integer; safecall;
     function DeleteFile(AFile_ID: Integer): Integer; safecall;
     function UpFileChunk(AFile_ID: Integer; AVer: Integer; AGroupID: Integer; AStream: OleVariant): Integer; safecall;
+    procedure MailTo(AStyle: Integer; const AMails: WideString; AContextID: Integer); safecall;
   public
     { Public declarations }
   end;
@@ -182,6 +186,7 @@ begin
   begin
     CurrBFSSSystem.fUsers.Delete(fUserID);
   end;
+  if SMTP.Connected then SMTP.Disconnect;
 end;
 
 function TBFSSRDM.Login(const AName, APass: WideString):Integer;
@@ -441,6 +446,94 @@ begin
   finally
     myms.Free;
   end;
+end;
+
+//
+// AStyle : 类型 目前只有bug=0
+// AMails : 邮箱，多个用 ; 号分开
+// AContextID : 为内容的ID,根据Style来定的,如是bug则是Bug_ID值
+//
+procedure TBFSSRDM.MailTo(AStyle: Integer; const AMails: WideString;
+  AContextID: Integer);
+var
+  myTitle : String;
+  myContext : String;  //内容
+  myID : integer;
+  myIdMsg: TIdMessage;
+const
+  glSQL  = 'select ZTITLE from TB_BUG_ITEM where ZID=%d ';
+  glSQL2 = 'select isnull(max(ZID),0) as v from TB_BUG_HISTORY where ZBUG_ID=%d';
+  glSQL3 = 'select ZCONTEXT from TB_BUG_HISTORY where ZID=%d';
+begin
+  if not CurrBFSSSystem.fSMTPParams.fAction then Exit;
+  if not SMTP.Connected then
+  begin
+    SMTP.AuthenticationType := atLogin;
+    SMTP.Host     := CurrBFSSSystem.fSMTPParams.fHost;
+    SMTP.Port     := CurrBFSSSystem.fSMTPParams.fPort;
+    SMTP.Username := CurrBFSSSystem.fSMTPParams.fUserName;
+    SMTP.Password := CurrBFSSSystem.fSMTPParams.fPassword;
+    try
+      SMTP.Connect;
+      if not SMTP.Connected then
+      begin
+        CurrBFSSSystem.WriteLog('连接邮件服务器出错。');
+        Exit;
+      end;
+    except
+      on E: Exception do
+      begin
+        CurrBFSSSystem.WriteLog('连接邮件服务器出错。'+ E.Message);
+        Exit;
+      end;
+    end;
+  end;
+
+  if SMTP.Connected then
+  begin
+    //发送邮件
+    case AStyle of
+      0: {bug}
+        begin
+          if adsSQL.Active then
+            adsSQL.Close;
+          adsSQL.CommandText := format(glSQL,[AContextID]);
+          adsSQL.Open;
+          if adsSQL.RecordCount = 0 then Exit;
+
+          myTitle := adsSQL.FieldByName('ZTITLE').AsString;
+          adsSQL.Close;
+          adsSQL.CommandText :=  format(glSQL2,[AContextID]);
+          adsSQL.Open;
+          if adsSQL.RecordCount > 0 then
+          begin
+            myID := adsSQL.FieldByName('v').AsInteger;
+            adsSQL.Close;
+            adsSQL.CommandText := format(glSQL3,[myID]);
+            adsSQl.Open;
+            if adsSQL.RecordCount > 0 then
+              myContext := adsSQL.FieldByName('ZCONTEXT').AsString;
+          end;
+
+        end;
+    end;
+
+    //发送内容:
+    try
+      IdMessage1.Clear;
+      IdMessage1.CharSet := 'gb2312';
+      IdMessage1.ClearBody;
+      IdMessage1.Body.Add(myContext);
+      IdMessage1.From.address := CurrBFSSSystem.fSMTPParams.fUserName;
+      IdMessage1.Subject := myTitle;
+      IdMessage1.Recipients.EMailAddresses := AMails;
+      IdMessage1.MessageParts.Clear;
+      SMTP.Send(IdMessage1);
+    finally
+
+    end;
+  end;
+
 end;
 
 initialization

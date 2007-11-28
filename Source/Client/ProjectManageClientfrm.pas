@@ -204,6 +204,7 @@ begin
     try
       ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
       ClientSystem.fDbOpr.CommitTrans;
+      DataSet.FieldByName('ZISNEW').AsBoolean := False;
     except
       ClientSystem.fDbOpr.RollbackTrans;
       MessageBox(Handle,'保存失败','错误',MB_ICONERROR+MB_OK);
@@ -217,6 +218,7 @@ procedure TProjectManageClientDlg.cdsProjectItemNewRecord(
 begin
   DataSet.FieldByName('ZOPENDATE').AsDateTime := Now();
   DataSet.FieldByName('ZISNEW').AsBoolean := True;
+  DataSet.FieldByName('ZISLOAD').AsBoolean := False;
 end;
 
 procedure TProjectManageClientDlg.actPro_CancelUpdate(Sender: TObject);
@@ -276,7 +278,7 @@ begin
   AllowChange := not cdsProjectItem.IsEmpty;
   if AllowChange then
   begin
-    if cdsProjectItem.FieldByName('ZISNEW').AsBoolean then
+    if not cdsProjectItem.FieldByName('ZISLoad').AsBoolean then
     begin
       MessageBox(Handle,'新增的立项目项目不能立刻新建版本，必须先点[刷新数据]',
         '提示',MB_ICONWARNING+MB_OK);
@@ -540,6 +542,7 @@ var
 const
   glSQL = 'select * from TB_PRO_ITEM';
 begin
+  ClientSystem.BeginTickCount;
   mycds := TClientDataSet.Create(nil);
   myb := fLoading ;
   fLoading := True;
@@ -553,6 +556,9 @@ begin
         FieldDefs.Assign(mycds.FieldDefs);
         myfield := FieldDefs.AddFieldDef;
         myfield.Name :='ZISNEW';
+        myfield.DataType := ftBoolean;
+        myfield := FieldDefs.AddFieldDef;
+        myfield.Name :='ZISLOAD';
         myfield.DataType := ftBoolean;
         //因为 ZID只读有问题，所以去掉 ,并将自动计算去掉
         for i:=0 to FieldDefs.Count -1 do
@@ -597,7 +603,8 @@ begin
       while not mycds.Eof do
       begin
         cdsProjectItem.Append;
-        cdsProjectItem.FieldByName('ZISNEW').AsBoolean := False;
+        cdsProjectItem.FieldByName('ZISNEW').AsBoolean  := False;
+        cdsProjectItem.FieldByName('ZISLOAD').AsBoolean := True;
         for i:=0 to mycds.FieldDefs.Count -1 do
           cdsProjectItem.FieldByName(mycds.FieldDefs[i].Name).AsVariant :=
             mycds.FieldByName(mycds.FieldDefs[i].Name).AsVariant;
@@ -611,6 +618,7 @@ begin
   finally
     mycds.Free;
     fLoading := myb;
+    ClientSystem.EndTickCount;
   end;
 end;
 

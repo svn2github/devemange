@@ -12,7 +12,7 @@ unit BFSS_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 07-11-27 15:05:11 from Type Library described below.
+// File generated on 07-11-28 11:03:10 from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\DeveManage\Source\Server\DeveManage.tlb (1)
@@ -79,6 +79,7 @@ type
     function CopyFile(AFile_ID: Integer; AVer: Integer; ATree_ID: Integer): Integer; safecall;
     function DeleteFile(AFile_ID: Integer): Integer; safecall;
     function UpFileChunk(AFile_ID: Integer; AVer: Integer; AGroupID: Integer; AStream: OleVariant): Integer; safecall;
+    procedure MailTo(AStyle: Integer; const AMails: WideString; AContextID: Integer); safecall;
   end;
 
 // *********************************************************************//
@@ -96,6 +97,7 @@ type
     function CopyFile(AFile_ID: Integer; AVer: Integer; ATree_ID: Integer): Integer; dispid 6;
     function DeleteFile(AFile_ID: Integer): Integer; dispid 7;
     function UpFileChunk(AFile_ID: Integer; AVer: Integer; AGroupID: Integer; AStream: OleVariant): Integer; dispid 8;
+    procedure MailTo(AStyle: Integer; const AMails: WideString; AContextID: Integer); dispid 301;
     function AS_ApplyUpdates(const ProviderName: WideString; Delta: OleVariant; MaxErrors: Integer; 
                              out ErrorCount: Integer; var OwnerData: OleVariant): OleVariant; dispid 20000000;
     function AS_GetRecords(const ProviderName: WideString; Count: Integer; out RecsOut: Integer; 

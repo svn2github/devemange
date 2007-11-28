@@ -11,7 +11,7 @@ uses
 
 type
 
-  TBugColumns = (bcCode,bcType,bcTitle,bcWhoBuild,bcBuildDate,
+  TBugColumns = (bcCode,bcTitle,bcType,bcWhoBuild,bcBuildDate,
     bcAssingeto,bcwhoReso,bcResoDate);
 
   TBugManageDlg = class(TBaseChildDlg)
@@ -140,6 +140,10 @@ type
     cbFindVer: TComboBox;
     DBLookupComboBox7: TDBLookupComboBox;
     actBugHistory_OpenFile: TAction;
+    actBug_RefreshData: TAction;
+    N10: TMenuItem;
+    dblcSelectUsermail: TDBLookupComboBox;
+    Label19: TLabel;
     procedure actBug_AddDirExecute(Sender: TObject);
     procedure tvProjectExpanding(Sender: TObject; Node: TTreeNode;
       var AllowExpansion: Boolean);
@@ -191,12 +195,16 @@ type
     procedure DBText3DblClick(Sender: TObject);
     procedure actBugHistory_OpenFileExecute(Sender: TObject);
     procedure actBugHistory_OpenFileUpdate(Sender: TObject);
+    procedure actBug_RefreshDataUpdate(Sender: TObject);
+    procedure actBug_RefreshDataExecute(Sender: TObject);
+    procedure dblcSelectUsermailCloseUp(Sender: TObject);
   private
     procedure ClearNode(AParent:TTreeNode);
     function  GetBugItemPageCount(APageIndex:integer;AWhereStr:String):integer; //取出页总数
     procedure LoadBugItem(APageIndex:integer;AWhereStr:String);
     procedure LoadBugHistory(ABugID:integer); //加载bug的回复
     function  UpBugFile(AFileName:String;var AFileID:integer):Boolean; //上传文件并返回文件的ID号
+    procedure Mailto(AEmailto:String); //发送到邮箱
   public
     { Public declarations }
     procedure initBase; override;
@@ -533,7 +541,7 @@ begin
   LoadBugItem(myPageindex,myWhere);
   lbProjectName.Caption := format('%s  =>第%d共%d页',[
     myData^.fName,myData^.fPageIndex,myData^.fPageCount]);
- 
+
 
   //读取项目
   if cdsProject.Tag <> myData^.fPRO_ID then
@@ -573,7 +581,8 @@ begin
     0, //不是取总数
     mywhere]);
   if fLoading then Exit;
-    
+
+  ClientSystem.BeginTickCount;
   myb := fLoading;
   fLoading := True;
   myDataSet := TClientDataSet.Create(nil);
@@ -694,6 +703,7 @@ begin
   finally
     myDataSet.Free;
     fLoading :=myb;
+    ClientSystem.EndTickCount;
   end;
 end;
 
@@ -838,7 +848,7 @@ end;
 procedure TBugManageDlg.pcBugChanging(Sender: TObject;
   var AllowChange: Boolean);
 begin
-  AllowChange := (not cdsBugItem.IsEmpty);
+  AllowChange := (not cdsBugItem.IsEmpty) or (pcBug.ActivePageIndex = 1);
   if not AllowChange then Exit;
   
   if pcBug.ActivePageIndex = 0 then
@@ -1053,7 +1063,9 @@ begin
       dblcQustionVer.Enabled  := False;
       if ShowModal <> mrOK then
       begin
+        cdsBugHistory.EnableControls;
         cdsBugHistory.Cancel;
+        cdsBugHistory.DisableControls;
         cdsBugHistory.RecNo := myRecNo;
         Exit;
       end;
@@ -1122,7 +1134,9 @@ begin
     try
       if ShowModal <> mrOK then
       begin
+        cdsBugHistory.EnableControls;
         cdsBugHistory.Cancel;
+        cdsBugHistory.DisableControls;
         cdsBugHistory.RecNo := myRecNo;
         Exit;
       end;
@@ -1290,7 +1304,9 @@ begin
       dblcQustionVer.Enabled  := False;
       if ShowModal <> mrOK then
       begin
+        cdsBugHistory.EnableControls;
         cdsBugHistory.Cancel;
+        cdsBugHistory.DisableControls;
         cdsBugHistory.RecNo := myRecNo;
         Exit;
       end;
@@ -1455,6 +1471,9 @@ begin
         cdsBugItem.FieldByName('ZSTATUS').asInteger := DataSet.FieldByName('ZSTATUS').Asinteger;
         cdsBugItem.Post;
       end;
+
+      //邮件通知
+      Mailto(cdsBugItem.FieldByName('ZMAILTO').AsString);
     except
       if myFileID >=0 then  //如已上传了附件，则要删除掉。
         ClientSystem.fdbOpr.DeleteFile(myFileID);
@@ -1534,8 +1553,7 @@ begin
   mydata := tvProject.Selected.data;
   mydata^.fPageIndex := 1;
   myPageIndex := myData^.fPageIndex;
-  mywhere := format('ZTREE_ID=%d and ZOPENEDBY=%d',
-    [myData^.fID,ClientSystem.fEditer_id]);
+  mywhere := format('ZOPENEDBY=%d',[ClientSystem.fEditer_id]);
   myData^.fPageCount := GetBugItemPageCount(myPageindex,myWhere);
   LoadBugItem(myPageindex,myWhere);
   lbPageCount.Caption := format('%d/%d',[
@@ -1554,8 +1572,7 @@ begin
   mydata := tvProject.Selected.data;
   mydata^.fPageIndex := 1;
   myPageIndex := myData^.fPageIndex;
-  mywhere := format('ZTREE_ID=%d and ZASSIGNEDTO=%d',
-    [myData^.fID,ClientSystem.fEditer_id]);
+  mywhere := format('ZASSIGNEDTO=%d',[ClientSystem.fEditer_id]);
   myData^.fPageCount := GetBugItemPageCount(myPageindex,myWhere);
   LoadBugItem(myPageindex,myWhere);
   lbPageCount.Caption := format('%d/%d',[
@@ -1574,8 +1591,7 @@ begin
   mydata := tvProject.Selected.data;
   mydata^.fPageIndex := 1;
   myPageIndex := myData^.fPageIndex;
-  mywhere := format('ZTREE_ID=%d and ZRESOLVEDBY=%d',
-    [myData^.fID,ClientSystem.fEditer_id]);
+  mywhere := format('ZRESOLVEDBY=%d',[ClientSystem.fEditer_id]);
   myData^.fPageCount := GetBugItemPageCount(myPageindex,myWhere);
   LoadBugItem(myPageindex,myWhere);
   lbPageCount.Caption := format('%d/%d',[
@@ -1622,6 +1638,133 @@ procedure TBugManageDlg.actBugHistory_OpenFileUpdate(Sender: TObject);
 begin
   (Sender as TAction).Enabled := not cdsBugHistory.IsEmpty
   and (cdsBugHistory.FieldByName('ZANNEXFILE_ID').AsInteger >=0);
+end;
+
+procedure TBugManageDlg.actBug_RefreshDataUpdate(Sender: TObject);
+begin
+  (Sender as TAction).Enabled := Assigned(tvProject.Selected)
+  and Assigned(tvProject.Selected.data);
+end;
+
+procedure TBugManageDlg.actBug_RefreshDataExecute(Sender: TObject);
+var
+  myBugData : PBugTreeNode;
+  myPageindex : integer;
+  mywhere : String;
+begin
+  myBugData := tvProject.Selected.data;
+  myPageIndex := myBugData^.fPageIndex;
+  mywhere := 'ZTREE_ID=' + inttostr(myBugData^.fID);
+  myBugData^.fPageCount := GetBugItemPageCount(myPageindex,myWhere);
+  lbPageCount.Caption := format('%d/%d',[
+    myBugData^.fPageIndex,
+    myBugData^.fPageCount]);
+  LoadBugItem(myPageindex,myWhere);
+  lbProjectName.Caption := format('%s  =>第%d共%d页',[
+    myBugData^.fName,myBugData^.fPageIndex,myBugData^.fPageCount]);
+end;
+
+procedure TBugManageDlg.dblcSelectUsermailCloseUp(Sender: TObject);
+var
+  mystr : String;
+begin
+  if dblcSelectUsermail.Text = '' then Exit;
+  
+  if cdsBugItem.State in [dsBrowse] then
+    cdsBugItem.Edit;
+
+  myStr := cdsBugItem.FieldByName('ZMAILTO').AsString;
+  if mystr <> '' then
+    myStr := myStr + format(';%s(%d)',[
+      DM.cdsUser.FieldByName('ZNAME').AsString,
+      DM.cdsUser.FieldByName('ZID').AsInteger])
+  else
+    myStr := myStr + format('%s(%d)',[
+      DM.cdsUser.FieldByName('ZNAME').AsString,
+      DM.cdsUser.FieldByName('ZID').AsInteger]);
+  cdsBugItem.FieldByName('ZMAILTO').AsString := myStr;
+end;
+
+procedure TBugManageDlg.Mailto(AEmailto: String);
+var
+  i     : integer;
+  mysl  : TStringList;
+  myStr : String;
+  mysv  : TStringList;
+  myMails : TStringList;
+  myBugID  : integer; //Bug的ID值;
+begin
+  mysl := TStringList.Create;
+  mysv := TStringList.Create;
+  myMails := TStringlist.Create;
+  try
+    myBugID := cdsBugItem.FieldByName('ZID').AsInteger;
+    //先加入创建人
+    DM.cdsUser.ControlsDisabled;
+    try
+      if (cdsBugItem.FieldByName('ZOPENEDBY').AsInteger <> ClientSystem.fEditer_id)
+         and  DM.cdsUser.Locate('ZID',
+           cdsBugItem.FieldByName('ZOPENEDBY').AsInteger,[loPartialKey]) then
+      begin
+        mysl.Add(format('%s(%d)',[DM.cdsUser.FieldByName('ZNAME').AsString,
+          DM.cdsUser.FieldByName('ZID').AsInteger]));
+        myMails.Add(DM.cdsUser.FieldByName('ZEMAIL').AsString);
+      end;
+
+      if (cdsBugItem.FieldByName('ZRESOLVEDBY').AsInteger <> ClientSystem.fEditer_id)
+         and DM.cdsUser.Locate('ZID',
+          cdsBugItem.FieldByName('ZRESOLVEDBY').AsInteger,[loPartialKey]) then
+      begin
+        myStr := format('%s(%d)',[DM.cdsUser.FieldByName('ZNAME').AsString,
+          DM.cdsUser.FieldByName('ZID').AsInteger]);
+        if mysl.IndexOf(myStr) < 0 then
+          mysl.Add(myStr);
+        myMails.Add(DM.cdsUser.FieldByName('ZEMAIL').AsString);
+      end;
+
+      ClientSystem.SplitStr(AEmailto,mysv,';');
+      for i:=0 to  mysv.Count -1 do
+      begin
+        if mysl.IndexOf(mysv[i]) < 0 then
+        begin
+          mysl.Add(mysv[i]);
+          DM.cdsUser.First;
+          while not DM.cdsUser.Eof do
+          begin
+            myStr := format('%s(%d)',[DM.cdsUser.FieldByName('ZNAME').AsString,
+              DM.cdsUser.FieldByName('ZID').AsInteger]);
+            if CompareText(myStr,mysv[i]) = 0 then
+            begin
+              myMails.Add(DM.cdsUser.FieldByName('ZEMAIL').AsString);
+              break;
+            end;
+            DM.cdsUser.Next;
+          end;
+        end;
+      end;
+
+    finally
+      DM.cdsUser.EnableControls;
+    end;
+
+    //调用接口发送
+    mystr := '';
+    for i:=0 to myMails.Count -1 do
+    begin
+      if Trim(myMails[i])='' then Continue;
+      if mystr = '' then
+        mystr := myMails[i]
+      else
+        mystr := mystr + ';' + myMails[i];
+    end;
+
+    if mystr <> '' then
+      ClientSystem.fDbOpr.MailTo(0,myStr,myBugID);
+  finally
+    mysl.Free;
+    mysv.Free;
+    myMails.Free;
+  end;
 end;
 
 end.

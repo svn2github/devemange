@@ -30,7 +30,7 @@ uses
 
 procedure TDM.DataModuleCreate(Sender: TObject);
 const
-  glSQL  ='select ZID,ZNAME from TB_USER_ITEM ';
+  glSQL  ='select ZID,ZNAME,ZEMAIL from TB_USER_ITEM ';
   glSQL2 = 'select ZID,ZNAME from TB_BUG_PARAMS where ZTYPE=%d';
 begin
 

@@ -3,7 +3,7 @@ object MainDlg: TMainDlg
   Top = 177
   Width = 870
   Height = 640
-  Caption = 'MainDlg'
+  Caption = 'DeveManage'
   Color = clBtnFace
   Font.Charset = GB2312_CHARSET
   Font.Color = clWindowText
@@ -24,7 +24,6 @@ object MainDlg: TMainDlg
     Height = 525
     Align = alClient
     BevelOuter = bvLowered
-    Caption = 'plForm'
     Font.Charset = GB2312_CHARSET
     Font.Color = clBlack
     Font.Height = -15
@@ -161,7 +160,6 @@ object MainDlg: TMainDlg
         Style = psOwnerDraw
         Width = 50
       end>
-    SimplePanel = False
     OnDrawPanel = StatusBarMainDrawPanel
     OnResize = StatusBarMainResize
   end

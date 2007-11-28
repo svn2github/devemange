@@ -88,4 +88,23 @@ object BFSSRDM: TBFSSRDM
     Left = 192
     Top = 16
   end
+  object SMTP: TIdSMTP
+    MaxLineAction = maException
+    ReadTimeout = 0
+    Port = 25
+    AuthenticationType = atNone
+    Left = 40
+    Top = 280
+  end
+  object IdMessage1: TIdMessage
+    AttachmentEncoding = 'MIME'
+    BccList = <>
+    CCList = <>
+    Encoding = meMIME
+    Priority = mpHigh
+    Recipients = <>
+    ReplyTo = <>
+    Left = 88
+    Top = 280
+  end
 end

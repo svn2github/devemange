@@ -56,6 +56,8 @@ type
     cbDel: TCheckBox;
     cbAdd: TCheckBox;
     DBText1: TDBText;
+    actUser_RefreshData: TAction;
+    BitBtn9: TBitBtn;
     procedure cbEditUserClick(Sender: TObject);
     procedure actUser_AddUpdate(Sender: TObject);
     procedure actUser_DelUpdate(Sender: TObject);
@@ -84,11 +86,13 @@ type
     procedure PageControl1Change(Sender: TObject);
     procedure PageControl1Changing(Sender: TObject;
       var AllowChange: Boolean);
+    procedure actUser_RefreshDataExecute(Sender: TObject);
   private
     { Private declarations }
   public
     { Public declarations }
     procedure initBase; override;
+    procedure LoadUser();
     class function GetModuleID : integer;override;
   end;
 
@@ -110,11 +114,8 @@ begin
 end;
 
 procedure TUserManageClientDlg.initBase;
-const
-  glSQL  ='select * from TB_USER_ITEM';
 begin
-  //
-  cdsUsers.Data := ClientSystem.fDbOpr.ReadDataSet(PChar(glSQL));
+  LoadUser;
 end;
 
 procedure TUserManageClientDlg.cbEditUserClick(Sender: TObject);
@@ -175,53 +176,52 @@ const
            'ZPRIVGROUP) ' +
            'values(''%s'',''%s'',%d,%d,''%s'',%d,%d)';
 begin
-  case DataSet.UpdateStatus of
-    usUnmodified, usModified:
-      begin
-        mySQL := format(glSQL,[
-          DataSet.FieldByName('ZNAME').AsString,
-          DataSet.FieldByName('ZPASS').AsString,
-          Ord(DataSet.FieldByName('ZSTOP').AsBoolean),
-          DataSet.FieldByName('ZTYPE').AsInteger,
-          DataSet.FieldByName('ZEMAIL').AsString,
-          DataSet.FieldByName('ZGROUP_ID').AsInteger,
-          DataSet.FieldByName('ZPRIVGROUP').AsInteger,
-          DataSet.FieldByName('ZID').Asinteger]);
-        ClientSystem.fDbOpr.BeginTrans;
-        try
-          ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
-          ClientSystem.fDbOpr.CommitTrans;
-        except
-          ClientSystem.fDbOpr.RollbackTrans;
-        end;
-      end;
-    usInserted:
-      begin
-        mySQL := format(glSQL2,[
-          DataSet.FieldByName('ZNAME').AsString,
-          DataSet.FieldByName('ZPASS').AsString,
-          Ord(DataSet.FieldByName('ZSTOP').AsBoolean),
-          DataSet.FieldByName('ZTYPE').AsInteger,
-          DataSet.FieldByName('ZEMAIL').AsString,
-          DataSet.FieldByName('ZGROUP_ID').AsInteger,
-          DataSet.FieldByName('ZPRIVGROUP').AsInteger]);
-        ClientSystem.fDbOpr.BeginTrans;
-        try
-          ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
-          ClientSystem.fDbOpr.CommitTrans;
-        except
-          ClientSystem.fDbOpr.RollbackTrans;
-        end;
-      end;
-    usDeleted:;
+  if fLoading then Exit;
+  if not DataSet.FieldByName('ZISNEW').AsBoolean then
+  begin
+    mySQL := format(glSQL,[
+      DataSet.FieldByName('ZNAME').AsString,
+      DataSet.FieldByName('ZPASS').AsString,
+      Ord(DataSet.FieldByName('ZSTOP').AsBoolean),
+      DataSet.FieldByName('ZTYPE').AsInteger,
+      DataSet.FieldByName('ZEMAIL').AsString,
+      DataSet.FieldByName('ZGROUP_ID').AsInteger,
+      DataSet.FieldByName('ZPRIVGROUP').AsInteger,
+      DataSet.FieldByName('ZID').Asinteger]);
+    ClientSystem.fDbOpr.BeginTrans;
+    try
+      ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
+      ClientSystem.fDbOpr.CommitTrans;
+    except
+      ClientSystem.fDbOpr.RollbackTrans;
+    end;
+  end
+  else begin
+    mySQL := format(glSQL2,[
+      DataSet.FieldByName('ZNAME').AsString,
+      DataSet.FieldByName('ZPASS').AsString,
+      Ord(DataSet.FieldByName('ZSTOP').AsBoolean),
+      DataSet.FieldByName('ZTYPE').AsInteger,
+      DataSet.FieldByName('ZEMAIL').AsString,
+      DataSet.FieldByName('ZGROUP_ID').AsInteger,
+      DataSet.FieldByName('ZPRIVGROUP').AsInteger]);
+    ClientSystem.fDbOpr.BeginTrans;
+    try
+      ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
+      ClientSystem.fDbOpr.CommitTrans;
+      DataSet.FieldByName('ZISNEW').AsBoolean := False;
+    except
+      ClientSystem.fDbOpr.RollbackTrans;
+    end;
   end;
-
 end;
 
 procedure TUserManageClientDlg.cdsUsersNewRecord(DataSet: TDataSet);
 begin
   DataSet.FieldByName('ZSTOP').AsBoolean := False;
   DataSet.FieldByName('ZTYPE').AsInteger := 1;
+  DataSet.FieldByName('ZISNEW').AsBoolean := True;
+  DataSet.FieldByName('ZISLOAD').AsBoolean := False;
 end;
 
 procedure TUserManageClientDlg.actUser_DelExecute(Sender: TObject);
@@ -236,6 +236,8 @@ const
   glSQL  = 'delete TB_USER_ITEM where ZID=%d and ZTYPE<>0';
   glSQL2 = 'delete  TB_USER_PRIVILEGE where ZUSER_ID=%d';
 begin
+  if fLoading then Exit;
+  
   if DataSet.FieldByName('ZTYPE').AsInteger = 0 then
   begin
     MessageBox(Handle,'系统用户不能删除','删除',MB_ICONWARNING+MB_OK);
@@ -439,7 +441,87 @@ end;
 procedure TUserManageClientDlg.PageControl1Changing(Sender: TObject;
   var AllowChange: Boolean);
 begin
-  AllowChange := not cdsUsers.IsEmpty;
+  AllowChange := (not cdsUsers.IsEmpty)
+  and cdsUsers.FieldByName('ZISLoad').AsBoolean;
 end;
+
+procedure TUserManageClientDlg.actUser_RefreshDataExecute(Sender: TObject);
+begin
+  LoadUser;
+end;
+
+procedure TUserManageClientDlg.LoadUser;
+var
+  i : integer;
+  mycds : TClientDataSet;
+  myfield : TFieldDef;
+  myb : Boolean;
+const
+  glSQL  ='select * from TB_USER_ITEM';
+begin
+  //
+  ClientSystem.BeginTickCount;
+  mycds := TClientDataSet.Create(nil);
+  myb := fLoading;
+  fLoading := True;
+  try
+    mycds.Data := ClientSystem.fDbOpr.ReadDataSet(PChar(glSQL));
+    if cdsUsers.Fields.Count = 0 then
+    begin
+      with cdsUsers do
+      begin
+        FieldDefs.Assign(mycds.FieldDefs);
+        myfield := FieldDefs.AddFieldDef;
+        myfield.Name :='ZISNEW';
+        myfield.DataType := ftBoolean;
+        myfield := FieldDefs.AddFieldDef;
+        myfield.Name :='ZISLoad';
+        myfield.DataType := ftBoolean;
+       //因为 ZID只读有问题，所以去掉 ,并将自动计算去掉
+        for i:=0 to FieldDefs.Count -1 do
+        begin
+          if faReadonly in FieldDefs[i].Attributes then
+            FieldDefs[i].Attributes := FieldDefs[i].Attributes - [faReadonly];
+          if FieldDefs[i].DataType = ftAutoInc then
+            FieldDefs[i].DataType := ftInteger;
+        end;
+        CreateDataSet;
+      end;
+    end
+    else begin
+      cdsUsers.DisableConstraints;
+      try
+        while not cdsUsers.IsEmpty do cdsUsers.Delete;
+      finally
+        cdsUsers.EnableConstraints;
+      end;
+    end;
+
+    cdsUsers.DisableControls;
+    try
+      mycds.First;
+      while not mycds.Eof do
+      begin
+        cdsUsers.Append;
+        cdsUsers.FieldByName('ZISNEW').AsBoolean  := False;
+        cdsUsers.FieldByName('ZISLoad').AsBoolean := True;
+        for i:=0 to mycds.FieldDefs.Count -1 do
+          cdsUsers.FieldByName(mycds.FieldDefs[i].Name).AsVariant :=
+            mycds.FieldByName(mycds.FieldDefs[i].Name).AsVariant;
+        cdsUsers.Post;
+        mycds.Next;
+      end;
+      cdsUsers.First;
+    finally
+      cdsUsers.EnableControls;
+    end;
+
+  finally
+    mycds.Free;
+    fLoading := myb;
+    ClientSystem.EndTickCount;
+  end;
+end;
+
 
 end.

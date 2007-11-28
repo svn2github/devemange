@@ -13,7 +13,7 @@ unit DbApiImpl;
 interface
 uses
   Classes,DBClient,SysUtils,
-  MConnect,
+  MConnect,SConnect,
   DBSocketConnection,
   DbApiIntf;
 
@@ -22,6 +22,8 @@ type
   TBfssDBOpr = class(TInterfacedObject, IDbOperator)
   private
     function GetRemoteServer: TCustomRemoteServer;
+    procedure SendData(const Data: IDataBlock);
+    procedure ReceiveData(const Data: IDataBlock);
   private
     fDOMServer    : TDCOMConnection;
     fSocketServer : TBffsSocketConnection;
@@ -58,6 +60,7 @@ type
     function CopyFile(AFile_ID: Integer; AVer: Integer; ATree_ID: Integer): Integer; safecall;
     function DeleteFile(AFile_ID: Integer): Integer; safecall;
     function UpFileChunk(AFile_ID: Integer; AVer: Integer; AGroupID: Integer; AStream: OleVariant): Integer; safecall;
+    procedure MailTo(AStyle: Integer; const AMails: WideString; AContextID: Integer); safecall;
 
     //5.属性
     function Connected(): Boolean; stdcall;
@@ -84,7 +87,7 @@ implementation
   begin
     mysl := TStringList.Create;
     try
-      mylogfile := ChangeFileExt(System.ParamStr(0),'.log');
+      mylogfile := ExtractFileDir(System.ParamStr(0)) + '\DBApi.log';
       if FileExists(mylogfile) then
         mysl.LoadFromFile(mylogfile);
       mysl.Add(format('%s %s',[
@@ -169,6 +172,9 @@ constructor TBfssDBOpr.Create();
 begin
   fDOMServer    := TDCOMConnection.Create(nil);
   fSocketServer := TBffsSocketConnection.Create(nil);
+  fSocketServer.SendDataEvent := SendData;
+  fSocketServer.ReceiveDataEvent := ReceiveData;
+
   fcdsQuery := TClientDataSet.Create(nil);
   fConnectStype := csSocket;
 end;
@@ -240,6 +246,12 @@ begin
   Result := RemoteServer.AppServer.Login(AName,APass);
 end;
 
+procedure TBfssDBOpr.MailTo(AStyle: Integer; const AMails: WideString;
+  AContextID: Integer);
+begin
+  RemoteServer.AppServer.MailTo(AStyle,AMails,AContextID);
+end;
+
 function TBfssDBOpr.ReadBlob(const SqlStr: PChar; var Buf;
   Len: Integer): Integer;
 begin
@@ -293,6 +305,11 @@ begin
 
 end;
 
+procedure TBfssDBOpr.ReceiveData(const Data: IDataBlock);
+begin
+  WriteLog('接收数据包'+inttostr(Data.Size));
+end;
+
 function TBfssDBOpr.ReConnect: Boolean;
 begin
   RemoteServer.Connected := False;
@@ -310,6 +327,11 @@ procedure TBfssDBOpr.RollbackTrans;
 begin
   if RemoteServer.Connected then
     RemoteServer.AppServer.RollbackTrans;
+end;
+
+procedure TBfssDBOpr.SendData(const Data: IDataBlock);
+begin
+  WriteLog('发送数据包'+inttostr(Data.Size));
 end;
 
 function TBfssDBOpr.UpFileChunk(AFile_ID, AVer, AGroupID: Integer;

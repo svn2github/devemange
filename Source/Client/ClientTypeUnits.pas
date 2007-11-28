@@ -1,7 +1,8 @@
 unit ClientTypeUnits;
 
 interface
-
+uses
+  windows;
 type
 
   TModuleType = (mtFile=100,mtBug=200,mtProject=300,mtUser=400);
@@ -79,6 +80,9 @@ const
   gcSoftChar    = '↑';
   gcDecSoftChar = '↓';
   gcfiledir     = '文件夹';
+
+const
+  gcMSG_TickCount = $0400{WM_USER} +1;  //发送到mainfrm显示
 
 
 implementation

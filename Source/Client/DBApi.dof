@@ -101,7 +101,7 @@ DebugSourceDirs=
 UsePackages=0
 [Parameters]
 RunParams=
-HostApplication=
+HostApplication=D:\DeveManage\App\Deve.exe
 Launcher=
 UseLauncher=0
 DebugCWD=

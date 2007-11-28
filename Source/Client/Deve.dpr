@@ -14,6 +14,7 @@ uses
 begin
   Application.Initialize;
   if not ShowLoginDlg then Exit;
+  Application.Title := 'DeveManage';
   Application.CreateForm(TMainDlg, MainDlg);
   Application.CreateForm(TDM, DM);
   Application.CreateForm(TBaseChildDlg, BaseChildDlg);

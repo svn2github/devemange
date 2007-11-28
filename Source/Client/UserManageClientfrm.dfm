@@ -1,6 +1,6 @@
 inherited UserManageClientDlg: TUserManageClientDlg
-  Left = 282
-  Top = 129
+  Left = 222
+  Top = 135
   Height = 798
   Caption = #29992#25143#31649#29702
   OldCreateOrder = True
@@ -33,7 +33,6 @@ inherited UserManageClientDlg: TUserManageClientDlg
       Height = 698
       ActivePage = tsUser
       Align = alClient
-      TabIndex = 0
       TabOrder = 1
       OnChange = PageControl1Change
       OnChanging = PageControl1Changing
@@ -169,6 +168,15 @@ inherited UserManageClientDlg: TUserManageClientDlg
             Action = actUser_Cancel
             Caption = #21462#28040
             TabOrder = 4
+          end
+          object BitBtn9: TBitBtn
+            Left = 528
+            Top = 8
+            Width = 100
+            Height = 25
+            Action = actUser_RefreshData
+            Caption = #21047#26032#25968#25454
+            TabOrder = 5
           end
         end
       end
@@ -501,6 +509,11 @@ inherited UserManageClientDlg: TUserManageClientDlg
       Category = #26435#38480
       Caption = #21462#28040
       OnUpdate = actPriv_CancelUpdate
+    end
+    object actUser_RefreshData: TAction
+      Category = #29992#25143
+      Caption = #21047#26032#25968#25454
+      OnExecute = actUser_RefreshDataExecute
     end
   end
 end

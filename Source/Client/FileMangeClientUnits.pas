@@ -368,6 +368,7 @@ const
           'left join TB_USER_ITEM as b on a.ZEDITER_ID = b.ZID '            +
           'where a.ZTREE_ID=%d and a.ZNEWVER=1 ';  //其中ZNEWVER=TRUE在MSSQL2000有问题
 begin
+  ClientSystem.BeginTickCount;
   lvFileItem.Items.BeginUpdate;
   try
     ClearItem;
@@ -403,6 +404,7 @@ begin
 
   finally
     lvFileItem.Items.EndUpdate;
+    ClientSystem.EndTickCount;
   end;
 end;
 
@@ -456,14 +458,10 @@ end;
 procedure TFileManageDlg.tvFileTreeChange(Sender: TObject; Node: TTreeNode);
 var
   myNodeData : PFileTreeNode;
-  mycount,mynetcount : word;
 begin
-  mycount := gettickcount;
   myNodeData := Node.Data;
   LoadFileItem(myNodeData^.fID);
   ShowStatusBarText(2,format('分部号=%d',[myNodeData^.fid]));
-  mynetcount := gettickcount;
-  ShowStatusBarText(4,floattostr((mynetcount-mycount)/1000)+'s');
 end;
 
 procedure TFileManageDlg.tvFileTreeChanging(Sender: TObject; Node: TTreeNode;
@@ -563,7 +561,6 @@ var
   myNodeParent : PFileTreeNode;
   myhasChild : Boolean;
   myChildNode,myBrother : TTreeNode;
-  mycount,mynetcount : word;
 begin
   //删除分部
 
@@ -589,7 +586,7 @@ begin
   if MessageBox(Handle,pChar(format('删除 %s',[myNodeData^.fName])),'删除',
     MB_ICONQUESTION+MB_YESNO)=IDNO then Exit;
 
-  mycount := gettickcount;
+  ClientSystem.BeginTickCount;
   ClientSystem.fDBOpr.BeginTrans;
   try
     Screen.Cursor := crHourGlass;
@@ -634,8 +631,7 @@ begin
   except
     ClientSystem.fDBOpr.RollbackTrans;
   end;
-  mynetcount := gettickcount;
-  ShowStatusBarText(4,floattostr((mynetcount-mycount)/1000)+'s');
+  ClientSystem.EndTickCount;
 end;
 
 
@@ -768,10 +764,9 @@ end;
 procedure TFileManageDlg.actFile_DeleteFIleExecute(Sender: TObject);
 var
   myItemData : PFileItem;
-  mycount,mynetcount : word;
 begin
   //删除文件
-  mycount := gettickcount;
+  ClientSystem.BeginTickCount;
   myItemData := lvFileItem.Selected.data;
   if MessageBox(Handle,PChar(format('删除-%s',[myItemData^.fName])),'删除',
     MB_ICONQUESTION+MB_YESNO)=IDNO then Exit;
@@ -781,9 +776,7 @@ begin
     lvFileItem.Selected.Delete;
     Dispose(myItemData);
   end;
-
-  mynetcount := gettickcount;
-  ShowStatusBarText(4,floattostr((mynetcount-mycount)/1000)+'s');
+  ClientSystem.EndTickCount;
 end;
 
 procedure TFileManageDlg.actFile_DeleteFIleUpdate(Sender: TObject);
@@ -1723,9 +1716,8 @@ var
   myItemData : PFileItem;
   myfileid : integer;
   i : integer;
-  mycount,mynetcount : word;
 begin
-  mycount := gettickcount;
+  ClientSystem.BeginTickCount;
   myItemData := lvFileItem.Selected.data;
   myfileid := ClientSystem.fDBOpr.CopyFile(myItemData^.fID,myItemData^.fVer,myItemData^.fTreeID);
   if myfileid >=0 then
@@ -1744,8 +1736,7 @@ begin
   end
   else
     MessageDlg('复制并粘贴出错。', mtError, [mbOK], 0);
-  mynetcount := gettickcount;
-  Self.ShowStatusBarText(4,floattostr((mynetcount-mycount)/1000)+'s');
+  ClientSystem.EndTickCount;
 end;
 
 procedure TFileManageDlg.ListView_SetItemImageIndex(Item: TListItem);

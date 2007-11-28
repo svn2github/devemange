@@ -1,6 +1,6 @@
 inherited ProjectManageClientDlg: TProjectManageClientDlg
-  Left = 252
-  Top = 125
+  Left = 265
+  Top = 257
   Width = 923
   Caption = 'ProjectManageClientDlg'
   OldCreateOrder = True
@@ -33,7 +33,6 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
       ActivePage = tsProjectList
       Align = alClient
       MultiLine = True
-      TabIndex = 0
       TabOrder = 0
       OnChange = pcProjectChange
       OnChanging = pcProjectChanging
