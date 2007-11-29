@@ -18,7 +18,8 @@ type
     fHost   : String;             //服务器名
     fcdsUsePriv : TClientDataSet; //用户权限表
     fGauge  : TGauge;
-    fDeleteFiles : TStringList; //浏览文件时要删除的内容
+    fDeleteFiles : TStringList;   //浏览文件时要删除的内容
+    fCancelUpFile : Boolean;      //终止上传或下载文件
 
     constructor Create;
     destructor Destroy; override;
@@ -73,6 +74,7 @@ begin
   fGauge  := TGauge.Create(nil);
   fDeleteFiles := TStringList.Create;
   fTickCount := 0;
+  fCancelUpFile := False;
 end;
 
 destructor TClinetSystem.Destroy;
@@ -92,6 +94,7 @@ var
   myfilename : String;
   ZStream : TZDecompressionStream;
   mycds : TClientDataSet;
+  myb : Boolean;
 const
   glSQL = 'Select ZSTREAM from TB_FILE_CONTEXT ' +
           ' where ZFILE_ID=%d and ZVer=%d Order by ZGROUPID';
@@ -99,6 +102,8 @@ begin
   Self.BeginTickCount;
   myfilename := AfileName;
   mycds := TClientDataSet.Create(nil);
+  myb := fCancelUpFile;
+  fCancelUpFile := False;
   try
     mycds.Data := ClientSystem.fDBOpr.ReadDataSet(pChar(format(glSQL,[Afile_id,Aver])));
     myfileStream := TMemoryStream.Create;
@@ -108,6 +113,13 @@ begin
     try
       while not mycds.Eof do
       begin
+        if fCancelUpFile then
+        begin
+          fGauge.Progress := 0;
+          Result := False;
+          Exit;
+        end;
+        Application.ProcessMessages;
         myStream :=  TMemoryStream.Create;
         //TBlobField(cdsQuery.FieldByName('ZSTREAM')).SaveToStream(myStream);
         //myStream := StrToStream(Base64ToStr(cdsQuery.FieldByName('ZSTREAM').AsString));
@@ -133,11 +145,12 @@ begin
       myfileStream.Free;
       OutStream.Free;
     end;
+    Result := True;
   finally
     mycds.Free;
     Self.EndTickCount;
+    fCancelUpFile := myb;
   end;
-  Result := True;
 end;
 
 
@@ -287,7 +300,7 @@ var
   OutStream : TMemoryStream;
   ZStream: TZCompressionStream;
   myData : OleVariant;
-  
+  myb : Boolean;
 const
   glSQL = 'insert into TB_FILE_CONTEXT (ZFILE_ID,ZGROUPID,ZVER,ZSTREAM)  ' +
           'values(%d,%d,%d,:myStream)';
@@ -296,6 +309,8 @@ begin
   myStream := TMemoryStream.Create;
   OutStream := TMemoryStream.Create;
 
+  myb := fCancelUpFile;
+  fCancelUpFile := False;
   BeginTickCount;
   try
     myStream.LoadFromFile(AfileName);
@@ -317,6 +332,12 @@ begin
     c := 0;
     for i:=0 to count -1 do
     begin
+      if fCancelUpFile then
+      begin
+        fGauge.Progress := 0;
+        Result:= False;
+        Exit;
+      end;
       Application.ProcessMessages;
       myms := TMemoryStream.Create;
       myms.CopyFrom(OutStream,glBackSize);
@@ -351,6 +372,13 @@ begin
 
     if (OutStream.Size mod glBackSize) >0 then
     begin
+      if fCancelUpFile then
+      begin
+        fGauge.Progress := 0;
+        Result:= False;
+        Exit;
+      end;
+
       myms := TMemoryStream.Create;
       myms.CopyFrom(OutStream,OutStream.Size mod glBackSize);
       myms.Position :=0;
@@ -378,13 +406,14 @@ begin
       end;
       freeandnil(myms);
     end;
+    Result := True;
 
   finally
     myStream.Free;
     OutStream.Free;
     EndTickCount;
+    fCancelUpFile := myb;
   end;
-  Result := True;
 end;
 
 

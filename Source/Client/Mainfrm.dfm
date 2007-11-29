@@ -163,6 +163,24 @@ object MainDlg: TMainDlg
     OnDrawPanel = StatusBarMainDrawPanel
     OnResize = StatusBarMainResize
   end
+  object btbnCancelUp: TBitBtn
+    Left = 104
+    Top = 432
+    Width = 65
+    Height = 25
+    Hint = #21462#28040#19978#20256#19979#36733#25991#20214
+    Caption = #21462#28040
+    Font.Charset = GB2312_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -12
+    Font.Name = #23435#20307
+    Font.Style = []
+    ParentFont = False
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 3
+    OnClick = btbnCancelUpClick
+  end
   object ActionList1: TActionList
     Images = ImageList1
     Left = 80

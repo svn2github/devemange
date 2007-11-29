@@ -21,9 +21,13 @@ type
 
   TBfssDBOpr = class(TInterfacedObject, IDbOperator)
   private
+    fLogFile:textfile;
+
     function GetRemoteServer: TCustomRemoteServer;
     procedure SendData(const Data: IDataBlock);
     procedure ReceiveData(const Data: IDataBlock);
+    procedure WriteLog(AStr:String);
+
   private
     fDOMServer    : TDCOMConnection;
     fSocketServer : TBffsSocketConnection;
@@ -31,6 +35,8 @@ type
     fConnectStype : TConnectStype;
 
     property RemoteServer : TCustomRemoteServer read GetRemoteServer;
+
+
   public
     constructor Create();
     destructor Destroy; override;
@@ -80,23 +86,8 @@ implementation
   end;
 
   //写日志
-  procedure WriteLog(AStr:String);
-  var
-    mysl : TStringList;
-    mylogfile : String;
-  begin
-    mysl := TStringList.Create;
-    try
-      mylogfile := ExtractFileDir(System.ParamStr(0)) + '\DBApi.log';
-      if FileExists(mylogfile) then
-        mysl.LoadFromFile(mylogfile);
-      mysl.Add(format('%s %s',[
-        formatdatetime('yyyy-dd-mm hh:mm:ss',now()),AStr]));
-      mysl.SaveToFile(mylogfile);
-    finally
-      mysl.Free;
-    end;
-  end;
+
+
 
 { TBfssDBOpr }
 
@@ -169,6 +160,8 @@ begin
 end;
 
 constructor TBfssDBOpr.Create();
+var
+  mylogfile : string;
 begin
   fDOMServer    := TDCOMConnection.Create(nil);
   fSocketServer := TBffsSocketConnection.Create(nil);
@@ -177,6 +170,15 @@ begin
 
   fcdsQuery := TClientDataSet.Create(nil);
   fConnectStype := csSocket;
+
+  //日志
+  mylogfile := ExtractFileDir(System.ParamStr(0)) +
+    format('\Log\DBApi_%s.log',[formatdatetime('yyyy-mm-dd',now())]);
+  AssignFile(fLogFile,mylogfile);
+  if not FileExists(mylogfile) then
+    Rewrite(fLogfile)
+  else
+    Reset(flogfile);
 end;
 
 function TBfssDBOpr.DeleteFile(AFile_ID: Integer): Integer;
@@ -195,6 +197,7 @@ begin
     RemoteServer.Connected := False;
   fDOMServer.Free;
   fSocketServer.Free;
+  Closefile(fLogFile);  //关闭日志
   inherited;
 end;
 
@@ -346,5 +349,17 @@ function TBfssDBOpr.Version: integer;
 begin
   Result := cnCurDbOprVersion;
 end;
+
+procedure TBfssDBOpr.WriteLog(AStr: String);
+var
+  mystr : string;
+begin
+  mystr := format('%s %s',[
+    formatdatetime('yyyy-dd-mm hh:mm:ss',now()),AStr]);
+  Append(fLogFile);
+  writeln(fLogFile,mystr);
+  Flush(fLogFile);
+end;
+
 
 end.

@@ -45,6 +45,7 @@ type
     Label2: TLabel;
     StatusBarMain: TStatusBar;
     ApplicationEvents1: TApplicationEvents;
+    btbnCancelUp: TBitBtn;
     procedure FormCreate(Sender: TObject);
     procedure actmod_FilesExecute(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -56,6 +57,7 @@ type
     procedure StatusBarMainDrawPanel(StatusBar: TStatusBar;
       Panel: TStatusPanel; const Rect: TRect);
     procedure ApplicationEvents1Hint(Sender: TObject);
+    procedure btbnCancelUpClick(Sender: TObject);
   private
     fChildform : TList; //所有子窗口的对象
     fCurrentChildform : TBaseChildDlg;
@@ -210,12 +212,20 @@ end;
 procedure TMainDlg.StatusBarMainDrawPanel(StatusBar: TStatusBar;
   Panel: TStatusPanel; const Rect: TRect);
 begin
+  with btbnCancelUp do
+  begin
+    Parent   :=   StatusBar;
+    Left     :=   Rect.Right-width;
+    Top      :=   Rect.Top ;
+    Height   :=   Rect.Bottom - Rect.Top ;
+    Visible  :=   True;
+  end;
   with ClientSystem.fGauge do
   begin
     Parent   :=   StatusBar;
     Left     :=   Rect.Left;
     Top      :=   Rect.Top ;
-    Width    :=   Panel.Width;
+    Width    :=   Panel.Width-btbnCancelUp.Width;
     Height   :=   Rect.Bottom - Rect.Top ;
     Visible  :=   True;
   end;
@@ -266,6 +276,11 @@ procedure TMainDlg.WMTickCount(var Msg: TMessage);
 begin
   StatusBarMain.Panels[4].Text :=
     floattostr(Msg.WParam/ 1000)+ 's';
+end;
+
+procedure TMainDlg.btbnCancelUpClick(Sender: TObject);
+begin
+  ClientSystem.fCancelUpFile := True;
 end;
 
 end.

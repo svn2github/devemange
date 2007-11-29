@@ -791,7 +791,7 @@ inherited BugManageDlg: TBugManageDlg
               Left = 1
               Top = 1
               Width = 1081
-              Height = 409
+              Height = 408
               Align = alClient
               AllowDelete = False
               AllowInsert = False
@@ -1091,6 +1091,7 @@ inherited BugManageDlg: TBugManageDlg
     end
   end
   object pmBugTree: TPopupMenu
+    AutoHotkeys = maManual
     Left = 16
     Top = 48
     object N10: TMenuItem

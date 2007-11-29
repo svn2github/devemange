@@ -36,8 +36,8 @@ type
     FClientSocket: TClientSocket;
     FSocket: TCustomWinSocket;
   protected
-    procedure InterceptIncoming(const Data: IDataBlock);virtual;
-    procedure InterceptOutgoing(const Data: IDataBlock);virtual;
+    procedure InterceptIncoming(const Data: IDataBlock);virtual;  //Ω” ’
+    procedure InterceptOutgoing(const Data: IDataBlock);virtual;  //∑¢ÀÕ
     { ITransport }
     function GetWaitEvent: THandle; stdcall;
     function GetConnected: Boolean; stdcall;
