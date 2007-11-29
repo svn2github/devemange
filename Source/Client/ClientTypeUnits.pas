@@ -2,7 +2,7 @@ unit ClientTypeUnits;
 
 interface
 uses
-  windows;
+  windows,ExcelUnits;
 type
 
   TModuleType = (mtFile=100,mtBug=200,mtProject=300,mtUser=400);
@@ -16,7 +16,7 @@ type
     );
 
   //文件管理内的Tree_ID保存Bug的附件Bug值
-  TFileTreeDirStype = (ftdBug=-2);
+  TFileTreeDirStype = (ftdBug=-2,ftProject=-3);
 
   //权限操作权限
   TActionType = (atView,atUpdate,atInsert,atDelete);
@@ -68,6 +68,16 @@ type
     fhasLoad : Boolean; //表示已加载了子级
     fPageIndex : integer; //当前的页数,默认为1;
     fPageCount : integer; //页总数
+  end;
+
+  PProjectDoc = ^TProjectDoc;
+  TProjectDoc = record
+    fID   : integer;
+    fPro_id : integer; 
+    fName : String;
+    fFile_id   : integer; //对就库的id号
+    fFile_ver  : integer; //库内的版本号
+    fExcelFile : TExcelFile;
   end;
 
 

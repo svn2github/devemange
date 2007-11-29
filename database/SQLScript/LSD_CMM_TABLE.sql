@@ -158,6 +158,23 @@ create table TB_PRO_VERSION(
 )
 go
 
+/*项目文档列表*/
+if exists (select * from dbo.sysobjects
+  where id = object_id(N'[dbo].[TB_PRO_DOCUMENT]')
+  and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+drop table [dbo].[TB_PRO_DOCUMENT]
+go
+
+create table TB_PRO_DOCUMENT(
+	ZID            int IDENTITY (1, 1) not null,             /*版本ID*/
+	ZPRO_ID        int not null,                             /*项目ID*/
+	ZNAME          varchar(200),                             /*文档名称*/ 
+	ZFILE_ID       int not null,                             /*对应文件库内的ID值*/
+	constraint PK_TB_PRO_DOCUMENT primary key(ZID,ZPRO_ID)   
+)
+go
+
+
 /*##########################################################
  #
  # BUG管理 

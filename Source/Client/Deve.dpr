@@ -7,7 +7,8 @@ uses
   DmUints in 'DmUints.pas' {DM: TDataModule},
   Loginfrm in 'Loginfrm.pas' {LoginDlg},
   BaseChildfrm in 'BaseChildfrm.pas' {BaseChildDlg},
-  BaseDialogfrm in 'BaseDialogfrm.pas' {BaseDialog};
+  BaseDialogfrm in 'BaseDialogfrm.pas' {BaseDialog},
+  ExcelUnits in 'ExcelUnits.pas';
 
 {$R *.res}
 

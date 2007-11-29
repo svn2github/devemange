@@ -16,7 +16,10 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, BaseChildfrm, ExtCtrls, ComCtrls, DB, DBClient, StdCtrls,
-  Buttons, Grids, DBGrids, ActnList, DBCtrls;
+  Buttons, Grids, DBGrids, ActnList, DBCtrls, Tabs, Menus,
+
+  ClientTypeUnits,
+  ExcelUnits;
 
 type
   TProjectManageClientDlg = class(TBaseChildDlg)
@@ -57,6 +60,40 @@ type
     dbProName: TDBText;
     actPro_RefreshData: TAction;
     BitBtn9: TBitBtn;
+    tsProDocmuent: TTabSheet;
+    dgExcel: TDrawGrid;
+    plExcelTool: TPanel;
+    Label1: TLabel;
+    DBText1: TDBText;
+    StatusBarDocList: TStatusBar;
+    TabSetProDocList: TTabSet;
+    pmExcel: TPopupMenu;
+    N1: TMenuItem;
+    miFixRow: TMenuItem;
+    N21: TMenuItem;
+    N31: TMenuItem;
+    N41: TMenuItem;
+    N51: TMenuItem;
+    N2: TMenuItem;
+    N3: TMenuItem;
+    N4: TMenuItem;
+    actExcel_Save: TAction;
+    BitBtn10: TBitBtn;
+    miFixedRow: TMenuItem;
+    N5: TMenuItem;
+    miFixedCol: TMenuItem;
+    N11: TMenuItem;
+    N22: TMenuItem;
+    N32: TMenuItem;
+    N42: TMenuItem;
+    N52: TMenuItem;
+    actExcel_new: TAction;
+    BitBtn11: TBitBtn;
+    actExcle_ColFront: TAction;
+    actExcel_ColBack: TAction;
+    N6: TMenuItem;
+    N7: TMenuItem;
+    cdsDocs: TClientDataSet;
     procedure actPro_AddExecute(Sender: TObject);
     procedure cbEditProItemClick(Sender: TObject);
     procedure actPro_AddUpdate(Sender: TObject);
@@ -84,15 +121,37 @@ type
     procedure actvar_CancelUpdate(Sender: TObject);
     procedure actvar_CancelExecute(Sender: TObject);
     procedure actPro_RefreshDataExecute(Sender: TObject);
+    procedure TabSetProDocListDrawTab(Sender: TObject; TabCanvas: TCanvas;
+      R: TRect; Index: Integer; Selected: Boolean);
+    procedure TabSetProDocListMeasureTab(Sender: TObject; Index: Integer;
+      var TabWidth: Integer);
+    procedure dgExcelDrawCell(Sender: TObject; ACol, ARow: Integer;
+      Rect: TRect; State: TGridDrawState);
+    procedure StatusBarDocListDrawPanel(StatusBar: TStatusBar;
+      Panel: TStatusPanel; const Rect: TRect);
+    procedure miFixedRowClick(Sender: TObject);
+    procedure miFixedColClick(Sender: TObject);
+    procedure actExcel_newExecute(Sender: TObject);
+    procedure actExcel_SaveUpdate(Sender: TObject);
+    procedure TabSetProDocListChange(Sender: TObject; NewTab: Integer;
+      var AllowChange: Boolean);
   private
     { Private declarations }
     procedure LoadProjectItem();
+    procedure initExcelGrid();
+    procedure LoadExcel(AExcelFile:TExcelFile);
+    function GetCurrentExcel: PProjectDoc;
+    procedure SaveDoc(ADoc : PProjectDoc;AIsNew:Boolean=False); //保存文档
+    function LoadDoc(ADoc:PProjectDoc):Boolean; //加载文档
+    procedure ClearDocs;
   public
     procedure initBase; override;
     procedure freeBase; override;
     procedure Showfrm ; override;  //显示后发生的事件
     procedure Closefrm; override;  //关闭显示发生的事件
     class function GetModuleID : integer;override;
+
+    property CurrentDoc : PProjectDoc read GetCurrentExcel;
   end;
 
 var
@@ -100,7 +159,6 @@ var
 
 implementation
 uses
-  ClientTypeUnits,
   ClinetSystemUnits, DmUints;
 
 
@@ -116,14 +174,16 @@ end;
 
 procedure TProjectManageClientDlg.freeBase;
 begin
+  ClearDocs;
   inherited;
-
 end;
 
 procedure TProjectManageClientDlg.initBase;
 begin
   inherited;
   LoadProjectItem();
+  initExcelGrid();
+  TabSetProDocList.TabIndex := -1;
 end;
 
 procedure TProjectManageClientDlg.Showfrm;
@@ -294,8 +354,10 @@ var
   myField : TFieldDef;
   mycds : TClientDataSet;
   myb : Boolean;
+  mydoc : PProjectDoc;
 const
-  glSQL = 'select * from TB_PRO_VERSION where ZPRO_ID=%d Order by ZID desc';
+  glSQL  = 'select * from TB_PRO_VERSION where ZPRO_ID=%d Order by ZID desc';
+  glSQL2 = 'select * from TB_PRO_DOCUMENT where ZPRO_ID=%d';
 begin
   //1.项目版本
   if pcProject.ActivePage = tsProjectVer then
@@ -358,6 +420,30 @@ begin
       mycds.Free;
       fLoading := myb;
     end;
+  end;
+
+  //2.项目文档
+  if pcProject.ActivePage = tsProDocmuent  then
+  begin
+    cdsDocs.Data := ClientSystem.fDbOpr.ReadDataSet(PChar(Format(glSQL2,[
+      cdsProjectItem.FieldByName('ZID').Asinteger])));
+
+    //清空列表
+    ClearDocs;
+    cdsDocs.First;
+    while not cdsDocs.Eof do
+    begin
+      new(mydoc);
+      myDoc^.fID := cdsDocs.FieldByName('ZID').AsInteger;
+      myDoc^.fName := cdsDocs.FieldByName('ZNAME').AsString;
+      myDoc^.fFile_id := cdsDocs.FieldByName('ZFILE_ID').AsInteger;
+      myDoc^.fExcelFile := nil;
+      TabSetProDocList.Tabs.AddObject(myDoc^.fName,TObject(myDoc));
+
+      cdsDocs.Next;
+    end;
+    dgExcel.Visible := False;
+
   end;
 end;
 
@@ -625,6 +711,299 @@ end;
 procedure TProjectManageClientDlg.actPro_RefreshDataExecute(Sender: TObject);
 begin
   LoadProjectItem;
+end;
+
+procedure TProjectManageClientDlg.TabSetProDocListDrawTab(Sender: TObject;
+  TabCanvas: TCanvas; R: TRect; Index: Integer; Selected: Boolean);
+var
+  mystr : String;
+begin
+  TabCanvas.FillRect(R);
+  mystr := TabSetProDocList.Tabs[Index];
+  //当前选择
+  if Index = TabSetProDocList.TabIndex then
+  begin
+    TabCanvas.TextOut(R.Left+4,R.Top+2,myStr);
+    TabCanvas.Pen.Width := 2;
+    TabCanvas.Pen.Color := clRed;
+    TabCanvas.MoveTo(R.Left,R.Bottom-4);
+    TabCanvas.LineTo(R.Right,R.Bottom-4);
+  end
+  else
+    TabCanvas.TextOut(R.Left+4,R.Top+2,myStr);
+
+end;
+
+procedure TProjectManageClientDlg.TabSetProDocListMeasureTab(
+  Sender: TObject; Index: Integer; var TabWidth: Integer);
+var
+  mystr : string;
+begin
+  mystr := TabSetProDocList.Tabs[Index];
+  TabWidth := TabSetProDocList.Canvas.TextWidth(mystr) + 8;
+end;
+
+procedure TProjectManageClientDlg.dgExcelDrawCell(Sender: TObject; ACol,
+  ARow: Integer; Rect: TRect; State: TGridDrawState);
+var
+  myRect : TRect;
+  myStr : String;
+  myAlignent : TAlignment; //
+const
+  gcColumnTitle : array[0..25] of string = ('A','B','C','D','E','F','G',
+    'H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z');
+begin
+  myRect := Rect;
+  InflateRect(myRect,-1,-1);
+  //1.列
+  if (ARow = 0) and (ACol>0) then
+  begin
+    myStr := gcColumnTitle[ACol-1];
+    myAlignent := taCenter; //居中
+  end
+  //2.行
+  else if (ACol=0) and (ARow>0) then begin
+    myStr := inttostr(ARow);
+    myAlignent := taCenter;
+  end
+  //单元格内容
+  else begin
+    //
+  end;
+
+  with dgExcel do
+  begin
+    case myAlignent of
+      taLeftJustify :
+        Canvas.TextOut(myRect.Left,
+          myRect.Top+ (Rect.Bottom - Rect.Top - Canvas.TextHeight(myStr)) div 2,
+          myStr);
+      taRightJustify:
+        Canvas.TextOut(myRect.Right - Canvas.TextWidth(myStr),
+          myRect.Top+ (Rect.Bottom - Rect.Top - Canvas.TextHeight(myStr)) div 2,
+          myStr);
+      taCenter:
+          Canvas.TextOut(myRect.Left + (myRect.Right-myRect.Left - Canvas.TextWidth(myStr)) div 2,
+           myRect.Top+ (Rect.Bottom - Rect.Top - Canvas.TextHeight(myStr)) div 2,
+           myStr);
+    end;
+  end;
+
+end;
+
+procedure TProjectManageClientDlg.initExcelGrid;
+begin
+  dgExcel.ColWidths[0] := 40;
+  dgExcel.FixedRows := 4;
+  dgExcel.DefaultRowHeight := 21;
+end;
+
+procedure TProjectManageClientDlg.StatusBarDocListDrawPanel(
+  StatusBar: TStatusBar; Panel: TStatusPanel; const Rect: TRect);
+begin
+  with TabSetProDocList do
+  begin
+    Parent   :=   StatusBar;
+    Left     :=   Rect.Left;
+    Top      :=   Rect.Top ;
+    Width    :=   Panel.Width;
+    Height   :=   Rect.Bottom;
+    Visible  :=   True;
+  end;
+end;
+
+procedure TProjectManageClientDlg.miFixedRowClick(Sender: TObject);
+var
+  myCount : integer;
+begin
+  if not Assigned(CurrentDoc) then Exit;
+  if CurrentDoc^.fExcelFile.fFixedRow = (Sender as TMenuItem).Tag then Exit;
+  myCount := (Sender as TMenuItem).Tag + 1;
+  dgExcel.FixedRows := myCount;
+  CurrentDoc^.fExcelFile.fFixedRow := myCount -1;
+  CurrentDoc^.fExcelFile.fmodify := True;
+end;
+
+procedure TProjectManageClientDlg.miFixedColClick(Sender: TObject);
+var
+  myCount : integer;
+begin
+  if not Assigned(CurrentDoc) then Exit;
+  if CurrentDoc^.fExcelFile.fFixedCols = (Sender as TMenuItem).Tag then Exit;
+  myCount := (Sender as TMenuItem).Tag + 1;
+  dgExcel.FixedCols := myCount;
+  CurrentDoc^.fExcelFile.fFixedCols := myCount -1;
+  CurrentDoc^.fExcelFile.fmodify := True;
+end;
+
+procedure TProjectManageClientDlg.actExcel_newExecute(Sender: TObject);
+var
+  mystr : string;
+  myindex : integer;
+  myDocData : PProjectDoc;
+begin
+  //新建文档
+  mystr := inputBox('新建文档','文档名称:','');
+  mystr := Trim(mystr);
+  if mystr ='' then Exit;
+
+  new(myDocData);
+  myDocData^.fName := mystr;
+  myDocData^.fPro_id := cdsProjectItem.FieldByName('ZID').AsInteger;
+  myDocData^.fExcelFile := TExcelFile.Create;
+  myDocData^.fFile_ver  := 1;
+  TabSetProDocList.TabIndex :=
+    TabSetProDocList.Tabs.AddObject(mystr,TObject(myDocData));
+  TabSetProDocList.Refresh;
+  SaveDoc(myDocData,True);
+end;
+
+procedure TProjectManageClientDlg.actExcel_SaveUpdate(Sender: TObject);
+begin
+  (Sender as TAction).Enabled := (TabSetProDocList.TabIndex >=0)
+  and Assigned(TabSetProDocList.Tabs.Objects[TabSetProDocList.TabIndex])
+  and PProjectDoc(TabSetProDocList.Tabs.Objects[TabSetProDocList.TabIndex])^.fExcelFile.fmodify;
+end;
+
+procedure TProjectManageClientDlg.TabSetProDocListChange(Sender: TObject;
+  NewTab: Integer; var AllowChange: Boolean);
+var
+  myDoc : PProjectDoc;
+  myfilename : string;
+begin
+  if fLoading then Exit;
+  myDoc := PProjectDoc(TabSetProDocList.Tabs.Objects[NewTab]);
+
+  //哪没有文档时，则要下载加载了
+  if not Assigned(myDoc^.fExcelFile) then
+  begin
+    myDoc^.fExcelFile := TExcelFile.Create;
+    if not LoadDoc(myDoc) then
+    begin
+      MessageBox(Handle,'文件出错，无法打开。','打开',MB_ICONERROR+MB_OK);
+      Exit;
+    end;
+  end;
+  LoadExcel(myDoc^.fExcelFile);
+end;
+
+procedure TProjectManageClientDlg.LoadExcel(AExcelFile: TExcelFile);
+var
+  i : integer;
+begin
+  dgExcel.Visible   := True;
+  dgExcel.ColCount  := AExcelFile.ColCount+1;
+  dgExcel.RowCount  := AExcelFile.RowCount+1;
+  dgExcel.FixedCols := AExcelFile.fFixedCols + 1;
+  dgExcel.FixedRows := AExcelFile.fFixedRow  + 1;
+
+  for i :=1 to dgExcel.ColCount -1 do
+    dgExcel.ColWidths[i] := AExcelFile.fCols[i-1].fWidht;
+
+  for i:=1 to dgExcel.RowCount -1 do
+    dgExcel.RowHeights[i] := AExcelFile.Rows[i-1].fHight;
+end;
+
+function TProjectManageClientDlg.GetCurrentExcel: PProjectDoc;
+begin
+  Result:= nil;
+  if (TabSetProDocList.Tabs.Count > 0) and
+     (TabSetProDocList.TabIndex>=0) and
+     Assigned(TabSetProDocList.Tabs.Objects[TabSetProDocList.TabIndex]) then
+    Result := PProjectDoc(TabSetProDocList.Tabs.Objects[TabSetProDocList.TabIndex]);
+end;
+
+procedure TProjectManageClientDlg.SaveDoc(ADoc: PProjectDoc;
+  AIsNew:Boolean);
+var
+  myver : integer;
+  mySQL : String;
+  myFileid : integer;
+  myms : TMemoryStream;
+  myfilename : string;
+const
+  glSQL = 'insert TB_PRO_DOCUMENT (ZPRO_ID,ZNAME,ZFILE_ID) ' +
+          'values(%d,''%s'',%d)';
+  glSQL2 = 'select isnull(max(ZVER),0)+1 from TB_FILE_CONTEXT where ZFILE_ID=%d';
+begin
+  // 1.先上传文件
+
+  myFileid := -1;
+  if AIsNew then
+    myver := 1
+  else begin
+    mySQL := format(glSQL2,[ADoc^.fFile_id]);
+    myver := ClientSystem.fDbOpr.ReadInt(pChar(mySQL));
+  end;
+
+  myms := TMemoryStream.Create;
+  try
+    myfilename :=  ClientSystem.fTempDir + ADoc^.fName + '.prodoc';
+    ADoc^.fExcelFile.SaveToStream(myms);
+    myms.SaveToFile(myfilename);
+    if not ClientSystem.UpFile(ftProject,myfilename,myFileid,myver) then
+    begin
+      Exit;
+    end;
+    ADoc^.fFile_ver := myver;
+
+    //写入库
+    if AIsNew then
+    begin
+      ClientSystem.fDbOpr.BeginTrans;
+      try
+        mySQL := format(glSQL,[
+          ADoc^.fPro_id,
+          ADoc^.fName,
+          myFileid]);
+        ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
+        ClientSystem.fDbOpr.CommitTrans;
+      except
+        ClientSystem.fDbOpr.RollbackTrans;
+      end;
+    end;
+
+  finally
+    myms.Free;
+  end;
+
+end;
+
+procedure TProjectManageClientDlg.ClearDocs;
+var
+  i : integer;
+  myDoc : PProjectDoc;
+begin
+  for i:=0 to TabSetProDocList.Tabs.Count -1 do
+  begin
+    if Assigned(TabSetProDocList.Tabs.Objects[i]) then
+    begin
+      myDoc := PProjectDoc(TabSetProDocList.Tabs.Objects[i]);
+      myDoc^.fExcelFile.Free;
+      Dispose(myDoc);
+    end;
+  end;
+  TabSetProDocList.Tabs.Clear;
+end;
+
+function TProjectManageClientDlg.LoadDoc(ADoc: PProjectDoc): Boolean;
+var
+  myfilename : String;
+  myms : TMemoryStream;
+begin
+  Result := False;
+  myfilename := ADoc^.fName + '.prodoc';
+  if ClientSystem.DonwFileToFileName(ADoc^.fFile_id,myfilename) then
+  begin
+    myms := TMemoryStream.Create;
+    try
+      myms.LoadFromFile(myfilename);
+      myms.Position := 0;
+      Result := ADoc.fExcelFile.LoadfromStream(myms);
+    finally
+      myms.Free;
+    end;
+  end;
 end;
 
 end.

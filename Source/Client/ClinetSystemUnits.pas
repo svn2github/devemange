@@ -12,6 +12,7 @@ type
     fTickCount : word;
   public
     fAppDir : String;
+    fTempDir : String;            //临时目录
     fDbOpr  : IDbOperator;        //数据接口处理
     fEditer_id : integer;         //用户的id号
     fEditer : String;             //用户名
@@ -32,7 +33,7 @@ type
 
     //文件的上传与下载
     function UpFile(AFile_ID,AVer:integer;AfileName:String):Boolean;overload; //上传文件
-    function UpFile(ATreeStyle:TFileTreeDirStype;AFileName:String;var AFileID:integer):Boolean;overload;
+    function UpFile(ATreeStyle:TFileTreeDirStype;AFileName:String;var AFileID:integer;AVer:integer=1):Boolean;overload;
     function DonwFileToFileName(Afile_id,Aver:integer;AfileName:String):Boolean;overload; //保存到文件
     function DonwFileToFileName(Afile_id:integer;var AfileName:String):Boolean;overload; //保存到文件
     procedure OleVariantToStream(var Input: OleVariant; Stream: TStream);
@@ -66,9 +67,26 @@ begin
 end;
 
 constructor TClinetSystem.Create;
+  function DoGetTemp:string;
+  var  
+    dwsize  : dword;
+    pcstr   : pchar;
+  begin
+    Result   :=   './';
+    dwsize   :=   MAX_PATH   +   1;
+    getmem(pcstr,dwsize);
+    try
+      if gettemppath(dwsize,pcstr)   <>   0   then
+          Result   :=   strpas(pcstr);
+    finally
+      freemem(pcstr);
+    end;
+  end;
+
 begin
   fDbOpr := CreateBfssDBOpr();
   fAppDir := ExtractFileDir(System.ParamStr(0));
+  ftempdir := DoGetTemp;
   fcdsUsePriv := TClientDataSet.Create(nil);
   fEditer_id := -1;
   fGauge  := TGauge.Create(nil);
@@ -418,7 +436,7 @@ end;
 
 
 function TClinetSystem.UpFile(ATreeStyle:TFileTreeDirStype;AFileName: String;
-  var AFileID: integer): Boolean;
+  var AFileID: integer;AVer:integer): Boolean;
 var
   myfilename : string;
   myfileid : integer;
@@ -444,7 +462,7 @@ begin
     fDBOpr.ExeSQL(PChar(format(glSQL,[
       Ord(ATreeStyle),// myNodeData^.fID,
       myfileid,
-      1,  //文件版本号
+      AVer,  //文件版本号
       ExtractFileName(myfilename),
       fEditer_id,
       myfilename,
@@ -456,7 +474,7 @@ begin
       '',
       GetFileSize(myfilename)])));
 
-    if not UpFile(myfileid,1,myfilename) then
+    if not UpFile(myfileid,AVer,myfilename) then
     begin
       ClientSystem.fDBOpr.RollbackTrans;
       Exit;
