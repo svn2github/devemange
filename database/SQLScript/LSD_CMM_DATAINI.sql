@@ -10,6 +10,7 @@
 
 insert into TB_USER_ITEM (ZNAME,ZPASS,ZSTOP,ZTYPE) values('admin','123456',0,0);
 insert into TB_FILE_TREE (ZPID,ZNAME,ZHASCHILD) values(-1,'$/',0);
+insert into TB_PRO_DOCUMENT (ZPID,ZNAME,ZSTYLE,ZHASCHILD) values(-1,'$/',0,0);
 
 /*######################
  #BUG²ÎÊý

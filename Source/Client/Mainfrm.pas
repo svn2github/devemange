@@ -46,6 +46,9 @@ type
     StatusBarMain: TStatusBar;
     ApplicationEvents1: TApplicationEvents;
     btbnCancelUp: TBitBtn;
+    actMod_ProDoc: TAction;
+    N5: TMenuItem;
+    ToolButton4: TToolButton;
     procedure FormCreate(Sender: TObject);
     procedure actmod_FilesExecute(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -58,6 +61,7 @@ type
       Panel: TStatusPanel; const Rect: TRect);
     procedure ApplicationEvents1Hint(Sender: TObject);
     procedure btbnCancelUpClick(Sender: TObject);
+    procedure actMod_ProDocExecute(Sender: TObject);
   private
     fChildform : TList; //所有子窗口的对象
     fCurrentChildform : TBaseChildDlg;
@@ -84,7 +88,8 @@ uses
   FileMangeClientUnits,    {文件管理}
   BugManageClientfrm,      {BUG管理}
   ProjectManageClientfrm,  {项目管理}
-  UserManageClientfrm      {用户管理}
+  UserManageClientfrm,     {用户管理}
+  DesignDocumentClientfrm {项目文档}
 
   ;
 
@@ -281,6 +286,11 @@ end;
 procedure TMainDlg.btbnCancelUpClick(Sender: TObject);
 begin
   ClientSystem.fCancelUpFile := True;
+end;
+
+procedure TMainDlg.actMod_ProDocExecute(Sender: TObject);
+begin
+  DoChangeClient(TDesignDocumentClientDlg);
 end;
 
 end.

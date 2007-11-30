@@ -33,7 +33,7 @@ type
 
     //文件的上传与下载
     function UpFile(AFile_ID,AVer:integer;AfileName:String):Boolean;overload; //上传文件
-    function UpFile(ATreeStyle:TFileTreeDirStype;AFileName:String;var AFileID:integer;AVer:integer=1):Boolean;overload;
+    function UpFile(ATreeStyle:TFileStype;ATree_ID:integer;AFileName:String;var AFileID:integer;AVer:integer=1):Boolean;overload;
     function DonwFileToFileName(Afile_id,Aver:integer;AfileName:String):Boolean;overload; //保存到文件
     function DonwFileToFileName(Afile_id:integer;var AfileName:String):Boolean;overload; //保存到文件
     procedure OleVariantToStream(var Input: OleVariant; Stream: TStream);
@@ -435,15 +435,15 @@ begin
 end;
 
 
-function TClinetSystem.UpFile(ATreeStyle:TFileTreeDirStype;AFileName: String;
+function TClinetSystem.UpFile(ATreeStyle:TFileStype;ATree_ID:integer;AFileName: String;
   var AFileID: integer;AVer:integer): Boolean;
 var
   myfilename : string;
   myfileid : integer;
 const
-  glSQL =  'insert into TB_FILE_ITEM (ZTREE_ID,ZID,ZVER,ZNAME,ZEDITER_ID,ZFILEPATH, '+
+  glSQL =  'insert into TB_FILE_ITEM (ZTREE_ID,ZSTYPE,ZID,ZVER,ZNAME,ZEDITER_ID,ZFILEPATH, '+
            'ZSTATUS,ZEXT,ZEDITDATETIME,ZSTRUCTVER,ZTYPE,ZNEWVER,ZNOTE,ZSIZE) ' +
-           'values (%d,%d,%d,''%s'',%d,''%s'',%d,''%s'',''%s'',%d,%d,1,''%s'',%d)';
+           'values (%d,%d,%d,%d,''%s'',%d,''%s'',%d,''%s'',''%s'',%d,%d,1,''%s'',%d)';
   glSQL2 = 'select isnull(max(ZID),0)+1 as mymax from TB_FILE_ITEM ';
 begin
   //
@@ -451,8 +451,15 @@ begin
   //
   // 这地方必须做回滚操作. 目前暂时没有。
   //
+  // AFileid 传时来是 =1 表示要取出最大值
+  //
   myfilename := AFileName;
-  myfileid := fDBOpr.ReadInt(PChar(glSQL2));
+
+  if AFileID < 0 then
+    myfileid := fDBOpr.ReadInt(PChar(glSQL2))
+  else
+    myfileid := AFileid;
+
   AFileID  := myfileid;
 
   Result := False;
@@ -460,7 +467,8 @@ begin
   fDBOpr.BeginTrans;
   try
     fDBOpr.ExeSQL(PChar(format(glSQL,[
-      Ord(ATreeStyle),// myNodeData^.fID,
+      ATree_ID, 
+      Ord(ATreeStyle), //类型
       myfileid,
       AVer,  //文件版本号
       ExtractFileName(myfilename),

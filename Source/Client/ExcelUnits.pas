@@ -211,8 +211,16 @@ begin
 end;
 
 function TExcelFile.GetCells(Col, Row: integer): TExcelCell;
+var
+  myRow : TExcelRow;
 begin
-
+  Result := nil;
+  if (Row >=0) and (Row<fRows.Count) and
+     (Col >=0) and (Col<glExcelColCount) then
+  begin
+    myRow := fRows[Row];
+    Result := myRow.fCells[Col];
+  end;
 end;
 
 function TExcelFile.GetColCount: integer;

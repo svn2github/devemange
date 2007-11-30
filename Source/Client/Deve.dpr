@@ -8,7 +8,9 @@ uses
   Loginfrm in 'Loginfrm.pas' {LoginDlg},
   BaseChildfrm in 'BaseChildfrm.pas' {BaseChildDlg},
   BaseDialogfrm in 'BaseDialogfrm.pas' {BaseDialog},
-  ExcelUnits in 'ExcelUnits.pas';
+  ExcelUnits in 'ExcelUnits.pas',
+  DesignDocumentClientfrm in 'DesignDocumentClientfrm.pas' {DesignDocumentClientDlg},
+  ProjectManageClientfrm in 'ProjectManageClientfrm.pas' {ProjectManageClientDlg};
 
 {$R *.res}
 
@@ -18,7 +20,5 @@ begin
   Application.Title := 'DeveManage';
   Application.CreateForm(TMainDlg, MainDlg);
   Application.CreateForm(TDM, DM);
-  Application.CreateForm(TBaseChildDlg, BaseChildDlg);
-  Application.CreateForm(TBaseDialog, BaseDialog);
   Application.Run;
 end.

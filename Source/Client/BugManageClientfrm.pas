@@ -203,7 +203,7 @@ type
     function  GetBugItemPageCount(APageIndex:integer;AWhereStr:String):integer; //取出页总数
     procedure LoadBugItem(APageIndex:integer;AWhereStr:String);
     procedure LoadBugHistory(ABugID:integer); //加载bug的回复
-    function  UpBugFile(AFileName:String;var AFileID:integer):Boolean; //上传文件并返回文件的ID号
+    function  UpBugFile(APro_ID:integer;AFileName:String;var AFileID:integer):Boolean; //上传文件并返回文件的ID号
     procedure Mailto(AEmailto:String); //发送到邮箱
   public
     { Public declarations }
@@ -1335,6 +1335,7 @@ var
   myFileName : String;
   myFileID : integer;
   mySQL : string;
+  myProID : integer;
 const
   glSQL  =  'insert TB_BUG_HISTORY (ZBUG_ID,ZUSER_ID,ZSTATUS,ZCONTEXT,' +
             'ZACTIONDATE,ZANNEXFILE_ID,ZANNEXFILENAME) ' +
@@ -1400,7 +1401,8 @@ begin
     if FileExists(DataSet.FieldByName('ZFILEPATH').AsString) then
     begin
       myFileName := DataSet.FieldByName('ZFILEPATH').AsString;
-      if not UpBugFile(myFileName,myFileID) then
+      myProID := cdsBugItem.FieldByName('ZPRO_ID').Asinteger;
+      if not UpBugFile(myProID,myFileName,myFileID) then
       begin
         MessageBox(Handle,'上传附件有问题。','提示',MB_ICONERROR+MB_OK);
         Exit;
@@ -1601,10 +1603,10 @@ begin
     myData^.fName,myData^.fPageIndex,myData^.fPageCount]);
 end;
 
-function TBugManageDlg.UpBugFile(AFileName: String;
+function TBugManageDlg.UpBugFile(APro_ID:integer;AFileName: String;
   var AFileID: integer): Boolean;
 begin
-  Result :=ClientSystem.UpFile(ftdBug,AFileName,AfileID);
+  Result :=ClientSystem.UpFile(fsBug,APro_ID,AFileName,AfileID);
 end;
 
 procedure TBugManageDlg.DBText3DblClick(Sender: TObject);

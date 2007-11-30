@@ -366,7 +366,7 @@ var
 const
   glSQL = 'select a.*,b.ZNAME as UserName from TB_FILE_ITEM as a  '         +
           'left join TB_USER_ITEM as b on a.ZEDITER_ID = b.ZID '            +
-          'where a.ZTREE_ID=%d and a.ZNEWVER=1 ';  //其中ZNEWVER=TRUE在MSSQL2000有问题
+          'where a.ZTREE_ID=%d and a.ZNEWVER=1 and a.ZSTYPE=%d ';  //其中ZNEWVER=TRUE在MSSQL2000有问题
 begin
   ClientSystem.BeginTickCount;
   lvFileItem.Items.BeginUpdate;
@@ -374,7 +374,8 @@ begin
     ClearItem;
     if not ClientSystem.fDBOpr.Connected then Exit;
 
-    cdsQuery.Data := ClientSystem.fDBOpr.ReadDataSet(PChar(format(glSQL,[ATreeID])));
+    cdsQuery.Data := ClientSystem.fDBOpr.ReadDataSet(PChar(format(glSQL,[ATreeID,
+      Ord(fsFile)])));
 
     cdsQuery.First;
     while not cdsQuery.Eof do
@@ -642,9 +643,9 @@ var
   myfileid : integer;
   myfilenote : String;
 const
-  glSQL =  'insert into TB_FILE_ITEM (ZTREE_ID,ZID,ZVER,ZNAME,ZEDITER_ID,ZFILEPATH, '+
+  glSQL =  'insert into TB_FILE_ITEM (ZTREE_ID,ZSTYPE,ZID,ZVER,ZNAME,ZEDITER_ID,ZFILEPATH, '+
            'ZSTATUS,ZEXT,ZEDITDATETIME,ZSTRUCTVER,ZTYPE,ZNEWVER,ZNOTE,ZSIZE) ' +
-           'values (%d,%d,%d,''%s'',%d,''%s'',%d,''%s'',''%s'',%d,%d,1,''%s'',%d)';
+           'values (%d,%d,%d,%d,''%s'',%d,''%s'',%d,''%s'',''%s'',%d,%d,1,''%s'',%d)';
   glSQL2 = 'select max(ZID)+1 as mymax from TB_FILE_ITEM ';
 begin
   //
@@ -676,6 +677,7 @@ begin
     ClientSystem.fDBOpr.ExeSQL(PChar(
       format(glSQL,[
       myNodeData^.fID,
+      Ord(fsFile), //类型
       myfileid,
       1,  //文件版本号
       ExtractFileName(myfilename),
@@ -839,9 +841,9 @@ var
   myver,mysize : integer;
 const
   glSQL  = 'Update TB_FILE_ITEM set ZNEWVER=0 where ZNEWVER=1 and ZID=%d';
-  glSQL1 = 'insert into TB_FILE_ITEM (ZTREE_ID,ZID,ZVER,ZNAME,ZEDITER_ID,ZFILEPATH, '+
+  glSQL1 = 'insert into TB_FILE_ITEM (ZTREE_ID,ZSTYPE,ZID,ZVER,ZNAME,ZEDITER_ID,ZFILEPATH, '+
           'ZSTATUS,ZEXT,ZEDITDATETIME,ZSTRUCTVER,ZTYPE,ZNEWVER,ZNOTE,ZSIZE)  ' +
-          'values (%d,%d,%d,''%s'',%d,''%s'',%d,''%s'',''%s'',%d,%d,1,''%s'',%d)';
+          'values (%d,%d,%d,%d,''%s'',%d,''%s'',%d,''%s'',''%s'',%d,%d,1,''%s'',%d)';
   glSQL2 = 'select max(ZVER)+1 as myver from TB_FILE_ITEM where ZID=%d';
 begin
 
@@ -884,6 +886,7 @@ begin
     ClientSystem.fDBOpr.ExeSQL(PChar(
       format(glSQL1,[
       myItemData^.fTreeID,
+      Ord(fsFile),
       myItemData^.fID,
       myver,  //文件版本号
       myItemData^.fName,
@@ -1421,9 +1424,9 @@ const
            'where ZID=%d and ZVER=%d';
   glSQL1 = 'select ZSTATUS,ZEDITER_ID from TB_FILE_ITEM where ZID=%d and ZVER=%d';
   glSQL2 = 'Update TB_FILE_ITEM set ZNEWVER=0 where ZNEWVER=1 and ZID=%d';
-  glSQL3 = 'insert into TB_FILE_ITEM (ZTREE_ID,ZID,ZVER,ZNAME,ZEDITER_ID,ZFILEPATH, '+
+  glSQL3 = 'insert into TB_FILE_ITEM (ZTREE_ID,ZSTYPE,ZID,ZVER,ZNAME,ZEDITER_ID,ZFILEPATH, '+
            'ZSTATUS,ZEXT,ZEDITDATETIME,ZSTRUCTVER,ZTYPE,ZNEWVER,ZNOTE,ZSIZE)  ' +
-           'values (%d,%d,%d,''%s'',%d,''%s'',%d,''%s'',''%s'',%d,%d,1,''%s'',%d)';
+           'values (%d,%d,%d,%d,''%s'',%d,''%s'',%d,''%s'',''%s'',%d,%d,1,''%s'',%d)';
   glSQL4 = 'select isnull(max(ZVER),0)+1 as myver from TB_FILE_ITEM where ZID=%d';
 begin
   //保存文件
@@ -1472,6 +1475,7 @@ begin
     ClientSystem.fDBOpr.ExeSQL(PChar(
       format(glSQL3,[
       myItemData^.fTreeID,
+      Ord(fsFile),
       myItemData^.fID,
       myItemData^.fVer,  //文件版本号
       myItemData^.fName,

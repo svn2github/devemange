@@ -46,13 +46,6 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
           Align = alTop
           BevelOuter = bvNone
           TabOrder = 0
-          object Label1: TLabel
-            Left = 680
-            Top = 16
-            Width = 48
-            Height = 15
-            Caption = 'Label1'
-          end
           object BitBtn1: TBitBtn
             Left = 77
             Top = 8
@@ -339,108 +332,6 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
             end>
         end
       end
-      object tsProDocmuent: TTabSheet
-        Caption = #35774#35745#25991#26723
-        ImageIndex = 2
-        object DBText1: TDBText
-          Left = 0
-          Top = 40
-          Width = 905
-          Height = 17
-          Align = alTop
-          Color = clGray
-          DataField = 'ZNAME'
-          DataSource = dsProjectItem
-          Font.Charset = GB2312_CHARSET
-          Font.Color = clWhite
-          Font.Height = -15
-          Font.Name = #23435#20307
-          Font.Style = []
-          ParentColor = False
-          ParentFont = False
-        end
-        object dgExcel: TDrawGrid
-          Left = 0
-          Top = 57
-          Width = 905
-          Height = 429
-          Align = alClient
-          ColCount = 27
-          DefaultRowHeight = 21
-          RowCount = 1000
-          FixedRows = 4
-          Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goDrawFocusSelected, goRowSizing, goColSizing, goEditing, goTabs]
-          PopupMenu = pmExcel
-          TabOrder = 0
-          Visible = False
-          OnDrawCell = dgExcelDrawCell
-        end
-        object plExcelTool: TPanel
-          Left = 0
-          Top = 0
-          Width = 905
-          Height = 40
-          Align = alTop
-          BevelOuter = bvNone
-          TabOrder = 1
-          object BitBtn10: TBitBtn
-            Left = 135
-            Top = 6
-            Width = 100
-            Height = 25
-            Action = actExcel_Save
-            Caption = #20445#23384
-            TabOrder = 0
-          end
-          object BitBtn11: TBitBtn
-            Left = 19
-            Top = 7
-            Width = 100
-            Height = 25
-            Action = actExcel_new
-            Caption = #26032#24314
-            TabOrder = 1
-          end
-        end
-        object StatusBarDocList: TStatusBar
-          Left = 0
-          Top = 486
-          Width = 905
-          Height = 23
-          Panels = <
-            item
-              Bevel = pbNone
-              Style = psOwnerDraw
-              Width = 600
-            end
-            item
-              Bevel = pbNone
-              Width = 50
-            end
-            item
-              Bevel = pbNone
-              Width = 50
-            end>
-          OnDrawPanel = StatusBarDocListDrawPanel
-        end
-        object TabSetProDocList: TTabSet
-          Left = 200
-          Top = 388
-          Width = 465
-          Height = 21
-          DitherBackground = False
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -11
-          Font.Name = 'MS Sans Serif'
-          Font.Style = []
-          SoftTop = True
-          Style = tsOwnerDraw
-          OnChange = TabSetProDocListChange
-          OnDrawTab = TabSetProDocListDrawTab
-          OnMeasureTab = TabSetProDocListMeasureTab
-        end
-      end
     end
   end
   object cdsProjectItem: TClientDataSet
@@ -515,25 +406,6 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
       Hint = #21047#26032#25968#25454
       OnExecute = actPro_RefreshDataExecute
     end
-    object actExcel_Save: TAction
-      Category = #35774#35745#25991#26723
-      Caption = #20445#23384
-      Hint = #20445#23384#27491#22312#32534#36753#30340#25991#26723
-      OnUpdate = actExcel_SaveUpdate
-    end
-    object actExcel_new: TAction
-      Category = #35774#35745#25991#26723
-      Caption = #26032#24314
-      OnExecute = actExcel_newExecute
-    end
-    object actExcle_ColFront: TAction
-      Category = #35774#35745#25991#26723
-      Caption = #21069#31227#19968#21015
-    end
-    object actExcel_ColBack: TAction
-      Category = #35774#35745#25991#26723
-      Caption = #21521#21518#31227#19968#21015
-    end
   end
   object dsProVersion: TDataSource
     DataSet = cdsProVersion
@@ -562,32 +434,26 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
         Caption = #35774#32622#22266#23450#34892
         object miFixedRow: TMenuItem
           Caption = '0'#34892
-          OnClick = miFixedRowClick
         end
         object miFixRow: TMenuItem
           Tag = 1
           Caption = '1'#34892
-          OnClick = miFixedRowClick
         end
         object N21: TMenuItem
           Tag = 2
           Caption = '2'#34892
-          OnClick = miFixedRowClick
         end
         object N31: TMenuItem
           Tag = 3
           Caption = '3'#34892
-          OnClick = miFixedRowClick
         end
         object N41: TMenuItem
           Tag = 4
           Caption = '4'#34892
-          OnClick = miFixedRowClick
         end
         object N51: TMenuItem
           Tag = 5
           Caption = '5'#34892
-          OnClick = miFixedRowClick
         end
       end
     end
@@ -597,39 +463,33 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
         Caption = #35774#32622#22266#23450#21015
         object miFixedCol: TMenuItem
           Caption = '0'#21015
-          OnClick = miFixedColClick
         end
         object N11: TMenuItem
           Tag = 1
           Caption = '1'#21015
-          OnClick = miFixedColClick
         end
         object N22: TMenuItem
           Tag = 2
           Caption = '2'#21015
-          OnClick = miFixedColClick
         end
         object N32: TMenuItem
           Tag = 3
           Caption = '3'#21015
-          OnClick = miFixedColClick
         end
         object N42: TMenuItem
           Tag = 4
           Caption = '4'#21015
-          OnClick = miFixedColClick
         end
         object N52: TMenuItem
           Tag = 5
           Caption = '5'#21015
-          OnClick = miFixedColClick
         end
       end
       object N6: TMenuItem
-        Action = actExcle_ColFront
+        Caption = #21069#31227#19968#21015
       end
       object N7: TMenuItem
-        Action = actExcel_ColBack
+        Caption = #21521#21518#31227#19968#21015
       end
     end
   end

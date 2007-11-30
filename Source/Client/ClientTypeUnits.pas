@@ -5,7 +5,7 @@ uses
   windows,ExcelUnits;
 type
 
-  TModuleType = (mtFile=100,mtBug=200,mtProject=300,mtUser=400);
+  TModuleType = (mtFile=100,mtBug=200,mtProject=300,mtUser=400,mtDoc=500);
   //文件的子模块
   TFileSubModuleStype = (fsmfile,fsmDir);
   //BUG项目管理
@@ -15,8 +15,8 @@ type
   TProjectSubModuleStype = (psVersion=1
     );
 
-  //文件管理内的Tree_ID保存Bug的附件Bug值
-  TFileTreeDirStype = (ftdBug=-2,ftProject=-3);
+  //文件管理内类型
+  TFileStype = (fsFile,fsBug,fsDoc);
 
   //权限操作权限
   TActionType = (atView,atUpdate,atInsert,atDelete);
@@ -72,12 +72,17 @@ type
 
   PProjectDoc = ^TProjectDoc;
   TProjectDoc = record
+    fParent : PProjectDoc;
     fID   : integer;
-    fPro_id : integer; 
+    fPid  : integer;
+    fStyle : integer;     //类型
     fName : String;
     fFile_id   : integer; //对就库的id号
     fFile_ver  : integer; //库内的版本号
+    fSort      : integer;
     fExcelFile : TExcelFile;
+    fhasChild  : Boolean;
+    fIsLoad    : Boolean; //是否已加载过了
   end;
 
 

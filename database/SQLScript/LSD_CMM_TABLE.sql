@@ -42,6 +42,7 @@ go
 
 create table TB_FILE_ITEM(
 	ZTREE_ID       int not null,           /*树ID*/
+        ZSTYPE         int not null,           /*类型，分文件管理，bug管理，项目文档*/ 
 	ZID	       int not null,           /*文件id*/
 	ZVER           int not null,           /*文件的版本号*/
 	ZNAME          varchar(200) not null,  /*名称*/
@@ -55,7 +56,7 @@ create table TB_FILE_ITEM(
 	ZNEWVER        bit not null,           /*是否是最新版本*/
 	ZNOTE          text,                   /*文件说明*/
 	ZSIZE          int not null,           /*文件大小*/
-	constraint PK_TB_FILE_ITEM primary key(ZTREE_ID,ZID,ZVER)
+	constraint PK_TB_FILE_ITEM primary key(ZTREE_ID,ZTYPE,ZID,ZVER)
 )
 go
 
@@ -166,11 +167,16 @@ drop table [dbo].[TB_PRO_DOCUMENT]
 go
 
 create table TB_PRO_DOCUMENT(
-	ZID            int IDENTITY (1, 1) not null,             /*版本ID*/
-	ZPRO_ID        int not null,                             /*项目ID*/
+	ZID            int IDENTITY (1, 1) not null,             /*ID*/
+	ZPID           int not null,                             /*上级ID = -1 表示根目录*/
 	ZNAME          varchar(200),                             /*文档名称*/ 
-	ZFILE_ID       int not null,                             /*对应文件库内的ID值*/
-	constraint PK_TB_PRO_DOCUMENT primary key(ZID,ZPRO_ID)   
+  	ZSTYLE         int not null,                             /*类型 = 0 目录，=1文档*/ 
+	ZFILE_ID       int ,                                     /*对应文件库内的ID值*/
+	ZFILE_VER      int ,                                     /*文件的版本*/
+	ZSORT          int ,                                     /*排序号*/
+	ZHASCHILD      bit not null,                             /*是否有下级*/
+	ZDOCTYPE       int ,                                     /*文档类型 0=Excel 1=txt*/
+	constraint PK_TB_PRO_DOCUMENT primary key(ZID)   
 )
 go
 

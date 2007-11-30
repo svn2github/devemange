@@ -123,13 +123,18 @@ object MainDlg: TMainDlg
         Top = 0
         Action = actMod_Project
       end
-      object ToolButton2: TToolButton
+      object ToolButton4: TToolButton
         Left = 67
+        Top = 0
+        Action = actMod_ProDoc
+      end
+      object ToolButton2: TToolButton
+        Left = 134
         Top = 0
         Action = actMod_Bug
       end
       object ToolButton1: TToolButton
-        Left = 134
+        Left = 201
         Top = 0
         Action = actmod_Files
       end
@@ -210,6 +215,12 @@ object MainDlg: TMainDlg
       Caption = #29992#25143#31649#29702
       ImageIndex = 3
       OnExecute = actManage_UserExecute
+    end
+    object actMod_ProDoc: TAction
+      Category = #19994#21153
+      Caption = #35774#35745#25991#26723
+      ImageIndex = 0
+      OnExecute = actMod_ProDocExecute
     end
   end
   object ImageList1: TImageList
@@ -636,6 +647,9 @@ object MainDlg: TMainDlg
       end
       object N3: TMenuItem
         Action = actMod_Project
+      end
+      object N5: TMenuItem
+        Action = actMod_ProDoc
       end
       object N4: TMenuItem
         Action = actManage_User
