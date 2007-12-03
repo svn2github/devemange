@@ -197,6 +197,12 @@ inherited DesignDocumentClientDlg: TDesignDocumentClientDlg
       OnExecute = actEdit_savecolwidthExecute
       OnUpdate = actEdit_savecolwidthUpdate
     end
+    object actEdit_SaveRowHgith: TAction
+      Category = #32534#36753
+      Caption = #20445#23384#34892#39640
+      OnExecute = actEdit_SaveRowHgithExecute
+      OnUpdate = actEdit_SaveRowHgithUpdate
+    end
   end
   object pmExcel: TPopupMenu
     AutoHotkeys = maManual
@@ -238,6 +244,9 @@ inherited DesignDocumentClientDlg: TDesignDocumentClientDlg
           Caption = '5'#34892
           OnClick = miFixedRowClick
         end
+      end
+      object N13: TMenuItem
+        Action = actEdit_SaveRowHgith
       end
     end
     object N3: TMenuItem

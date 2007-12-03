@@ -93,6 +93,8 @@ begin
   fDeleteFiles := TStringList.Create;
   fTickCount := 0;
   fCancelUpFile := False;
+  if not DirectoryExists(fAppDir + '\' + gcLogDir) then
+    CreateDir(fAppDir + '\' + gcLogDir);
 end;
 
 destructor TClinetSystem.Destroy;

@@ -374,10 +374,15 @@ begin
   Result := False;
   fHight := AReader.ReadInteger;
   myCount := AReader.ReadInteger;
+
+  for i:=0 to High(fCells) do
+    fCells[i].Free;
+
+  SetLength(fCells,myCount);
   for i:= 0 to myCount-1 do
   begin
-    myCell := TExcelCell.Create;
-    if not mycell.LoadfromReader(AReader,Aver) then
+    fCells[i] := TExcelCell.Create;
+    if not fCells[i].LoadfromReader(AReader,Aver) then
       Exit;
   end;
   Result := True;

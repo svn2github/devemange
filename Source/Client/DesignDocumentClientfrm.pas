@@ -61,6 +61,8 @@ type
     actEdit_SetCells: TAction;
     actEdit_savecolwidth: TAction;
     N12: TMenuItem;
+    actEdit_SaveRowHgith: TAction;
+    N13: TMenuItem;
     procedure miFixedRowClick(Sender: TObject);
     procedure miFixedColClick(Sender: TObject);
     procedure actProject_AddDirUpdate(Sender: TObject);
@@ -85,6 +87,8 @@ type
     procedure actEdit_SetCellsExecute(Sender: TObject);
     procedure actEdit_savecolwidthUpdate(Sender: TObject);
     procedure actEdit_savecolwidthExecute(Sender: TObject);
+    procedure actEdit_SaveRowHgithExecute(Sender: TObject);
+    procedure actEdit_SaveRowHgithUpdate(Sender: TObject);
   private
     fCurrentDoc : PProjectDoc; //当前文件
     function GetCurrentExcel: TExcelFile;
@@ -593,7 +597,7 @@ const
   gcColumnTitle : array[0..25] of string = ('A','B','C','D','E','F','G',
     'H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z');
 begin
-  if fLoading then Exit; 
+  if fLoading then Exit;
   myRect := Rect;
   InflateRect(myRect,-1,-1);
   //1.列
@@ -611,10 +615,14 @@ begin
   else if (ACol>0) and (ARow>0) then begin
     if Assigned(fCurrentDoc) and Assigned(fCurrentDoc^.fExcelFile) then
     begin
+     // if (ACol-1 = 1) and (ARow-1=0) then
+     //   showmessage('ttt');
       myCell := fCurrentDoc^.fExcelFile.Cells[ACol-1,ARow-1];
       if Assigned(myCell) then
       begin
         myStr := myCell.fText;
+        //if myStr = '' then Exit;
+        //if mystr <> '' then showmessage(mystr);
         dgExcel.Canvas.Pen.Color :=myCell.fColor;
         dgExcel.Canvas.Brush.Color := myCell.fbgColor;
         dgExcel.Canvas.Font.Assign(myCell.fFont);
@@ -649,6 +657,7 @@ procedure TDesignDocumentClientDlg.dgExcelSetEditText(Sender: TObject;
 var
   mycell : TExcelCell;
 begin
+  if fLoading then Exit;
   if (ACol >=1) and (ARow >=1) and
      Assigned(fCurrentDoc) and Assigned(fCurrentDoc^.fExcelFile) then
   begin
@@ -665,6 +674,7 @@ end;
 procedure TDesignDocumentClientDlg.dgExcelGetEditText(Sender: TObject;
   ACol, ARow: Integer; var Value: String);
 begin
+  if fLoading then Exit;
   if (ACol >=1) and (ARow >=1) and
      Assigned(fCurrentDoc) and Assigned(fCurrentDoc^.fExcelFile) then
   begin
@@ -698,8 +708,8 @@ begin
         myCell := fCurrentDoc^.fExcelFile.Cells[myCol,myRow];
         if Assigned(myCell) then
         begin
-          myCell.fColor   := cbFontColor.Color;
-          myCell.fbgColor := cbbgColor.Color;
+          myCell.fColor   := cbFontColor.Selected;
+          myCell.fbgColor := cbbgColor.Selected;
           fCurrentDoc.fExcelFile.fmodify := True;
         end;
       end;
@@ -709,8 +719,8 @@ begin
         for i:=0 to High(myRowData.fCells) do
         begin
           myCell := myRowData.fCells[i];
-          myCell.fColor   := cbFontColor.Color;
-          myCell.fbgColor := cbbgColor.Color;
+          myCell.fColor   := cbFontColor.Selected;
+          myCell.fbgColor := cbbgColor.Selected;
         end;
         fCurrentDoc.fExcelFile.fmodify := True;
       end;
@@ -720,6 +730,7 @@ begin
       end;
   end;
 
+  dgExcel.Repaint;
 end;
 
 procedure TDesignDocumentClientDlg.actEdit_savecolwidthUpdate(
@@ -732,10 +743,34 @@ end;
 
 procedure TDesignDocumentClientDlg.actEdit_savecolwidthExecute(
   Sender: TObject);
+var
+  i : integer;
 begin
-  fCurrentDoc^.fExcelFile.fCols[dgExcel.Col-1].fWidht :=
-    dgExcel.ColWidths[dgExcel.Col];
+  for i:=1 to dgExcel.ColCount - 1 do
+    fCurrentDoc^.fExcelFile.fCols[i-1].fWidht :=
+    dgExcel.ColWidths[i];
   fCurrentDoc^.fExcelFile.fmodify := True;
+end;
+
+procedure TDesignDocumentClientDlg.actEdit_SaveRowHgithExecute(
+  Sender: TObject);
+var
+  i : integer;
+begin
+  for i:= 1 to dgExcel.RowCount -1 do
+  begin
+    fCurrentDoc^.fExcelFile.Rows[i-1].fHight :=
+    dgExcel.RowHeights[i];
+  end;
+  fCurrentDoc^.fExcelFile.fmodify := True;
+end;
+
+procedure TDesignDocumentClientDlg.actEdit_SaveRowHgithUpdate(
+  Sender: TObject);
+begin
+  (Sender as TAction).Enabled := Assigned(fCurrentDoc) and
+  Assigned(fCurrentDoc^.fExcelFile) and
+   (dgExcel.Row>=1) and (dgExcel.Col>=1) ;
 end;
 
 end.

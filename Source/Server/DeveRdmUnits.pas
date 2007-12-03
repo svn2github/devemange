@@ -8,6 +8,7 @@
 //
 // 修改内容:
 //     1) 更新了Copyfile() 方法时，对二进制的处理。 ver=1.0.1 2007-11-8
+//     2) 更改了TB_FILE_ITEM 增加ZSTYPE Field ver=1.0.2 2007-12-3
 //
 //
 ///////////////////////////////////////////////////////////////////////////////
@@ -304,9 +305,9 @@ var
 const
   glSQL   = 'select * from  TB_FILE_ITEM where ZID=%d and ZVER=%d';
   glSQL1  = 'select isnull(Max(ZID),0)+1 as mymax from TB_FILE_ITEM';
-  glSQL2  = 'insert into TB_FILE_ITEM (ZTREE_ID,ZID,ZVER,ZNAME,ZEDITER_ID, ' +
+  glSQL2  = 'insert into TB_FILE_ITEM (ZTREE_ID,ZSTYPE,ZID,ZVER,ZNAME,ZEDITER_ID, ' +
             'ZEDITDATETIME,ZSTATUS,ZEXT,ZSTRUCTVER,ZTYPE,ZNEWVER,ZSIZE) '+
-            ' values(%d,%d,%d,''%s'',%d,''%s'',%d,''%s'',%d,%d,1,%d) ';
+            ' values(%d,%d,%d,%d,''%s'',%d,''%s'',%d,''%s'',%d,%d,1,%d) ';
   glSQL3  = 'select * from TB_FILE_CONTEXT where ZFILE_ID=%d and ZVER=%d';
   glSQL4  = 'insert into TB_FILE_CONTEXT (ZFILE_ID,ZGROUPID,ZVER,ZSTREAM) ' +
             ' values(%d,%d,%d,:mystream)';
@@ -334,6 +335,7 @@ begin
       myNewQuery.Close;
       myNewQuery.SQL.Text := format(glSQL2,[
         ATree_ID,
+        0,  //0表示是文件管理模块内的文档
         myFileID,
         1,
         '复制' + myADOQuery.FieldByName('ZNAME').AsString,

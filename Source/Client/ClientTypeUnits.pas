@@ -98,6 +98,7 @@ const
 
 const
   gcMSG_TickCount = $0400{WM_USER} +1;  //发送到mainfrm显示
+  gcLogDir = 'Log'; //日志目录
 
 
 implementation

@@ -1,6 +1,6 @@
 inherited BugManageDlg: TBugManageDlg
-  Left = 74
-  Top = 131
+  Left = 111
+  Top = 181
   Width = 1099
   Height = 834
   Caption = #38169#35823#31649#29702
@@ -29,7 +29,7 @@ inherited BugManageDlg: TBugManageDlg
         object Splitter1: TSplitter
           Left = 189
           Top = 0
-          Width = 8
+          Width = 10
           Height = 675
           Beveled = True
         end
@@ -50,9 +50,9 @@ inherited BugManageDlg: TBugManageDlg
           OnExpanding = tvProjectExpanding
         end
         object plBugList: TPanel
-          Left = 197
+          Left = 199
           Top = 0
-          Width = 886
+          Width = 884
           Height = 675
           Align = alClient
           BevelOuter = bvNone
@@ -61,7 +61,7 @@ inherited BugManageDlg: TBugManageDlg
           object lbProjectName: TLabel
             Left = 0
             Top = 40
-            Width = 886
+            Width = 884
             Height = 15
             Align = alTop
             Caption = 'lbProjectName'
@@ -77,7 +77,7 @@ inherited BugManageDlg: TBugManageDlg
           object dgBugItem: TDBGrid
             Left = 0
             Top = 55
-            Width = 886
+            Width = 884
             Height = 580
             Align = alClient
             DataSource = dsBugItem
@@ -166,7 +166,7 @@ inherited BugManageDlg: TBugManageDlg
           object plBugTop: TPanel
             Left = 0
             Top = 0
-            Width = 886
+            Width = 884
             Height = 40
             Align = alTop
             BevelOuter = bvNone
@@ -313,7 +313,7 @@ inherited BugManageDlg: TBugManageDlg
           object plBugItemBottom: TPanel
             Left = 0
             Top = 635
-            Width = 886
+            Width = 884
             Height = 40
             Align = alBottom
             BevelOuter = bvNone
@@ -393,7 +393,7 @@ inherited BugManageDlg: TBugManageDlg
           Left = 0
           Top = 215
           Width = 1083
-          Height = 9
+          Height = 10
           Cursor = crVSplit
           Align = alTop
           Beveled = True
@@ -697,9 +697,9 @@ inherited BugManageDlg: TBugManageDlg
         end
         object plBugHistory: TPanel
           Left = 0
-          Top = 224
+          Top = 225
           Width = 1083
-          Height = 451
+          Height = 450
           Align = alClient
           BevelOuter = bvNone
           TabOrder = 1
@@ -782,7 +782,7 @@ inherited BugManageDlg: TBugManageDlg
             Left = 0
             Top = 40
             Width = 1083
-            Height = 411
+            Height = 410
             Align = alClient
             BevelOuter = bvLowered
             Caption = 'Panel1'

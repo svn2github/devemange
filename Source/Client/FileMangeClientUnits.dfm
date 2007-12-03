@@ -21,15 +21,15 @@ object FileManageDlg: TFileManageDlg
   object Splitter1: TSplitter
     Left = 220
     Top = 78
-    Width = 8
+    Width = 10
     Height = 519
     Beveled = True
     ResizeStyle = rsLine
   end
   object plfilelist: TPanel
-    Left = 228
+    Left = 230
     Top = 78
-    Width = 564
+    Width = 562
     Height = 519
     Align = alClient
     BevelOuter = bvNone
@@ -39,7 +39,7 @@ object FileManageDlg: TFileManageDlg
     object lvFileItem: TListView
       Left = 0
       Top = 41
-      Width = 564
+      Width = 562
       Height = 435
       Hint = #28857#20987#21015#21487#20197#36827#34892#21015#20869#23481#30340#25490#24207#12290
       Align = alClient
@@ -85,7 +85,7 @@ object FileManageDlg: TFileManageDlg
     object plFileTop: TPanel
       Left = 0
       Top = 0
-      Width = 564
+      Width = 562
       Height = 41
       Align = alTop
       BevelOuter = bvNone
@@ -140,7 +140,7 @@ object FileManageDlg: TFileManageDlg
     object plMainBottom: TPanel
       Left = 0
       Top = 476
-      Width = 564
+      Width = 562
       Height = 43
       Align = alBottom
       BevelOuter = bvNone

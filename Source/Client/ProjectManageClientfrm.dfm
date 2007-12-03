@@ -1,6 +1,6 @@
 inherited ProjectManageClientDlg: TProjectManageClientDlg
-  Left = 174
-  Top = 182
+  Left = 227
+  Top = 175
   Width = 923
   Caption = 'ProjectManageClientDlg'
   OldCreateOrder = True
@@ -188,9 +188,9 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
         ImageIndex = 1
         object Splitter1: TSplitter
           Left = 0
-          Top = 160
+          Top = 158
           Width = 905
-          Height = 8
+          Height = 10
           Cursor = crVSplit
           Align = alBottom
           Beveled = True
@@ -282,7 +282,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
           Left = 0
           Top = 57
           Width = 905
-          Height = 103
+          Height = 101
           Align = alClient
           DataSource = dsProVersion
           Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]

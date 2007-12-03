@@ -563,7 +563,7 @@ var
   mywhere : String;
 const
   glSQL = 'exec pt_SplitPage ''TB_BUG_ITEM'',' +
-          '''ZID,ZTYPE,ZTITLE,ZOPENEDBY,ZOPENEDDATE,ZASSIGNEDTO,ZRESOLVEDBY,' +
+          '''ZPRO_ID,ZID,ZTYPE,ZTITLE,ZOPENEDBY,ZOPENEDDATE,ZASSIGNEDTO,ZRESOLVEDBY,' +
           'ZRESOLUTION,ZRESOLVEDDATE,ZOS,ZLEVEL,ZSTATUS,ZMAILTO,ZOPENVER, ' +
           'ZRESOLVEDVER,ZTREEPATH,ZTREE_ID,ZASSIGNEDTO,ZASSIGNEDDATE'',' +
           '''ZLASTEDITEDDATE'',20,%d,%d,1,''%s''';
@@ -1518,6 +1518,10 @@ procedure TBugManageDlg.dgBugItemDrawColumnCell(Sender: TObject;
   const Rect: TRect; DataCol: Integer; Column: TColumn;
   State: TGridDrawState);
 begin
+
+  if cdsBugItem.RecNo mod 2  = 0 then
+    dgBugItem.Canvas.Brush.Color := clSilver;
+
   if (cdsBugItem.FieldByName('ZSTATUS').AsInteger = Ord(bgsDeath)) then
   begin
     dgBugItem.Canvas.Font.Color := clblue;
