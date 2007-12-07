@@ -1,6 +1,6 @@
 inherited BugManageDlg: TBugManageDlg
-  Left = 111
-  Top = 181
+  Left = 93
+  Top = 142
   Width = 1099
   Height = 834
   Caption = #38169#35823#31649#29702
@@ -171,8 +171,15 @@ inherited BugManageDlg: TBugManageDlg
             Align = alTop
             BevelOuter = bvNone
             TabOrder = 1
+            object Label20: TLabel
+              Left = 583
+              Top = 12
+              Width = 8
+              Height = 15
+              Caption = '='
+            end
             object BitBtn3: TBitBtn
-              Left = 16
+              Left = 11
               Top = 8
               Width = 100
               Height = 25
@@ -181,7 +188,7 @@ inherited BugManageDlg: TBugManageDlg
               TabOrder = 0
             end
             object BitBtn15: TBitBtn
-              Left = 131
+              Left = 120
               Top = 8
               Width = 100
               Height = 25
@@ -199,8 +206,8 @@ inherited BugManageDlg: TBugManageDlg
                 EEE00EEEEEEEEEEEEEE00EEEEEEEEEEEEEE00000000000000000}
             end
             object BitBtn16: TBitBtn
-              Left = 243
-              Top = 7
+              Left = 229
+              Top = 8
               Width = 100
               Height = 25
               Action = actBug_AssingToMe
@@ -243,8 +250,8 @@ inherited BugManageDlg: TBugManageDlg
                 FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00}
             end
             object BitBtn17: TBitBtn
-              Left = 355
-              Top = 7
+              Left = 340
+              Top = 8
               Width = 100
               Height = 25
               Action = actBug_ResoMe
@@ -287,11 +294,12 @@ inherited BugManageDlg: TBugManageDlg
                 FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00}
             end
             object cbFindVer: TComboBox
-              Left = 467
+              Left = 448
               Top = 9
               Width = 132
               Height = 23
               Style = csDropDownList
+              Color = clSkyBlue
               ItemHeight = 15
               TabOrder = 4
               Items.Strings = (
@@ -300,14 +308,31 @@ inherited BugManageDlg: TBugManageDlg
                 #35299#20915#38382#39064#30340#29256#26412)
             end
             object DBLookupComboBox7: TDBLookupComboBox
-              Left = 603
-              Top = 8
-              Width = 127
+              Left = 595
+              Top = 9
+              Width = 111
               Height = 23
+              Color = clSkyBlue
               KeyField = 'ZID'
               ListField = 'ZVER'
               ListSource = dsProject
               TabOrder = 5
+            end
+            object cbSort: TComboBox
+              Left = 716
+              Top = 9
+              Width = 102
+              Height = 23
+              Hint = #25353#20160#20040#25490#24207
+              Style = csDropDownList
+              Color = clSkyBlue
+              ItemHeight = 15
+              ItemIndex = 0
+              TabOrder = 6
+              Text = #32534#21495
+              Items.Strings = (
+                #32534#21495
+                #26368#21518#20462#25913#26102#38388)
             end
           end
           object plBugItemBottom: TPanel

@@ -144,6 +144,8 @@ type
     N10: TMenuItem;
     dblcSelectUsermail: TDBLookupComboBox;
     Label19: TLabel;
+    cbSort: TComboBox;
+    Label20: TLabel;
     procedure actBug_AddDirExecute(Sender: TObject);
     procedure tvProjectExpanding(Sender: TObject; Node: TTreeNode;
       var AllowExpansion: Boolean);
@@ -566,7 +568,7 @@ const
           '''ZPRO_ID,ZID,ZTYPE,ZTITLE,ZOPENEDBY,ZOPENEDDATE,ZASSIGNEDTO,ZRESOLVEDBY,' +
           'ZRESOLUTION,ZRESOLVEDDATE,ZOS,ZLEVEL,ZSTATUS,ZMAILTO,ZOPENVER, ' +
           'ZRESOLVEDVER,ZTREEPATH,ZTREE_ID,ZASSIGNEDTO,ZASSIGNEDDATE'',' +
-          '''ZLASTEDITEDDATE'',20,%d,%d,1,''%s''';
+          '''%s'',20,%d,%d,1,''%s''';
   //                                             页码,以总数=1, 条件where
 begin
 
@@ -576,10 +578,19 @@ begin
     2: mywhere := mywhere + ' and ZRESOLVEDVER=' + inttostr(cdsProject.FieldByName('ZID').AsInteger);
   end;
 
-  mySQL := format(glSQL,[
-    APageIndex,
-    0, //不是取总数
-    mywhere]);
+  if cbSort.ItemIndex = 0 then  //按编号排序
+    mySQL := format(glSQL,[
+      'ZID',
+      APageIndex,
+      0, //不是取总数
+      mywhere])
+  else
+    mySQL := format(glSQL,[
+      'ZLASTEDITEDDATE',
+      APageIndex,
+      0, //不是取总数
+      mywhere]);
+
   if fLoading then Exit;
 
   ClientSystem.BeginTickCount;
@@ -769,8 +780,8 @@ var
   mywhere : string;
 const
   glSQL = 'exec pt_SplitPage ''TB_BUG_ITEM'',' +
-          '''ZID,ZTITLE,ZOPENEDBY,ZOPENEDDATE,ZASSIGNEDTO,ZRESOLVEDBY,' +
-          'ZRESOLUTION,ZRESOLVEDDATE'', ''ZLASTEDITEDDATE'',20,%d,%d,1,''%s''';
+          '''ZID,' +
+         'ZRESOLUTION,ZRESOLVEDDATE'', ''%s'',20,%d,%d,1,''%s''';
   //                                             页码,以总数=1, 条件where
 begin
   mywhere := AWhereStr;
@@ -779,10 +790,18 @@ begin
     2: mywhere := mywhere + ' and ZRESOLVEDVER=' + inttostr(cdsProject.FieldByName('ZID').AsInteger);
   end;
 
-  mySQL := format(glSQL,[
-    APageIndex,
-    1, //不是取总数
-    AWhereStr]);
+  if cbSort.ItemIndex = 0 then  //按编号排序
+    mySQL := format(glSQL,[
+      'ZID',
+      APageIndex,
+      1, //不是取总数
+      mywhere])
+  else
+    mySQL := format(glSQL,[
+      'ZLASTEDITEDDATE',
+      APageIndex,
+      1, //不是取总数
+      mywhere]);
 
   myRowCount := ClientSystem.fDbOpr.ReadInt(PChar(mySQL));
   Result := myRowCount div 20;
@@ -905,6 +924,7 @@ begin
   DataSet.FieldByName('ZTREE_ID').AsInteger := myBugData^.fID;
   DataSet.FieldByName('ZSTATUS').AsInteger   := 0; //0=要修改的
   DataSet.FieldByName('ZOPENEDBY').AsInteger := ClientSystem.fEditer_id;
+  DataSet.FieldByName('ZOPENEDDATE').AsDateTime := now();
   DataSet.FieldByName('ZISNEW').AsBoolean := True;
   DataSet.FieldByName('ZRESOLUTION').AsInteger := -1; //解决方案
 end;
@@ -1519,7 +1539,7 @@ procedure TBugManageDlg.dgBugItemDrawColumnCell(Sender: TObject;
   State: TGridDrawState);
 begin
 
-  if cdsBugItem.RecNo mod 2  = 0 then
+  if (cdsBugItem.RecNo mod 2  = 0) and not ( gdSelected in State)  then
     dgBugItem.Canvas.Brush.Color := clSilver;
 
   if (cdsBugItem.FieldByName('ZSTATUS').AsInteger = Ord(bgsDeath)) then

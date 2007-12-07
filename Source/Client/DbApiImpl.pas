@@ -310,7 +310,7 @@ end;
 
 procedure TBfssDBOpr.ReceiveData(const Data: IDataBlock);
 begin
-  WriteLog('接收数据包'+inttostr(Data.Size));
+  WriteLog('接收='+inttostr(Data.Size));
 end;
 
 function TBfssDBOpr.ReConnect: Boolean;
@@ -334,7 +334,7 @@ end;
 
 procedure TBfssDBOpr.SendData(const Data: IDataBlock);
 begin
-  WriteLog('发送数据包'+inttostr(Data.Size));
+  WriteLog('发送='+inttostr(Data.Size));
 end;
 
 function TBfssDBOpr.UpFileChunk(AFile_ID, AVer, AGroupID: Integer;
