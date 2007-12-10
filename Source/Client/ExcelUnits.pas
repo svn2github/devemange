@@ -10,6 +10,7 @@ const
 
 type
 
+  TExcelFile = class;
 
   //单元格
   TExcelCell = Class
@@ -30,6 +31,7 @@ type
   //行
   TExcelRow = Class
   public
+    ffile   :TExcelFile;
     fHight  : integer;
     fCells  : array of TExcelCell;
 
@@ -77,6 +79,7 @@ type
 
     procedure AddRow();
     procedure InsertRow(Aindex:integer);
+    procedure DeleteRow(Aindex:integer); 
     procedure MoveCol(ACurIndex,AnewIndex:integer); // 移动行
 
     property RowCount : integer read GetRowCount;
@@ -162,6 +165,7 @@ var
   myRow : TExcelRow;
 begin
   myRow := TExcelRow.Create;
+  myRow.ffile := Self;
   fRows.Add(myRow);
 end;
 
@@ -193,7 +197,20 @@ begin
   for i:=0 to 99 do
   begin
     myRow := TExcelRow.Create;
+    myRow.ffile := Self;
     fRows.Add(myRow);
+  end;
+end;
+
+procedure TExcelFile.DeleteRow(Aindex: integer);
+var
+  myRow : TExcelRow;
+begin
+  if (Aindex >=0) and (Aindex < fRows.Count) then
+  begin
+    myRow := fRows.Items[Aindex];
+    fRows.Delete(Aindex);
+    myRow.Free;
   end;
 end;
 
@@ -247,6 +264,7 @@ begin
   if (Aindex >=0) and (AIndex < fRows.Count) then
   begin
     myRow := TExcelRow.Create;
+    myRow.ffile := Self;
     fRows.Insert(Aindex,myRow);
   end;
 end;
@@ -303,6 +321,7 @@ end;
 procedure TExcelFile.MoveCol(ACurIndex, AnewIndex: integer);
 var
   i :integer;
+  mywidth : integer;
   myRow : TExcelRow;
   myCell : TExcelCell;
 begin
@@ -317,6 +336,10 @@ begin
       myRow.fCells[AnewIndex] := myRow.fCells[ACurIndex];
       myRow.fCells[ACurIndex] := myCell;
     end;
+    //列的属性
+    mywidth := fCols[ACurIndex].fWidht;
+    fCols[ACurIndex].fWidht := fCols[AnewIndex].fWidht;
+    fCols[AnewIndex].fWidht := mywidth;
   end;
 end;
 

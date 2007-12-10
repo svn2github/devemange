@@ -8,16 +8,14 @@ uses
   Grids, Menus,
 
   ExcelUnits,            
-  ClientTypeUnits, DB, DBClient;
+  ClientTypeUnits, DB, DBClient, CheckLst;
 
 type
   TDesignDocumentClientDlg = class(TBaseChildDlg)
     tvProject: TTreeView;
     Splitter1: TSplitter;
     plClient: TPanel;
-    plTool: TPanel;
     lbDocName: TLabel;
-    BitBtn1: TBitBtn;
     ActionList1: TActionList;
     actEditor_Save: TAction;
     dgExcel: TDrawGrid;
@@ -51,18 +49,38 @@ type
     N9: TMenuItem;
     actProject_AddExcel: TAction;
     N10: TMenuItem;
-    BitBtn2: TBitBtn;
     actProject_OpenFile: TAction;
-    cbAction: TComboBox;
-    Bevel1: TBevel;
-    cbFontColor: TColorBox;
-    cbbgColor: TColorBox;
-    btbnOK: TBitBtn;
     actEdit_SetCells: TAction;
     actEdit_savecolwidth: TAction;
     N12: TMenuItem;
     actEdit_SaveRowHgith: TAction;
     N13: TMenuItem;
+    actEdit_InsertRow: TAction;
+    N14: TMenuItem;
+    PageControl1: TPageControl;
+    TabSheet1: TTabSheet;
+    tsFont: TTabSheet;
+    BitBtn2: TBitBtn;
+    BitBtn1: TBitBtn;
+    cbAction: TComboBox;
+    cbFontName: TComboBox;
+    sbtBold: TSpeedButton;
+    sbtItalic: TSpeedButton;
+    sbtUnderline: TSpeedButton;
+    sbtStrikeOut: TSpeedButton;
+    cbFontColor: TColorBox;
+    cbbgColor: TColorBox;
+    btbnOK: TBitBtn;
+    tsRow: TTabSheet;
+    tsCol: TTabSheet;
+    edFontSize: TEdit;
+    UpDown1: TUpDown;
+    BitBtn3: TBitBtn;
+    BitBtn4: TBitBtn;
+    BitBtn5: TBitBtn;
+    actEdit_DeleteRow: TAction;
+    BitBtn6: TBitBtn;
+    N15: TMenuItem;
     procedure miFixedRowClick(Sender: TObject);
     procedure miFixedColClick(Sender: TObject);
     procedure actProject_AddDirUpdate(Sender: TObject);
@@ -89,6 +107,14 @@ type
     procedure actEdit_savecolwidthExecute(Sender: TObject);
     procedure actEdit_SaveRowHgithExecute(Sender: TObject);
     procedure actEdit_SaveRowHgithUpdate(Sender: TObject);
+    procedure actEdit_InsertRowExecute(Sender: TObject);
+    procedure actEdit_InsertRowUpdate(Sender: TObject);
+    procedure dgExcelSelectCell(Sender: TObject; ACol, ARow: Integer;
+      var CanSelect: Boolean);
+    procedure actEdit_DeleteRowUpdate(Sender: TObject);
+    procedure actEdit_DeleteRowExecute(Sender: TObject);
+    procedure dgExcelColumnMoved(Sender: TObject; FromIndex,
+      ToIndex: Integer);
   private
     fCurrentDoc : PProjectDoc; //当前文件
     function GetCurrentExcel: TExcelFile;
@@ -145,18 +171,26 @@ end;
 procedure TDesignDocumentClientDlg.LoadExcel(AExcelFile: TExcelFile);
 var
   i : integer;
+  myb : Boolean;
 begin
-  dgExcel.Visible   := True;
-  dgExcel.ColCount  := AExcelFile.ColCount+1;
-  dgExcel.RowCount  := AExcelFile.RowCount+1;
-  dgExcel.FixedCols := AExcelFile.fFixedCols + 1;
-  dgExcel.FixedRows := AExcelFile.fFixedRow  + 1;
+  myb := fLoading;
+  fLoading := True;
+  try
+    dgExcel.Visible   := True;
+    dgExcel.ColCount  := AExcelFile.ColCount+1;
+    dgExcel.RowCount  := AExcelFile.RowCount+1;
+    dgExcel.FixedCols := AExcelFile.fFixedCols + 1;
+    dgExcel.FixedRows := AExcelFile.fFixedRow  + 1;
 
-  for i :=1 to dgExcel.ColCount -1 do
-    dgExcel.ColWidths[i] := AExcelFile.fCols[i-1].fWidht;
+    for i :=1 to dgExcel.ColCount -1 do
+      dgExcel.ColWidths[i] := AExcelFile.fCols[i-1].fWidht;
 
-  for i:=1 to dgExcel.RowCount -1 do
-    dgExcel.RowHeights[i] := AExcelFile.Rows[i-1].fHight;
+    for i:=1 to dgExcel.RowCount -1 do
+      dgExcel.RowHeights[i] := AExcelFile.Rows[i-1].fHight;
+
+  finally
+    fLoading := myb;
+  end;
 end;
 
 procedure TDesignDocumentClientDlg.LoadProject(ANode: TTreeNode;
@@ -242,9 +276,10 @@ begin
   dgExcel.ColWidths[0] := 40;
   dgExcel.FixedRows := 4;
   dgExcel.DefaultRowHeight := 21;
-  
+
   LoadProject(nil,-1); //加载根目录
   fCurrentDoc := nil;
+  cbFontName.Items.Assign(Screen.Fonts);
 end;
 
 procedure TDesignDocumentClientDlg.freeBase;
@@ -583,7 +618,9 @@ end;
 
 procedure TDesignDocumentClientDlg.actEditor_SaveUpdate(Sender: TObject);
 begin
-  (Sender as TAction).Enabled := Assigned(Self.fCurrentDoc);
+  (Sender as TAction).Enabled := Assigned(Self.fCurrentDoc) and
+  Assigned(Self.fCurrentDoc^.fExcelFile) and
+  (Self.fCurrentDoc^.fExcelFile.fmodify);
 end;
 
 procedure TDesignDocumentClientDlg.dgExcelDrawCell(Sender: TObject; ACol,
@@ -626,6 +663,7 @@ begin
         dgExcel.Canvas.Pen.Color :=myCell.fColor;
         dgExcel.Canvas.Brush.Color := myCell.fbgColor;
         dgExcel.Canvas.Font.Assign(myCell.fFont);
+        dgExcel.Canvas.Font.Color := myCell.fColor;
         dgExcel.Canvas.FillRect(Rect);
       end;
     end;
@@ -710,6 +748,13 @@ begin
         begin
           myCell.fColor   := cbFontColor.Selected;
           myCell.fbgColor := cbbgColor.Selected;
+          if cbFontName.ItemIndex >=0 then myCell.fFont.Name := cbFontName.Text;
+          myCell.fFont.Style := [];
+          if sbtBold.Down then myCell.fFont.Style := myCell.fFont.Style + [fsBold];
+          if sbtItalic.Down then myCell.fFont.Style := myCell.fFont.Style + [fsItalic];
+          if sbtUnderline.Down then myCell.fFont.Style := myCell.fFont.Style + [fsUnderline];
+          if sbtStrikeOut.Down then myCell.fFont.Style := myCell.fFont.Style + [fsStrikeOut];
+          myCell.fFont.Size := strtoint(edFontSize.Text);
           fCurrentDoc.fExcelFile.fmodify := True;
         end;
       end;
@@ -721,7 +766,14 @@ begin
           myCell := myRowData.fCells[i];
           myCell.fColor   := cbFontColor.Selected;
           myCell.fbgColor := cbbgColor.Selected;
-        end;
+          if cbFontName.ItemIndex >=0 then myCell.fFont.Name := cbFontName.Text;
+          myCell.fFont.Style := [];
+          if sbtBold.Down then myCell.fFont.Style := myCell.fFont.Style + [fsBold];
+          if sbtItalic.Down then myCell.fFont.Style := myCell.fFont.Style + [fsItalic];
+          if sbtUnderline.Down then myCell.fFont.Style := myCell.fFont.Style + [fsUnderline];
+          if sbtStrikeOut.Down then myCell.fFont.Style := myCell.fFont.Style + [fsStrikeOut];
+          myCell.fFont.Size := strtoint(edFontSize.Text);
+         end;
         fCurrentDoc.fExcelFile.fmodify := True;
       end;
     2: {col}
@@ -771,6 +823,97 @@ begin
   (Sender as TAction).Enabled := Assigned(fCurrentDoc) and
   Assigned(fCurrentDoc^.fExcelFile) and
    (dgExcel.Row>=1) and (dgExcel.Col>=1) ;
+end;
+
+procedure TDesignDocumentClientDlg.actEdit_InsertRowExecute(
+  Sender: TObject);
+var
+  myindex : integer;
+  i : integer;
+begin
+  myindex := dgExcel.Row - 1;
+  fCurrentDoc^.fExcelFile.InsertRow(myindex);
+  dgExcel.RowCount := fCurrentDoc^.fExcelFile.RowCount;
+  fCurrentDoc^.fExcelFile.fmodify := True;
+  for i:=1 to dgExcel.RowCount-1 do
+  begin
+    dgExcel.RowHeights[i] := fCurrentDoc^.fExcelFile.Rows[i-1].fHight;
+  end;
+  dgExcel.Refresh;
+end;
+
+procedure TDesignDocumentClientDlg.actEdit_InsertRowUpdate(
+  Sender: TObject);
+begin
+  (Sender as TAction).Enabled := Assigned(fCurrentDoc) and
+  Assigned(fCurrentDoc^.fExcelFile) and (dgExcel.Row>=1);
+end;
+
+procedure TDesignDocumentClientDlg.dgExcelSelectCell(Sender: TObject; ACol,
+  ARow: Integer; var CanSelect: Boolean);
+var
+  myCell : TExcelCell;
+begin
+  if fLoading then Exit;
+  if not Assigned(fCurrentDoc) or
+     not Assigned(fCurrentDoc^.fExcelFile) then Exit;
+
+  myCell := fCurrentDoc^.fExcelFile.Cells[ACol-1,ARow-1];
+  cbFontColor.Selected := myCell.fColor;
+  cbbgColor.Selected   := myCell.fbgColor;
+
+  cbFontName.ItemIndex := cbFontName.Items.IndexOf(myCell.fFont.Name);
+  sbtBold.Down         := fsBold      in myCell.fFont.Style;
+  sbtItalic.Down       := fsItalic    in myCell.fFont.Style;
+  sbtUnderline.Down    := fsUnderline in myCell.fFont.Style;
+  sbtStrikeOut.Down    := fsStrikeOut in myCell.fFont.Style;
+  edFontSize.Text      := inttostr(myCell.fFont.Size);
+  //
+end;
+
+procedure TDesignDocumentClientDlg.actEdit_DeleteRowUpdate(
+  Sender: TObject);
+begin
+  (Sender as TAction).Enabled := Assigned(fCurrentDoc) and
+  Assigned(fCurrentDoc^.fExcelFile) and (dgExcel.Row>=1);
+end;
+
+procedure TDesignDocumentClientDlg.actEdit_DeleteRowExecute(
+  Sender: TObject);
+var
+  i : integer;
+  myindex : integer;
+begin
+  if MessageBox(Handle,'确定是否删除行','删除行',
+    MB_ICONQUESTION+MB_YESNO)=IDNO then Exit;
+  myindex := dgExcel.Row -1;
+  fCurrentDoc^.fExcelFile.DeleteRow(myindex);
+  dgExcel.RowCount := fCurrentDoc^.fExcelFile.RowCount;
+  fCurrentDoc^.fExcelFile.fmodify := True;
+  for i:=1 to dgExcel.RowCount-1 do
+  begin
+    dgExcel.RowHeights[i] := fCurrentDoc^.fExcelFile.Rows[i-1].fHight;
+  end;
+  dgExcel.Refresh;
+end;
+
+procedure TDesignDocumentClientDlg.dgExcelColumnMoved(Sender: TObject;
+  FromIndex, ToIndex: Integer);
+var
+  i : integer;
+begin
+  if fLoading then Exit;
+  // 移动列
+  if not Assigned(fCurrentDoc) or
+     not Assigned(fCurrentDoc^.fExcelFile) then Exit;
+
+  fCurrentDoc^.fExcelFile.MoveCol(Fromindex-1,ToIndex-1);
+  fCurrentDoc^.fExcelFile.fmodify := True;
+
+  for i:=1 to dgExcel.ColCount -1 do
+    dgExcel.ColWidths[i] := fCurrentDoc^.fExcelFile.fCols[i-1].fWidht;
+
+  dgExcel.Realign;
 end;
 
 end.
