@@ -102,7 +102,7 @@ inherited DesignDocumentClientDlg: TDesignDocumentClientDlg
       Top = 0
       Width = 857
       Height = 70
-      ActivePage = tsRow
+      ActivePage = TabSheet1
       Align = alTop
       TabOrder = 1
       object TabSheet1: TTabSheet
@@ -396,7 +396,7 @@ inherited DesignDocumentClientDlg: TDesignDocumentClientDlg
           Height = 23
           Hint = #35774#32622#23383#20307
           Style = csDropDownList
-          ItemHeight = 15
+          ItemHeight = 0
           TabOrder = 1
         end
         object cbFontColor: TColorBox

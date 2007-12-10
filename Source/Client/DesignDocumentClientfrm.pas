@@ -664,7 +664,7 @@ begin
         dgExcel.Canvas.Brush.Color := myCell.fbgColor;
         dgExcel.Canvas.Font.Assign(myCell.fFont);
         dgExcel.Canvas.Font.Color := myCell.fColor;
-        dgExcel.Canvas.FillRect(Rect);
+        dgExcel.Canvas.FillRect(myRect);
       end;
     end;
   end
@@ -675,15 +675,15 @@ begin
     case myAlignent of
       taLeftJustify :
         Canvas.TextOut(myRect.Left,
-          myRect.Top+ (Rect.Bottom - Rect.Top - Canvas.TextHeight(myStr)) div 2,
+          myRect.Top+ (myRect.Bottom - myRect.Top - Canvas.TextHeight(myStr)) div 2,
           myStr);
       taRightJustify:
         Canvas.TextOut(myRect.Right - Canvas.TextWidth(myStr),
-          myRect.Top+ (Rect.Bottom - Rect.Top - Canvas.TextHeight(myStr)) div 2,
+          myRect.Top+ (myRect.Bottom - myRect.Top - Canvas.TextHeight(myStr)) div 2,
           myStr);
       taCenter:
           Canvas.TextOut(myRect.Left + (myRect.Right-myRect.Left - Canvas.TextWidth(myStr)) div 2,
-           myRect.Top+ (Rect.Bottom - Rect.Top - Canvas.TextHeight(myStr)) div 2,
+           myRect.Top+ (myRect.Bottom - myRect.Top - Canvas.TextHeight(myStr)) div 2,
            myStr);
     end;
   end;
