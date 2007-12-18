@@ -1,8 +1,15 @@
 ///////////////////////////////////////////////////////
 //
+// 开发项目管理 
+// 创建时间:2007-11-19
+// 作者: mrlong  web: http://devemange.googlecode.com
+//
 // 主窗口
 //
-// 创建时间:2007-11-19
+//
+//
+// 修改:
+//   增加只有管理员才能进入用户管理 2007-12-18
 //
 //
 ///////////////////////////////////////////////////////
@@ -192,7 +199,10 @@ end;
 
 procedure TMainDlg.actManage_UserExecute(Sender: TObject);
 begin
-  DoChangeClient(TUserManageClientDlg);
+  if ClientSystem.fEditerType = etAdmin then
+    DoChangeClient(TUserManageClientDlg)
+  else
+    MessageBox(Handle,'无权限','提示',MB_ICONWARNING+MB_OK);
 end;
 
 procedure TMainDlg.btbnNoUpgradeClick(Sender: TObject);

@@ -13,6 +13,7 @@ library DBApi;
 uses
   SysUtils,
   Classes,
+  midaslib,
   DbApiImpl in 'DbApiImpl.pas',
   DbApiIntf in 'DbApiIntf.pas';
 

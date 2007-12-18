@@ -58,6 +58,8 @@ var
   myid : integer;
   myhost : String;
   myPost : integer;
+const
+  glSQL  = 'select ZTYPE from  TB_USER_ITEM where ZID=%d ';
 begin
   //
   // 合法性处理
@@ -97,6 +99,8 @@ begin
       begin
         ClientSystem.fEditer_id  := myid;
         ClientSystem.fEditer     := edName.Text;
+        ClientSystem.fEditerType := TEditerType(
+          ClientSystem.fDbOpr.ReadInt(PChar(format(glSQL,[myid]))));
         if rbLocal.Checked then
           ClientSystem.fHost     := '本地连接'
         else

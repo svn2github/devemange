@@ -1,3 +1,13 @@
+///////////////////////////////////////////////////////////////////////////////
+//
+// author: mrlong date:2007-12-12
+//
+//  修改内容:
+//     1)更改权限为正向权限. 用户类型为管理员则有全部权限能力.
+//
+//
+//
+////////////////////////////////////////////////////////////////////////////////
 unit ClinetSystemUnits;
 
 interface
@@ -7,6 +17,9 @@ uses
   DBApiIntf,DBClient;
 
 type
+
+  TEditerType = (etAdmin,etUser);  //用户类型
+
   TClinetSystem = Class(TObject)
   private
     fTickCount : word;
@@ -16,6 +29,7 @@ type
     fDbOpr  : IDbOperator;        //数据接口处理
     fEditer_id : integer;         //用户的id号
     fEditer : String;             //用户名
+    fEditerType : TEditerType;    //用户类型
     fHost   : String;             //服务器名
     fcdsUsePriv : TClientDataSet; //用户权限表
     fGauge  : TGauge;
@@ -29,7 +43,9 @@ type
     procedure EndTickCount;    //结束计时
 
     procedure GetUserPriv(); //取出用户的权限
-    function HasModuleAction(AStype:integer;ASubStype:integer;AID:integer;AAction:TActionType):Boolean;      //操作权限
+    //操作权限
+    function HasModuleAction(AStype:integer;ASubStype:integer;
+      AID:integer;AAction:TActionType):Boolean;
 
     //文件的上传与下载
     function UpFile(AFile_ID,AVer:integer;AfileName:String):Boolean;overload; //上传文件
@@ -237,6 +253,8 @@ begin
   // 反向权限,如是有权限,则是说明这个模板
   //  对这个人要处理的.
   //
+  // 为了安全更改为正向，只要存在才说明有权限,除了类型为o的管理用户.
+  //
   //
   if ClientSystem.fEditer_id < 0 then
   begin
@@ -244,7 +262,14 @@ begin
     Exit;
   end;
 
-  Result := True;
+  //管理员有全部的权限
+  if ClientSystem.fEditerType = etAdmin then
+  begin
+    Result := True;
+    Exit;
+  end;
+
+  Result := False;
   fcdsUsePriv.First;
   myc := 0;
   while not fcdsUsePriv.Eof do

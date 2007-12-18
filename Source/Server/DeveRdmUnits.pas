@@ -9,6 +9,7 @@
 // 修改内容:
 //     1) 更新了Copyfile() 方法时，对二进制的处理。 ver=1.0.1 2007-11-8
 //     2) 更改了TB_FILE_ITEM 增加ZSTYPE Field ver=1.0.2 2007-12-3
+//     3) 更改了TIDSTMP组件发送邮件时，可能被别的服务阻击的可能. ver=1.0.3 2007-12-18
 //
 //
 ///////////////////////////////////////////////////////////////////////////////
@@ -461,7 +462,7 @@ var
   myTitle : String;
   myContext : String;  //内容
   myID : integer;
-  myIdMsg: TIdMessage;
+  //myIdMsg: TIdMessage;
 const
   glSQL  = 'select ZTITLE from TB_BUG_ITEM where ZID=%d ';
   glSQL2 = 'select isnull(max(ZID),0) as v from TB_BUG_HISTORY where ZBUG_ID=%d';

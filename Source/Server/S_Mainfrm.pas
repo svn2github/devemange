@@ -38,7 +38,6 @@ type
     actSys_About: TAction;
     pcMain: TPageControl;
     plMain: TPanel;
-    tsUser: TTabSheet;
     tsLogin: TTabSheet;
     StatusBar: TStatusBar;
     dgLogin: TDrawGrid;

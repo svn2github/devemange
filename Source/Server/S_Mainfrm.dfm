@@ -50,9 +50,6 @@ object MainDlg: TMainDlg
         OnClick = btbnRefreshClick
       end
     end
-    object tsUser: TTabSheet
-      Caption = #29992#25143#26435#38480
-    end
     object tsDataBase: TTabSheet
       Caption = #25968#25454#22791#20221#24674#22797
       ImageIndex = 2

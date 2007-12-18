@@ -1,6 +1,6 @@
 object LoginDlg: TLoginDlg
-  Left = 457
-  Top = 284
+  Left = 451
+  Top = 283
   BorderStyle = bsDialog
   Caption = #29992#25143#30331#24405
   ClientHeight = 241
@@ -23,22 +23,22 @@ object LoginDlg: TLoginDlg
     Caption = #26381#21153#22120'IP'#22320#22336'='
   end
   object Label2: TLabel
-    Left = 21
+    Left = 20
     Top = 129
     Width = 56
     Height = 16
     Caption = #29992#25143#21517'='
   end
   object Label3: TLabel
-    Left = 23
+    Left = 20
     Top = 159
     Width = 56
     Height = 16
     Caption = #23494'  '#30721'='
   end
   object lbStutas: TLabel
-    Left = 16
-    Top = 200
+    Left = 25
+    Top = 203
     Width = 70
     Height = 14
     Caption = #30331#24405#26381#21153#22120
