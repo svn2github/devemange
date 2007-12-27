@@ -16,3 +16,4 @@ create table TB_FILE_TREE(
 constraint PK_TB_MEDIA  primary key (ZID)
 )
 go
+
