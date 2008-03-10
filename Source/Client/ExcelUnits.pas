@@ -148,7 +148,6 @@ end;
 function TExcelCol.LoadfromReader(AReader: TReader;
   AVer: integer): Boolean;
 begin
-  Result := False;
   fWidht := AReader.ReadInteger;
   Result := True;
 end;

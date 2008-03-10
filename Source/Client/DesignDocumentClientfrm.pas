@@ -8,17 +8,13 @@ uses
   Grids, Menus,
 
   ExcelUnits,            
-  ClientTypeUnits, DB, DBClient, CheckLst;
+  ClientTypeUnits, DB, DBClient, CheckLst, DBCtrls;
 
 type
   TDesignDocumentClientDlg = class(TBaseChildDlg)
     tvProject: TTreeView;
     Splitter1: TSplitter;
-    plClient: TPanel;
-    lbDocName: TLabel;
     ActionList1: TActionList;
-    actEditor_Save: TAction;
-    dgExcel: TDrawGrid;
     pmExcel: TPopupMenu;
     N4: TMenuItem;
     N2: TMenuItem;
@@ -39,8 +35,6 @@ type
     N52: TMenuItem;
     N6: TMenuItem;
     N7: TMenuItem;
-    actEditor_FrontCol: TAction;
-    actEditor_BlackCol: TAction;
     cdsData: TClientDataSet;
     actProject_AddDir: TAction;
     pmProject: TPopupMenu;
@@ -49,38 +43,19 @@ type
     N9: TMenuItem;
     actProject_AddExcel: TAction;
     N10: TMenuItem;
-    actProject_OpenFile: TAction;
-    actEdit_SetCells: TAction;
     actEdit_savecolwidth: TAction;
     N12: TMenuItem;
     actEdit_SaveRowHgith: TAction;
     N13: TMenuItem;
     actEdit_InsertRow: TAction;
     N14: TMenuItem;
-    PageControl1: TPageControl;
-    TabSheet1: TTabSheet;
-    tsFont: TTabSheet;
-    BitBtn2: TBitBtn;
-    BitBtn1: TBitBtn;
-    cbAction: TComboBox;
-    cbFontName: TComboBox;
-    sbtBold: TSpeedButton;
-    sbtItalic: TSpeedButton;
-    sbtUnderline: TSpeedButton;
-    sbtStrikeOut: TSpeedButton;
-    cbFontColor: TColorBox;
-    cbbgColor: TColorBox;
-    btbnOK: TBitBtn;
-    tsRow: TTabSheet;
-    tsCol: TTabSheet;
-    edFontSize: TEdit;
-    UpDown1: TUpDown;
-    BitBtn3: TBitBtn;
-    BitBtn4: TBitBtn;
-    BitBtn5: TBitBtn;
     actEdit_DeleteRow: TAction;
-    BitBtn6: TBitBtn;
     N15: TMenuItem;
+    cdsText: TClientDataSet;
+    dsText: TDataSource;
+    pltxt: TPanel;
+    DBMemo1: TDBMemo;
+    DBText1: TDBText;
     procedure miFixedRowClick(Sender: TObject);
     procedure miFixedColClick(Sender: TObject);
     procedure actProject_AddDirUpdate(Sender: TObject);
@@ -91,30 +66,7 @@ type
     procedure actProject_DelDirExecute(Sender: TObject);
     procedure actProject_AddExcelUpdate(Sender: TObject);
     procedure actProject_AddExcelExecute(Sender: TObject);
-    procedure actProject_OpenFileUpdate(Sender: TObject);
-    procedure actProject_OpenFileExecute(Sender: TObject);
-    procedure actEditor_SaveExecute(Sender: TObject);
-    procedure actEditor_SaveUpdate(Sender: TObject);
-    procedure dgExcelDrawCell(Sender: TObject; ACol, ARow: Integer;
-      Rect: TRect; State: TGridDrawState);
-    procedure dgExcelSetEditText(Sender: TObject; ACol, ARow: Integer;
-      const Value: String);
-    procedure dgExcelGetEditText(Sender: TObject; ACol, ARow: Integer;
-      var Value: String);
-    procedure actEdit_SetCellsUpdate(Sender: TObject);
-    procedure actEdit_SetCellsExecute(Sender: TObject);
-    procedure actEdit_savecolwidthUpdate(Sender: TObject);
-    procedure actEdit_savecolwidthExecute(Sender: TObject);
-    procedure actEdit_SaveRowHgithExecute(Sender: TObject);
-    procedure actEdit_SaveRowHgithUpdate(Sender: TObject);
-    procedure actEdit_InsertRowExecute(Sender: TObject);
-    procedure actEdit_InsertRowUpdate(Sender: TObject);
-    procedure dgExcelSelectCell(Sender: TObject; ACol, ARow: Integer;
-      var CanSelect: Boolean);
-    procedure actEdit_DeleteRowUpdate(Sender: TObject);
-    procedure actEdit_DeleteRowExecute(Sender: TObject);
-    procedure dgExcelColumnMoved(Sender: TObject; FromIndex,
-      ToIndex: Integer);
+    procedure tvProjectChange(Sender: TObject; Node: TTreeNode);
   private
     fCurrentDoc : PProjectDoc; //当前文件
     function GetCurrentExcel: TExcelFile;
@@ -151,7 +103,6 @@ begin
   if not Assigned(CurrentExcel) then Exit;
   if CurrentExcel.fFixedRow = (Sender as TMenuItem).Tag then Exit;
   myCount := (Sender as TMenuItem).Tag + 1;
-  dgExcel.FixedRows := myCount;
   CurrentExcel.fFixedRow := myCount -1;
   CurrentExcel.fmodify := True;
 end;
@@ -163,7 +114,6 @@ begin
   if not Assigned(CurrentExcel) then Exit;
   if CurrentExcel.fFixedCols = (Sender as TMenuItem).Tag then Exit;
   myCount := (Sender as TMenuItem).Tag + 1;
-  dgExcel.FixedCols := myCount;
   CurrentExcel.fFixedCols := myCount -1;
   CurrentExcel.fmodify := True;
 end;
@@ -176,17 +126,6 @@ begin
   myb := fLoading;
   fLoading := True;
   try
-    dgExcel.Visible   := True;
-    dgExcel.ColCount  := AExcelFile.ColCount+1;
-    dgExcel.RowCount  := AExcelFile.RowCount+1;
-    dgExcel.FixedCols := AExcelFile.fFixedCols + 1;
-    dgExcel.FixedRows := AExcelFile.fFixedRow  + 1;
-
-    for i :=1 to dgExcel.ColCount -1 do
-      dgExcel.ColWidths[i] := AExcelFile.fCols[i-1].fWidht;
-
-    for i:=1 to dgExcel.RowCount -1 do
-      dgExcel.RowHeights[i] := AExcelFile.Rows[i-1].fHight;
 
   finally
     fLoading := myb;
@@ -227,8 +166,6 @@ begin
       myData^.fPid := cdsData.FieldByName('ZPID').AsInteger;
       myData^.fStyle := cdsData.FieldByName('ZSTYLE').AsInteger;
       myData^.fName := cdsData.FieldByName('ZNAME').AsString;
-      myData^.fFile_id := cdsData.FieldByName('ZFILE_ID').AsInteger;
-      myData^.fFile_ver := cdsData.FieldByName('ZFILE_VER').AsInteger;
       myData^.fSort := cdsData.FieldByName('ZSORT').AsInteger;
       myData^.fhasChild := cdsData.FieldByName('ZHASCHILD').AsBoolean;
       myData^.fExcelFile := nil;
@@ -273,13 +210,8 @@ end;
 procedure TDesignDocumentClientDlg.initBase;
 begin
   inherited;
-  dgExcel.ColWidths[0] := 40;
-  dgExcel.FixedRows := 4;
-  dgExcel.DefaultRowHeight := 21;
-
   LoadProject(nil,-1); //加载根目录
   fCurrentDoc := nil;
-  cbFontName.Items.Assign(Screen.Fonts);
 end;
 
 procedure TDesignDocumentClientDlg.freeBase;
@@ -445,39 +377,27 @@ var
   myNodeData : PProjectDoc;
   myfileid : integer;
   myExcelFile : TExcelFile;
-  myms : TMemoryStream;
   myfilename : string;
   mySQL : string;
 const
-  glSQL  = 'insert TB_PRO_DOCUMENT (ZPID,ZNAME,ZSTYLE,ZFILE_ID,ZFILE_VER, ' +
+  glSQL  = 'insert TB_PRO_DOCUMENT (ZPID,ZNAME,ZSTYLE, ' +
            ' ZHASCHILD,ZDOCTYPE) ' +
-           'values(%d,''%s'',1,%d,1,0,0)';
+           'values(%d,''%s'',1,0,0)';
   glSQL1 = 'update TB_PRO_DOCUMENT set ZHASCHILD=1 where ZID=%d';
 begin
-  myName := InputBox('新建电子表格文档','名称:','');
+  myName := InputBox('新建文档','名称:','');
   myName := Trim(myName);
   if myName = '' then Exit;
 
   myNodeData := tvProject.Selected.data;
 
   myExcelFile := TExcelFile.Create;
-  myms := TMemoryStream.Create;
   try
-    myfilename := ClientSystem.fTempDir + '\' + myname + '.prodoc';
-
-    myExcelFile.SaveToStream(myms);
-    myms.SaveToFile(myfilename);
-
-    myfileid := -1;
-    if not ClientSystem.UpFile(fsDoc,myNodeData^.fID,myfilename,myfileid,1) then
-    begin
-      MessageBox(Handle,'新建出错','提示',MB_ICONERROR+MB_OK);
-      Exit;
-    end;
+     myfileid := -1;
 
     ClientSystem.fDbOpr.BeginTrans;
     try
-      mySQL := format(glSQL,[myNodeData^.fID,myName,myfileid]);
+      mySQL := format(glSQL,[myNodeData^.fID,myName]);
       ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
 
       if not myNodeData^.fhasChild then
@@ -489,7 +409,6 @@ begin
       ClientSystem.fDbOpr.CommitTrans;
 
       LoadProject(tvProject.Selected,myNodeData^.fID);
-      deletefile(myfilename);
     except
       ClientSystem.fDbOpr.RollbackTrans;
       if myfileid >=0 then
@@ -498,422 +417,42 @@ begin
 
   finally
     myExcelFile.Free;
-    myms.Free;
   end;
 end;
 
-procedure TDesignDocumentClientDlg.actProject_OpenFileUpdate(
-  Sender: TObject);
-begin
-  (Sender as TAction).Enabled := Assigned(tvProject.Selected)
-  and Assigned(tvProject.Selected.data)
-  and (PProjectDoc(tvProject.Selected.data)^.fStyle=1);
-end;
-
-procedure TDesignDocumentClientDlg.actProject_OpenFileExecute(
-  Sender: TObject);
+procedure TDesignDocumentClientDlg.tvProjectChange(Sender: TObject;
+  Node: TTreeNode);
 var
-  myNodeData : PProjectDoc;
-  myfilename : string;
-  myms : TMemoryStream;
-begin
-  //打开
-
-  myNodeData := tvProject.Selected.data;
-
-  if Assigned(fCurrentDoc) and Assigned(fCurrentDoc^.fExcelFile)
-     and fCurrentDoc^.fExcelFile.fmodify
-     and (myNodeData^.fID <>fCurrentDoc^.fID) then
-  begin
-    if MessageBox(Handle,'当前打开的文档已修改了，是否要保存?',
-      '提示保存',MB_ICONWARNING+MB_YESNO)=IDYES then
-      actEditor_Save.Execute;
-  end;
-
-
-
-  if not Assigned(myNodeData^.fExcelFile) then
-  begin
-    myNodeData^.fExcelFile := TExcelFile.Create;
-    myfilename := myNodeData^.fName;
-    if not ClientSystem.DonwFileToFileName(myNodeData^.fFile_id,myfilename) then
-    begin
-      MessageBox(Handle,'文件打开出错','提示',MB_ICONERROR+MB_OK);
-      myNodeData^.fExcelFile.Free;
-      myNodeData^.fExcelFile := nil;
-      Exit;
-    end;
-
-    myms := TMemoryStream.Create;
-    try
-      myms.LoadFromFile(myfilename);
-      deletefile(myfilename);
-      myms.Position := 0;
-      myNodeData^.fExcelFile.LoadfromStream(myms);
-    finally
-      myms.Free;
-    end;
-  end;
-
-  lbDocName.Caption := myNodeData^.fName;
-  fCurrentDoc := myNodeData;
-  LoadExcel(myNodeData^.fExcelFile);
-
-end;
-
-procedure TDesignDocumentClientDlg.actEditor_SaveExecute(Sender: TObject);
-var
-  myms : TMemoryStream;
-  mySQL : string;
-  myfilename : string;
-  myTreeID : integer;
-  myver : integer;
+  myData : PProjectDoc;
 const
-  glSQL  = 'select ZFILE_VER from TB_PRO_DOCUMENT where ZID=%d';
-  glSQL2 = 'update TB_PRO_DOCUMENT set ZFILE_VER=%d where ZID=%d';
+  mySQL = 'select ZID,ZCONTEXT,ZNAME from TB_PRO_DOCUMENT where ZID=%d  ';
+  mySQL2 = 'update TB_PRO_DOCUMENT set ZCONTEXT=''%s'' where ZID=%d ';
 begin
+  if fLoading then Exit;
+  if not Assigned(Node) or not Assigned(Node.data) then Exit;
+  myData := Node.data;
 
-  mySQL := format(glSQL,[fCurrentDoc^.fID]);
-
-  if ClientSystem.fDbOpr.ReadInt(PChar(mySQL)) <>
-     fCurrentDoc^.fFile_ver then
+  //修改了，要更新
+  if cdsText.State in [dsEdit, dsInsert] then
   begin
-    MessageBox(Handle,'文件已被别人修改过并保存了，你不能再保存。','保存',
-      MB_ICONERROR+MB_OK);
+    cdsText.Post;
+    ClientSystem.fDbOpr.ExeSQL(PChar(Format(mySQL2,[
+      cdsText.FieldByName('ZCONTEXT').AsString,
+      cdsText.FieldByName('ZID').AsInteger])));
+  end;
+
+  if myData.fStyle = 0 then
+  begin
+    Self.ShowStatusBarText(2,format('分部号=%d',[myData^.fid]));
+    cdsText.Close;
     Exit;
   end;
 
-  myms := TMemoryStream.Create;
-  try
-    myfilename := ClientSystem.fTempDir + '\' + fCurrentDoc^.fName + '.prodoc';
-    fCurrentDoc^.fExcelFile.SaveToStream(myms);
-    myms.SaveToFile(myfilename);
-    myTreeID := -1;
-    if Assigned(fCurrentDoc^.fParent) then
-      myTreeID := fCurrentDoc^.fParent^.fID;
-    myver := fCurrentDoc^.fFile_ver + 1;
+  cdsText.Data := ClientSystem.fDbOpr.ReadDataSet(PChar(Format(mySQL,[
+    myData.fID])));
 
-    if not ClientSystem.UpFile(fsDoc,myTreeID,myfilename,fCurrentDoc^.fFile_id,myver) then
-    begin
-      MessageBox(Handle,'保存出错','提示',MB_ICONERROR+MB_OK);
-      Exit;
-    end;
+  Self.ShowStatusBarText(3,format('文件号=%d',[myData^.fid]));
 
-    fCurrentDoc^.fFile_ver := myver;
-
-    ClientSystem.fDbOpr.BeginTrans;
-    try
-      mySQL := format(glSQL2,[myver,fCurrentDoc^.fID]);
-      ClientSystem.fDbOpr.ExeSQL(pChar(mySQL));
-      ClientSystem.fDbOpr.CommitTrans;
-      fCurrentDoc^.fExcelFile.fmodify := False;
-    except
-      ClientSystem.fDbOpr.RollbackTrans;
-    end;
-    deletefile(myfilename);
-  finally
-    myms.Free;
-  end;
-end;
-
-procedure TDesignDocumentClientDlg.actEditor_SaveUpdate(Sender: TObject);
-begin
-  (Sender as TAction).Enabled := Assigned(Self.fCurrentDoc) and
-  Assigned(Self.fCurrentDoc^.fExcelFile) and
-  (Self.fCurrentDoc^.fExcelFile.fmodify);
-end;
-
-procedure TDesignDocumentClientDlg.dgExcelDrawCell(Sender: TObject; ACol,
-  ARow: Integer; Rect: TRect; State: TGridDrawState);
-var
-  myRect : TRect;
-  myStr : String;
-  myAlignent : TAlignment; //
-  myCell : TExcelCell;
-const
-  gcColumnTitle : array[0..25] of string = ('A','B','C','D','E','F','G',
-    'H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z');
-begin
-  if fLoading then Exit;
-  myRect := Rect;
-  InflateRect(myRect,-1,-1);
-  //1.列
-  if (ARow = 0) and (ACol>0) then
-  begin
-    myStr := gcColumnTitle[ACol-1];
-    myAlignent := taCenter; //居中
-  end
-  //2.行
-  else if (ACol=0) and (ARow>0) then begin
-    myStr := inttostr(ARow);
-    myAlignent := taCenter;
-  end
-  //单元格内容
-  else if (ACol>0) and (ARow>0) then begin
-    if Assigned(fCurrentDoc) and Assigned(fCurrentDoc^.fExcelFile) then
-    begin
-     // if (ACol-1 = 1) and (ARow-1=0) then
-     //   showmessage('ttt');
-      myCell := fCurrentDoc^.fExcelFile.Cells[ACol-1,ARow-1];
-      if Assigned(myCell) then
-      begin
-        myStr := myCell.fText;
-        //if myStr = '' then Exit;
-        //if mystr <> '' then showmessage(mystr);
-        dgExcel.Canvas.Pen.Color :=myCell.fColor;
-        dgExcel.Canvas.Brush.Color := myCell.fbgColor;
-        dgExcel.Canvas.Font.Assign(myCell.fFont);
-        dgExcel.Canvas.Font.Color := myCell.fColor;
-        dgExcel.Canvas.FillRect(myRect);
-      end;
-    end;
-  end
-  else Exit;
-
-  with dgExcel do
-  begin
-    case myAlignent of
-      taLeftJustify :
-        Canvas.TextOut(myRect.Left,
-          myRect.Top+ (myRect.Bottom - myRect.Top - Canvas.TextHeight(myStr)) div 2,
-          myStr);
-      taRightJustify:
-        Canvas.TextOut(myRect.Right - Canvas.TextWidth(myStr),
-          myRect.Top+ (myRect.Bottom - myRect.Top - Canvas.TextHeight(myStr)) div 2,
-          myStr);
-      taCenter:
-          Canvas.TextOut(myRect.Left + (myRect.Right-myRect.Left - Canvas.TextWidth(myStr)) div 2,
-           myRect.Top+ (myRect.Bottom - myRect.Top - Canvas.TextHeight(myStr)) div 2,
-           myStr);
-    end;
-  end;
-
-end;
-
-procedure TDesignDocumentClientDlg.dgExcelSetEditText(Sender: TObject;
-  ACol, ARow: Integer; const Value: String);
-var
-  mycell : TExcelCell;
-begin
-  if fLoading then Exit;
-  if (ACol >=1) and (ARow >=1) and
-     Assigned(fCurrentDoc) and Assigned(fCurrentDoc^.fExcelFile) then
-  begin
-    mycell := fCurrentDoc^.fExcelFile.Cells[ACol-1,ARow-1];
-    if Assigned(mycell) and
-       (CompareText(mycell.fText,Value)<>0) then
-    begin
-      mycell.fText := Value;
-      fCurrentDoc^.fExcelFile.fmodify := True;
-    end;
-  end;
-end;
-
-procedure TDesignDocumentClientDlg.dgExcelGetEditText(Sender: TObject;
-  ACol, ARow: Integer; var Value: String);
-begin
-  if fLoading then Exit;
-  if (ACol >=1) and (ARow >=1) and
-     Assigned(fCurrentDoc) and Assigned(fCurrentDoc^.fExcelFile) then
-  begin
-    Value := fCurrentDoc^.fExcelFile.Cells[ACol-1,ARow-1].fText;
-  end;
-end;
-
-procedure TDesignDocumentClientDlg.actEdit_SetCellsUpdate(Sender: TObject);
-begin
-  (Sender as TAction).Enabled := Assigned(fCurrentDoc) and
-  Assigned(fCurrentDoc^.fExcelFile) and
-  (cbAction.ItemIndex>=0) and (dgExcel.Row>=1) and (dgExcel.Col>=1) ;
-end;
-
-procedure TDesignDocumentClientDlg.actEdit_SetCellsExecute(
-  Sender: TObject);
-var
-  i : integer;
-  myCell : TExcelCell;
-  myRowData  : TExcelRow;
-  myRow,myCol : integer;
-begin
-  //
-  //
-  //
-  myRow := dgExcel.Row -1 ;
-  myCol := dgExcel.Col -1;
-  case cbAction.ItemIndex of
-    0: {cell}
-      begin
-        myCell := fCurrentDoc^.fExcelFile.Cells[myCol,myRow];
-        if Assigned(myCell) then
-        begin
-          myCell.fColor   := cbFontColor.Selected;
-          myCell.fbgColor := cbbgColor.Selected;
-          if cbFontName.ItemIndex >=0 then myCell.fFont.Name := cbFontName.Text;
-          myCell.fFont.Style := [];
-          if sbtBold.Down then myCell.fFont.Style := myCell.fFont.Style + [fsBold];
-          if sbtItalic.Down then myCell.fFont.Style := myCell.fFont.Style + [fsItalic];
-          if sbtUnderline.Down then myCell.fFont.Style := myCell.fFont.Style + [fsUnderline];
-          if sbtStrikeOut.Down then myCell.fFont.Style := myCell.fFont.Style + [fsStrikeOut];
-          myCell.fFont.Size := strtoint(edFontSize.Text);
-          fCurrentDoc.fExcelFile.fmodify := True;
-        end;
-      end;
-    1: {row}
-      begin
-        myRowData := fCurrentDoc^.fExcelFile.Rows[myRow];
-        for i:=0 to High(myRowData.fCells) do
-        begin
-          myCell := myRowData.fCells[i];
-          myCell.fColor   := cbFontColor.Selected;
-          myCell.fbgColor := cbbgColor.Selected;
-          if cbFontName.ItemIndex >=0 then myCell.fFont.Name := cbFontName.Text;
-          myCell.fFont.Style := [];
-          if sbtBold.Down then myCell.fFont.Style := myCell.fFont.Style + [fsBold];
-          if sbtItalic.Down then myCell.fFont.Style := myCell.fFont.Style + [fsItalic];
-          if sbtUnderline.Down then myCell.fFont.Style := myCell.fFont.Style + [fsUnderline];
-          if sbtStrikeOut.Down then myCell.fFont.Style := myCell.fFont.Style + [fsStrikeOut];
-          myCell.fFont.Size := strtoint(edFontSize.Text);
-         end;
-        fCurrentDoc.fExcelFile.fmodify := True;
-      end;
-    2: {col}
-      begin
-
-      end;
-  end;
-
-  dgExcel.Repaint;
-end;
-
-procedure TDesignDocumentClientDlg.actEdit_savecolwidthUpdate(
-  Sender: TObject);
-begin
-  (Sender as TAction).Enabled := Assigned(fCurrentDoc) and
-  Assigned(fCurrentDoc^.fExcelFile) and
-   (dgExcel.Row>=1) and (dgExcel.Col>=1) ;
-end;
-
-procedure TDesignDocumentClientDlg.actEdit_savecolwidthExecute(
-  Sender: TObject);
-var
-  i : integer;
-begin
-  for i:=1 to dgExcel.ColCount - 1 do
-    fCurrentDoc^.fExcelFile.fCols[i-1].fWidht :=
-    dgExcel.ColWidths[i];
-  fCurrentDoc^.fExcelFile.fmodify := True;
-end;
-
-procedure TDesignDocumentClientDlg.actEdit_SaveRowHgithExecute(
-  Sender: TObject);
-var
-  i : integer;
-begin
-  for i:= 1 to dgExcel.RowCount -1 do
-  begin
-    fCurrentDoc^.fExcelFile.Rows[i-1].fHight :=
-    dgExcel.RowHeights[i];
-  end;
-  fCurrentDoc^.fExcelFile.fmodify := True;
-end;
-
-procedure TDesignDocumentClientDlg.actEdit_SaveRowHgithUpdate(
-  Sender: TObject);
-begin
-  (Sender as TAction).Enabled := Assigned(fCurrentDoc) and
-  Assigned(fCurrentDoc^.fExcelFile) and
-   (dgExcel.Row>=1) and (dgExcel.Col>=1) ;
-end;
-
-procedure TDesignDocumentClientDlg.actEdit_InsertRowExecute(
-  Sender: TObject);
-var
-  myindex : integer;
-  i : integer;
-begin
-  myindex := dgExcel.Row - 1;
-  fCurrentDoc^.fExcelFile.InsertRow(myindex);
-  dgExcel.RowCount := fCurrentDoc^.fExcelFile.RowCount;
-  fCurrentDoc^.fExcelFile.fmodify := True;
-  for i:=1 to dgExcel.RowCount-1 do
-  begin
-    dgExcel.RowHeights[i] := fCurrentDoc^.fExcelFile.Rows[i-1].fHight;
-  end;
-  dgExcel.Refresh;
-end;
-
-procedure TDesignDocumentClientDlg.actEdit_InsertRowUpdate(
-  Sender: TObject);
-begin
-  (Sender as TAction).Enabled := Assigned(fCurrentDoc) and
-  Assigned(fCurrentDoc^.fExcelFile) and (dgExcel.Row>=1);
-end;
-
-procedure TDesignDocumentClientDlg.dgExcelSelectCell(Sender: TObject; ACol,
-  ARow: Integer; var CanSelect: Boolean);
-var
-  myCell : TExcelCell;
-begin
-  if fLoading then Exit;
-  if not Assigned(fCurrentDoc) or
-     not Assigned(fCurrentDoc^.fExcelFile) then Exit;
-
-  myCell := fCurrentDoc^.fExcelFile.Cells[ACol-1,ARow-1];
-  cbFontColor.Selected := myCell.fColor;
-  cbbgColor.Selected   := myCell.fbgColor;
-
-  cbFontName.ItemIndex := cbFontName.Items.IndexOf(myCell.fFont.Name);
-  sbtBold.Down         := fsBold      in myCell.fFont.Style;
-  sbtItalic.Down       := fsItalic    in myCell.fFont.Style;
-  sbtUnderline.Down    := fsUnderline in myCell.fFont.Style;
-  sbtStrikeOut.Down    := fsStrikeOut in myCell.fFont.Style;
-  edFontSize.Text      := inttostr(myCell.fFont.Size);
-  //
-end;
-
-procedure TDesignDocumentClientDlg.actEdit_DeleteRowUpdate(
-  Sender: TObject);
-begin
-  (Sender as TAction).Enabled := Assigned(fCurrentDoc) and
-  Assigned(fCurrentDoc^.fExcelFile) and (dgExcel.Row>=1);
-end;
-
-procedure TDesignDocumentClientDlg.actEdit_DeleteRowExecute(
-  Sender: TObject);
-var
-  i : integer;
-  myindex : integer;
-begin
-  if MessageBox(Handle,'确定是否删除行','删除行',
-    MB_ICONQUESTION+MB_YESNO)=IDNO then Exit;
-  myindex := dgExcel.Row -1;
-  fCurrentDoc^.fExcelFile.DeleteRow(myindex);
-  dgExcel.RowCount := fCurrentDoc^.fExcelFile.RowCount;
-  fCurrentDoc^.fExcelFile.fmodify := True;
-  for i:=1 to dgExcel.RowCount-1 do
-  begin
-    dgExcel.RowHeights[i] := fCurrentDoc^.fExcelFile.Rows[i-1].fHight;
-  end;
-  dgExcel.Refresh;
-end;
-
-procedure TDesignDocumentClientDlg.dgExcelColumnMoved(Sender: TObject;
-  FromIndex, ToIndex: Integer);
-var
-  i : integer;
-begin
-  if fLoading then Exit;
-  // 移动列
-  if not Assigned(fCurrentDoc) or
-     not Assigned(fCurrentDoc^.fExcelFile) then Exit;
-
-  fCurrentDoc^.fExcelFile.MoveCol(Fromindex-1,ToIndex-1);
-  fCurrentDoc^.fExcelFile.fmodify := True;
-
-  for i:=1 to dgExcel.ColCount -1 do
-    dgExcel.ColWidths[i] := fCurrentDoc^.fExcelFile.fCols[i-1].fWidht;
-
-  dgExcel.Realign;
 end;
 
 end.

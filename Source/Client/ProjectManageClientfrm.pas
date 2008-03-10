@@ -111,8 +111,6 @@ type
   private
     { Private declarations }
     procedure LoadProjectItem();
-    procedure SaveDoc(ADoc : PProjectDoc;AIsNew:Boolean=False); //保存文档
-    function LoadDoc(ADoc:PProjectDoc):Boolean; //加载文档
   public
     procedure initBase; override;
     procedure freeBase; override;
@@ -658,81 +656,6 @@ end;
 
 
 
-procedure TProjectManageClientDlg.SaveDoc(ADoc: PProjectDoc;
-  AIsNew:Boolean);
-var
-  myver : integer;
-  mySQL : String;
-  myFileid : integer;
-  myms : TMemoryStream;
-  myfilename : string;
-const
-  glSQL = 'insert TB_PRO_DOCUMENT (ZPRO_ID,ZNAME,ZFILE_ID) ' +
-          'values(%d,''%s'',%d)';
-  glSQL2 = 'select isnull(max(ZVER),0)+1 from TB_FILE_CONTEXT where ZFILE_ID=%d';
-begin
-  // 1.先上传文件
 
-  myFileid := -1;
-  if AIsNew then
-    myver := 1
-  else begin
-    mySQL := format(glSQL2,[ADoc^.fFile_id]);
-    myver := ClientSystem.fDbOpr.ReadInt(pChar(mySQL));
-  end;
-
-  myms := TMemoryStream.Create;
-  try
-    myfilename :=  ClientSystem.fTempDir + ADoc^.fName + '.prodoc';
-    ADoc^.fExcelFile.SaveToStream(myms);
-    myms.SaveToFile(myfilename);
-    if not ClientSystem.UpFile(fsDoc,2,myfilename,myFileid,myver) then
-    begin
-      Exit;
-    end;
-    ADoc^.fFile_ver := myver;
-
-    //写入库
-    if AIsNew then
-    begin
-      ClientSystem.fDbOpr.BeginTrans;
-      try
-        mySQL := format(glSQL,[
-          ADoc^.fPid,
-          ADoc^.fName,
-          myFileid]);
-        ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
-        ClientSystem.fDbOpr.CommitTrans;
-      except
-        ClientSystem.fDbOpr.RollbackTrans;
-      end;
-    end;
-
-  finally
-    myms.Free;
-  end;
-
-end;
-
-
-function TProjectManageClientDlg.LoadDoc(ADoc: PProjectDoc): Boolean;
-var
-  myfilename : String;
-  myms : TMemoryStream;
-begin
-  Result := False;
-  myfilename := ADoc^.fName + '.prodoc';
-  if ClientSystem.DonwFileToFileName(ADoc^.fFile_id,myfilename) then
-  begin
-    myms := TMemoryStream.Create;
-    try
-      myms.LoadFromFile(myfilename);
-      myms.Position := 0;
-      Result := ADoc.fExcelFile.LoadfromStream(myms);
-    finally
-      myms.Free;
-    end;
-  end;
-end;
 
 end.

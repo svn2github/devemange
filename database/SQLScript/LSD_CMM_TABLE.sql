@@ -8,6 +8,9 @@
 *   注意: 
 *	因mssql2000内没有boolean的类型，采用bit的处理 0=False 1=True
 *
+*   修改内容:
+*       1.将项目文档改为txt的格式 2008-3-10       
+*
 ******************************************************************************/
 
 /*#########################################################
@@ -171,11 +174,10 @@ create table TB_PRO_DOCUMENT(
 	ZPID           int not null,                             /*上级ID = -1 表示根目录*/
 	ZNAME          varchar(200),                             /*文档名称*/ 
   	ZSTYLE         int not null,                             /*类型 = 0 目录，=1文档*/ 
-	ZFILE_ID       int ,                                     /*对应文件库内的ID值*/
-	ZFILE_VER      int ,                                     /*文件的版本*/
 	ZSORT          int ,                                     /*排序号*/
 	ZHASCHILD      bit not null,                             /*是否有下级*/
 	ZDOCTYPE       int ,                                     /*文档类型 0=Excel 1=txt*/
+        ZCONTEXT       text,                                     /*内容*/
 	constraint PK_TB_PRO_DOCUMENT primary key(ZID)   
 )
 go

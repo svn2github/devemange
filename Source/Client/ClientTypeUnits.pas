@@ -75,10 +75,8 @@ type
     fParent : PProjectDoc;
     fID   : integer;
     fPid  : integer;
-    fStyle : integer;     //类型
+    fStyle : integer;     //类型  类型 = 0 目录，=1文档
     fName : String;
-    fFile_id   : integer; //对就库的id号
-    fFile_ver  : integer; //库内的版本号
     fSort      : integer;
     fExcelFile : TExcelFile;
     fhasChild  : Boolean;

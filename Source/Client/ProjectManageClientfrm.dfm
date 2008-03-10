@@ -2,7 +2,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
   Left = 227
   Top = 175
   Width = 923
-  Caption = 'ProjectManageClientDlg'
+  Caption = #39033#30446#31649#29702
   OldCreateOrder = True
   PixelsPerInch = 96
   TextHeight = 15
