@@ -11,7 +11,8 @@ uses
   BaseDialogfrm in 'BaseDialogfrm.pas' {BaseDialog},
   ExcelUnits in 'ExcelUnits.pas',
   DesignDocumentClientfrm in 'DesignDocumentClientfrm.pas' {DesignDocumentClientDlg},
-  ProjectManageClientfrm in 'ProjectManageClientfrm.pas' {ProjectManageClientDlg};
+  ProjectManageClientfrm in 'ProjectManageClientfrm.pas' {ProjectManageClientDlg},
+  NewTaskfrm in 'NewTaskfrm.pas' {NewTaskDlg};
 
 {$R *.res}
 

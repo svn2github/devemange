@@ -1,6 +1,6 @@
 inherited ProjectManageClientDlg: TProjectManageClientDlg
-  Left = 227
-  Top = 175
+  Left = 198
+  Top = 167
   Width = 923
   Caption = #39033#30446#31649#29702
   OldCreateOrder = True
@@ -10,7 +10,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
     Left = 0
     Top = 0
     Width = 915
-    Height = 65
+    Height = 70
     Align = alTop
     Caption = 'plonvisible'
     TabOrder = 0
@@ -18,9 +18,9 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
   end
   object plcenter: TPanel
     Left = 0
-    Top = 65
+    Top = 70
     Width = 915
-    Height = 541
+    Height = 536
     Align = alClient
     BevelOuter = bvLowered
     Caption = 'plcenter'
@@ -29,8 +29,8 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
       Left = 1
       Top = 1
       Width = 913
-      Height = 539
-      ActivePage = tsProjectList
+      Height = 534
+      ActivePage = tsTask
       Align = alClient
       MultiLine = True
       TabOrder = 0
@@ -105,7 +105,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
           Left = 0
           Top = 40
           Width = 905
-          Height = 469
+          Height = 464
           Align = alClient
           DataSource = dsProjectItem
           Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
@@ -188,7 +188,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
         ImageIndex = 1
         object Splitter1: TSplitter
           Left = 0
-          Top = 158
+          Top = 153
           Width = 905
           Height = 10
           Cursor = crVSplit
@@ -269,7 +269,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
         end
         object dbmContext: TDBMemo
           Left = 0
-          Top = 168
+          Top = 163
           Width = 905
           Height = 341
           Align = alBottom
@@ -283,7 +283,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
           Left = 0
           Top = 57
           Width = 905
-          Height = 101
+          Height = 96
           Align = alClient
           DataSource = dsProVersion
           Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
@@ -333,6 +333,204 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
             end>
         end
       end
+      object tsTask: TTabSheet
+        Caption = #20219#21153#21333
+        ImageIndex = 2
+        object Splitter2: TSplitter
+          Left = 0
+          Top = 294
+          Width = 905
+          Height = 10
+          Cursor = crVSplit
+          Align = alBottom
+          Beveled = True
+          ResizeStyle = rsLine
+        end
+        object Splitter3: TSplitter
+          Left = 401
+          Top = 62
+          Width = 10
+          Height = 232
+          Beveled = True
+          ResizeStyle = rsLine
+        end
+        object plTaskTool: TPanel
+          Left = 0
+          Top = 0
+          Width = 905
+          Height = 40
+          Align = alTop
+          BevelOuter = bvNone
+          TabOrder = 0
+          object BitBtn10: TBitBtn
+            Left = 8
+            Top = 8
+            Width = 100
+            Height = 25
+            Action = actTask_Creaet
+            Caption = #29983#25104#20219#21153#21333
+            TabOrder = 0
+          end
+          object BitBtn11: TBitBtn
+            Left = 120
+            Top = 8
+            Width = 100
+            Height = 25
+            Action = actTask_ToMe
+            Caption = #25351#25344#32473#25105#30340
+            TabOrder = 1
+          end
+        end
+        object plTitle: TPanel
+          Left = 0
+          Top = 40
+          Width = 905
+          Height = 22
+          Align = alTop
+          TabOrder = 1
+          object DBText1: TDBText
+            Left = 440
+            Top = 1
+            Width = 464
+            Height = 20
+            Align = alClient
+            Color = clGray
+            DataField = 'ZVER'
+            DataSource = dsProVersion
+            Font.Charset = GB2312_CHARSET
+            Font.Color = clWhite
+            Font.Height = -15
+            Font.Name = #23435#20307
+            Font.Style = []
+            ParentColor = False
+            ParentFont = False
+          end
+          object DBText2: TDBText
+            Left = 1
+            Top = 1
+            Width = 439
+            Height = 20
+            Align = alLeft
+            Color = clGray
+            DataField = 'ZNAME'
+            DataSource = dsProjectItem
+            Font.Charset = GB2312_CHARSET
+            Font.Color = clWhite
+            Font.Height = -15
+            Font.Name = #23435#20307
+            Font.Style = []
+            ParentColor = False
+            ParentFont = False
+          end
+        end
+        object plTaskBootom: TPanel
+          Left = 0
+          Top = 304
+          Width = 905
+          Height = 200
+          Align = alBottom
+          BevelOuter = bvNone
+          TabOrder = 2
+          object DBGrid1: TDBGrid
+            Left = 56
+            Top = 24
+            Width = 553
+            Height = 120
+            DataSource = dsTask
+            TabOrder = 0
+            TitleFont.Charset = GB2312_CHARSET
+            TitleFont.Color = clWindowText
+            TitleFont.Height = -15
+            TitleFont.Name = #23435#20307
+            TitleFont.Style = []
+          end
+        end
+        object plTaskList: TPanel
+          Left = 0
+          Top = 62
+          Width = 401
+          Height = 232
+          Align = alLeft
+          BevelOuter = bvNone
+          TabOrder = 3
+          object dgTaskList: TDBGrid
+            Left = 0
+            Top = 0
+            Width = 401
+            Height = 232
+            Align = alClient
+            DataSource = dsTask
+            Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
+            ReadOnly = True
+            TabOrder = 0
+            TitleFont.Charset = GB2312_CHARSET
+            TitleFont.Color = clWindowText
+            TitleFont.Height = -15
+            TitleFont.Name = #23435#20307
+            TitleFont.Style = []
+            Columns = <
+              item
+                Expanded = False
+                FieldName = 'ZNo'
+                Title.Alignment = taCenter
+                Title.Caption = #24207#21495
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'ZNAME'
+                Title.Alignment = taCenter
+                Title.Caption = #29366#24577
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'ZNAME'
+                Title.Alignment = taCenter
+                Title.Caption = #20219#21153#21333#21517#31216
+                Width = 271
+                Visible = True
+              end>
+          end
+        end
+        object plTaskContext: TPanel
+          Left = 411
+          Top = 62
+          Width = 494
+          Height = 232
+          Align = alClient
+          BevelOuter = bvNone
+          TabOrder = 4
+          object Splitter4: TSplitter
+            Left = 0
+            Top = 71
+            Width = 494
+            Height = 10
+            Cursor = crVSplit
+            Align = alBottom
+            Beveled = True
+            ResizeStyle = rsLine
+          end
+          object DBMemo1: TDBMemo
+            Left = 0
+            Top = 81
+            Width = 494
+            Height = 151
+            Align = alBottom
+            DataSource = dsTask
+            TabOrder = 0
+          end
+          object DBMemo2: TDBMemo
+            Left = 0
+            Top = 0
+            Width = 494
+            Height = 71
+            Align = alClient
+            DataSource = dsTask
+            TabOrder = 1
+          end
+        end
+      end
     end
   end
   object cdsProjectItem: TClientDataSet
@@ -346,8 +544,8 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
   end
   object dsProjectItem: TDataSource
     DataSet = cdsProjectItem
-    Left = 56
-    Top = 8
+    Left = 24
+    Top = 32
   end
   object ActionList1: TActionList
     Left = 96
@@ -407,11 +605,21 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
       Hint = #21047#26032#25968#25454
       OnExecute = actPro_RefreshDataExecute
     end
+    object actTask_Creaet: TAction
+      Category = #20219#21153#21333
+      Caption = #29983#25104#20219#21153#21333
+      Hint = #29983#25104#20219#21153#21333
+      OnExecute = actTask_CreaetExecute
+    end
+    object actTask_ToMe: TAction
+      Category = #20219#21153#21333
+      Caption = #25351#25344#32473#25105#30340
+    end
   end
   object dsProVersion: TDataSource
     DataSet = cdsProVersion
-    Left = 168
-    Top = 8
+    Left = 136
+    Top = 32
   end
   object cdsProVersion: TClientDataSet
     Aggregates = <>
@@ -497,7 +705,44 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
   object cdsDocs: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 272
+    Left = 256
+    Top = 8
+  end
+  object cdsTask: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    OnCalcFields = cdsTaskCalcFields
+    OnNewRecord = cdsTaskNewRecord
+    Left = 296
+    Top = 8
+  end
+  object dsTask: TDataSource
+    DataSet = cdsTask
+    Left = 296
+    Top = 36
+  end
+  object cdsTaskType: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 336
+    Top = 8
+    object cdsTaskTypeZNAME: TStringField
+      FieldName = 'ZNAME'
+      Size = 30
+    end
+    object cdsTaskTypeZID: TIntegerField
+      FieldName = 'ZID'
+    end
+  end
+  object dsTaskType: TDataSource
+    DataSet = cdsTaskType
+    Left = 336
+    Top = 40
+  end
+  object cdsTemp: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 384
     Top = 8
   end
 end

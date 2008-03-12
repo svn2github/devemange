@@ -15,7 +15,7 @@ type
   TBugSubModuleStype = (bsBugTree=1
                          );
   //项目管理
-  TProjectSubModuleStype = (psVersion=1
+  TProjectSubModuleStype = (psVersion=1,psTask=2
     );
   //项目文档
   TDocSubModuleStype = (bsDocTree=1);
@@ -31,6 +31,10 @@ type
 
   //BUG的状态
   TBugStatus = (bgsAction,bgsDeath); //活动的，已修改的
+
+  //任务单的状态
+  //待分发=0 ; 执行中=1 ; 撤消=2; 完成=3 ; 关闭=4;激活=5
+  TTaskStatus = (tsRelass,tsing,tsUndo,tsSccuess,tsClose,tsAction);
 
   PFileTreeNode = ^TFileTreeNode;
   TFileTreeNode = record
@@ -103,6 +107,9 @@ const
 
   ActionTypeName : array [atView..atDelete] of String  =
   ('查看','修改','增加','删除');
+
+  TaskStatusName : array [tsRelass..tsAction] of String =
+  ('待分发','执行中','撤消','完成','关闭','激活');
 
 const
   gcMSG_TickCount = $0400{WM_USER} +1;  //发送到mainfrm显示

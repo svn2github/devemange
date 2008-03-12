@@ -9,7 +9,8 @@
 *	因mssql2000内没有boolean的类型，采用bit的处理 0=False 1=True
 *
 *   修改内容:
-*       1.将项目文档改为txt的格式 2008-3-10       
+*       1.将项目文档改为txt的格式 2008-3-10   
+*       2.增加任务单功能. 2008-3-11
 *
 ******************************************************************************/
 
@@ -178,10 +179,73 @@ create table TB_PRO_DOCUMENT(
 	ZHASCHILD      bit not null,                             /*是否有下级*/
 	ZDOCTYPE       int ,                                     /*文档类型 0=Excel 1=txt*/
     ZCONTEXT       text,                                     /*内容 2008-3-11*/
-	constraint PK_TB_PRO_DOCUMENT primary key(ZID)   
+	constraint PK_TB_PRO_DOCUMENT primary key(ZID),   
 )
 go
 
+/*任务单*/
+if exists (select * from dbo.sysobjects
+  where id = object_id(N'[dbo].[TB_TASK]')
+  and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+drop table [dbo].[TB_TASK]
+go
+create table TB_TASK(
+	ZCODE           varchar(30) not null,                   /*自行按一定的规则生成 人员编号_TASK_时间*/
+	ZTYPE           int not null,                           /*类型 新增功能=0,变更功能=1*/
+	ZNAME			varchar(100),                           /*名称*/
+	ZUSER_ID        int ,									/*任务单制单人,并有关闭任务单功能*/
+	ZPRO_ID         int not null,                           /*项目ID*/
+	ZPRO_VERSION_ID int not null,                           /*项目版本,只有定版后才能生成任务单*/
+	ZDESIGN         text,                                   /*项目的设计说明*/
+	ZTESTCASE       text,                                   /*测试用例*/
+	ZSTATUS         int not null,                           /*状态 待分发=0 ; 执行中=1 ; 撤消=2; 完成=3 ; 关闭=4;激活=5*/
+	ZDATE           datetime,                               /*制单时间*/
+	ZPALNDAY       int not null default 1,                  /*计划工期(天)*/
+
+	ZBEGINDATE      datetime,	                            /*任务开始时间 由任务执行人生成,这时状态变更为执行中*/
+	ZDAY            int,                                    /*实际的天数*/
+	ZSUCCESSDATE    datetime,                               /*完成时间*/
+	ZCLOSEDATE      datetime,                               /*关闭时间*/
+
+	
+	constraint PK_TB_TASK primary key(ZCODE) 
+)
+go
+
+/*任务单执行人*/
+if exists (select * from dbo.sysobjects
+  where id = object_id(N'[dbo].[TB_TASK_USER]')
+  and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+drop table [dbo].[TB_TASK_USER]
+go
+create table TB_TASK_USER(
+	ZTASK_CODE		varchar(30) not null,
+	ZUSER_ID        int not null,							/*执行的人*/
+	ZPERFACT        int,                                    /*满分分数*/
+	ZSCORE          int,                                    /*得分*/
+	ZREMASK         varchar(200),                           /*备注*/
+	ZSCOREDATE      datetime,                               /*评分的时间，用于统计一个月的得分*/
+
+	constraint PK_TB_TASK_USER primary key(ZTASK_CODE,ZUSER_ID)
+)
+go
+
+/*任务单明细*/
+if exists (select * from dbo.sysobjects
+  where id = object_id(N'[dbo].[TB_TASK_ITEM]')
+  and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+drop table [dbo].[TB_TASK_ITEM]
+go
+create table TB_TASK_ITEM(
+	ZID				int IDENTITY (1, 1) not null,
+	ZTASK_CODE		varchar(30) not null,
+	ZDATE			datetime,
+	ZDESIGN         text,									/*测试说明*/
+	ZUSER_ID        int  not null,                          /*书写人员*/
+
+	constraint PK_TB_TASK_ITEM primary key(ZID)
+)
+go
 
 /*##########################################################
  #
