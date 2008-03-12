@@ -12,6 +12,7 @@ inherited DesignDocumentClientDlg: TDesignDocumentClientDlg
     Width = 10
     Height = 606
     Beveled = True
+    ResizeStyle = rsLine
   end
   object tvProject: TTreeView
     Left = 0
@@ -25,6 +26,8 @@ inherited DesignDocumentClientDlg: TDesignDocumentClientDlg
     PopupMenu = pmProject
     TabOrder = 0
     OnChange = tvProjectChange
+    OnEdited = tvProjectEdited
+    OnEditing = tvProjectEditing
     OnExpanding = tvProjectExpanding
   end
   object pltxt: TPanel
@@ -37,7 +40,7 @@ inherited DesignDocumentClientDlg: TDesignDocumentClientDlg
     TabOrder = 1
     object DBText1: TDBText
       Left = 0
-      Top = 0
+      Top = 40
       Width = 857
       Height = 17
       Align = alTop
@@ -54,14 +57,76 @@ inherited DesignDocumentClientDlg: TDesignDocumentClientDlg
     end
     object DBMemo1: TDBMemo
       Left = 0
-      Top = 17
+      Top = 57
       Width = 857
-      Height = 589
+      Height = 549
       Align = alClient
       DataField = 'ZCONTEXT'
       DataSource = dsText
       ScrollBars = ssBoth
       TabOrder = 0
+    end
+    object plDocTool: TPanel
+      Left = 0
+      Top = 0
+      Width = 857
+      Height = 40
+      Align = alTop
+      TabOrder = 1
+      object BitBtn1: TBitBtn
+        Left = 16
+        Top = 8
+        Width = 100
+        Height = 25
+        Action = act_SaveDoc
+        Caption = #20445#23384
+        TabOrder = 0
+        Glyph.Data = {
+          36040000424D3604000000000000360000002800000010000000100000000100
+          2000000000000004000000000000000000000000000000000000FF00FF00FF00
+          FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+          FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+          FF00000000000000000000000000000000000000000000000000000000000000
+          00000000000000000000000000000000000000000000FF00FF00FF00FF000000
+          0000008080000080800000000000000000000000000000000000000000000000
+          0000C0C0C000C0C0C000000000000080800000000000FF00FF00FF00FF000000
+          0000008080000080800000000000000000000000000000000000000000000000
+          0000C0C0C000C0C0C000000000000080800000000000FF00FF00FF00FF000000
+          0000008080000080800000000000000000000000000000000000000000000000
+          0000C0C0C000C0C0C000000000000080800000000000FF00FF00FF00FF000000
+          0000008080000080800000000000000000000000000000000000000000000000
+          00000000000000000000000000000080800000000000FF00FF00FF00FF000000
+          0000008080000080800000808000008080000080800000808000008080000080
+          80000080800000808000008080000080800000000000FF00FF00FF00FF000000
+          0000008080000080800000000000000000000000000000000000000000000000
+          00000000000000000000008080000080800000000000FF00FF00FF00FF000000
+          00000080800000000000C0C0C000C0C0C000C0C0C000C0C0C000C0C0C000C0C0
+          C000C0C0C000C0C0C000000000000080800000000000FF00FF00FF00FF000000
+          00000080800000000000C0C0C000C0C0C000C0C0C000C0C0C000C0C0C000C0C0
+          C000C0C0C000C0C0C000000000000080800000000000FF00FF00FF00FF000000
+          00000080800000000000C0C0C000C0C0C000C0C0C000C0C0C000C0C0C000C0C0
+          C000C0C0C000C0C0C000000000000080800000000000FF00FF00FF00FF000000
+          00000080800000000000C0C0C000C0C0C000C0C0C000C0C0C000C0C0C000C0C0
+          C000C0C0C000C0C0C000000000000080800000000000FF00FF00FF00FF000000
+          00000080800000000000C0C0C000C0C0C000C0C0C000C0C0C000C0C0C000C0C0
+          C000C0C0C000C0C0C000000000000000000000000000FF00FF00FF00FF000000
+          00000080800000000000C0C0C000C0C0C000C0C0C000C0C0C000C0C0C000C0C0
+          C000C0C0C000C0C0C00000000000C0C0C00000000000FF00FF00FF00FF000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          00000000000000000000000000000000000000000000FF00FF00FF00FF00FF00
+          FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+          FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00}
+      end
+      object BitBtn2: TBitBtn
+        Left = 128
+        Top = 8
+        Width = 100
+        Height = 25
+        Action = act_CancelDoc
+        Caption = #25764#28040
+        TabOrder = 1
+        Kind = bkCancel
+      end
     end
   end
   object ActionList1: TActionList
@@ -77,32 +142,30 @@ inherited DesignDocumentClientDlg: TDesignDocumentClientDlg
     end
     object actProject_DelDir: TAction
       Category = #20998#37096#26641
-      Caption = #21024#38500#20998#37096
+      Caption = #21024#38500#33410#28857
+      Hint = #21024#38500#20998#37096#25110#25991#26723#12290
       OnExecute = actProject_DelDirExecute
       OnUpdate = actProject_DelDirUpdate
     end
     object actProject_AddExcel: TAction
       Category = #20998#37096#26641
-      Caption = #22686#21152#30005#23376#34920#26684#25991#26723
+      Caption = #22686#21152#25991#26723
       OnExecute = actProject_AddExcelExecute
       OnUpdate = actProject_AddExcelUpdate
     end
-    object actEdit_savecolwidth: TAction
+    object act_SaveDoc: TAction
       Category = #32534#36753
-      Caption = #20445#23384#21015#23485
+      Caption = #20445#23384
+      ImageIndex = 6
+      OnExecute = act_SaveDocExecute
+      OnUpdate = act_SaveDocUpdate
     end
-    object actEdit_SaveRowHgith: TAction
+    object act_CancelDoc: TAction
       Category = #32534#36753
-      Caption = #20445#23384#34892#39640
-    end
-    object actEdit_InsertRow: TAction
-      Category = #32534#36753
-      Caption = #25554#20837#34892
-    end
-    object actEdit_DeleteRow: TAction
-      Category = #32534#36753
-      Caption = #21024#38500#34892
-      Hint = #21024#38500#24403#21069#36873#25321#30340#34892
+      Caption = #25764#28040
+      Hint = #25764#28040#21040#19978#19968#27425#20445#23384#30340#20869#23481#12290
+      OnExecute = act_CancelDocExecute
+      OnUpdate = act_CancelDocUpdate
     end
   end
   object pmExcel: TPopupMenu
@@ -115,13 +178,14 @@ inherited DesignDocumentClientDlg: TDesignDocumentClientDlg
     object N2: TMenuItem
       Caption = #34892#25805#20316
       object N14: TMenuItem
-        Action = actEdit_InsertRow
+        Caption = #25554#20837#34892
       end
       object N15: TMenuItem
-        Action = actEdit_DeleteRow
+        Caption = #21024#38500#34892
+        Hint = #21024#38500#24403#21069#36873#25321#30340#34892
       end
       object N13: TMenuItem
-        Action = actEdit_SaveRowHgith
+        Caption = #20445#23384#34892#39640
       end
       object N1: TMenuItem
         Caption = #35774#32622#22266#23450#34892
@@ -198,7 +262,7 @@ inherited DesignDocumentClientDlg: TDesignDocumentClientDlg
         Caption = #21521#21518#31227#19968#21015
       end
       object N12: TMenuItem
-        Action = actEdit_savecolwidth
+        Caption = #20445#23384#21015#23485
       end
     end
   end

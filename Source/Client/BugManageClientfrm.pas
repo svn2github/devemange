@@ -251,24 +251,31 @@ procedure TBugManageDlg.ClearNode(AParent: TTreeNode);
 var
   myChild   : TTreeNode;
   myBugData : PBugTreeNode;
+  myb : Boolean;
 begin
-  if Assigned(AParent) then
-  begin
-    DofreeChild(AParent);
-    AParent.DeleteChildren;
-  end
-  else begin
-    myChild := tvProject.TopItem;
-    while Assigned(myChild) do
+  myb := fLoading;
+  fLoading := True;
+  try
+    if Assigned(AParent) then
     begin
-      if Assigned(myChild.Data) then
+      DofreeChild(AParent);
+      AParent.DeleteChildren;
+    end
+    else begin
+      myChild := tvProject.TopItem;
+      while Assigned(myChild) do
       begin
-        myBugData := myChild.Data;
-        Dispose(myBugData);
+        if Assigned(myChild.Data) then
+        begin
+          myBugData := myChild.Data;
+          Dispose(myBugData);
+        end;
+        myChild := myChild.GetNext;
       end;
-      myChild := myChild.GetNext;
+      tvProject.Items.Clear;
     end;
-    tvProject.Items.Clear;
+  finally
+    fLoading := myb;
   end;
 end;
 
@@ -533,6 +540,13 @@ begin
   if fLoading then Exit;
   if not Assigned(Node.data) then Exit;
   myData := Node.data;
+
+  //权限
+  if not HasModuleActionByShow(Ord(bsBugTree),myData.fID,atView) then
+  begin
+    Exit;
+  end;
+
 
   myPageIndex := myData^.fPageIndex;
   mywhere := 'ZTREE_ID=' + inttostr(myData^.fID);
@@ -1107,17 +1121,8 @@ end;
 
 procedure TBugManageDlg.tvProjectChanging(Sender: TObject; Node: TTreeNode;
   var AllowChange: Boolean);
-var
-  myBugData : PBugTreeNode;
 begin
   if not Assigned(Node.data) then
-  begin
-    AllowChange := False;
-    Exit;
-  end;
-  myBugData := Node.data;
-  //权限
-  if not HasModuleActionByShow(Ord(psVersion),myBugData.fID,atView) then
   begin
     AllowChange := False;
     Exit;

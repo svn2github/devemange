@@ -194,6 +194,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
           Cursor = crVSplit
           Align = alBottom
           Beveled = True
+          ResizeStyle = rsLine
         end
         object dbProName: TDBText
           Left = 0

@@ -58,6 +58,10 @@ type
     DBText1: TDBText;
     actUser_RefreshData: TAction;
     BitBtn9: TBitBtn;
+    Memo1: TMemo;
+    Splitter1: TSplitter;
+    Label5: TLabel;
+    Label6: TLabel;
     procedure cbEditUserClick(Sender: TObject);
     procedure actUser_AddUpdate(Sender: TObject);
     procedure actUser_DelUpdate(Sender: TObject);
@@ -295,8 +299,11 @@ procedure TUserManageClientDlg.btbnCalcPrivClick(Sender: TObject);
 var
   myv : integer;
 begin
-  if (cdsUserPriv.State in [dsEdit,dsInsert]) and
-     ckEditUserPriv.Checked then
+  if not ckEditUserPriv.Checked then Exit;
+  if not (cdsUserPriv.State in [dsEdit,dsInsert]) then
+    cdsUserPriv.Edit;
+
+  if (cdsUserPriv.State in [dsEdit,dsInsert]) then
   begin
     myv := 0;
     if cbView.Checked   then myv := myv + 1;

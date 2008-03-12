@@ -346,7 +346,6 @@ function TExcelCell.LoadfromReader(AReader: TReader;Aver:integer): Boolean;
 var
   c : integer;
 begin
-  Result     := False;
   fColor     := AReader.ReadInteger;
   fbgColor   := AReader.ReadInteger;
   fText      := AReader.ReadString;
@@ -391,7 +390,6 @@ function TExcelRow.LoadfromReader(AReader: TReader;AVer:integer): Boolean;
 var
   i : integer;
   mycount : integer;
-  myCell : TExcelCell;
 begin
   Result := False;
   fHight := AReader.ReadInteger;

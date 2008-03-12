@@ -237,7 +237,7 @@ end;
 
 procedure TClinetSystem.GetUserPriv;
 const
-  glSQL = 'select ZSTYLE,ZMODULEID,ZRIGHTMASK from TB_USER_PRIVILEGE ' +
+  glSQL = 'select ZSTYLE,ZSUBSTYLE,ZMODULEID,ZRIGHTMASK from TB_USER_PRIVILEGE ' +
           'where ZUSER_ID=%d';
 begin
   if fEditer_id <0 then Exit;

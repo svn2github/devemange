@@ -258,7 +258,7 @@ end;
 function TBfssDBOpr.ReadBlob(const SqlStr: PChar; var Buf;
   Len: Integer): Integer;
 begin
-
+  Result := -1;
 end;
 
 function TBfssDBOpr.ReadDataSet(const SqlStr: PChar): OleVariant;
@@ -323,7 +323,7 @@ end;
 function TBfssDBOpr.RefreshData(const AData: TClientDataSet;
   const SqlStr: PChar): Boolean;
 begin
-
+   Result := False;
 end;
 
 procedure TBfssDBOpr.RollbackTrans;

@@ -317,7 +317,6 @@ var
   myField : TFieldDef;
   mycds : TClientDataSet;
   myb : Boolean;
-  mydoc : PProjectDoc;
 const
   glSQL  = 'select * from TB_PRO_VERSION where ZPRO_ID=%d Order by ZID desc';
   glSQL2 = 'select * from TB_PRO_DOCUMENT where ZPRO_ID=%d';

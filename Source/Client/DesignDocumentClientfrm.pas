@@ -43,19 +43,20 @@ type
     N9: TMenuItem;
     actProject_AddExcel: TAction;
     N10: TMenuItem;
-    actEdit_savecolwidth: TAction;
     N12: TMenuItem;
-    actEdit_SaveRowHgith: TAction;
     N13: TMenuItem;
-    actEdit_InsertRow: TAction;
     N14: TMenuItem;
-    actEdit_DeleteRow: TAction;
     N15: TMenuItem;
     cdsText: TClientDataSet;
     dsText: TDataSource;
     pltxt: TPanel;
     DBMemo1: TDBMemo;
     DBText1: TDBText;
+    plDocTool: TPanel;
+    BitBtn1: TBitBtn;
+    act_SaveDoc: TAction;
+    act_CancelDoc: TAction;
+    BitBtn2: TBitBtn;
     procedure miFixedRowClick(Sender: TObject);
     procedure miFixedColClick(Sender: TObject);
     procedure actProject_AddDirUpdate(Sender: TObject);
@@ -67,19 +68,27 @@ type
     procedure actProject_AddExcelUpdate(Sender: TObject);
     procedure actProject_AddExcelExecute(Sender: TObject);
     procedure tvProjectChange(Sender: TObject; Node: TTreeNode);
+    procedure act_SaveDocExecute(Sender: TObject);
+    procedure act_SaveDocUpdate(Sender: TObject);
+    procedure act_CancelDocUpdate(Sender: TObject);
+    procedure act_CancelDocExecute(Sender: TObject);
+    procedure tvProjectEdited(Sender: TObject; Node: TTreeNode;
+      var S: String);
+    procedure tvProjectEditing(Sender: TObject; Node: TTreeNode;
+      var AllowEdit: Boolean);
   private
     fCurrentDoc : PProjectDoc; //当前文件
     function GetCurrentExcel: TExcelFile;
 
     procedure LoadProject(ANode:TTreeNode;APID:integer);
-    procedure LoadExcel(AExcelFile:TExcelFile);
     procedure ClearNode(ANode:TTreeNode);  //清空
   private
-    procedure initBase; override;
-    procedure freeBase; override;
     property CurrentExcel : TExcelFile read GetCurrentExcel;
   public
     { Public declarations }
+    procedure initBase; override;
+    procedure freeBase; override;
+    class function GetModuleID : integer;override;
   end;
 
 
@@ -116,20 +125,6 @@ begin
   myCount := (Sender as TMenuItem).Tag + 1;
   CurrentExcel.fFixedCols := myCount -1;
   CurrentExcel.fmodify := True;
-end;
-
-procedure TDesignDocumentClientDlg.LoadExcel(AExcelFile: TExcelFile);
-var
-  i : integer;
-  myb : Boolean;
-begin
-  myb := fLoading;
-  fLoading := True;
-  try
-
-  finally
-    fLoading := myb;
-  end;
 end;
 
 procedure TDesignDocumentClientDlg.LoadProject(ANode: TTreeNode;
@@ -276,11 +271,16 @@ const
            'values(%d,''%s'',0,0)';
   glSQL2 = 'update TB_PRO_DOCUMENT set ZHASCHILD=1 where ZID=%d';
 begin
+  myData := tvProject.Selected.data;
+  //权限
+  if not HasModuleActionByShow(Ord(bsDocTree),myData.fID,atInsert) then
+    Exit;
+
   myName := InputBox('新建目录','目录名称','');
   myName := Trim(myName);
   if myName = '' then Exit;
 
-  myData := tvProject.Selected.data;
+
   mySQL := format(glSQL,[myData^.fID,myName]);
 
   ClientSystem.fDbOpr.BeginTrans;
@@ -328,6 +328,10 @@ const
   glSQL3  = 'update TB_PRO_DOCUMENT set ZHASCHILD=0 where ZID=%d';
 begin
   myNodeData := tvProject.Selected.data;
+  //权限
+  if not HasModuleActionByShow(Ord(bsDocTree),myNodeData.fID,atInsert) then
+    Exit;
+
   if myNodeData^.fhasChild then
   begin
     MessageBox(Handle,'分部下有内容，不能删除。','删除',MB_ICONERROR+MB_OK);
@@ -377,7 +381,6 @@ var
   myNodeData : PProjectDoc;
   myfileid : integer;
   myExcelFile : TExcelFile;
-  myfilename : string;
   mySQL : string;
 const
   glSQL  = 'insert TB_PRO_DOCUMENT (ZPID,ZNAME,ZSTYLE, ' +
@@ -385,11 +388,14 @@ const
            'values(%d,''%s'',1,0,0)';
   glSQL1 = 'update TB_PRO_DOCUMENT set ZHASCHILD=1 where ZID=%d';
 begin
+  myNodeData := tvProject.Selected.data;
+  //权限
+  if not HasModuleActionByShow(Ord(bsDocTree),myNodeData.fID,atInsert) then
+    Exit;
+
   myName := InputBox('新建文档','名称:','');
   myName := Trim(myName);
   if myName = '' then Exit;
-
-  myNodeData := tvProject.Selected.data;
 
   myExcelFile := TExcelFile.Create;
   try
@@ -426,24 +432,28 @@ var
   myData : PProjectDoc;
 const
   mySQL = 'select ZID,ZCONTEXT,ZNAME from TB_PRO_DOCUMENT where ZID=%d  ';
-  mySQL2 = 'update TB_PRO_DOCUMENT set ZCONTEXT=''%s'' where ZID=%d ';
 begin
   if fLoading then Exit;
   if not Assigned(Node) or not Assigned(Node.data) then Exit;
   myData := Node.data;
 
-  //修改了，要更新
-  if cdsText.State in [dsEdit, dsInsert] then
+  if myData.fStyle = 0 then
+    Self.ShowStatusBarText(2,format('分部号=%d',[myData^.fid]))
+  else
+    Self.ShowStatusBarText(3,format('文件号=%d',[myData^.fid]));
+
+  //权限
+  if not HasModuleActionByShow(Ord(bsDocTree),myData.fID,atView) then
   begin
-    cdsText.Post;
-    ClientSystem.fDbOpr.ExeSQL(PChar(Format(mySQL2,[
-      cdsText.FieldByName('ZCONTEXT').AsString,
-      cdsText.FieldByName('ZID').AsInteger])));
+    Exit;
   end;
+
+  //修改了，要更新
+  if act_SaveDoc.Enabled then
+    act_SaveDocExecute(nil);
 
   if myData.fStyle = 0 then
   begin
-    Self.ShowStatusBarText(2,format('分部号=%d',[myData^.fid]));
     cdsText.Close;
     Exit;
   end;
@@ -451,8 +461,87 @@ begin
   cdsText.Data := ClientSystem.fDbOpr.ReadDataSet(PChar(Format(mySQL,[
     myData.fID])));
 
-  Self.ShowStatusBarText(3,format('文件号=%d',[myData^.fid]));
 
+
+end;
+
+procedure TDesignDocumentClientDlg.act_SaveDocExecute(Sender: TObject);
+var
+  myData : PProjectDoc;
+const
+  mySQL = 'update TB_PRO_DOCUMENT set ZCONTEXT=''%s'' where ZID=%d ';
+begin
+  if fLoading then Exit;
+  if not Assigned(tvProject.Selected) or
+     not Assigned(tvProject.Selected.data) then Exit;
+  myData := tvProject.Selected.data;
+
+  //权限
+  if not HasModuleActionByShow(Ord(bsDocTree),myData.fID,atUpdate) then
+    Exit;
+
+  if cdsText.State in [dsEdit, dsInsert] then
+  begin
+    cdsText.Post;
+    ClientSystem.fDbOpr.ExeSQL(PChar(Format(mySQL,[
+      cdsText.FieldByName('ZCONTEXT').AsString,
+      cdsText.FieldByName('ZID').AsInteger])));
+  end;
+end;
+
+procedure TDesignDocumentClientDlg.act_SaveDocUpdate(Sender: TObject);
+begin
+  (Sender as TAction).Enabled :=
+    cdsText.State in [dsEdit, dsInsert];
+end;
+
+procedure TDesignDocumentClientDlg.act_CancelDocUpdate(Sender: TObject);
+begin
+  (Sender as TAction).Enabled :=
+    cdsText.State in [dsEdit, dsInsert];
+end;
+
+procedure TDesignDocumentClientDlg.act_CancelDocExecute(Sender: TObject);
+begin
+  if MessageBox(Handle,'撤消到上次保存的内容，是否要撤消？','提示',
+    MB_ICONQUESTION+MB_YESNO)=IDYES then
+  cdsText.Cancel;
+end;
+
+procedure TDesignDocumentClientDlg.tvProjectEdited(Sender: TObject;
+  Node: TTreeNode; var S: String);
+var
+  myData : PProjectDoc;
+const
+  glSQL = 'update TB_PRO_DOCUMENT set ZNAME=''%s'' where ZID=%d';
+begin
+  if fLoading then Exit;
+  if not Assigned(Node) or not Assigned(Node.data) then Exit;
+
+  myData := Node.data;
+
+  //权限
+  if not HasModuleActionByShow(Ord(bsDocTree),myData.fID,atUpdate) then
+    Exit;
+
+  if myData^.fPid = -1 then Exit; //说明根结点，不能编辑
+  if CompareText(S,mydata^.fName) <>0 then
+  begin
+    mydata^.fName := S;
+    ClientSystem.fDbOpr.ExeSQL(PChar(Format(glSQL,[mydata^.fName,
+      mydata^.fID])));
+  end;
+end;
+
+procedure TDesignDocumentClientDlg.tvProjectEditing(Sender: TObject;
+  Node: TTreeNode; var AllowEdit: Boolean);
+begin
+  AllowEdit := Assigned(Node.Parent);
+end;
+
+class function TDesignDocumentClientDlg.GetModuleID: integer;
+begin
+  Result := Ord(mtDoc);
 end;
 
 end.

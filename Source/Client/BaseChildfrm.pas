@@ -67,7 +67,7 @@ var
   myStyle : integer;
 begin
   myStyle := GetModuleID; //取出总的模块
-  Result := ClientSystem.HasModuleAction(myStyle,myStyle+ASubStype,
+  Result := ClientSystem.HasModuleAction(myStyle,{myStyle+}ASubStype,
     AID,AAction);
 end;
 
@@ -75,8 +75,9 @@ function TBaseChildDlg.HasModuleActionByShow(ASubStype, AID: integer;
   AAction: TActionType): Boolean;
 begin
   Result := HasModuleAction(ASubStype,AID,AAction);
-  if not Result then
-    MessageBox(Handle,'你没有操作的权限','提示',MB_ICONWARNING+MB_OK);
+  if not Result and (AID<>1) then   //AID<>1 根结点不提示
+    MessageBox(Handle,PChar(format('你没有%s操作的权限',[ActionTypeName[AAction]])),
+      '提示',MB_ICONWARNING+MB_OK);
 end;
 
 procedure TBaseChildDlg.initBase;

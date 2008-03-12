@@ -1,6 +1,6 @@
 inherited UserManageClientDlg: TUserManageClientDlg
-  Left = 222
-  Top = 135
+  Left = 191
+  Top = 110
   Height = 798
   Caption = #29992#25143#31649#29702
   OldCreateOrder = True
@@ -200,6 +200,16 @@ inherited UserManageClientDlg: TUserManageClientDlg
           ParentColor = False
           ParentFont = False
         end
+        object Splitter1: TSplitter
+          Left = 0
+          Top = 470
+          Width = 852
+          Height = 10
+          Cursor = crVSplit
+          Align = alBottom
+          Beveled = True
+          ResizeStyle = rsLine
+        end
         object plUserProvTool: TPanel
           Left = 0
           Top = 0
@@ -258,7 +268,7 @@ inherited UserManageClientDlg: TUserManageClientDlg
           Left = 0
           Top = 57
           Width = 472
-          Height = 611
+          Height = 413
           Align = alClient
           DataSource = dsUserPriv
           Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
@@ -306,7 +316,7 @@ inherited UserManageClientDlg: TUserManageClientDlg
           Left = 472
           Top = 57
           Width = 380
-          Height = 611
+          Height = 413
           Align = alRight
           BevelOuter = bvNone
           TabOrder = 2
@@ -345,6 +355,20 @@ inherited UserManageClientDlg: TUserManageClientDlg
             Caption = #26435#38480':'
             Color = clBtnFace
             ParentColor = False
+          end
+          object Label5: TLabel
+            Left = 321
+            Top = 90
+            Width = 137
+            Height = 15
+            Caption = '('#20998#37096#25110#25991#20214#30340'ID'#21495')'
+          end
+          object Label6: TLabel
+            Left = 8
+            Top = 312
+            Width = 429
+            Height = 15
+            Caption = #25805#20316#23545#35937'='#20998#37096#25110#25991#20214#30340'ID'#21495#65292#20063#26159#23545#36825#20010#23545#35937#36827#34892#26597#25214#65292#20462#25913#12290
           end
           object DBEdit1: TDBEdit
             Left = 112
@@ -427,6 +451,36 @@ inherited UserManageClientDlg: TUserManageClientDlg
             Caption = #22686#21152'=8'
             TabOrder = 8
           end
+        end
+        object Memo1: TMemo
+          Left = 0
+          Top = 480
+          Width = 852
+          Height = 188
+          Align = alBottom
+          Lines.Strings = (
+            '#######################'
+            '# '#39033#30446#25991#26723' '
+            '#######################'
+            #27169#22359'=500'
+            '1.'#26641#26435#19982#25991#20214#30340#20445#23384#38480#23376#27169#22359'=1'
+            ''
+            '######################'
+            '# Bug'#31649#29702#22120
+            '######################'
+            #27169#22359'=200'
+            '1.'#26641#26435#38480#23376#27169#22359'=1'
+            ''
+            '######################'
+            '# '#25991#20214#31649#29702
+            '######################'
+            #27169#22359'=100'
+            '1.'#26641#26435#38480#23376#27169#22359'=1'
+            '2.'#25991#20214#32534#36753#26435#38480#23376#27169#22359'=2'
+            ''
+            '')
+          ScrollBars = ssBoth
+          TabOrder = 3
         end
       end
     end

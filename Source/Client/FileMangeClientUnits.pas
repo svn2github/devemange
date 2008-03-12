@@ -94,8 +94,6 @@ type
     procedure tvFileTreeExpanding(Sender: TObject; Node: TTreeNode;
       var AllowExpansion: Boolean);
     procedure tvFileTreeChange(Sender: TObject; Node: TTreeNode);
-    procedure tvFileTreeChanging(Sender: TObject; Node: TTreeNode;
-      var AllowChange: Boolean);
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure actTree_DeleteDirUpdate(Sender: TObject);
@@ -461,24 +459,10 @@ var
   myNodeData : PFileTreeNode;
 begin
   myNodeData := Node.Data;
-  LoadFileItem(myNodeData^.fID);
   ShowStatusBarText(2,format('分部号=%d',[myNodeData^.fid]));
-end;
-
-procedure TFileManageDlg.tvFileTreeChanging(Sender: TObject; Node: TTreeNode;
-  var AllowChange: Boolean);
-var
-  myNodeData : PFileTreeNode;
-begin
-  AllowChange := False;
-  if Assigned(Node.data) and not fLoading then
-  begin
-    myNodeData  := Node.data;
-    AllowChange := HasModuleAction(Ord(fsmDir),myNodeData^.fID,atView);
-    if not AllowChange then
-      MessageBox(Handle,PChar(format('%s 没有权限。',[myNodeData^.fName])),
-        '权限',MB_ICONWARNING+MB_OK);
-  end;
+  if not HasModuleActionByShow(Ord(fsmDir),myNodeData^.fID,atView) then
+    Exit;
+  LoadFileItem(myNodeData^.fID);
 end;
 
 procedure TFileManageDlg.FormCreate(Sender: TObject);

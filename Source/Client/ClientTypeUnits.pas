@@ -5,22 +5,29 @@ uses
   windows,ExcelUnits;
 type
 
+  //
+  // 权限管理的内容
+  //
   TModuleType = (mtFile=100,mtBug=200,mtProject=300,mtUser=400,mtDoc=500);
   //文件的子模块
-  TFileSubModuleStype = (fsmfile,fsmDir);
+  TFileSubModuleStype = (fsmDir=1,fsmfile=2);
   //BUG项目管理
   TBugSubModuleStype = (bsBugTree=1
                          );
   //项目管理
   TProjectSubModuleStype = (psVersion=1
     );
+  //项目文档
+  TDocSubModuleStype = (bsDocTree=1);
 
-  //文件管理内类型
-  TFileStype = (fsFile,fsBug,fsDoc);
 
   //权限操作权限
   TActionType = (atView,atUpdate,atInsert,atDelete);
   TActionTypes = set of  TActionType;
+
+
+  //文件管理内类型
+  TFileStype = (fsFile,fsBug,fsDoc);
 
   //BUG的状态
   TBugStatus = (bgsAction,bgsDeath); //活动的，已修改的
@@ -93,6 +100,9 @@ const
   gcSoftChar    = '↑';
   gcDecSoftChar = '↓';
   gcfiledir     = '文件夹';
+
+  ActionTypeName : array [atView..atDelete] of String  =
+  ('查看','修改','增加','删除');
 
 const
   gcMSG_TickCount = $0400{WM_USER} +1;  //发送到mainfrm显示

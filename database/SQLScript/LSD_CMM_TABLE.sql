@@ -27,7 +27,7 @@ drop table [dbo].[TB_FILE_TREE]
 go
 
 create table TB_FILE_TREE(
-	ZID	int IDENTITY (1, 1) not null, /*ID并自动产生编号*/
+	ZID	int IDENTITY (1, 1) not null,     /*ID并自动产生编号*/
 	ZPID    int not null default -1,      /*上级ID=-1表示根目录 默认值为-1 */
 	ZNAME	varchar(200) not null,        /*名称*/
 	ZNOTE	varchar(200),                 /*说明*/
@@ -45,12 +45,12 @@ go
 
 create table TB_FILE_ITEM(
 	ZTREE_ID       int not null,           /*树ID*/
-        ZSTYPE         int not null,           /*类型，分文件管理，bug管理，项目文档*/ 
-	ZID	       int not null,           /*文件id*/
+        ZSTYPE         int not null,       /*类型，分文件管理，bug管理，项目文档*/ 
+	ZID	       int not null,               /*文件id*/
 	ZVER           int not null,           /*文件的版本号*/
 	ZNAME          varchar(200) not null,  /*名称*/
 	ZEDITER_ID     int ,                   /*编辑人*/
-        ZFILEPATH      varchar(200),           /*文件路径*/
+        ZFILEPATH      varchar(200),       /*文件路径*/
 	ZSTATUS        int not null,           /*状态 = 0 表示没有人编辑 =1表示在编辑*/	
 	ZEXT           varchar(10),            /*文件的扩展名*/
 	ZEDITDATETIME  datetime,               /*文件编辑时间*/
@@ -71,10 +71,10 @@ drop table [dbo].[TB_FILE_CONTEXT]
 go
 
 create table TB_FILE_CONTEXT(
-	ZFILE_ID  int not null,  /*文件ID*/
-	ZGROUPID  int not null,  /*文件块的顺序号*/
-	ZVER      int not null,  /*文件版本*/
-	ZSTREAM   image not null, /*文件块内容*/
+	ZFILE_ID  int not null,          /*文件ID*/
+	ZGROUPID  int not null,          /*文件块的顺序号*/
+	ZVER      int not null,          /*文件版本*/
+	ZSTREAM   image not null,        /*文件块内容*/
 	constraint PK_TB_FILE_CONTEXT primary key(ZFILE_ID,ZGROUPID,ZVER)       
 )
 go
@@ -110,8 +110,8 @@ create table TB_USER_PRIVILEGE(
 	ZID            int IDENTITY (1, 1) not null, /*ID值*/
 	ZUSER_ID       int not null,    /*用户ID*/
 	ZSTYLE         int not null,    /*类型 是大的模块*/
-	ZSUBSTYLE      int not null,    /*子类型*/
-	ZMODULEID      int not null,    /*模块ID就是文件，目录的ID*/
+	ZSUBSTYLE      int not null,    /*子类型 如树,编辑列表*/
+	ZMODULEID      int not null,    /*模块ID就是文件，目录的ID 对象ID*/
 	ZRIGHTMASK     int not null,    /*权限掩码  1=查看 2=修改 4=删除 8=增加*/
 	constraint PK_TB_USER_PRIVILEGE primary key(ZID,ZUSER_ID,ZSTYLE,ZMODULEID)   
 )
@@ -177,7 +177,7 @@ create table TB_PRO_DOCUMENT(
 	ZSORT          int ,                                     /*排序号*/
 	ZHASCHILD      bit not null,                             /*是否有下级*/
 	ZDOCTYPE       int ,                                     /*文档类型 0=Excel 1=txt*/
-        ZCONTEXT       text,                                     /*内容*/
+    ZCONTEXT       text,                                     /*内容 2008-3-11*/
 	constraint PK_TB_PRO_DOCUMENT primary key(ZID)   
 )
 go
@@ -230,7 +230,7 @@ create table TB_BUG_ITEM(
 	ZOPENEDDATE    datetime not null,                         /*创建时间*/
 	ZOPENVER       int not null,                              /*当时有问题的版本*/
 	ZASSIGNEDTO    int,                                       /*分派给*/
-        ZASSIGNEDDATE  datetime,                                  /*分派时间*/
+    ZASSIGNEDDATE  datetime,                                  /*分派时间*/
 	ZRESOLVEDBY    int,                                       /*解决人*/
 	ZRESOLUTION    int,                                       /*解决方案*/
 	ZRESOLVEDVER   int,                                       /*解决的版本*/
@@ -246,7 +246,6 @@ go
 go
 
 /*BUG的回复信息*/
-
 if exists (select * from dbo.sysobjects
   where id = object_id(N'[dbo].[TB_BUG_HISTORY]')
   and OBJECTPROPERTY(id, N'IsUserTable') = 1)

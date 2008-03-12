@@ -202,7 +202,6 @@ object FileManageDlg: TFileManageDlg
       ReadOnly = True
       TabOrder = 0
       OnChange = tvFileTreeChange
-      OnChanging = tvFileTreeChanging
       OnExpanding = tvFileTreeExpanding
     end
   end

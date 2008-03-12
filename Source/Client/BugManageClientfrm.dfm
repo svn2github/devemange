@@ -32,6 +32,7 @@ inherited BugManageDlg: TBugManageDlg
           Width = 10
           Height = 675
           Beveled = True
+          ResizeStyle = rsLine
         end
         object tvProject: TTreeView
           Left = 0
@@ -422,6 +423,7 @@ inherited BugManageDlg: TBugManageDlg
           Cursor = crVSplit
           Align = alTop
           Beveled = True
+          ResizeStyle = rsLine
         end
         object ScrollBox1: TScrollBox
           Left = 0
@@ -825,6 +827,7 @@ inherited BugManageDlg: TBugManageDlg
               PanelWidth = 1064
               TabOrder = 0
               RowCount = 4
+              SelectedColor = clMedGray
               object DBText1: TDBText
                 Left = 67
                 Top = 3
@@ -840,6 +843,7 @@ inherited BugManageDlg: TBugManageDlg
                 Font.Style = []
                 ParentColor = False
                 ParentFont = False
+                Transparent = True
               end
               object DBText2: TDBText
                 Left = 350
@@ -856,6 +860,7 @@ inherited BugManageDlg: TBugManageDlg
                 Font.Style = []
                 ParentColor = False
                 ParentFont = False
+                Transparent = True
               end
               object Label9: TLabel
                 Left = 304
@@ -897,6 +902,7 @@ inherited BugManageDlg: TBugManageDlg
                 Font.Style = []
                 ParentColor = False
                 ParentFont = False
+                Transparent = True
                 OnDblClick = DBText3DblClick
               end
               object Label12: TLabel
@@ -923,6 +929,7 @@ inherited BugManageDlg: TBugManageDlg
                 Font.Style = []
                 ParentColor = False
                 ParentFont = False
+                Transparent = True
               end
               object DBText5: TDBText
                 Left = 1028
