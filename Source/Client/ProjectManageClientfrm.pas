@@ -19,8 +19,8 @@ uses
   Dialogs, BaseChildfrm, ExtCtrls, ComCtrls, DB, DBClient, StdCtrls,
   Buttons, Grids, DBGrids, ActnList, DBCtrls, Tabs, Menus,
 
-  ClientTypeUnits,
-  ExcelUnits;
+  ClientTypeUnits, Mask;
+
 
 type
   TProjectManageClientDlg = class(TBaseChildDlg)
@@ -87,27 +87,58 @@ type
     plTitle: TPanel;
     DBText1: TDBText;
     DBText2: TDBText;
-    Splitter2: TSplitter;
-    plTaskBootom: TPanel;
     actTask_Creaet: TAction;
     BitBtn10: TBitBtn;
     plTaskList: TPanel;
     dgTaskList: TDBGrid;
     Splitter3: TSplitter;
     plTaskContext: TPanel;
-    DBMemo1: TDBMemo;
-    Splitter4: TSplitter;
-    DBMemo2: TDBMemo;
     cdsTask: TClientDataSet;
     dsTask: TDataSource;
     BitBtn11: TBitBtn;
     actTask_ToMe: TAction;
     cdsTaskType: TClientDataSet;
-    cdsTaskTypeZNAME: TStringField;
-    cdsTaskTypeZID: TIntegerField;
     dsTaskType: TDataSource;
     cdsTemp: TClientDataSet;
+    cdsStatus: TClientDataSet;
+    dsStatus: TDataSource;
+    cbEditDesing: TCheckBox;
+    actTask_Save: TAction;
+    BitBtn12: TBitBtn;
+    pcTasKUser: TPageControl;
+    tsDesign: TTabSheet;
+    Splitter4: TSplitter;
+    DBMDesign: TDBMemo;
+    DBMTestCase: TDBMemo;
+    tsUser: TTabSheet;
+    dgUser: TDBGrid;
+    tsPlan: TTabSheet;
+    actTask_to: TAction;
+    BitBtn13: TBitBtn;
+    cdsTaskUser: TClientDataSet;
+    dsTaskUser: TDataSource;
+    plUserRight: TPanel;
+    plUserBottom: TPanel;
+    BitBtn14: TBitBtn;
+    plScore: TPanel;
+    Label1: TLabel;
+    Label2: TLabel;
+    DBEdit1: TDBEdit;
+    DBEdit2: TDBEdit;
+    DBEdit3: TDBEdit;
+    Label3: TLabel;
+    Label4: TLabel;
+    DBText3: TDBText;
+    Label5: TLabel;
+    DBCheckBox1: TDBCheckBox;
     DBGrid1: TDBGrid;
+    Splitter2: TSplitter;
+    dbmItemDeign: TDBMemo;
+    cdsTaskItem: TClientDataSet;
+    dsTaskItem: TDataSource;
+    plTaskItemBottom: TPanel;
+    BitBtn15: TBitBtn;
+    actTask_AddItem: TAction;
     procedure actPro_AddExecute(Sender: TObject);
     procedure cbEditProItemClick(Sender: TObject);
     procedure actPro_AddUpdate(Sender: TObject);
@@ -138,6 +169,19 @@ type
     procedure cdsTaskCalcFields(DataSet: TDataSet);
     procedure actTask_CreaetExecute(Sender: TObject);
     procedure cdsTaskNewRecord(DataSet: TDataSet);
+    procedure cdsTaskBeforePost(DataSet: TDataSet);
+    procedure cbEditDesingClick(Sender: TObject);
+    procedure actTask_SaveExecute(Sender: TObject);
+    procedure actTask_SaveUpdate(Sender: TObject);
+    procedure actTask_toUpdate(Sender: TObject);
+    procedure actTask_toExecute(Sender: TObject);
+    procedure cdsTaskAfterScroll(DataSet: TDataSet);
+    procedure cdsTaskUserBeforePost(DataSet: TDataSet);
+    procedure actTask_ToMeExecute(Sender: TObject);
+    procedure actTask_AddItemExecute(Sender: TObject);
+    procedure cdsTaskItemNewRecord(DataSet: TDataSet);
+    procedure cdsTaskItemBeforePost(DataSet: TDataSet);
+    procedure cdsTaskItemCalcFields(DataSet: TDataSet);
   private
     { Private declarations }
     procedure LoadProjectItem();
@@ -158,6 +202,7 @@ implementation
 uses
   ClinetSystemUnits,
   DmUints,
+  SelectUsersfrm,             {选择用户}  
   NewTaskfrm                  {新建任务单}
   ;
 
@@ -178,8 +223,109 @@ begin
 end;
 
 procedure TProjectManageClientDlg.initBase;
+var
+  i : integer;
+  mycds : TClientDataSet;
+  myfield : TFieldDef;
+const
+  glSQL  = 'select ZID,ZNAME from TB_TASK_PARAMS where ZTYPE=%d';
+  glSQL2 = 'select * from TB_TASK_USER where 1=0';
+  glSQL3 = 'select * from TB_TASK_ITEM where 1=0';
 begin
-  inherited;
+  with ClientSystem.fDbOpr do
+  begin
+    cdsStatus.Data   := ReadDataSet(PChar(format(glSQL,[1]))); //状态
+    cdsTaskType.Data := ReadDataSet(PChar(format(glSQL,[2]))); //类型
+  end;
+
+  mycds := TClientDataSet.Create(nil);
+  try
+    mycds.data := ClientSystem.fDbOpr.ReadDataSet(PChar(glSQL2));
+
+    if cdsTaskUser.Active then
+      cdsTaskUser.Close;
+    cdsTaskUser.FieldDefs.Clear;
+    cdsTaskUser.FieldDefs.Assign(mycds.FieldDefs);
+    with cdsTaskUser.FieldDefs do
+    begin
+      myField := AddFieldDef;
+      myField.Name := 'ZISNEW';   //是否是新增
+      myField.DataType := ftBoolean;
+      with cdsTaskUser do
+      begin
+        for i:=0 to FieldDefs.Count -1 do
+           FieldDefs[i].CreateField(cdsTaskUser);
+      end;
+
+      myField := AddFieldDef;
+      myField.Name := 'ZUSERNAME';
+      myField.DataType := ftString;
+      myField.Size := 30;
+      with myfield.CreateField(cdsTaskUser) do
+      begin
+        FieldKind := fkLookup;
+        KeyFields := 'ZUSER_ID';
+        LookupDataSet := DM.cdsUser;
+        LookupKeyFields := 'ZID';
+        LookupResultField := 'ZNAME';
+      end;
+
+    end;
+    cdsTaskUser.CreateDataSet;
+  finally
+    mycds.Free;
+  end;
+
+  mycds := TClientDataSet.Create(nil);
+  try
+    mycds.data := ClientSystem.fDbOpr.ReadDataSet(PChar(glSQL3));
+
+    if cdsTaskItem.Active then
+      cdsTaskItem.Close;
+    cdsTaskItem.FieldDefs.Clear;
+    cdsTaskItem.FieldDefs.Assign(mycds.FieldDefs);
+    with cdsTaskItem.FieldDefs do
+    begin
+      myField := AddFieldDef;
+      myField.Name := 'ZISNEW';   //是否是新增
+      myField.DataType := ftBoolean;
+      with cdsTaskItem do
+      begin
+        for i:=0 to FieldDefs.Count -1 do
+           FieldDefs[i].CreateField(cdsTaskItem);
+      end;
+
+      myField := AddFieldDef;
+      myField.Name := 'ZUSERNAME';
+      myField.DataType := ftString;
+      myField.Size := 30;
+      with myfield.CreateField(cdsTaskItem) do
+      begin
+        FieldKind := fkLookup;
+        KeyFields := 'ZUSER_ID';
+        LookupDataSet := DM.cdsUser;
+        LookupKeyFields := 'ZID';
+        LookupResultField := 'ZNAME';
+      end;
+
+      myField := AddFieldDef;
+      myField.Name := 'ZNO';
+      myField.DataType := ftInteger;
+      with myField.CreateField(cdsTask) do FieldKind := fkCalculated;
+
+      myField := AddFieldDef;
+      myField.Name := 'ZMYID';   // 对应与库的ZID ，因为ZID是自动的
+      myField.DataType := ftInteger;
+      myField.CreateField(cdsTask);
+    end;
+    cdsTaskItem.CreateDataSet;
+    
+  finally
+    mycds.Free;
+  end;
+
+
+
   LoadProjectItem();
 end;
 
@@ -353,7 +499,8 @@ var
 const
   glSQL  = 'select * from TB_PRO_VERSION where ZPRO_ID=%d Order by ZID desc';
   glSQL2 = 'select * from TB_PRO_DOCUMENT where ZPRO_ID=%d';
-  glSQL3 = 'select * from TB_TASK where ZPRO_ID=%d and ZPRO_VERSION_ID=%d';
+  glSQL3 = 'select * from TB_TASK where ZPRO_ID=%d and ZPRO_VERSION_ID=%d ' +
+           'Order by ZDATE DESC';
 begin
   //1.项目版本
   if pcProject.ActivePage = tsProjectVer then
@@ -441,39 +588,80 @@ begin
             cdsProjectItem.FieldByName('ZID').Asinteger,
             cdsProVersion.FieldByName('ZID').AsInteger])));
 
-      if cdsTask.Active then cdsTask.Close;
-      cdsTask.FieldDefs.Clear;
-      cdsTask.FieldDefs.Assign(cdsTemp.FieldDefs);
 
-      with cdsTask.FieldDefs do
+      if cdsTask.FieldDefs.Count = 0 then
       begin
-        myField := AddFieldDef;
-        myField.Name := 'ZNO';
-        myField.DataType := ftInteger;
-        with myField.CreateField(cdsTask) do FieldKind := fkCalculated;
+        cdsTask.Fields.Clear;
+        cdsTask.FieldDefs.Assign(cdsTemp.FieldDefs);
+        for i:=0 to cdsTask.FieldDefs.Count -1 do
+          cdsTask.FieldDefs[i].CreateField(cdsTask);
 
-        myField := AddFieldDef;
-        myField.Name := 'ZSTATUSNAME';  //状态名称
-        myField.DataType := ftString;
-        with myField.CreateField(cdsTask) do FieldKind := fkCalculated;
-
-        myField := AddFieldDef;
-        myField.Name := 'ZTYPENAME';    //类型名称
-        myField.DataType := ftString;
-        myfield.Size := 50;
-        {
-        with myfield.CreateField(cdsTask) do
+        with cdsTask.FieldDefs do
         begin
-          FieldKind := fkLookup;
-          KeyFields := 'ZTYPE';
-          LookupDataSet := cdsTaskType;
-          LookupKeyFields := 'ZID';
-          LookupResultField := 'ZNAME';
+          myField := AddFieldDef;
+          myField.Name := 'ZNO';
+          myField.DataType := ftInteger;
+          with myField.CreateField(cdsTask) do FieldKind := fkCalculated;
+
+          myField := AddFieldDef;
+          myField.Name := 'ZISNEW';   //是否是新增
+          myField.DataType := ftBoolean;
+          myField.CreateField(cdsTask);
+
+          myField := AddFieldDef;
+          myField.Name := 'ZSTATUSNAME';  //状态名称
+          myField.DataType := ftString;
+          with myField.CreateField(cdsTask) do
+          begin
+            FieldKind := fkLookup;
+            KeyFields         := 'ZSTATUS';
+            LookupDataSet     := cdsStatus;
+            LookupKeyFields   := 'ZID';
+            LookupResultField := 'ZNAME';
+          end;
+
+          myField := AddFieldDef;
+          myField.Name := 'ZTYPENAME';    //类型名称
+          myField.DataType := ftString;
+          myfield.Size := 50;
+          with myfield.CreateField(cdsTask) do
+          begin
+            FieldKind         := fkLookup;
+            KeyFields         := 'ZTYPE';
+            LookupDataSet     := cdsTaskType;
+            LookupKeyFields   := 'ZID';
+            LookupResultField := 'ZNAME';
+          end;
         end;
-        }
+        cdsTask.CreateDataSet;
+      end//end count
+      else begin
+        cdsTask.DisableControls;
+        try
+          while not cdsTask.IsEmpty do cdsTask.Delete;
+        finally
+          cdsTask.EnableControls;
+        end;
       end;
-      cdsTask.CreateDataSet;
-     
+
+      //生成数据
+      cdsTask.DisableControls;
+      try
+        cdsTemp.First;
+        while not cdsTemp.Eof do
+        begin
+          cdsTask.Append;
+          cdsTask.FieldByName('ZISNEW').AsBoolean := False;
+          for i:=0 to cdsTemp.FieldDefs.Count -1 do
+            cdsTask.FieldByName(cdsTemp.FieldDefs[i].Name).AsVariant :=
+              cdsTemp.FieldByName(cdsTemp.FieldDefs[i].Name).AsVariant;
+          cdsTask.Post;
+          cdsTemp.Next;
+        end;
+        cdsTask.First;
+      finally
+        cdsTask.EnableControls;
+      end;
 
     finally
       fLoading := myb;
@@ -752,21 +940,29 @@ end;
 procedure TProjectManageClientDlg.cdsTaskCalcFields(DataSet: TDataSet);
 begin
   DataSet.FieldByName('ZNO').AsInteger := DataSet.RecNo;
-  DataSet.FieldByName('ZSTATUSNAME').AsString :=
-    TaskStatusName[TTaskStatus(DataSet.FieldByName('ZSTATUS').AsInteger)];
 end;
 
 procedure TProjectManageClientDlg.actTask_CreaetExecute(Sender: TObject);
 var
   myform : TNewTaskDlg;
 begin
+  //权限
+  if not HasModuleActionByShow(Ord(psTask),
+    cdsProjectItem.FieldByName('ZID').AsInteger,
+    atInsert) then
+    Exit;
+
   myform := TNewTaskDlg.Create(nil);
   try
-
+    if cdsTask.State in [dsEdit,dsInsert] then
+      cdsTask.Post;
+    cdsTask.Append;
     if myform.ShowModal() = mrOK then
     begin
-
-    end;
+      cdsTask.Post;
+    end
+    else
+      cdsTask.Cancel;
   finally
     myform.free;
   end;
@@ -777,15 +973,419 @@ begin
   DataSet.FieldByName('ZDATE').AsDateTime := Now();
   DataSet.FieldByName('ZCODE').AsString   := BuildCode_Task();
   DataSet.FieldByName('ZUSER_ID').AsInteger := ClientSystem.fEditer_id;
+  DataSet.FieldByName('ZSTATUS').AsInteger := 0;
   DataSet.FieldByName('ZPRO_ID').AsInteger :=
     cdsProjectItem.FieldByName('ZID').AsInteger;
   DataSet.FieldByName('ZPRO_VERSION_ID').AsInteger :=
     cdsProVersion.FieldByName('ZID').AsInteger;
-
+  DataSet.FieldByName('ZPALNDAY').AsInteger := 0;
+  DataSet.FieldByName('ZDESIGN').AsString := '#设计说明';
+  DataSet.FieldByName('ZTESTCASE').AsString := '#测试用例';
+  DataSet.FieldByName('ZISNEW').AsBoolean := True;
 end;
 
 function TProjectManageClientDlg.BuildCode_Task: String;
 begin
+  Result := format('U%d_TASK_%S',[ClientSystem.fEditer_id,
+    formatdatetime('yyyymmhhhhmmss',now())]);
+end;
+
+procedure TProjectManageClientDlg.cdsTaskBeforePost(DataSet: TDataSet);
+var
+  mySQL : String;
+const
+  glSQL = 'insert TB_TASK(ZCODE,ZTYPE,ZNAME,ZUSER_ID,ZPRO_ID, ' +
+          'ZPRO_VERSION_ID,ZDESIGN,ZTESTCASE,ZSTATUS,ZDATE,ZPALNDAY) ' +
+          'values(''%s'',%d,''%s'',%d,%d,%d,''%s'',''%s'',%d,''%s'',%d)';
+  glSQL2 = 'update TB_TASK set ZSTATUS=%d,ZDESIGN=''%s'',ZTESTCASE=''%s'' ' +
+           'where ZCODE=''%s''';
+
+begin
+  //保存
+  if DataSet.FieldByName('ZISNEW').AsBoolean then
+  begin
+    mySQL := format(glSQL,[
+      DataSet.FieldByName('ZCODE').AsString,
+      DataSet.FieldByName('ZTYPE').AsInteger,
+      DataSet.FieldByName('ZNAME').AsString,
+      DataSet.FieldByName('ZUSER_ID').AsInteger,
+      DataSet.FieldByName('ZPRO_ID').AsInteger,
+      DataSet.FieldByName('ZPRO_VERSION_ID').AsInteger,
+      DataSet.FieldByName('ZDESIGN').AsString,
+      DataSet.FieldByName('ZTESTCASE').AsString,
+      DataSet.FieldByName('ZSTATUS').AsInteger,
+      DataSet.FieldByName('ZDATE').AsString,
+      DataSet.FieldByName('ZPALNDAY').AsInteger]);
+
+    ClientSystem.fDbOpr.BeginTrans;
+    try
+      ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
+      DataSet.FieldByName('ZISNEW').AsBoolean := False;
+      ClientSystem.fDbOpr.CommitTrans;
+    except
+      DataSet.Cancel;
+      ClientSystem.fDbOpr.RollbackTrans;
+    end;
+  end
+  else begin
+    mySQL := format(glSQL2,[
+      DataSet.FieldByName('ZSTATUS').AsInteger,
+      DataSet.FieldByName('ZDESIGN').AsString,
+      DataSet.FieldByName('ZTESTCASE').AsString,
+      DataSet.FieldByName('ZCODE').AsString]);
+    ClientSystem.fDbOpr.BeginTrans;
+    try
+      ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
+      ClientSystem.fDbOpr.CommitTrans;
+    except
+      DataSet.Cancel;
+      ClientSystem.fDbOpr.RollbackTrans;
+    end;
+  end;
+end;
+
+procedure TProjectManageClientDlg.cbEditDesingClick(Sender: TObject);
+begin
+  DBMDesign.ReadOnly := not cbEditDesing.Checked;
+  DBMTestCase.ReadOnly := not cbEditDesing.Checked;
+  dbmItemDeign.ReadOnly := not cbEditDesing.Checked;
+end;
+
+procedure TProjectManageClientDlg.actTask_SaveExecute(Sender: TObject);
+begin
+  if cdsTask.State in [dsEdit,dsInsert] then
+    cdsTask.Post;
+  if cdsTaskUser.State in [dsEdit,dsInsert] then
+  begin
+    if cdsTask.FieldByName('ZUSER_ID').AsInteger <> ClientSystem.fEditer_id then
+    begin
+      MessageBox(Handle,'不是你创建的任务单，不能评分。','提示',
+        MB_ICONWARNING+MB_OK);
+      cdsTaskUser.Cancel;
+    end
+    else
+      cdsTaskUser.Post;
+  end;
+  if cdsTaskItem.State in [dsEdit,dsInsert] then
+    cdsTaskItem.Post;
+end;
+
+procedure TProjectManageClientDlg.actTask_SaveUpdate(Sender: TObject);
+begin
+  (Sender as TAction).Enabled := (cdsTask.State in [dsEdit,dsInsert])
+    or (cdsTaskUser.State in [dsEdit,dsInsert])
+    or (cdsTaskItem.State in [dsEdit,dsInsert]);
+end;
+
+procedure TProjectManageClientDlg.actTask_toUpdate(Sender: TObject);
+begin
+  (Sender as TAction).Enabled := (not cdsTask.IsEmpty) and
+   not (cdsTask.FieldByName('ZSTATUS').AsInteger in [Ord(tsSccuess),Ord(tsClose)]);
+end;
+
+procedure TProjectManageClientDlg.actTask_toExecute(Sender: TObject);
+var
+  i : integer;
+  myfrom : TSelectUsersDlg;
+begin
+  //只有我创建的任务才能分给别人
+  if (cdsTask.FieldByName('ZUSER_ID').AsInteger <> ClientSystem.fEditer_id) then
+  begin
+    MessageBox(Handle,'不是你创建的任务，不能指派给别人。','提示',
+      MB_ICONWARNING+MB_OK);
+    Exit;
+  end;
+
+  myfrom := TSelectUsersDlg.Create(nil);
+  try
+    if myfrom.ShowModal = mrOK then
+    begin
+      for i:=0 to myfrom.lbUserCode.Count -1 do
+      begin
+        if not
+          cdsTaskUser.Locate('ZUSER_ID',myfrom.lbUserCode.Items[i],
+            [loPartialKey]) then
+        begin
+          //加入库内
+          cdsTaskUser.Append;
+          cdsTaskUser.FieldByName('ZISNEW').AsBoolean := True;
+          cdsTaskUser.FieldByName('ZTASK_CODE').AsString :=
+            cdsTask.FieldByName('ZCODE').AsString;
+          cdsTaskUser.FieldByName('ZUSER_ID').AsInteger :=
+            strtoint(myfrom.lbUserCode.Items[i]);
+          cdsTaskUser.Post;
+
+          if not(cdsTask.State in [dsEdit,dsInsert]) then
+            cdsTask.Edit;
+          cdsTask.FieldByName('ZSTATUS').AsInteger := Ord(tsing);
+          cdsTask.Post;
+        end;
+      end;
+    end;
+  finally
+    myfrom.Free;
+  end;
+
+end;
+
+procedure TProjectManageClientDlg.cdsTaskAfterScroll(DataSet: TDataSet);
+var
+  i : integer;
+  mySQL : string;
+  mycds : TClientDataSet;
+  myb   : Boolean;
+  myme  : Boolean;
+const
+  glSQL = 'select * from TB_TASK_USER where ZTASK_CODE=''%s''';
+  glSQL2 = 'select * from TB_TASK_ITEM where ZTASK_CODE=''%s''';
+begin
+  //
+  if cdsTaskUser.State in [dsEdit,dsInsert] then
+    cdsTaskUser.Post;
+  if cdsTaskItem.State in [dsEdit,dsInsert] then
+    cdsTaskItem.Post;
+
+  myme := False;
+  myb := fLoading;
+  fLoading := True;
+  try
+    cdsTaskUser.DisableConstraints;
+    try
+      while not cdsTaskUser.Eof do
+        cdsTaskuser.Delete;
+    finally
+      cdsTaskUser.EnableConstraints;
+    end;
+
+    mySQL := format(glSQL,[DataSet.FieldByName('ZCODE').AsString]);
+    mycds := TClientDataSet.Create(nil);
+    cdsTaskUser.DisableConstraints;
+    try
+      mycds.data := ClientSystem.fDbOpr.ReadDataSet(PChar(mySQL));
+      mycds.First;
+      while not mycds.Eof do
+      begin
+        cdsTaskUser.Append;
+        cdsTaskUser.FieldByName('ZISNEW').AsBoolean := False;
+        for i:= 0 to mycds.FieldDefs.Count -1 do
+          cdsTaskUser.FieldByName(mycds.FieldDefs[i].Name).AsVariant :=
+            mycds.fieldByName(mycds.FieldDefs[i].Name).AsVariant;
+        cdsTaskUser.Post;
+        if not myme and
+           (mycds.FieldByName('ZUSER_ID').AsInteger = ClientSystem.fEditer_id) then
+          myme := True;
+        mycds.Next;
+      end;
+      cdsTaskUser.First;
+      plScore.Visible := myme or (cdsTask.FieldByName('ZUSER_ID').AsInteger=
+        ClientSystem.fEditer_id);
+    finally
+      mycds.Free;
+      cdsTaskUser.EnableConstraints;
+    end;
+
+    //2.任务进度
+    cdsTaskItem.DisableConstraints;
+    try
+      while not cdsTaskItem.Eof do
+        cdsTaskItem.Delete;
+    finally
+      cdsTaskItem.EnableConstraints;
+    end;
+
+    mySQL := format(glSQL2,[DataSet.FieldByName('ZCODE').AsString]);
+    mycds := TClientDataSet.Create(nil);
+    cdsTaskItem.DisableConstraints;
+    try
+      mycds.data := ClientSystem.fDbOpr.ReadDataSet(PChar(mySQL));
+      mycds.First;
+      while not mycds.Eof do
+      begin
+        cdsTaskItem.Append;
+        cdsTaskItem.FieldByName('ZISNEW').AsBoolean := False;
+        for i:= 0 to mycds.FieldDefs.Count -1 do
+        begin
+          if mycds.FieldDefs[i].Name = 'ZID' then
+            cdsTaskItem.FieldByName('ZMYID').AsInteger :=
+              mycds.FieldByName('ZID').AsInteger
+          else
+            cdsTaskItem.FieldByName(mycds.FieldDefs[i].Name).AsVariant :=
+              mycds.fieldByName(mycds.FieldDefs[i].Name).AsVariant;
+        end;
+        cdsTaskItem.Post;
+        mycds.Next;
+      end;
+      cdsTaskItem.First;
+    finally
+      mycds.Free;
+      cdsTaskItem.EnableConstraints;
+    end;
+
+
+  finally
+    fLoading := myb;
+  end;
+end;
+
+procedure TProjectManageClientDlg.cdsTaskUserBeforePost(DataSet: TDataSet);
+var
+  myd : integer;
+  mySQL : string;
+const
+  glSQL = 'insert into TB_TASK_USER (ZTASK_CODE,ZUSER_ID) values(''%s'',%d)';
+  glSQL2 = 'update TB_TASK_USER set ZPERFACT=%d,ZSCORE=%d,ZREMASK=''%s'', ' +
+           ' ZSCOREDATE = getdate(), ZCANCEL=%d where ZTASK_CODE=''%s'' and ZUSER_ID=%d';
+begin
+  //
+  if fLoading then Exit;
+  if DataSet.FieldByName('ZISNEW').AsBoolean then
+  begin
+    mysql := format(glSQL,[dataSet.FieldByName('ZTASK_CODE').AsString,
+      dataset.FieldByName('ZUSER_ID').AsInteger]);
+    ClientSystem.fDbOpr.BeginTrans;
+    try
+      ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
+      DataSet.FieldByName('ZISNEW').AsBoolean := False;
+      ClientSystem.fDbOpr.CommitTrans;
+    except
+      DataSet.Cancel;
+      ClientSystem.fDbOpr.RollbackTrans;
+    end;
+  end
+  else begin
+    myd := Ord(dataset.FieldByName('ZCANCEL').AsBoolean);
+    mysql := format(glSQL2,[
+      dataSet.FieldByName('ZPERFACT').AsInteger,
+      dataSet.FieldByName('ZSCORE').AsInteger,
+      dataset.FieldByName('ZREMASK').AsString,
+      myd,
+      dataset.FieldByName('ZTASK_CODE').AsString,
+      dataset.FieldByName('ZUSER_ID').AsInteger ]);
+    ClientSystem.fDbOpr.BeginTrans;
+    try
+      dataSet.FieldByName('ZSCOREDATE').AsString :=
+        formatdatetime('yyyy-mm-dd hh:ss:mm',now());
+      ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
+          ClientSystem.fDbOpr.CommitTrans;
+    except
+      DataSet.Cancel;
+      ClientSystem.fDbOpr.RollbackTrans;
+    end;
+  end;
+
+
+end;
+
+procedure TProjectManageClientDlg.actTask_ToMeExecute(Sender: TObject);
+var
+  i : integer;
+  mySQL : String;
+  mycds : TClientDataSet;
+const
+  glSQL = 'select a.* from TB_TASK as a ' +
+          'left join  TB_TASK_USER as b on a.ZCODE=b.ZTASK_CODE ' +
+          'where b.ZCANCEL=0 and b.ZUSER_ID=%d Order by ZDATE DESC';
+begin
+  //
+  cdsTask.DisableControls;
+  try
+    while not cdsTask.IsEmpty do cdsTask.Delete;
+  finally
+    cdsTask.EnableControls;
+  end;
+  //生成数据
+  mycds := TClientDataSet.Create(nil);
+  cdsTask.DisableControls;
+  try
+    mySQL := format(glSQL,[ClientSystem.fEditer_id]);
+    mycds.Data := ClientSystem.fDbOpr.ReadDataSet(PChar(mySQL));
+    mycds.First;
+    while not mycds.Eof do
+    begin
+      cdsTask.Append;
+      cdsTask.FieldByName('ZISNEW').AsBoolean := False;
+      for i:=0 to mycds.FieldDefs.Count -1 do
+        cdsTask.FieldByName(mycds.FieldDefs[i].Name).AsVariant :=
+          mycds.FieldByName(mycds.FieldDefs[i].Name).AsVariant;
+      cdsTask.Post;
+      mycds.Next;
+    end;
+    cdsTask.First;
+  finally
+    cdsTask.EnableControls;
+    mycds.free;
+  end;
+end;
+
+procedure TProjectManageClientDlg.actTask_AddItemExecute(Sender: TObject);
+begin
+  if cdsTaskItem.State in [dsEdit,dsInsert] then
+    cdsTaskItem.Post;
+  cdsTaskItem.Append;
+end;
+
+procedure TProjectManageClientDlg.cdsTaskItemNewRecord(DataSet: TDataSet);
+begin
+  DataSet.FieldByName('ZTASK_CODE').AsString := cdsTask.FieldByName('ZCODE').AsString;
+  DataSet.FieldByName('ZUSER_ID').AsInteger := ClientSystem.fEditer_id;
+  dataSet.FieldByName('ZDATE').AsString :=
+        formatdatetime('yyyy-mm-dd hh:ss:mm',now());
+  dataSet.FieldByName('ZISNEW').AsBoolean := True;
+end;
+
+procedure TProjectManageClientDlg.cdsTaskItemBeforePost(DataSet: TDataSet);
+var
+  mySQL : String;
+const
+  glSQL = 'insert into TB_TASK_ITEM (ZTASK_CODE,ZDATE,ZDESIGN,ZUSER_ID) ' +
+          'values(''%s'',''%s'',''%s'',%d)';
+  glSQL2 = 'update TB_TASK_ITEM set ZDESIGN=''%s'' where ZID=%d ';
+
+begin
+  if fLoading then Exit;
+  if dataSet.FieldByName('ZISNEW').AsBoolean then
+  begin
+    mySQL := format(glSQL,[
+      dataset.FieldByName('ZTASK_CODE').AsString,
+      dataset.FieldByName('ZDATE').AsString,
+      dataset.FieldByName('ZDESIGN').AsString,
+      dataset.FieldByName('ZUSER_ID').AsInteger]);
+    ClientSystem.fDbOpr.BeginTrans;
+    try
+      ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
+      DataSet.FieldByName('ZISNEW').AsBoolean := False;
+      ClientSystem.fDbOpr.CommitTrans;
+    except
+      DataSet.Cancel;
+      ClientSystem.fDbOpr.RollbackTrans;
+    end;
+  end
+  else begin
+    if (dataset.FieldByName('ZUSER_ID').AsInteger <> ClientSystem.fEditer_id) then
+    begin
+      MessageBox(Handle,'不是你增加，不能编辑。','提示',
+        MB_ICONWARNING+MB_OK);
+      DataSet.Cancel;
+      Exit;
+    end;
+
+    mysql := format(glSQL2,[
+      dataset.FieldByName('ZDESIGN').AsString,
+      dataset.FieldByName('ZMYID').AsInteger]);  //ZID
+    ClientSystem.fDbOpr.BeginTrans;
+    try
+      ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
+      ClientSystem.fDbOpr.CommitTrans;
+    except
+      DataSet.Cancel;
+      ClientSystem.fDbOpr.RollbackTrans;
+    end;
+  end;
+end;
+
+procedure TProjectManageClientDlg.cdsTaskItemCalcFields(DataSet: TDataSet);
+begin
+  DataSet.FieldByName('ZNO').AsInteger := DataSet.RecNo;
 
 end;
 

@@ -63,6 +63,7 @@ inherited DesignDocumentClientDlg: TDesignDocumentClientDlg
       Align = alClient
       DataField = 'ZCONTEXT'
       DataSource = dsText
+      ReadOnly = True
       ScrollBars = ssBoth
       TabOrder = 0
     end
@@ -126,6 +127,15 @@ inherited DesignDocumentClientDlg: TDesignDocumentClientDlg
         Caption = #25764#28040
         TabOrder = 1
         Kind = bkCancel
+      end
+      object cbEditDoc: TCheckBox
+        Left = 254
+        Top = 13
+        Width = 67
+        Height = 17
+        Caption = #32534#36753
+        TabOrder = 2
+        OnClick = cbEditDocClick
       end
     end
   end

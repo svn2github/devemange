@@ -57,6 +57,7 @@ type
     act_SaveDoc: TAction;
     act_CancelDoc: TAction;
     BitBtn2: TBitBtn;
+    cbEditDoc: TCheckBox;
     procedure miFixedRowClick(Sender: TObject);
     procedure miFixedColClick(Sender: TObject);
     procedure actProject_AddDirUpdate(Sender: TObject);
@@ -76,6 +77,7 @@ type
       var S: String);
     procedure tvProjectEditing(Sender: TObject; Node: TTreeNode;
       var AllowEdit: Boolean);
+    procedure cbEditDocClick(Sender: TObject);
   private
     fCurrentDoc : PProjectDoc; //当前文件
     function GetCurrentExcel: TExcelFile;
@@ -542,6 +544,11 @@ end;
 class function TDesignDocumentClientDlg.GetModuleID: integer;
 begin
   Result := Ord(mtDoc);
+end;
+
+procedure TDesignDocumentClientDlg.cbEditDocClick(Sender: TObject);
+begin
+  DBMemo1.ReadOnly := not cbEditDoc.Checked;
 end;
 
 end.

@@ -40,5 +40,15 @@ insert into TB_BUG_PARAMS (ZTYPE,ZID,ZNAME) values(5,0,'严重错误');
 insert into TB_BUG_PARAMS (ZTYPE,ZID,ZNAME) values(5,1,'一般错误');
 insert into TB_BUG_PARAMS (ZTYPE,ZID,ZNAME) values(5,2,'可不改错误');
 
+/*任务单状态*/
+insert into TB_TASK_PARAMS (ZTYPE,ZID,ZNAME) values(1,0,'待分发');
+insert into TB_TASK_PARAMS (ZTYPE,ZID,ZNAME) values(1,1,'执行中');
+insert into TB_TASK_PARAMS (ZTYPE,ZID,ZNAME) values(1,2,'撤消');
+insert into TB_TASK_PARAMS (ZTYPE,ZID,ZNAME) values(1,3,'完成');
+insert into TB_TASK_PARAMS (ZTYPE,ZID,ZNAME) values(1,4,'关闭');
+insert into TB_TASK_PARAMS (ZTYPE,ZID,ZNAME) values(1,5,'激活');
+/*任务单类型*/
+insert into TB_TASK_PARAMS (ZTYPE,ZID,ZNAME) values(2,0,'新增功能');
+insert into TB_TASK_PARAMS (ZTYPE,ZID,ZNAME) values(2,1,'变更功能');
 
 GO

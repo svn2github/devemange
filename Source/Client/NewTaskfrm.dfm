@@ -5,6 +5,7 @@ inherited NewTaskDlg: TNewTaskDlg
   Caption = #26032#24314#20219#21153#21333
   ClientHeight = 379
   ClientWidth = 726
+  OldCreateOrder = True
   PixelsPerInch = 96
   TextHeight = 15
   object BitBtn1: TBitBtn
@@ -109,6 +110,11 @@ inherited NewTaskDlg: TNewTaskDlg
       Top = 49
       Width = 200
       Height = 23
+      DataField = 'ZTYPE'
+      DataSource = ProjectManageClientDlg.dsTask
+      KeyField = 'ZID'
+      ListField = 'ZNAME'
+      ListSource = ProjectManageClientDlg.dsTaskType
       TabOrder = 1
     end
   end
@@ -136,7 +142,7 @@ inherited NewTaskDlg: TNewTaskDlg
     object Label6: TLabel
       Left = 336
       Top = 31
-      Width = 101
+      Width = 106
       Height = 15
       Caption = #23454#38469#24037#26399'('#22825')'#65306
     end
@@ -150,7 +156,7 @@ inherited NewTaskDlg: TNewTaskDlg
     object Label8: TLabel
       Left = 12
       Top = 96
-      Width = 101
+      Width = 105
       Height = 15
       Caption = #20219#21153#20851#38381#26102#38388#65306
     end
@@ -159,6 +165,8 @@ inherited NewTaskDlg: TNewTaskDlg
       Top = 27
       Width = 200
       Height = 23
+      DataField = 'ZPALNDAY'
+      DataSource = ProjectManageClientDlg.dsTask
       TabOrder = 0
     end
     object DBEdit3: TDBEdit
@@ -166,6 +174,8 @@ inherited NewTaskDlg: TNewTaskDlg
       Top = 26
       Width = 200
       Height = 23
+      DataField = 'ZDAY'
+      DataSource = ProjectManageClientDlg.dsTask
       TabOrder = 1
     end
     object DBEdit4: TDBEdit
@@ -173,6 +183,8 @@ inherited NewTaskDlg: TNewTaskDlg
       Top = 59
       Width = 200
       Height = 23
+      DataField = 'ZBEGINDATE'
+      DataSource = ProjectManageClientDlg.dsTask
       TabOrder = 2
     end
     object DBEdit5: TDBEdit
@@ -180,6 +192,8 @@ inherited NewTaskDlg: TNewTaskDlg
       Top = 59
       Width = 200
       Height = 23
+      DataField = 'ZSUCCESSDATE'
+      DataSource = ProjectManageClientDlg.dsTask
       TabOrder = 3
     end
     object DBEdit6: TDBEdit
@@ -187,6 +201,8 @@ inherited NewTaskDlg: TNewTaskDlg
       Top = 91
       Width = 200
       Height = 23
+      DataField = 'ZCLOSEDATE'
+      DataSource = ProjectManageClientDlg.dsTask
       TabOrder = 4
     end
   end

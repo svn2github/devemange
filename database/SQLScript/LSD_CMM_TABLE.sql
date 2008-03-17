@@ -46,7 +46,7 @@ go
 
 create table TB_FILE_ITEM(
 	ZTREE_ID       int not null,           /*树ID*/
-        ZSTYPE         int not null,       /*类型，分文件管理，bug管理，项目文档*/ 
+    ZSTYPE         int not null,           /*类型，分文件管理，bug管理，项目文档*/ 
 	ZID	       int not null,               /*文件id*/
 	ZVER           int not null,           /*文件的版本号*/
 	ZNAME          varchar(200) not null,  /*名称*/
@@ -200,13 +200,13 @@ create table TB_TASK(
 	ZTESTCASE       text,                                   /*测试用例*/
 	ZSTATUS         int not null,                           /*状态 待分发=0 ; 执行中=1 ; 撤消=2; 完成=3 ; 关闭=4;激活=5*/
 	ZDATE           datetime,                               /*制单时间*/
-	ZPALNDAY       int not null default 1,                  /*计划工期(天)*/
+	ZPALNDAY        int not null default 1,                  /*计划工期(天)*/
 
 	ZBEGINDATE      datetime,	                            /*任务开始时间 由任务执行人生成,这时状态变更为执行中*/
 	ZDAY            int,                                    /*实际的天数*/
 	ZSUCCESSDATE    datetime,                               /*完成时间*/
 	ZCLOSEDATE      datetime,                               /*关闭时间*/
-
+	
 	
 	constraint PK_TB_TASK primary key(ZCODE) 
 )
@@ -225,7 +225,7 @@ create table TB_TASK_USER(
 	ZSCORE          int,                                    /*得分*/
 	ZREMASK         varchar(200),                           /*备注*/
 	ZSCOREDATE      datetime,                               /*评分的时间，用于统计一个月的得分*/
-
+	ZCANCEL			bit not null default 1,                 /*取消执行*/
 	constraint PK_TB_TASK_USER primary key(ZTASK_CODE,ZUSER_ID)
 )
 go
@@ -244,6 +244,21 @@ create table TB_TASK_ITEM(
 	ZUSER_ID        int  not null,                          /*书写人员*/
 
 	constraint PK_TB_TASK_ITEM primary key(ZID)
+)
+go
+
+/*任务单参数表*/
+if exists (select * from dbo.sysobjects
+  where id = object_id(N'[dbo].[TB_TASK_PARAMS]')
+  and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+drop table [dbo].[TB_TASK_PARAMS]
+go
+
+create table TB_TASK_PARAMS(
+	ZTYPE 	     int not null,                                   /*类型*/
+	ZID          int not null,                                   /*ID值*/
+	ZNAME        varchar(200)                                    /*值*/
+	constraint PK_TB_TASK_PARAMS primary key(ZTYPE,ZID)  
 )
 go
 

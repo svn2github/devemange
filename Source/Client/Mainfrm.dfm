@@ -1,6 +1,6 @@
 object MainDlg: TMainDlg
-  Left = 235
-  Top = 145
+  Left = 206
+  Top = 195
   Width = 870
   Height = 640
   Caption = 'DeveManage'

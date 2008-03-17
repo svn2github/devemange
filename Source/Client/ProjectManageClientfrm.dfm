@@ -1,7 +1,7 @@
 inherited ProjectManageClientDlg: TProjectManageClientDlg
-  Left = 198
-  Top = 167
-  Width = 923
+  Left = 36
+  Top = 122
+  Width = 1173
   Caption = #39033#30446#31649#29702
   OldCreateOrder = True
   PixelsPerInch = 96
@@ -9,17 +9,16 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
   object plonvisible: TPanel
     Left = 0
     Top = 0
-    Width = 915
+    Width = 1165
     Height = 70
     Align = alTop
-    Caption = 'plonvisible'
     TabOrder = 0
     Visible = False
   end
   object plcenter: TPanel
     Left = 0
     Top = 70
-    Width = 915
+    Width = 1165
     Height = 536
     Align = alClient
     BevelOuter = bvLowered
@@ -28,9 +27,9 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
     object pcProject: TPageControl
       Left = 1
       Top = 1
-      Width = 913
+      Width = 1163
       Height = 534
-      ActivePage = tsTask
+      ActivePage = tsProjectList
       Align = alClient
       MultiLine = True
       TabOrder = 0
@@ -41,7 +40,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
         object plProItemTop: TPanel
           Left = 0
           Top = 0
-          Width = 905
+          Width = 1155
           Height = 40
           Align = alTop
           BevelOuter = bvNone
@@ -104,7 +103,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
         object dgProItem: TDBGrid
           Left = 0
           Top = 40
-          Width = 905
+          Width = 1155
           Height = 464
           Align = alClient
           DataSource = dsProjectItem
@@ -189,7 +188,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
         object Splitter1: TSplitter
           Left = 0
           Top = 153
-          Width = 905
+          Width = 1155
           Height = 10
           Cursor = crVSplit
           Align = alBottom
@@ -199,7 +198,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
         object dbProName: TDBText
           Left = 0
           Top = 40
-          Width = 905
+          Width = 1155
           Height = 17
           Align = alTop
           Color = clGray
@@ -216,7 +215,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
         object plProVersion: TPanel
           Left = 0
           Top = 0
-          Width = 905
+          Width = 1155
           Height = 40
           Align = alTop
           BevelOuter = bvNone
@@ -270,7 +269,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
         object dbmContext: TDBMemo
           Left = 0
           Top = 163
-          Width = 905
+          Width = 1155
           Height = 341
           Align = alBottom
           DataField = 'ZCONTEXT'
@@ -282,7 +281,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
         object dgProVersion: TDBGrid
           Left = 0
           Top = 57
-          Width = 905
+          Width = 1155
           Height = 96
           Align = alClient
           DataSource = dsProVersion
@@ -336,32 +335,25 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
       object tsTask: TTabSheet
         Caption = #20219#21153#21333
         ImageIndex = 2
-        object Splitter2: TSplitter
-          Left = 0
-          Top = 294
-          Width = 905
-          Height = 10
-          Cursor = crVSplit
-          Align = alBottom
-          Beveled = True
-          ResizeStyle = rsLine
-        end
         object Splitter3: TSplitter
           Left = 401
           Top = 62
           Width = 10
-          Height = 232
+          Height = 442
           Beveled = True
           ResizeStyle = rsLine
         end
         object plTaskTool: TPanel
           Left = 0
           Top = 0
-          Width = 905
+          Width = 1155
           Height = 40
           Align = alTop
           BevelOuter = bvNone
           TabOrder = 0
+          DesignSize = (
+            1155
+            40)
           object BitBtn10: TBitBtn
             Left = 8
             Top = 8
@@ -380,18 +372,75 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
             Caption = #25351#25344#32473#25105#30340
             TabOrder = 1
           end
+          object BitBtn12: TBitBtn
+            Left = 1049
+            Top = 7
+            Width = 100
+            Height = 25
+            Action = actTask_Save
+            Anchors = [akTop, akRight]
+            Caption = #20445#23384
+            TabOrder = 2
+            Glyph.Data = {
+              36040000424D3604000000000000360000002800000010000000100000000100
+              2000000000000004000000000000000000000000000000000000FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00000000000000000000000000000000000000000000000000000000000000
+              00000000000000000000000000000000000000000000FF00FF00FF00FF000000
+              0000008080000080800000000000000000000000000000000000000000000000
+              0000C0C0C000C0C0C000000000000080800000000000FF00FF00FF00FF000000
+              0000008080000080800000000000000000000000000000000000000000000000
+              0000C0C0C000C0C0C000000000000080800000000000FF00FF00FF00FF000000
+              0000008080000080800000000000000000000000000000000000000000000000
+              0000C0C0C000C0C0C000000000000080800000000000FF00FF00FF00FF000000
+              0000008080000080800000000000000000000000000000000000000000000000
+              00000000000000000000000000000080800000000000FF00FF00FF00FF000000
+              0000008080000080800000808000008080000080800000808000008080000080
+              80000080800000808000008080000080800000000000FF00FF00FF00FF000000
+              0000008080000080800000000000000000000000000000000000000000000000
+              00000000000000000000008080000080800000000000FF00FF00FF00FF000000
+              00000080800000000000C0C0C000C0C0C000C0C0C000C0C0C000C0C0C000C0C0
+              C000C0C0C000C0C0C000000000000080800000000000FF00FF00FF00FF000000
+              00000080800000000000C0C0C000C0C0C000C0C0C000C0C0C000C0C0C000C0C0
+              C000C0C0C000C0C0C000000000000080800000000000FF00FF00FF00FF000000
+              00000080800000000000C0C0C000C0C0C000C0C0C000C0C0C000C0C0C000C0C0
+              C000C0C0C000C0C0C000000000000080800000000000FF00FF00FF00FF000000
+              00000080800000000000C0C0C000C0C0C000C0C0C000C0C0C000C0C0C000C0C0
+              C000C0C0C000C0C0C000000000000080800000000000FF00FF00FF00FF000000
+              00000080800000000000C0C0C000C0C0C000C0C0C000C0C0C000C0C0C000C0C0
+              C000C0C0C000C0C0C000000000000000000000000000FF00FF00FF00FF000000
+              00000080800000000000C0C0C000C0C0C000C0C0C000C0C0C000C0C0C000C0C0
+              C000C0C0C000C0C0C00000000000C0C0C00000000000FF00FF00FF00FF000000
+              0000000000000000000000000000000000000000000000000000000000000000
+              00000000000000000000000000000000000000000000FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00}
+          end
+          object BitBtn13: TBitBtn
+            Left = 232
+            Top = 8
+            Width = 100
+            Height = 25
+            Action = actTask_to
+            Caption = #25351#27966#32473
+            TabOrder = 3
+          end
         end
         object plTitle: TPanel
           Left = 0
           Top = 40
-          Width = 905
+          Width = 1155
           Height = 22
           Align = alTop
           TabOrder = 1
+          DesignSize = (
+            1155
+            22)
           object DBText1: TDBText
             Left = 440
             Top = 1
-            Width = 464
+            Width = 714
             Height = 20
             Align = alClient
             Color = clGray
@@ -422,42 +471,32 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
             ParentColor = False
             ParentFont = False
           end
-        end
-        object plTaskBootom: TPanel
-          Left = 0
-          Top = 304
-          Width = 905
-          Height = 200
-          Align = alBottom
-          BevelOuter = bvNone
-          TabOrder = 2
-          object DBGrid1: TDBGrid
-            Left = 56
-            Top = 24
-            Width = 553
-            Height = 120
-            DataSource = dsTask
+          object cbEditDesing: TCheckBox
+            Left = 1094
+            Top = 3
+            Width = 55
+            Height = 17
+            Anchors = [akTop, akRight]
+            Caption = #32534#36753
+            Color = clGray
+            ParentColor = False
             TabOrder = 0
-            TitleFont.Charset = GB2312_CHARSET
-            TitleFont.Color = clWindowText
-            TitleFont.Height = -15
-            TitleFont.Name = #23435#20307
-            TitleFont.Style = []
+            OnClick = cbEditDesingClick
           end
         end
         object plTaskList: TPanel
           Left = 0
           Top = 62
           Width = 401
-          Height = 232
+          Height = 442
           Align = alLeft
           BevelOuter = bvNone
-          TabOrder = 3
+          TabOrder = 2
           object dgTaskList: TDBGrid
             Left = 0
             Top = 0
             Width = 401
-            Height = 232
+            Height = 442
             Align = alClient
             DataSource = dsTask
             Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
@@ -474,13 +513,15 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
                 FieldName = 'ZNo'
                 Title.Alignment = taCenter
                 Title.Caption = #24207#21495
+                Width = 30
                 Visible = True
               end
               item
                 Expanded = False
-                FieldName = 'ZNAME'
+                FieldName = 'ZSTATUSNAME'
                 Title.Alignment = taCenter
                 Title.Caption = #29366#24577
+                Width = 50
                 Visible = True
               end
               item
@@ -488,7 +529,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
                 FieldName = 'ZNAME'
                 Title.Alignment = taCenter
                 Title.Caption = #20219#21153#21333#21517#31216
-                Width = 271
+                Width = 250
                 Visible = True
               end>
           end
@@ -496,38 +537,297 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
         object plTaskContext: TPanel
           Left = 411
           Top = 62
-          Width = 494
-          Height = 232
+          Width = 744
+          Height = 442
           Align = alClient
           BevelOuter = bvNone
-          TabOrder = 4
-          object Splitter4: TSplitter
-            Left = 0
-            Top = 71
-            Width = 494
-            Height = 10
-            Cursor = crVSplit
-            Align = alBottom
-            Beveled = True
-            ResizeStyle = rsLine
-          end
-          object DBMemo1: TDBMemo
-            Left = 0
-            Top = 81
-            Width = 494
-            Height = 151
-            Align = alBottom
-            DataSource = dsTask
-            TabOrder = 0
-          end
-          object DBMemo2: TDBMemo
+          TabOrder = 3
+          object pcTasKUser: TPageControl
             Left = 0
             Top = 0
-            Width = 494
-            Height = 71
+            Width = 744
+            Height = 442
+            ActivePage = tsDesign
             Align = alClient
-            DataSource = dsTask
-            TabOrder = 1
+            TabOrder = 0
+            TabPosition = tpBottom
+            object tsDesign: TTabSheet
+              Caption = #21333#20803#35774#35745
+              ImageIndex = 1
+              object Splitter4: TSplitter
+                Left = 0
+                Top = 253
+                Width = 736
+                Height = 10
+                Cursor = crVSplit
+                Align = alBottom
+                Beveled = True
+                ResizeStyle = rsLine
+              end
+              object DBMDesign: TDBMemo
+                Left = 0
+                Top = 0
+                Width = 736
+                Height = 253
+                Align = alClient
+                DataField = 'ZDESIGN'
+                DataSource = dsTask
+                ReadOnly = True
+                TabOrder = 0
+              end
+              object DBMTestCase: TDBMemo
+                Left = 0
+                Top = 263
+                Width = 736
+                Height = 151
+                Align = alBottom
+                DataField = 'ZTESTCASE'
+                DataSource = dsTask
+                ReadOnly = True
+                TabOrder = 1
+              end
+            end
+            object tsUser: TTabSheet
+              Caption = #25191#34892#20154
+              ImageIndex = 1
+              object dgUser: TDBGrid
+                Left = 0
+                Top = 0
+                Width = 241
+                Height = 414
+                Align = alLeft
+                DataSource = dsTaskUser
+                Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
+                ReadOnly = True
+                TabOrder = 0
+                TitleFont.Charset = GB2312_CHARSET
+                TitleFont.Color = clWindowText
+                TitleFont.Height = -15
+                TitleFont.Name = #23435#20307
+                TitleFont.Style = []
+                Columns = <
+                  item
+                    Alignment = taRightJustify
+                    Expanded = False
+                    FieldName = 'ZUSER_ID'
+                    Title.Alignment = taCenter
+                    Title.Caption = 'UID'
+                    Width = 40
+                    Visible = True
+                  end
+                  item
+                    Expanded = False
+                    FieldName = 'ZUSERNAME'
+                    Title.Alignment = taCenter
+                    Title.Caption = #22995#21517
+                    Width = 141
+                    Visible = True
+                  end>
+              end
+              object plUserRight: TPanel
+                Left = 241
+                Top = 0
+                Width = 495
+                Height = 414
+                Align = alClient
+                BevelOuter = bvNone
+                TabOrder = 1
+                object plUserBottom: TPanel
+                  Left = 0
+                  Top = 373
+                  Width = 495
+                  Height = 41
+                  Align = alBottom
+                  BevelOuter = bvNone
+                  TabOrder = 0
+                  object BitBtn14: TBitBtn
+                    Left = 24
+                    Top = 8
+                    Width = 100
+                    Height = 25
+                    Caption = #35780#20998
+                    TabOrder = 0
+                  end
+                end
+                object plScore: TPanel
+                  Left = 0
+                  Top = 0
+                  Width = 495
+                  Height = 373
+                  Align = alClient
+                  BevelOuter = bvNone
+                  Color = clMoneyGreen
+                  TabOrder = 1
+                  object Label1: TLabel
+                    Left = 24
+                    Top = 32
+                    Width = 45
+                    Height = 15
+                    Caption = #28385#20998#65306
+                  end
+                  object Label2: TLabel
+                    Left = 24
+                    Top = 61
+                    Width = 45
+                    Height = 15
+                    Caption = #24471#20998#65306
+                  end
+                  object Label3: TLabel
+                    Left = 26
+                    Top = 92
+                    Width = 42
+                    Height = 15
+                    Caption = #22791#27880#65306
+                  end
+                  object Label4: TLabel
+                    Left = 24
+                    Top = 128
+                    Width = 75
+                    Height = 15
+                    Caption = #35780#20998#26102#38388#65306
+                  end
+                  object DBText3: TDBText
+                    Left = 100
+                    Top = 125
+                    Width = 200
+                    Height = 17
+                    Color = clMoneyGreen
+                    DataField = 'ZSCOREDATE'
+                    DataSource = dsTaskUser
+                    ParentColor = False
+                  end
+                  object Label5: TLabel
+                    Left = 24
+                    Top = 184
+                    Width = 180
+                    Height = 15
+                    Caption = #27880#24847#65292#35780#20998#21518#28857#20851#38381#20219#21153#12290
+                  end
+                  object DBEdit1: TDBEdit
+                    Left = 100
+                    Top = 28
+                    Width = 200
+                    Height = 23
+                    DataField = 'ZPERFACT'
+                    DataSource = dsTaskUser
+                    TabOrder = 0
+                  end
+                  object DBEdit2: TDBEdit
+                    Left = 100
+                    Top = 56
+                    Width = 200
+                    Height = 23
+                    DataField = 'ZSCORE'
+                    DataSource = dsTaskUser
+                    TabOrder = 1
+                  end
+                  object DBEdit3: TDBEdit
+                    Left = 100
+                    Top = 88
+                    Width = 400
+                    Height = 23
+                    DataField = 'ZREMASK'
+                    DataSource = dsTaskUser
+                    TabOrder = 2
+                  end
+                  object DBCheckBox1: TDBCheckBox
+                    Left = 328
+                    Top = 27
+                    Width = 97
+                    Height = 17
+                    Caption = #21462#28040#25191#34892#20154
+                    DataField = 'ZCANCEL'
+                    DataSource = dsTaskUser
+                    TabOrder = 3
+                    ValueChecked = 'True'
+                    ValueUnchecked = 'False'
+                  end
+                end
+              end
+            end
+            object tsPlan: TTabSheet
+              Caption = #20219#21153#36827#24230
+              ImageIndex = 2
+              object Splitter2: TSplitter
+                Left = 0
+                Top = 169
+                Width = 736
+                Height = 10
+                Cursor = crVSplit
+                Align = alTop
+                ResizeStyle = rsLine
+              end
+              object DBGrid1: TDBGrid
+                Left = 0
+                Top = 0
+                Width = 736
+                Height = 169
+                Align = alTop
+                DataSource = dsTaskItem
+                Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
+                ReadOnly = True
+                TabOrder = 0
+                TitleFont.Charset = GB2312_CHARSET
+                TitleFont.Color = clWindowText
+                TitleFont.Height = -15
+                TitleFont.Name = #23435#20307
+                TitleFont.Style = []
+                Columns = <
+                  item
+                    Expanded = False
+                    FieldName = 'ZNO'
+                    Title.Alignment = taCenter
+                    Title.Caption = #24207#21495
+                    Width = 48
+                    Visible = True
+                  end
+                  item
+                    Expanded = False
+                    FieldName = 'ZUSERNAME'
+                    Title.Alignment = taCenter
+                    Title.Caption = #25191#34892#20154
+                    Width = 100
+                    Visible = True
+                  end
+                  item
+                    Expanded = False
+                    FieldName = 'ZDATE'
+                    Title.Alignment = taCenter
+                    Title.Caption = #26102#38388
+                    Width = 200
+                    Visible = True
+                  end>
+              end
+              object dbmItemDeign: TDBMemo
+                Left = 0
+                Top = 179
+                Width = 736
+                Height = 195
+                Align = alClient
+                DataField = 'ZDESIGN'
+                DataSource = dsTaskItem
+                ScrollBars = ssBoth
+                TabOrder = 1
+              end
+              object plTaskItemBottom: TPanel
+                Left = 0
+                Top = 374
+                Width = 736
+                Height = 40
+                Align = alBottom
+                BevelOuter = bvNone
+                TabOrder = 2
+                object BitBtn15: TBitBtn
+                  Left = 8
+                  Top = 8
+                  Width = 100
+                  Height = 25
+                  Action = actTask_AddItem
+                  Caption = #22686#21152
+                  TabOrder = 0
+                end
+              end
+            end
           end
         end
       end
@@ -548,6 +848,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
     Top = 32
   end
   object ActionList1: TActionList
+    Images = DM.ImageList1
     Left = 96
     Top = 8
     object actPro_Add: TAction
@@ -614,6 +915,26 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
     object actTask_ToMe: TAction
       Category = #20219#21153#21333
       Caption = #25351#25344#32473#25105#30340
+      OnExecute = actTask_ToMeExecute
+    end
+    object actTask_Save: TAction
+      Category = #20219#21153#21333
+      Caption = #20445#23384
+      Hint = #20445#23384#20462#25913
+      ImageIndex = 6
+      OnExecute = actTask_SaveExecute
+      OnUpdate = actTask_SaveUpdate
+    end
+    object actTask_to: TAction
+      Category = #20219#21153#21333
+      Caption = #25351#27966#32473
+      OnExecute = actTask_toExecute
+      OnUpdate = actTask_toUpdate
+    end
+    object actTask_AddItem: TAction
+      Category = #20219#21153#21333
+      Caption = #22686#21152
+      OnExecute = actTask_AddItemExecute
     end
   end
   object dsProVersion: TDataSource
@@ -628,7 +949,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
     BeforeDelete = cdsProVersionBeforeDelete
     OnNewRecord = cdsProVersionNewRecord
     Left = 136
-    Top = 7
+    Top = 5
   end
   object pmExcel: TPopupMenu
     AutoHotkeys = maManual
@@ -711,6 +1032,8 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
   object cdsTask: TClientDataSet
     Aggregates = <>
     Params = <>
+    BeforePost = cdsTaskBeforePost
+    AfterScroll = cdsTaskAfterScroll
     OnCalcFields = cdsTaskCalcFields
     OnNewRecord = cdsTaskNewRecord
     Left = 296
@@ -726,13 +1049,6 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
     Params = <>
     Left = 336
     Top = 8
-    object cdsTaskTypeZNAME: TStringField
-      FieldName = 'ZNAME'
-      Size = 30
-    end
-    object cdsTaskTypeZID: TIntegerField
-      FieldName = 'ZID'
-    end
   end
   object dsTaskType: TDataSource
     DataSet = cdsTaskType
@@ -742,7 +1058,44 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
   object cdsTemp: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 384
+    Left = 680
     Top = 8
+  end
+  object cdsStatus: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 376
+    Top = 8
+  end
+  object dsStatus: TDataSource
+    DataSet = cdsStatus
+    Left = 376
+    Top = 40
+  end
+  object cdsTaskUser: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    BeforePost = cdsTaskUserBeforePost
+    Left = 416
+    Top = 8
+  end
+  object dsTaskUser: TDataSource
+    DataSet = cdsTaskUser
+    Left = 416
+    Top = 40
+  end
+  object cdsTaskItem: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    BeforePost = cdsTaskItemBeforePost
+    OnCalcFields = cdsTaskItemCalcFields
+    OnNewRecord = cdsTaskItemNewRecord
+    Left = 456
+    Top = 8
+  end
+  object dsTaskItem: TDataSource
+    DataSet = cdsTaskItem
+    Left = 456
+    Top = 40
   end
 end

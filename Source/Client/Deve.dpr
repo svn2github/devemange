@@ -12,7 +12,8 @@ uses
   ExcelUnits in 'ExcelUnits.pas',
   DesignDocumentClientfrm in 'DesignDocumentClientfrm.pas' {DesignDocumentClientDlg},
   ProjectManageClientfrm in 'ProjectManageClientfrm.pas' {ProjectManageClientDlg},
-  NewTaskfrm in 'NewTaskfrm.pas' {NewTaskDlg};
+  NewTaskfrm in 'NewTaskfrm.pas' {NewTaskDlg},
+  SelectUsersfrm in 'SelectUsersfrm.pas' {SelectUsersDlg};
 
 {$R *.res}
 
