@@ -139,6 +139,13 @@ type
     plTaskItemBottom: TPanel;
     BitBtn15: TBitBtn;
     actTask_AddItem: TAction;
+    BitBtn16: TBitBtn;
+    BitBtn17: TBitBtn;
+    BitBtn18: TBitBtn;
+    actTask_Finally: TAction;
+    actTask_Close: TAction;
+    actTask_Action: TAction;
+    actTask_Score: TAction;
     procedure actPro_AddExecute(Sender: TObject);
     procedure cbEditProItemClick(Sender: TObject);
     procedure actPro_AddUpdate(Sender: TObject);
@@ -182,6 +189,14 @@ type
     procedure cdsTaskItemNewRecord(DataSet: TDataSet);
     procedure cdsTaskItemBeforePost(DataSet: TDataSet);
     procedure cdsTaskItemCalcFields(DataSet: TDataSet);
+    procedure actTask_FinallyExecute(Sender: TObject);
+    procedure actTask_FinallyUpdate(Sender: TObject);
+    procedure actTask_CloseExecute(Sender: TObject);
+    procedure actTask_CloseUpdate(Sender: TObject);
+    procedure actTask_ActionExecute(Sender: TObject);
+    procedure actTask_ActionUpdate(Sender: TObject);
+    procedure actTask_ScoreUpdate(Sender: TObject);
+    procedure actTask_ScoreExecute(Sender: TObject);
   private
     { Private declarations }
     procedure LoadProjectItem();
@@ -202,6 +217,7 @@ implementation
 uses
   ClinetSystemUnits,
   DmUints,
+  TaskScorefrm,               {评分}
   SelectUsersfrm,             {选择用户}  
   NewTaskfrm                  {新建任务单}
   ;
@@ -1234,7 +1250,7 @@ var
 const
   glSQL = 'insert into TB_TASK_USER (ZTASK_CODE,ZUSER_ID) values(''%s'',%d)';
   glSQL2 = 'update TB_TASK_USER set ZPERFACT=%d,ZSCORE=%d,ZREMASK=''%s'', ' +
-           ' ZSCOREDATE = getdate(), ZCANCEL=%d where ZTASK_CODE=''%s'' and ZUSER_ID=%d';
+           ' ZCANCEL=%d where ZTASK_CODE=''%s'' and ZUSER_ID=%d';
 begin
   //
   if fLoading then Exit;
@@ -1263,8 +1279,6 @@ begin
       dataset.FieldByName('ZUSER_ID').AsInteger ]);
     ClientSystem.fDbOpr.BeginTrans;
     try
-      dataSet.FieldByName('ZSCOREDATE').AsString :=
-        formatdatetime('yyyy-mm-dd hh:ss:mm',now());
       ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
           ClientSystem.fDbOpr.CommitTrans;
     except
@@ -1386,7 +1400,120 @@ end;
 procedure TProjectManageClientDlg.cdsTaskItemCalcFields(DataSet: TDataSet);
 begin
   DataSet.FieldByName('ZNO').AsInteger := DataSet.RecNo;
+end;
 
+procedure TProjectManageClientDlg.actTask_FinallyExecute(Sender: TObject);
+begin
+  if cdsTaskUser.Locate('ZUSER_ID;ZCANCEL',VarArrayOf([ClientSystem.fEditer_id,0]),
+    [loPartialKey]) then
+  begin
+    if not (cdsTask.State in [dsEdit,dsInsert]) then
+      cdsTask.Edit;
+    cdsTask.FieldByName('ZSTATUS').AsInteger := Ord(tsSccuess);
+    cdsTask.Post;
+  end
+  else begin
+    MessageBox(Handle,'不是你的任务，不能提交完成。','提示',
+      MB_ICONWARNING+MB_OK);
+    Exit;
+  end;
+end;
+
+procedure TProjectManageClientDlg.actTask_FinallyUpdate(Sender: TObject);
+begin
+  (Sender as TAction).Enabled := (not cdsTask.IsEmpty) and
+   not (cdsTask.FieldByName('ZSTATUS').AsInteger in [Ord(tsSccuess),Ord(tsClose)]);
+end;
+
+procedure TProjectManageClientDlg.actTask_CloseExecute(Sender: TObject);
+begin
+  //关闭任务
+  if cdsTask.Locate('ZUSER_ID',ClientSystem.fEditer_id,[loPartialKey]) then
+  begin
+    if not (cdsTask.State in [dsEdit,dsInsert]) then
+      cdsTask.Edit;
+    cdsTask.FieldByName('ZSTATUS').AsInteger := Ord(tsClose);
+    cdsTask.Post;
+  end
+  else begin
+    MessageBox(Handle,'不是你创建的任务，不能关闭。','提示',
+      MB_ICONWARNING+MB_OK);
+    Exit;
+  end;
+end;
+
+procedure TProjectManageClientDlg.actTask_CloseUpdate(Sender: TObject);
+begin
+  (Sender as TAction).Enabled := (not cdsTask.IsEmpty) and
+   (cdsTask.FieldByName('ZSTATUS').AsInteger in [Ord(tsSccuess)]);
+end;
+
+procedure TProjectManageClientDlg.actTask_ActionExecute(Sender: TObject);
+begin
+  if cdsTaskUser.Locate('ZUSER_ID;ZCANCEL',VarArrayOf([ClientSystem.fEditer_id,0]),
+    [loPartialKey]) then
+  begin
+    if not (cdsTask.State in [dsEdit,dsInsert]) then
+      cdsTask.Edit;
+    cdsTask.FieldByName('ZSTATUS').AsInteger := Ord(tsing);
+    cdsTask.Post;
+  end
+  else if cdsTask.Locate('ZUSER_ID',ClientSystem.fEditer_id,[loPartialKey]) then
+  begin
+    if not (cdsTask.State in [dsEdit,dsInsert]) then
+      cdsTask.Edit;
+    cdsTask.FieldByName('ZSTATUS').AsInteger := Ord(tsing);
+    cdsTask.Post;
+  end
+  else begin
+    MessageBox(Handle,'不是你执行任务或创建任务，不能提交激活。','提示',
+      MB_ICONWARNING+MB_OK);
+    Exit;
+  end;
+end;
+
+procedure TProjectManageClientDlg.actTask_ActionUpdate(Sender: TObject);
+begin
+  (Sender as TAction).Enabled := (not cdsTask.IsEmpty) and
+  (cdsTask.FieldByName('ZSTATUS').AsInteger in [Ord(tsSccuess),Ord(tsClose)]);
+end;
+
+procedure TProjectManageClientDlg.actTask_ScoreUpdate(Sender: TObject);
+begin
+  (Sender as TAction).Enabled := (not cdsTask.IsEmpty) and
+  (cdsTask.FieldByName('ZSTATUS').AsInteger in [Ord(tsSccuess)]);
+end;
+
+procedure TProjectManageClientDlg.actTask_ScoreExecute(Sender: TObject);
+var
+  myfrom : TTaskScoreDlg;
+  mycds : TClientDataSet;
+begin
+  mycds := TClientDataSet.Create(nil);
+  mycds.CloneCursor(cdsTask,False);  //为了处理locate()方法定位问题。
+  try
+    if mycds.Locate('ZUSER_ID',ClientSystem.fEditer_id,[loPartialKey]) then
+    begin
+      myfrom := TTaskScoreDlg.Create(nil);
+      try
+        if cdsTaskUser.State in [dsEdit,dsInsert] then
+          cdsTaskUser.Post;
+        cdsTaskUser.Edit;
+        if myfrom.ShowModal() = mrOK then
+        begin
+          cdsTaskUser.FieldByName('ZSCOREDATE').AsString :=
+            formatdatetime('yyyy-mm-dd hh:ss:mm',now());
+          cdsTaskUser.Post;
+        end
+        else
+          cdsTaskUser.Cancel;
+      finally
+        myfrom.Free;
+      end;
+    end;
+  finally
+    mycds.Free;
+  end;
 end;
 
 end.

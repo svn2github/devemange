@@ -13,7 +13,8 @@ uses
   DesignDocumentClientfrm in 'DesignDocumentClientfrm.pas' {DesignDocumentClientDlg},
   ProjectManageClientfrm in 'ProjectManageClientfrm.pas' {ProjectManageClientDlg},
   NewTaskfrm in 'NewTaskfrm.pas' {NewTaskDlg},
-  SelectUsersfrm in 'SelectUsersfrm.pas' {SelectUsersDlg};
+  SelectUsersfrm in 'SelectUsersfrm.pas' {SelectUsersDlg},
+  TaskScorefrm in 'TaskScorefrm.pas' {TaskScoreDlg};
 
 {$R *.res}
 

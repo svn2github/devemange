@@ -1,6 +1,6 @@
 inherited ProjectManageClientDlg: TProjectManageClientDlg
-  Left = 36
-  Top = 122
+  Left = 44
+  Top = 123
   Width = 1173
   Caption = #39033#30446#31649#29702
   OldCreateOrder = True
@@ -547,7 +547,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
             Top = 0
             Width = 744
             Height = 442
-            ActivePage = tsDesign
+            ActivePage = tsUser
             Align = alClient
             TabOrder = 0
             TabPosition = tpBottom
@@ -641,12 +641,40 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
                   BevelOuter = bvNone
                   TabOrder = 0
                   object BitBtn14: TBitBtn
-                    Left = 24
+                    Left = 12
                     Top = 8
                     Width = 100
                     Height = 25
+                    Action = actTask_Score
                     Caption = #35780#20998
                     TabOrder = 0
+                  end
+                  object BitBtn16: TBitBtn
+                    Left = 128
+                    Top = 8
+                    Width = 100
+                    Height = 25
+                    Action = actTask_Finally
+                    Caption = #25105#23436#25104#20102
+                    TabOrder = 1
+                  end
+                  object BitBtn17: TBitBtn
+                    Left = 249
+                    Top = 8
+                    Width = 100
+                    Height = 25
+                    Action = actTask_Action
+                    Caption = #28608#27963#20219#21153
+                    TabOrder = 2
+                  end
+                  object BitBtn18: TBitBtn
+                    Left = 362
+                    Top = 8
+                    Width = 100
+                    Height = 25
+                    Action = actTask_Close
+                    Caption = #20851#38381#20219#21153
+                    TabOrder = 3
                   end
                 end
                 object plScore: TPanel
@@ -675,7 +703,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
                   object Label3: TLabel
                     Left = 26
                     Top = 92
-                    Width = 42
+                    Width = 45
                     Height = 15
                     Caption = #22791#27880#65306
                   end
@@ -717,8 +745,10 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
                     Top = 56
                     Width = 200
                     Height = 23
+                    Color = clMenuBar
                     DataField = 'ZSCORE'
                     DataSource = dsTaskUser
+                    ReadOnly = True
                     TabOrder = 1
                   end
                   object DBEdit3: TDBEdit
@@ -935,6 +965,30 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
       Category = #20219#21153#21333
       Caption = #22686#21152
       OnExecute = actTask_AddItemExecute
+    end
+    object actTask_Finally: TAction
+      Category = #20219#21153#21333
+      Caption = #25105#23436#25104#20102
+      OnExecute = actTask_FinallyExecute
+      OnUpdate = actTask_FinallyUpdate
+    end
+    object actTask_Close: TAction
+      Category = #20219#21153#21333
+      Caption = #20851#38381#20219#21153
+      OnExecute = actTask_CloseExecute
+      OnUpdate = actTask_CloseUpdate
+    end
+    object actTask_Action: TAction
+      Category = #20219#21153#21333
+      Caption = #28608#27963#20219#21153
+      OnExecute = actTask_ActionExecute
+      OnUpdate = actTask_ActionUpdate
+    end
+    object actTask_Score: TAction
+      Category = #20219#21153#21333
+      Caption = #35780#20998
+      OnExecute = actTask_ScoreExecute
+      OnUpdate = actTask_ScoreUpdate
     end
   end
   object dsProVersion: TDataSource
