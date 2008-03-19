@@ -4,6 +4,9 @@
 //
 //   压缩的算法,我采用了ZLib 1.2.3 版本 www.Zlib.net
 //
+//
+//   1.增加一个数据包如小于100字节，则不压。 21008-3-19
+//
 ///////////////////////////////////////////////////////////////////////////////
 
 unit ZLibImpt;
@@ -43,7 +46,7 @@ begin
   try
     p := Pointer(Integer(Data.Memory) + Data.BytesReserved);
     Size := PInteger(p)^;
-    if Size = 0 then Exit;
+    if (Size = 0) or (Size<=100) then Exit;
     p := Pointer(Integer(p) + SizeOf(Size));
     InStream.Write(p^, Data.Size - SizeOf(Size));
     OutStream := TMemoryStream.Create;
@@ -78,7 +81,7 @@ begin
   try
     InStream.Write(Pointer(Integer(Data.Memory) + Data.BytesReserved)^, Data.Size);
     Size := InStream.Size;
-    if Size = 0 then Exit; 
+    if (Size = 0) or (Size<=100) then Exit;
     OutStream := TMemoryStream.Create;
     try
       ZStream := TZCompressionStream.Create(OutStream,zcFastest);

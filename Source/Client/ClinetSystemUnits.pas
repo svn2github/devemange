@@ -70,7 +70,7 @@ uses
   ZLibEx;
 
   function CreateBfssDBOpr():IDbOperator; stdcall;
-    external 'DB.api';
+    external 'lgDB.api';
 
 type
    TByteArray = array of byte;

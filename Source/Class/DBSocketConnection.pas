@@ -9,6 +9,8 @@
 //
 // 因小于100字节的量比较多,所以小于100或等于100的内容不处理
 //
+//   1.增加一个数据包如小于100字节，则不压。 21008-3-19
+//
 //
 ///////////////////////////////////////////////////////////////////////////////
 unit DBSocketConnection;
@@ -18,10 +20,11 @@ uses
   Classes,SConnect,ScktComp,WinSock;
 type
 
-  TSendDataEvent = procedure(const Data: IDataBlock) of Object;
+  TSendDataEvent    = procedure(const Data: IDataBlock) of Object;
   TReceiveDataEvent = procedure(const Data: IDataBlock) of Object;
 
   TBffsSocketConnection = class;
+  TDBSocketTransport    = class;
 
 //-------------------------
 // 数据发送与接收
@@ -84,6 +87,7 @@ type
   end;
 
 
+
 implementation
 uses
   ZLibEx,
@@ -116,7 +120,7 @@ resourcestring
     try
       p := Pointer(Integer(Data.Memory) + Data.BytesReserved);
       Size := PInteger(p)^;
-      if Size = 0 then Exit;
+      if (Size = 0) or (Size<100) then Exit;
       p := Pointer(Integer(p) + SizeOf(Size));
       InStream.Write(p^, Data.Size - SizeOf(Size));
       OutStream := TMemoryStream.Create;
@@ -151,7 +155,7 @@ resourcestring
     try
       InStream.Write(Pointer(Integer(Data.Memory) + Data.BytesReserved)^, Data.Size);
       Size := InStream.Size;
-      if Size = 0 then Exit;
+      if (Size = 0) or (Size<100) then Exit;
       OutStream := TMemoryStream.Create;
       try
         ZStream := TZCompressionStream.Create(OutStream,zcFastest);
@@ -300,6 +304,7 @@ begin
     fOwner.fSendDataEvent(Data);
 end;
 
+//接收到的数据
 function TDBSocketTransport.Receive(WaitForInput: Boolean;
   Context: Integer): IDataBlock;
 var
@@ -388,5 +393,6 @@ begin
     if FEvent <> 0 then WSACloseEvent(FEvent);
   end;
 end;
+
 
 end.
