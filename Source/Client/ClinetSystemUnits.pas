@@ -4,6 +4,7 @@
 //
 //  修改内容:
 //     1)更改权限为正向权限. 用户类型为管理员则有全部权限能力.
+//     2)增加插件的功能 2008-3-19 
 //
 //
 //
@@ -39,6 +40,7 @@ type
     fGauge  : TGauge;
     fDeleteFiles : TStringList;   //浏览文件时要删除的内容
     fCancelUpFile : Boolean;      //终止上传或下载文件
+    fPluginList   : TPluginList;  //插件列表
 
     constructor Create;
     destructor Destroy; override;
@@ -66,13 +68,26 @@ type
 
 
   TPlugin        = Class
-  private
-
+  public
+    fOwner : TPluginList;
+    fCaption : String;
+    fVersion : integer;
+    fDllfileName : String;
+    fStartAction : Boolean; //=True 表示加载后马上显示
+    fDllHandle   : THandle;
+    fDllWindowHandle : THandle;
   end;
 
   TPluginList    = Class
   private
+    fItems : TList;
 
+    procedure ClearItem;
+  public
+    fMainExeDir : String; //exe的目录
+
+    constructor Create;
+    destructor Destroy; override;
   end;
   
 
@@ -127,6 +142,9 @@ begin
   fCancelUpFile := False;
   if not DirectoryExists(fAppDir + '\' + gcLogDir) then
     CreateDir(fAppDir + '\' + gcLogDir);
+
+  fPluginList := TPluginList.Create;
+  fPluginList.fMainExeDir := fAppDir;  
 end;
 
 destructor TClinetSystem.Destroy;
@@ -135,6 +153,7 @@ begin
   fcdsUsePriv.Free;
   fDbOpr := nil;
   fGauge.Free;
+  fPluginList.Free;
   inherited;
 end;
 
@@ -539,6 +558,33 @@ begin
   end;
 end;
 
+
+{ TPluginList }
+
+procedure TPluginList.ClearItem;
+var
+  myItem : TPlugin;
+  i : integer;
+begin
+  for i:=0 to fItems.Count -1 do
+  begin
+    myItem := fItems.items[i];
+    myItem.Free;
+  end;
+  fItems.Clear;
+end;
+
+constructor TPluginList.Create;
+begin
+  fItems := TList.Create;
+end;
+
+destructor TPluginList.Destroy;
+begin
+  ClearItem(); 
+  fItems.free;
+  inherited;
+end;
 
 initialization
   ClientSystem := TClinetSystem.Create;
