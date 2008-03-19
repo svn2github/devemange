@@ -76,13 +76,18 @@ type
 
   end;
 
+var
+  CurrentDBOpr : TBfssDBOpr;
+
   function CreateBfssDBOpr(): IDbOperator; stdcall;
 
 implementation
 
   function CreateBfssDBOpr(): IDbOperator;
   begin
-     Result := TBfssDBOpr.Create();
+    if not Assigned(CurrentDBOpr) then
+      CurrentDBOpr := TBfssDBOpr.Create;
+    Result := CurrentDBOpr;
   end;
 
   //–¥»’÷æ
@@ -361,5 +366,8 @@ begin
   Flush(fLogFile);
 end;
 
+initialization
+  CurrentDBOpr := nil;
+finalization
 
 end.

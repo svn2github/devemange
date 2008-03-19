@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, BaseDialogfrm, StdCtrls, Buttons, Mask, DBCtrls;
+  Dialogs, BaseDialogfrm, StdCtrls, Buttons, Mask, DBCtrls, ExtCtrls;
 
 type
   TTaskScoreDlg = class(TBaseDialog)
@@ -15,6 +15,10 @@ type
     Label2: TLabel;
     Label3: TLabel;
     DBText1: TDBText;
+    Label4: TLabel;
+    DBEdit2: TDBEdit;
+    Label5: TLabel;
+    Bevel1: TBevel;
   private
     { Private declarations }
   public

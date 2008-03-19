@@ -319,42 +319,47 @@ inherited UserManageClientDlg: TUserManageClientDlg
           Height = 413
           Align = alRight
           BevelOuter = bvNone
+          Color = clMoneyGreen
           TabOrder = 2
           object Label1: TLabel
-            Left = 48
+            Left = 32
             Top = 30
             Width = 38
             Height = 15
             Caption = #27169#22359':'
             Color = clBtnFace
             ParentColor = False
+            Transparent = True
           end
           object Label2: TLabel
-            Left = 33
+            Left = 32
             Top = 62
             Width = 53
             Height = 15
             Caption = #23376#27169#22359':'
             Color = clBtnFace
             ParentColor = False
+            Transparent = True
           end
           object Label3: TLabel
-            Left = 18
+            Left = 32
             Top = 89
             Width = 68
             Height = 15
             Caption = #25805#20316#23545#35937':'
             Color = clBtnFace
             ParentColor = False
+            Transparent = True
           end
           object Label4: TLabel
-            Left = 48
+            Left = 32
             Top = 118
             Width = 38
             Height = 15
             Caption = #26435#38480':'
             Color = clBtnFace
             ParentColor = False
+            Transparent = True
           end
           object Label5: TLabel
             Left = 321

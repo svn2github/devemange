@@ -1190,6 +1190,7 @@ begin
             cdsTask.FieldByName('ZCODE').AsString;
           cdsTaskUser.FieldByName('ZUSER_ID').AsInteger :=
             strtoint(myfrom.lbUserCode.Items[i]);
+          cdsTaskUser.FieldByName('ZCANCEL').AsBoolean := False;
           cdsTaskUser.Post;
 
           if not(cdsTask.State in [dsEdit,dsInsert]) then
@@ -1333,6 +1334,14 @@ begin
     end;
   end
   else begin
+    if cdsTask.FieldByName('ZUSER_ID').AsInteger <> ClientSystem.fEditer_id then
+    begin
+      MessageBox(Handle,'你不是任务的创建人，不能修改。','提示',
+        MB_ICONWARNING+MB_OK);
+      DataSet.Cancel;
+      Exit;
+    end;
+
     myd := Ord(dataset.FieldByName('ZCANCEL').AsBoolean);
     mysql := format(glSQL2,[
       dataSet.FieldByName('ZPERFACT').AsInteger,

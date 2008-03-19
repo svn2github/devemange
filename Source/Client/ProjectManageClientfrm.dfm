@@ -527,18 +527,18 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
               end
               item
                 Expanded = False
-                FieldName = 'ZSTATUSNAME'
-                Title.Alignment = taCenter
-                Title.Caption = #29366#24577
-                Width = 50
-                Visible = True
-              end
-              item
-                Expanded = False
                 FieldName = 'ZNAME'
                 Title.Alignment = taCenter
                 Title.Caption = #20219#21153#21333#21517#31216
                 Width = 280
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'ZSTATUSNAME'
+                Title.Alignment = taCenter
+                Title.Caption = #29366#24577
+                Width = 50
                 Visible = True
               end>
           end
@@ -556,7 +556,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
             Top = 0
             Width = 744
             Height = 442
-            ActivePage = tsUser
+            ActivePage = tsDesign
             Align = alClient
             TabOrder = 0
             TabPosition = tpBottom
@@ -582,6 +582,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
                 DataField = 'ZDESIGN'
                 DataSource = dsTask
                 ReadOnly = True
+                ScrollBars = ssBoth
                 TabOrder = 0
               end
               object DBMTestCase: TDBMemo
@@ -593,6 +594,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
                 DataField = 'ZTESTCASE'
                 DataSource = dsTask
                 ReadOnly = True
+                ScrollBars = ssBoth
                 TabOrder = 1
               end
             end

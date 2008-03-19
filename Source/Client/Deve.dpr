@@ -1,7 +1,6 @@
 program Deve;
 
 uses
-  midaslib,
   Forms,
   Mainfrm in 'Mainfrm.pas' {MainDlg},
   ClinetSystemUnits in 'ClinetSystemUnits.pas',
