@@ -20,6 +20,10 @@ type
 
   TEditerType = (etAdmin,etUser);  //用户类型
 
+  TClinetSystem  = Class;
+  TPlugin        = Class;
+  TPluginList    = Class;
+
   TClinetSystem = Class(TObject)
   private
     fTickCount : word;
@@ -59,6 +63,18 @@ type
     function GetFileSize(const FileName: String): LongInt;
     procedure SplitStr(AStr:String;ASl:TStringList;AChar:Char=';');  //折分字符
   end;
+
+
+  TPlugin        = Class
+  private
+
+  end;
+
+  TPluginList    = Class
+  private
+
+  end;
+  
 
 var
   ClientSystem : TClinetSystem;
