@@ -1,9 +1,9 @@
 object LoginDlg: TLoginDlg
-  Left = 451
-  Top = 283
+  Left = 459
+  Top = 264
   BorderStyle = bsDialog
   Caption = #29992#25143#30331#24405
-  ClientHeight = 241
+  ClientHeight = 245
   ClientWidth = 453
   Color = clBtnFace
   Font.Charset = GB2312_CHARSET
@@ -36,20 +36,6 @@ object LoginDlg: TLoginDlg
     Height = 16
     Caption = #23494'  '#30721'='
   end
-  object lbStutas: TLabel
-    Left = 25
-    Top = 203
-    Width = 70
-    Height = 14
-    Caption = #30331#24405#26381#21153#22120
-    Font.Charset = GB2312_CHARSET
-    Font.Color = clBlue
-    Font.Height = -14
-    Font.Name = #23435#20307
-    Font.Style = []
-    ParentFont = False
-    Visible = False
-  end
   object Label4: TLabel
     Left = 129
     Top = 99
@@ -61,6 +47,22 @@ object LoginDlg: TLoginDlg
     Font.Height = -14
     Font.Name = #23435#20307
     Font.Style = []
+    ParentFont = False
+  end
+  object lbStutas: TLabel
+    Left = 0
+    Top = 0
+    Width = 453
+    Height = 14
+    Align = alTop
+    Caption = #30331#24405#26381#21153#22120
+    Color = clGray
+    Font.Charset = GB2312_CHARSET
+    Font.Color = clBlue
+    Font.Height = -14
+    Font.Name = #23435#20307
+    Font.Style = []
+    ParentColor = False
     ParentFont = False
   end
   object cbServerIP: TComboBox
@@ -129,8 +131,8 @@ object LoginDlg: TLoginDlg
     Kind = bkCancel
   end
   object rbLocal: TRadioButton
-    Left = 81
-    Top = 23
+    Left = 64
+    Top = 28
     Width = 113
     Height = 17
     Caption = #26412#22320#36830#25509
@@ -140,8 +142,8 @@ object LoginDlg: TLoginDlg
     OnClick = rbLocalClick
   end
   object rbRemoate: TRadioButton
-    Left = 257
-    Top = 23
+    Left = 255
+    Top = 28
     Width = 113
     Height = 17
     Caption = #36828#31243#36830#25509

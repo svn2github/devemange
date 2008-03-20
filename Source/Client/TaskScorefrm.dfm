@@ -8,7 +8,7 @@ inherited TaskScoreDlg: TTaskScoreDlg
   TextHeight = 15
   object Label1: TLabel
     Left = 72
-    Top = 188
+    Top = 198
     Width = 75
     Height = 15
     Caption = #26368#21518#24471#20998#65306
@@ -39,7 +39,7 @@ inherited TaskScoreDlg: TTaskScoreDlg
   end
   object Label4: TLabel
     Left = 76
-    Top = 242
+    Top = 238
     Width = 45
     Height = 15
     Caption = #22791#27880#65306

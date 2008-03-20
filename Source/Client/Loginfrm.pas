@@ -16,10 +16,10 @@ type
     edPass: TEdit;
     btOK: TBitBtn;
     btCancel: TBitBtn;
-    lbStutas: TLabel;
     Label4: TLabel;
     rbLocal: TRadioButton;
     rbRemoate: TRadioButton;
+    lbStutas: TLabel;
     procedure btOKClick(Sender: TObject);
     procedure rbLocalClick(Sender: TObject);
     procedure rbRemoateClick(Sender: TObject);
@@ -75,6 +75,7 @@ begin
     Exit;
   end;
 
+  lbStutas.Font.Color := clblue;
   lbStutas.Caption := '连接服务器...';
   try
     if Pos(':',cbServerIP.Text) > 0 then
@@ -116,8 +117,10 @@ begin
           lbStutas.Caption := '用户或密码错误。';
       end;
     end
-    else
+    else begin
       lbStutas.Caption := '连接服务器失败。';
+      lbStutas.Font.Color := clred;
+    end;
   finally
 
   end;

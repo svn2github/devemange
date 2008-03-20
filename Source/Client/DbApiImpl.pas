@@ -5,6 +5,9 @@
 // 版本: 1.0.0 
 //
 //
+//  1.修改了写日志目录没有创建时,出错. 2008-3-20
+//  2.处理连接不上提示错误 2008-3-20
+//
 //
 //
 ///////////////////////////////////////////////////////////////////////////////
@@ -122,13 +125,18 @@ begin
 
   if Self.fConnectStype = csDCOM then
   begin
-
     with  RemoteServer as TDCOMConnection do
     begin
       ServerName :=  AHost;
       ServerGUID := '{B4AA6BE1-5DEF-431A-AFA0-F1262EDB4C5A}';
       ServerName := 'BFSS.BFSSRDM';
-      Connected  := True;
+      try
+        Connected  := True;
+      except
+        WriteLog('DCOM 连接失败。');
+        Result := False;
+        Exit;
+      end;
       if Connected then
         WriteLog('DCOM 连接成功。')
       else
@@ -141,7 +149,15 @@ begin
       Host := AHost;
       Port := APort;
       ServerGUID    := '{B4AA6BE1-5DEF-431A-AFA0-F1262EDB4C5A}';
-      Connected  := True;
+
+      try
+        Connected  := True;
+      except
+        Result := False;
+        WriteLog('Sokcet 连接失败。');
+        Exit;
+      end;
+
       if Connected then
         WriteLog('Sokcet 连接成功。')
       else
@@ -179,6 +195,8 @@ begin
   //日志
   mylogfile := ExtractFileDir(System.ParamStr(0)) +
     format('\Log\DBApi_%s.log',[formatdatetime('yyyy-mm-dd',now())]);
+  if not DirectoryExists(ExtractFileDir(mylogfile)) then
+    CreateDir(ExtractFileDir(mylogfile));
   AssignFile(fLogFile,mylogfile);
   if not FileExists(mylogfile) then
     Rewrite(fLogfile)
