@@ -7,6 +7,7 @@
 //
 //  1.修改了写日志目录没有创建时,出错. 2008-3-20
 //  2.处理连接不上提示错误 2008-3-20
+//  3.增加 GetSysDateTime的方法(); 2008-3-24 by mrlong
 //
 //
 //
@@ -70,6 +71,7 @@ type
     function DeleteFile(AFile_ID: Integer): Integer; safecall;
     function UpFileChunk(AFile_ID: Integer; AVer: Integer; AGroupID: Integer; AStream: OleVariant): Integer; safecall;
     procedure MailTo(AStyle: Integer; const AMails: WideString; AContextID: Integer); safecall;
+    function GetSysDateTime: OleVariant; stdcall;
 
     //5.属性
     function Connected(): Boolean; stdcall;
@@ -265,6 +267,12 @@ begin
     Result := fDOMServer
   else
     Result := fSocketServer;
+end;
+
+function TBfssDBOpr.GetSysDateTime: OleVariant;
+begin
+  if RemoteServer.Connected then
+    Result := RemoteServer.AppServer.GetSysDateTime;
 end;
 
 function TBfssDBOpr.Login(const AName, APass: WideString):integer;

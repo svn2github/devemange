@@ -76,7 +76,9 @@ type
     // AContextID 内容，是按类型来确定的。如bug则是bug_id值
     //
     procedure MailTo(AStyle: Integer; const AMails: WideString; AContextID: Integer); safecall;
-    
+
+    //取出系统时间
+    function GetSysDateTime: OleVariant; stdcall;
     //5.属性
     function Connected(): Boolean; stdcall;
     function Version : integer;stdcall;

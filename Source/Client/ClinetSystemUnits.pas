@@ -22,12 +22,11 @@ type
   TEditerType = (etAdmin,etUser);  //用户类型
 
   TClinetSystem  = Class;
-  TPlugin        = Class;
-  TPluginList    = Class;
 
   TClinetSystem = Class(TObject)
   private
     fTickCount : word;
+    function GetSysNow: TDateTime;
   public
     fAppDir : String;
     fTempDir : String;            //临时目录
@@ -40,7 +39,6 @@ type
     fGauge  : TGauge;
     fDeleteFiles : TStringList;   //浏览文件时要删除的内容
     fCancelUpFile : Boolean;      //终止上传或下载文件
-    fPluginList   : TPluginList;  //插件列表
 
     constructor Create;
     destructor Destroy; override;
@@ -52,7 +50,6 @@ type
     //操作权限
     function HasModuleAction(AStype:integer;ASubStype:integer;
       AID:integer;AAction:TActionType):Boolean;
-
     //文件的上传与下载
     function UpFile(AFile_ID,AVer:integer;AfileName:String):Boolean;overload; //上传文件
     function UpFile(ATreeStyle:TFileStype;ATree_ID:integer;AFileName:String;var AFileID:integer;AVer:integer=1):Boolean;overload;
@@ -60,36 +57,15 @@ type
     function DonwFileToFileName(Afile_id:integer;var AfileName:String):Boolean;overload; //保存到文件
     procedure OleVariantToStream(var Input: OleVariant; Stream: TStream);
     function StreamToOleVariant(Stream: TStream; Count: Integer): OleVariant;
-
     //其他
     function GetFileSize(const FileName: String): LongInt;
     procedure SplitStr(AStr:String;ASl:TStringList;AChar:Char=';');  //折分字符
+
+    property SysNow : TDateTime read GetSysNow;  //取出系统的时间
   end;
 
 
-  TPlugin        = Class
-  public
-    fOwner : TPluginList;
-    fCaption : String;
-    fVersion : integer;
-    fDllfileName : String;
-    fStartAction : Boolean; //=True 表示加载后马上显示
-    fDllHandle   : THandle;
-    fDllWindowHandle : THandle;
-  end;
 
-  TPluginList    = Class
-  private
-    fItems : TList;
-
-    procedure ClearItem;
-  public
-    fMainExeDir : String; //exe的目录
-
-    constructor Create;
-    destructor Destroy; override;
-  end;
-  
 
 var
   ClientSystem : TClinetSystem;
@@ -100,12 +76,10 @@ uses
   Variants,
   ZLibEx;
 
-  function CreateBfssDBOpr():IDbOperator; stdcall;
-    external 'lgDB.api';
-
+  function CreateBfssDBOpr():IDbOperator; stdcall;  external 'lgDB.api';
+  
 type
    TByteArray = array of byte;
-
 { TClinetSystem }
 
 procedure TClinetSystem.BeginTickCount;
@@ -143,8 +117,6 @@ begin
   if not DirectoryExists(fAppDir + '\' + gcLogDir) then
     CreateDir(fAppDir + '\' + gcLogDir);
 
-  fPluginList := TPluginList.Create;
-  fPluginList.fMainExeDir := fAppDir;  
 end;
 
 destructor TClinetSystem.Destroy;
@@ -153,7 +125,6 @@ begin
   fcdsUsePriv.Free;
   fDbOpr := nil;
   fGauge.Free;
-  fPluginList.Free;
   inherited;
 end;
 
@@ -268,6 +239,20 @@ begin
     Result := SearchRec.Size div 1024
   else
    Result := 0;
+end;
+
+function TClinetSystem.GetSysNow: TDateTime;
+var
+  mystr : String;
+begin
+  if fDbOpr.Connected then
+  begin
+    fDbOpr.Version();
+    mystr  := fDbOpr.GetSysDateTime;
+    Result := strtodatetime(mystr);
+  end
+  else
+    Result := now();
 end;
 
 procedure TClinetSystem.GetUserPriv;
@@ -538,7 +523,7 @@ begin
       myfilename,
       0,
       ExtractFileExt(myfilename),
-      datetimetostr(now()), //?这地方mssql是不是一样的
+      datetimetostr(ClientSystem.SysNow), //?这地方mssql是不是一样的
       0,
       1,
       '',
@@ -558,33 +543,6 @@ begin
   end;
 end;
 
-
-{ TPluginList }
-
-procedure TPluginList.ClearItem;
-var
-  myItem : TPlugin;
-  i : integer;
-begin
-  for i:=0 to fItems.Count -1 do
-  begin
-    myItem := fItems.items[i];
-    myItem.Free;
-  end;
-  fItems.Clear;
-end;
-
-constructor TPluginList.Create;
-begin
-  fItems := TList.Create;
-end;
-
-destructor TPluginList.Destroy;
-begin
-  ClearItem(); 
-  fItems.free;
-  inherited;
-end;
 
 initialization
   ClientSystem := TClinetSystem.Create;

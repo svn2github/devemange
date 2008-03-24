@@ -1,7 +1,7 @@
 inherited ProjectManageClientDlg: TProjectManageClientDlg
   Left = 72
   Top = 128
-  Width = 1173
+  Width = 1153
   Caption = #39033#30446#31649#29702
   OldCreateOrder = True
   PixelsPerInch = 96
@@ -9,7 +9,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
   object plonvisible: TPanel
     Left = 0
     Top = 0
-    Width = 1165
+    Width = 1145
     Height = 70
     Align = alTop
     TabOrder = 0
@@ -18,7 +18,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
   object plcenter: TPanel
     Left = 0
     Top = 70
-    Width = 1165
+    Width = 1145
     Height = 536
     Align = alClient
     BevelOuter = bvLowered
@@ -27,7 +27,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
     object pcProject: TPageControl
       Left = 1
       Top = 1
-      Width = 1163
+      Width = 1143
       Height = 534
       ActivePage = tsProjectList
       Align = alClient
@@ -40,7 +40,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
         object plProItemTop: TPanel
           Left = 0
           Top = 0
-          Width = 1155
+          Width = 1135
           Height = 40
           Align = alTop
           BevelOuter = bvNone
@@ -103,7 +103,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
         object dgProItem: TDBGrid
           Left = 0
           Top = 40
-          Width = 1155
+          Width = 1135
           Height = 464
           Align = alClient
           DataSource = dsProjectItem
@@ -188,7 +188,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
         object Splitter1: TSplitter
           Left = 0
           Top = 153
-          Width = 1155
+          Width = 1135
           Height = 10
           Cursor = crVSplit
           Align = alBottom
@@ -198,7 +198,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
         object dbProName: TDBText
           Left = 0
           Top = 40
-          Width = 1155
+          Width = 1135
           Height = 17
           Align = alTop
           Color = clGray
@@ -215,7 +215,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
         object plProVersion: TPanel
           Left = 0
           Top = 0
-          Width = 1155
+          Width = 1135
           Height = 40
           Align = alTop
           BevelOuter = bvNone
@@ -269,7 +269,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
         object dbmContext: TDBMemo
           Left = 0
           Top = 163
-          Width = 1155
+          Width = 1135
           Height = 341
           Align = alBottom
           DataField = 'ZCONTEXT'
@@ -281,7 +281,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
         object dgProVersion: TDBGrid
           Left = 0
           Top = 57
-          Width = 1155
+          Width = 1135
           Height = 96
           Align = alClient
           DataSource = dsProVersion
@@ -346,13 +346,13 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
         object plTaskTool: TPanel
           Left = 0
           Top = 0
-          Width = 1155
+          Width = 1135
           Height = 40
           Align = alTop
           BevelOuter = bvNone
           TabOrder = 0
           DesignSize = (
-            1155
+            1135
             40)
           object BitBtn10: TBitBtn
             Left = 8
@@ -373,7 +373,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
             TabOrder = 1
           end
           object BitBtn12: TBitBtn
-            Left = 1049
+            Left = 1029
             Top = 7
             Width = 100
             Height = 25
@@ -439,17 +439,17 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
         object plTitle: TPanel
           Left = 0
           Top = 40
-          Width = 1155
+          Width = 1135
           Height = 22
           Align = alTop
           TabOrder = 1
           DesignSize = (
-            1155
+            1135
             22)
           object DBText1: TDBText
             Left = 440
             Top = 1
-            Width = 714
+            Width = 694
             Height = 20
             Align = alClient
             Color = clGray
@@ -481,7 +481,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
             ParentFont = False
           end
           object cbEditDesing: TCheckBox
-            Left = 1094
+            Left = 1074
             Top = 3
             Width = 55
             Height = 17
@@ -546,7 +546,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
         object plTaskContext: TPanel
           Left = 411
           Top = 62
-          Width = 744
+          Width = 724
           Height = 442
           Align = alClient
           BevelOuter = bvNone
@@ -554,9 +554,9 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
           object pcTasKUser: TPageControl
             Left = 0
             Top = 0
-            Width = 744
+            Width = 724
             Height = 442
-            ActivePage = tsDesign
+            ActivePage = tsUser
             Align = alClient
             TabOrder = 0
             TabPosition = tpBottom
@@ -566,7 +566,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
               object Splitter4: TSplitter
                 Left = 0
                 Top = 253
-                Width = 736
+                Width = 716
                 Height = 10
                 Cursor = crVSplit
                 Align = alBottom
@@ -576,7 +576,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
               object DBMDesign: TDBMemo
                 Left = 0
                 Top = 0
-                Width = 736
+                Width = 716
                 Height = 253
                 Align = alClient
                 DataField = 'ZDESIGN'
@@ -588,7 +588,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
               object DBMTestCase: TDBMemo
                 Left = 0
                 Top = 263
-                Width = 736
+                Width = 716
                 Height = 151
                 Align = alBottom
                 DataField = 'ZTESTCASE'
@@ -638,7 +638,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
               object plUserRight: TPanel
                 Left = 241
                 Top = 0
-                Width = 495
+                Width = 475
                 Height = 414
                 Align = alClient
                 BevelOuter = bvNone
@@ -646,7 +646,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
                 object plUserBottom: TPanel
                   Left = 0
                   Top = 373
-                  Width = 495
+                  Width = 475
                   Height = 41
                   Align = alBottom
                   BevelOuter = bvNone
@@ -691,7 +691,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
                 object plScore: TPanel
                   Left = 0
                   Top = 0
-                  Width = 495
+                  Width = 475
                   Height = 373
                   Align = alClient
                   BevelOuter = bvNone
@@ -792,7 +792,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
               object Splitter2: TSplitter
                 Left = 0
                 Top = 169
-                Width = 736
+                Width = 716
                 Height = 10
                 Cursor = crVSplit
                 Align = alTop
@@ -802,7 +802,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
               object DBGrid1: TDBGrid
                 Left = 0
                 Top = 0
-                Width = 736
+                Width = 716
                 Height = 169
                 Align = alTop
                 DataSource = dsTaskItem
@@ -843,7 +843,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
               object dbmItemDeign: TDBMemo
                 Left = 0
                 Top = 179
-                Width = 736
+                Width = 716
                 Height = 195
                 Align = alClient
                 DataField = 'ZDESIGN'
@@ -855,7 +855,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
               object plTaskItemBottom: TPanel
                 Left = 0
                 Top = 374
-                Width = 736
+                Width = 716
                 Height = 40
                 Align = alBottom
                 BevelOuter = bvNone
@@ -877,7 +877,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
               object plPlan: TPanel
                 Left = 0
                 Top = 0
-                Width = 736
+                Width = 716
                 Height = 414
                 Align = alClient
                 BevelOuter = bvNone
@@ -919,28 +919,28 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
                   Caption = #21046#21333#20154#65306
                 end
                 object Label12: TLabel
-                  Left = 361
+                  Left = 329
                   Top = 194
                   Width = 99
                   Height = 15
                   Caption = #23454#38469#24037#26399'('#22825'):'
                 end
                 object Label13: TLabel
-                  Left = 361
+                  Left = 329
                   Top = 157
                   Width = 68
                   Height = 15
                   Caption = #23436#25104#26102#38388':'
                 end
                 object Label9: TLabel
-                  Left = 361
+                  Left = 329
                   Top = 62
                   Width = 75
                   Height = 15
                   Caption = #21046#21333#26102#38388#65306
                 end
                 object Label8: TLabel
-                  Left = 361
+                  Left = 329
                   Top = 94
                   Width = 75
                   Height = 15
@@ -954,7 +954,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
                   Caption = #20219#21153#21333#21517#31216#65306
                 end
                 object DBEdit4: TDBEdit
-                  Left = 121
+                  Left = 116
                   Top = 58
                   Width = 200
                   Height = 23
@@ -965,7 +965,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
                   TabOrder = 0
                 end
                 object DBEdit5: TDBEdit
-                  Left = 121
+                  Left = 116
                   Top = 90
                   Width = 200
                   Height = 23
@@ -976,7 +976,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
                   TabOrder = 1
                 end
                 object DBEdit8: TDBEdit
-                  Left = 120
+                  Left = 115
                   Top = 151
                   Width = 200
                   Height = 23
@@ -985,7 +985,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
                   TabOrder = 2
                 end
                 object DBEdit11: TDBEdit
-                  Left = 120
+                  Left = 115
                   Top = 186
                   Width = 200
                   Height = 23
@@ -994,7 +994,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
                   TabOrder = 3
                 end
                 object DBEdit12: TDBEdit
-                  Left = 120
+                  Left = 115
                   Top = 218
                   Width = 200
                   Height = 23
@@ -1003,7 +1003,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
                   TabOrder = 4
                 end
                 object DBEdit9: TDBEdit
-                  Left = 473
+                  Left = 441
                   Top = 90
                   Width = 200
                   Height = 23
@@ -1014,7 +1014,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
                   TabOrder = 5
                 end
                 object DBEdit10: TDBEdit
-                  Left = 472
+                  Left = 440
                   Top = 154
                   Width = 200
                   Height = 23
@@ -1023,7 +1023,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
                   TabOrder = 6
                 end
                 object DBEdit7: TDBEdit
-                  Left = 472
+                  Left = 440
                   Top = 186
                   Width = 200
                   Height = 23
@@ -1032,7 +1032,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
                   TabOrder = 7
                 end
                 object DBEdit6: TDBEdit
-                  Left = 472
+                  Left = 440
                   Top = 58
                   Width = 200
                   Height = 23
@@ -1043,9 +1043,9 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
                   TabOrder = 8
                 end
                 object DBEdit13: TDBEdit
-                  Left = 120
+                  Left = 115
                   Top = 24
-                  Width = 553
+                  Width = 523
                   Height = 23
                   DataField = 'ZNAME'
                   DataSource = dsTask
@@ -1073,7 +1073,6 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
     Top = 32
   end
   object ActionList1: TActionList
-    Images = DM.ImageList1
     Left = 96
     Top = 8
     object actPro_Add: TAction

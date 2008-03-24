@@ -12,7 +12,7 @@ unit BFSS_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 2008-03-18 17:51:05 from Type Library described below.
+// File generated on 2008-03-24 11:39:07 from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\DeveManage\Source\Server\DeveManage.tlb (1)
@@ -21,7 +21,7 @@ unit BFSS_TLB;
 // Helpfile: 
 // HelpString: BFSS Library
 // DepndLst: 
-//   (1) v1.0 Midas, (D:\DeveManage\App\midas.dll)
+//   (1) v1.0 Midas, (D:\DeveManage\App\App\midas.dll)
 //   (2) v2.0 stdole, (C:\WINDOWS\system32\STDOLE2.TLB)
 // ************************************************************************ //
 {$TYPEDADDRESS OFF} // Unit must be compiled without type-checked pointers. 
@@ -80,6 +80,7 @@ type
     function DeleteFile(AFile_ID: Integer): Integer; safecall;
     function UpFileChunk(AFile_ID: Integer; AVer: Integer; AGroupID: Integer; AStream: OleVariant): Integer; safecall;
     procedure MailTo(AStyle: Integer; const AMails: WideString; AContextID: Integer); safecall;
+    function GetSysDateTime: OleVariant; safecall;
   end;
 
 // *********************************************************************//
@@ -98,6 +99,7 @@ type
     function DeleteFile(AFile_ID: Integer): Integer; dispid 7;
     function UpFileChunk(AFile_ID: Integer; AVer: Integer; AGroupID: Integer; AStream: OleVariant): Integer; dispid 8;
     procedure MailTo(AStyle: Integer; const AMails: WideString; AContextID: Integer); dispid 301;
+    function GetSysDateTime: OleVariant; dispid 302;
     function AS_ApplyUpdates(const ProviderName: WideString; Delta: OleVariant; MaxErrors: Integer; 
                              out ErrorCount: Integer; var OwnerData: OleVariant): OleVariant; dispid 20000000;
     function AS_GetRecords(const ProviderName: WideString; Count: Integer; out RecsOut: Integer; 

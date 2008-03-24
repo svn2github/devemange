@@ -461,7 +461,7 @@ end;
 procedure TProjectManageClientDlg.cdsProjectItemNewRecord(
   DataSet: TDataSet);
 begin
-  DataSet.FieldByName('ZOPENDATE').AsDateTime := Now();
+  DataSet.FieldByName('ZOPENDATE').AsDateTime := ClientSystem.SysNow;
   DataSet.FieldByName('ZISNEW').AsBoolean := True;
   DataSet.FieldByName('ZISLOAD').AsBoolean := False;
 end;
@@ -733,7 +733,7 @@ begin
   if fLoading then Exit;
   DataSet.FieldByName('ZPRO_ID').AsInteger :=
     cdsProjectItem.FieldByName('ZID').AsInteger;
-  DataSet.FieldByName('ZUPDATEDATE').AsDateTime := now();
+  DataSet.FieldByName('ZUPDATEDATE').AsDateTime := ClientSystem.SysNow;
   DataSet.FieldByName('ZMUSTVER').AsBoolean := False;
   DataSet.FieldByName('ZISNEW').AsBoolean := True;
 end;
@@ -1026,7 +1026,7 @@ end;
 
 procedure TProjectManageClientDlg.cdsTaskNewRecord(DataSet: TDataSet);
 begin
-  DataSet.FieldByName('ZDATE').AsDateTime := Now();
+  DataSet.FieldByName('ZDATE').AsDateTime := ClientSystem.SysNow;
   DataSet.FieldByName('ZCODE').AsString   := BuildCode_Task();
   DataSet.FieldByName('ZUSER_ID').AsInteger := ClientSystem.fEditer_id;
   DataSet.FieldByName('ZSTATUS').AsInteger := 0;
@@ -1043,7 +1043,7 @@ end;
 function TProjectManageClientDlg.BuildCode_Task: String;
 begin
   Result := format('U%d_TASK_%S',[ClientSystem.fEditer_id,
-    formatdatetime('yyyymmhhhhmmss',now())]);
+    formatdatetime('yyyymmhhhhmmss',ClientSystem.SysNow)]);
 end;
 
 procedure TProjectManageClientDlg.cdsTaskBeforePost(DataSet: TDataSet);
@@ -1197,7 +1197,7 @@ begin
             cdsTask.Edit;
           cdsTask.FieldByName('ZSTATUS').AsInteger := Ord(tsing);
           cdsTask.FieldByName('ZBEGINDATE').AsString :=
-            formatdatetime('yyyy-mm-dd hh:ss:mm',now());
+            formatdatetime('yyyy-mm-dd hh:ss:mm',ClientSystem.SysNow);
           cdsTask.Post;
         end;
       end;
@@ -1315,7 +1315,7 @@ var
 const
   glSQL = 'insert into TB_TASK_USER (ZTASK_CODE,ZUSER_ID) values(''%s'',%d)';
   glSQL2 = 'update TB_TASK_USER set ZPERFACT=%d,ZSCORE=%d,ZREMASK=''%s'', ' +
-           ' ZCANCEL=%d where ZTASK_CODE=''%s'' and ZUSER_ID=%d';
+           ' ZCANCEL=%d,ZSCOREDATE=''%s'' where ZTASK_CODE=''%s'' and ZUSER_ID=%d';
 begin
   //
   if fLoading then Exit;
@@ -1348,6 +1348,7 @@ begin
       dataSet.FieldByName('ZSCORE').AsInteger,
       dataset.FieldByName('ZREMASK').AsString,
       myd,
+      dataset.FieldByName('ZSCOREDATE').AsString, //评分时间
       dataset.FieldByName('ZTASK_CODE').AsString,
       dataset.FieldByName('ZUSER_ID').AsInteger ]);
     ClientSystem.fDbOpr.BeginTrans;
@@ -1359,8 +1360,6 @@ begin
       ClientSystem.fDbOpr.RollbackTrans;
     end;
   end;
-
-
 end;
 
 procedure TProjectManageClientDlg.actTask_ToMeExecute(Sender: TObject);
@@ -1420,7 +1419,7 @@ begin
   DataSet.FieldByName('ZTASK_CODE').AsString := cdsTask.FieldByName('ZCODE').AsString;
   DataSet.FieldByName('ZUSER_ID').AsInteger := ClientSystem.fEditer_id;
   dataSet.FieldByName('ZDATE').AsString :=
-        formatdatetime('yyyy-mm-dd hh:ss:mm',now());
+        formatdatetime('yyyy-mm-dd hh:ss:mm',ClientSystem.SysNow);
   dataSet.FieldByName('ZISNEW').AsBoolean := True;
 end;
 
@@ -1490,7 +1489,7 @@ begin
       cdsTask.Edit;
     cdsTask.FieldByName('ZSTATUS').AsInteger := Ord(tsSccuess);
     cdsTask.FieldByName('ZSUCCESSDATE').AsString :=
-      formatdatetime('yyyy-mm-dd hh:ss:mm',now());
+      formatdatetime('yyyy-mm-dd hh:ss:mm',ClientSystem.SysNow);
     //计算完成的工期
     mydate1 := strtodate(formatdatetime('yyyy-mm-dd',strtodatetime(cdsTask.FieldByName('ZBEGINDATE').AsString)));
     mydate2 := strtodate(formatdatetime('yyyy-mm-dd',strtodatetime(cdsTask.FieldByName('ZSUCCESSDATE').AsString)));
@@ -1527,7 +1526,7 @@ begin
         cdsTask.Edit;
       cdsTask.FieldByName('ZSTATUS').AsInteger := Ord(tsClose);
       cdsTask.FieldByName('ZCLOSEDATE').AsString :=
-          formatdatetime('yyyy-mm-dd hh:ss:mm',now());
+          formatdatetime('yyyy-mm-dd hh:ss:mm',ClientSystem.SysNow);
       cdsTask.Post;
     end
     else begin
@@ -1604,13 +1603,13 @@ begin
     begin
       myfrom := TTaskScoreDlg.Create(nil);
       try
-        if cdsTaskUser.State in [dsEdit,dsInsert] then
-          cdsTaskUser.Post;
-        cdsTaskUser.Edit;
+        if not (cdsTaskUser.State in [dsEdit,dsInsert]) then
+          cdsTaskUser.Edit;
+          
         if myfrom.ShowModal() = mrOK then
         begin
           cdsTaskUser.FieldByName('ZSCOREDATE').AsString :=
-            formatdatetime('yyyy-mm-dd hh:ss:mm',now());
+            formatdatetime('yyyy-mm-dd hh:ss:mm',ClientSystem.SysNow);
           cdsTaskUser.Post;
         end
         else

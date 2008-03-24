@@ -1,11 +1,11 @@
 object MainDlg: TMainDlg
-  Left = 448
-  Top = 190
+  Left = 400
+  Top = 222
   BorderIcons = [biSystemMenu]
   BorderStyle = bsDialog
   Caption = 'BFFS'
-  ClientHeight = 530
-  ClientWidth = 526
+  ClientHeight = 401
+  ClientWidth = 492
   Color = clBtnFace
   Font.Charset = GB2312_CHARSET
   Font.Color = clWindowText
@@ -23,32 +23,14 @@ object MainDlg: TMainDlg
   object pcMain: TPageControl
     Left = 0
     Top = 41
-    Width = 526
-    Height = 470
+    Width = 492
+    Height = 341
     ActivePage = tsLogin
     Align = alClient
     TabOrder = 0
     object tsLogin: TTabSheet
       Caption = #23458#25143#31471
       ImageIndex = 1
-      object dgLogin: TDrawGrid
-        Left = 7
-        Top = 8
-        Width = 502
-        Height = 390
-        RowCount = 2
-        Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goColSizing, goRowSelect]
-        TabOrder = 0
-      end
-      object btbnRefresh: TBitBtn
-        Left = 20
-        Top = 408
-        Width = 100
-        Height = 25
-        Caption = #21047#26032
-        TabOrder = 1
-        OnClick = btbnRefreshClick
-      end
     end
     object tsDataBase: TTabSheet
       Caption = #25968#25454#22791#20221#24674#22797
@@ -76,15 +58,15 @@ object MainDlg: TMainDlg
   object plMain: TPanel
     Left = 0
     Top = 0
-    Width = 526
+    Width = 492
     Height = 41
     Align = alTop
     TabOrder = 1
   end
   object StatusBar: TStatusBar
     Left = 0
-    Top = 511
-    Width = 526
+    Top = 382
+    Width = 492
     Height = 19
     Panels = <
       item

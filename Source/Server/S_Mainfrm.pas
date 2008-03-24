@@ -40,8 +40,6 @@ type
     plMain: TPanel;
     tsLogin: TTabSheet;
     StatusBar: TStatusBar;
-    dgLogin: TDrawGrid;
-    btbnRefresh: TBitBtn;
     actSys_dbBackup: TAction;
     OpenDialog: TOpenDialog;
     SaveDialog: TSaveDialog;
@@ -54,7 +52,6 @@ type
     procedure actSys_ClaseExecute(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
-    procedure btbnRefreshClick(Sender: TObject);
     procedure actSys_dbBackupExecute(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure FormDestroy(Sender: TObject);
@@ -74,7 +71,6 @@ type
     //初期化
     procedure Initialize();
     procedure initform;
-    procedure initGrid;
     procedure freeform;
   end;
 
@@ -184,19 +180,7 @@ procedure TMainDlg.initform;
 begin
   Caption := format('%s 版本=%s',[CurrBFSSSystem.fAppCaption,
   GetVersionNumber]);
-  initGrid;
 end;
-
-
-procedure TMainDlg.initGrid;
-begin
-  //用户登录
-  dgLogin.ColCount := 3;
-  dgLogin.ColWidths[0] := 50;
-  dgLogin.ColWidths[1] := 200;
-  dgLogin.ColWidths[2] := 200;
-end;
-
 
 procedure TMainDlg.freeform;
 begin
@@ -245,11 +229,6 @@ end;
 procedure TMainDlg.FormShow(Sender: TObject);
 begin
   initform;
-end;
-
-procedure TMainDlg.btbnRefreshClick(Sender: TObject);
-begin
-  dgLogin.Refresh;  
 end;
 
 procedure TMainDlg.actSys_dbBackupExecute(Sender: TObject);

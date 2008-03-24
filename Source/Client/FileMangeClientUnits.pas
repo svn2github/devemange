@@ -669,7 +669,7 @@ begin
       myfilename,
       0,
       ExtractFileExt(myfilename),
-      datetimetostr(now()), //?这地方mssql是不是一样的
+      datetimetostr(ClientSystem.SysNow), //?这地方mssql是不是一样的
       0,
       1,
       myfilenote,
@@ -878,7 +878,7 @@ begin
       myfilename,
       0,
       myItemData^.fExt,
-      datetimetostr(now()),
+      datetimetostr(ClientSystem.SysNow),
       0,
       1,
       myfilenote,
@@ -1467,7 +1467,7 @@ begin
       myfilename,
       0,
       myItemData^.fExt,
-      datetimetostr(now()),
+      datetimetostr(ClientSystem.SysNow),
       0,
       1,
       myfilenote,

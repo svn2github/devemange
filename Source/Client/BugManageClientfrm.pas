@@ -146,6 +146,7 @@ type
     Label19: TLabel;
     cbSort: TComboBox;
     Label20: TLabel;
+    DBNavigator1: TDBNavigator;
     procedure actBug_AddDirExecute(Sender: TObject);
     procedure tvProjectExpanding(Sender: TObject; Node: TTreeNode;
       var AllowExpansion: Boolean);
@@ -938,7 +939,7 @@ begin
   DataSet.FieldByName('ZTREE_ID').AsInteger := myBugData^.fID;
   DataSet.FieldByName('ZSTATUS').AsInteger   := 0; //0=要修改的
   DataSet.FieldByName('ZOPENEDBY').AsInteger := ClientSystem.fEditer_id;
-  DataSet.FieldByName('ZOPENEDDATE').AsDateTime := now();
+  DataSet.FieldByName('ZOPENEDDATE').AsDateTime := ClientSystem.SysNow;
   DataSet.FieldByName('ZISNEW').AsBoolean := True;
   DataSet.FieldByName('ZRESOLUTION').AsInteger := -1; //解决方案
 end;
@@ -1350,7 +1351,7 @@ begin
   DataSet.FieldByName('ZBUG_ID').AsInteger :=
     cdsBugItem.FieldByName('ZID').AsInteger;
   DataSet.FieldByName('ZUSER_ID').AsInteger := ClientSystem.fEditer_id;
-  DataSet.FieldByName('ZACTIONDATE').AsDateTime := now();
+  DataSet.FieldByName('ZACTIONDATE').AsDateTime := ClientSystem.SysNow;
   DataSet.FieldByName('ZSTATUS').AsInteger := -1;
   DataSet.FieldByName('ZNO').AsInteger := DataSet.RecordCount+1;
 end;
@@ -1483,7 +1484,7 @@ begin
         cdsBugItem.FieldByName('ZRESOLVEDBY').AsInteger := ClientSystem.fEditer_id;
         cdsBugItem.FieldByName('ZRESOLUTION').AsInteger := cdsBugPlan.FieldByName('ZID').AsInteger;
         cdsBugItem.FieldByName('ZRESOLVEDVER').AsInteger := cdsProject.FieldByName('ZID').AsInteger;
-        cdsBugItem.FieldByName('ZRESOLVEDDATE').AsDateTime := now();
+        cdsBugItem.FieldByName('ZRESOLVEDDATE').AsDateTime := ClientSystem.SysNow;
         cdsBugItem.FieldByName('ZSTATUS').asInteger := DataSet.FieldByName('ZSTATUS').Asinteger;
         cdsBugItem.Post;
       end

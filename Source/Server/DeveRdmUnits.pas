@@ -14,9 +14,7 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 unit DeveRdmUnits;
-
 {$WARN SYMBOL_PLATFORM OFF}
-
 interface
 
 uses
@@ -30,9 +28,9 @@ type
 
   //数据提供池定义
   TDspPoolRec = Record
-    fDsp   : TDataSetProvider;
+    fDsp     : TDataSetProvider;
     fDspName : String;
-    fCount : Longint; //目前的总数
+    fCount   : Longint; //目前的总数
   end;
 
   TBFSSRDM = class(TRemoteDataModule, IBFSSRDM)
@@ -72,6 +70,7 @@ type
     function DeleteFile(AFile_ID: Integer): Integer; safecall;
     function UpFileChunk(AFile_ID: Integer; AVer: Integer; AGroupID: Integer; AStream: OleVariant): Integer; safecall;
     procedure MailTo(AStyle: Integer; const AMails: WideString; AContextID: Integer); safecall;
+    function GetSysDateTime: OleVariant; safecall;
   public
     { Public declarations }
   end;
@@ -538,6 +537,13 @@ begin
   end;
 
 end;
+
+
+function TBFSSRDM.GetSysDateTime: OleVariant;
+begin
+  Result := now();
+end;
+
 
 initialization
   TComponentFactory.Create(ComServer, TBFSSRDM,

@@ -128,7 +128,7 @@ inherited BugManageDlg: TBugManageDlg
                 FieldName = 'ZOPENEDDATE'
                 Title.Alignment = taCenter
                 Title.Caption = #21019#24314#26102#38388
-                Width = 150
+                Width = 180
                 Visible = True
               end
               item
@@ -160,7 +160,7 @@ inherited BugManageDlg: TBugManageDlg
                 FieldName = 'ZRESOLVEDDATE'
                 Title.Alignment = taCenter
                 Title.Caption = #35299#20915#26102#38388
-                Width = 150
+                Width = 180
                 Visible = True
               end>
           end
@@ -455,7 +455,7 @@ inherited BugManageDlg: TBugManageDlg
           end
           object Label5: TLabel
             Left = 447
-            Top = 14
+            Top = 17
             Width = 105
             Height = 15
             Caption = #20986#38382#39064#30340#29256#26412#65306
@@ -539,7 +539,6 @@ inherited BugManageDlg: TBugManageDlg
             DataSource = dsBugItem
             KeyField = 'ZID'
             ListField = 'ZNAME'
-            ListSource = DM.dsOS
             TabOrder = 0
           end
           object DBEdit2: TDBEdit
@@ -625,7 +624,6 @@ inherited BugManageDlg: TBugManageDlg
             DataSource = dsBugItem
             KeyField = 'ZID'
             ListField = 'ZNAME'
-            ListSource = DM.dsUsers
             TabOrder = 8
           end
           object DBEdit3: TDBEdit
@@ -717,7 +715,6 @@ inherited BugManageDlg: TBugManageDlg
             Height = 23
             KeyField = 'ZID'
             ListField = 'ZNAME'
-            ListSource = DM.dsUsers
             TabOrder = 17
             OnCloseUp = dblcSelectUsermailCloseUp
           end
@@ -739,6 +736,9 @@ inherited BugManageDlg: TBugManageDlg
             BevelOuter = bvNone
             Color = clGray
             TabOrder = 0
+            DesignSize = (
+              1083
+              40)
             object Label13: TLabel
               Left = 15
               Top = 13
@@ -804,6 +804,16 @@ inherited BugManageDlg: TBugManageDlg
               Caption = #22238#22797#25764#28040
               TabOrder = 4
             end
+            object DBNavigator1: TDBNavigator
+              Left = 885
+              Top = 8
+              Width = 176
+              Height = 25
+              DataSource = dsBugBugHistory
+              VisibleButtons = [nbFirst, nbPrior, nbNext, nbLast]
+              Anchors = [akTop, akRight]
+              TabOrder = 5
+            end
           end
           object Panel1: TPanel
             Left = 0
@@ -823,10 +833,9 @@ inherited BugManageDlg: TBugManageDlg
               AllowDelete = False
               AllowInsert = False
               DataSource = dsBugBugHistory
-              PanelHeight = 102
+              PanelHeight = 136
               PanelWidth = 1064
               TabOrder = 0
-              RowCount = 4
               SelectedColor = clMedGray
               object DBText1: TDBText
                 Left = 67
@@ -878,7 +887,7 @@ inherited BugManageDlg: TBugManageDlg
               end
               object Label11: TLabel
                 Left = 301
-                Top = 79
+                Top = 113
                 Width = 38
                 Height = 15
                 Anchors = [akLeft, akBottom]
@@ -886,7 +895,7 @@ inherited BugManageDlg: TBugManageDlg
               end
               object DBText3: TDBText
                 Left = 349
-                Top = 79
+                Top = 113
                 Width = 476
                 Height = 17
                 Cursor = crHandPoint
@@ -907,7 +916,7 @@ inherited BugManageDlg: TBugManageDlg
               end
               object Label12: TLabel
                 Left = 7
-                Top = 78
+                Top = 112
                 Width = 45
                 Height = 15
                 Anchors = [akLeft, akBottom]
@@ -915,7 +924,7 @@ inherited BugManageDlg: TBugManageDlg
               end
               object DBText4: TDBText
                 Left = 52
-                Top = 78
+                Top = 112
                 Width = 195
                 Height = 17
                 Anchors = [akLeft, akBottom]
@@ -953,7 +962,7 @@ inherited BugManageDlg: TBugManageDlg
                 Left = 7
                 Top = 22
                 Width = 1046
-                Height = 52
+                Height = 86
                 Anchors = [akLeft, akTop, akRight, akBottom]
                 DataField = 'ZCONTEXT'
                 DataSource = dsBugBugHistory
@@ -984,7 +993,6 @@ inherited BugManageDlg: TBugManageDlg
     Top = 16
   end
   object ActionList1: TActionList
-    Images = DM.ImageList1
     Left = 48
     Top = 16
     object actBug_AddDir: TAction
