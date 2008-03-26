@@ -1,27 +1,27 @@
 inherited TaskScoreDlg: TTaskScoreDlg
-  Left = 405
-  Top = 266
+  Left = 411
+  Top = 248
   BorderStyle = bsDialog
   Caption = #20219#21153#35780#20998
   OldCreateOrder = True
   PixelsPerInch = 96
   TextHeight = 15
   object Label1: TLabel
-    Left = 72
-    Top = 198
+    Left = 73
+    Top = 197
     Width = 75
     Height = 15
     Caption = #26368#21518#24471#20998#65306
   end
   object Label2: TLabel
-    Left = 72
+    Left = 73
     Top = 156
     Width = 45
     Height = 15
     Caption = #28385#20998#65306
   end
   object Label3: TLabel
-    Left = 40
+    Left = 28
     Top = 16
     Width = 75
     Height = 15
@@ -38,8 +38,8 @@ inherited TaskScoreDlg: TTaskScoreDlg
     ParentColor = False
   end
   object Label4: TLabel
-    Left = 76
-    Top = 238
+    Left = 73
+    Top = 239
     Width = 45
     Height = 15
     Caption = #22791#27880#65306
@@ -57,6 +57,20 @@ inherited TaskScoreDlg: TTaskScoreDlg
     Width = 494
     Height = 13
     Shape = bsTopLine
+  end
+  object Label6: TLabel
+    Left = 64
+    Top = 112
+    Width = 183
+    Height = 15
+    Caption = #24037#26399#25552#21069'1/3 '#22686#21152#24635#20998#30340'5%'
+  end
+  object Label7: TLabel
+    Left = 28
+    Top = 96
+    Width = 60
+    Height = 15
+    Caption = #38468#21152#20998#65306
   end
   object BitBtn1: TBitBtn
     Left = 401

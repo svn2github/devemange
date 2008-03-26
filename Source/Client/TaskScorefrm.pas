@@ -19,6 +19,8 @@ type
     DBEdit2: TDBEdit;
     Label5: TLabel;
     Bevel1: TBevel;
+    Label6: TLabel;
+    Label7: TLabel;
   private
     { Private declarations }
   public

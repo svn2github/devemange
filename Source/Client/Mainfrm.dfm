@@ -212,6 +212,7 @@ object MainDlg: TMainDlg
       OnExecute = actMod_ProjectExecute
     end
     object actManage_User: TAction
+      Category = #19994#21153
       Caption = #29992#25143#31649#29702
       ImageIndex = 3
       OnExecute = actManage_UserExecute
@@ -221,6 +222,10 @@ object MainDlg: TMainDlg
       Caption = #35774#35745#25991#26723
       ImageIndex = 0
       OnExecute = actMod_ProDocExecute
+    end
+    object actFile_Close: TAction
+      Caption = #20851#38381
+      OnExecute = actFile_CloseExecute
     end
   end
   object ImageList1: TImageList
@@ -636,6 +641,9 @@ object MainDlg: TMainDlg
     Top = 56
     object f1: TMenuItem
       Caption = #25991#20214'(&F)'
+      object N6: TMenuItem
+        Action = actFile_Close
+      end
     end
     object N1: TMenuItem
       Caption = #19994#21153'(&B)'

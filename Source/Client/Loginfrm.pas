@@ -1,3 +1,12 @@
+///////////////////////////////////////////////////////////////////////////////
+//
+//    用户登录
+//
+//  修改:
+//     1. 增加了对保存当前的用户名 2008-3-26
+//
+//
+///////////////////////////////////////////////////////////////////////////////
 unit Loginfrm;
 
 interface
@@ -115,6 +124,7 @@ begin
           lbStutas.Caption := '用户被禁用。'
         else
           lbStutas.Caption := '用户或密码错误。';
+        lbStutas.Font.Color := clred;
       end;
     end
     else begin
@@ -149,6 +159,10 @@ begin
           rbRemoate.Checked := True;
         rbLocalClick(nil);
       end
+      else if mysl.Names[i] = 'user' then
+      begin
+        edName.Text := mysl.Values['user'];
+      end
       else
         cbServerIP.Items.Add(mysl[i]);
     end;
@@ -176,6 +190,7 @@ begin
     mysl.Add('connection=0')
   else
     mysl.Add('connection=1');
+  mysl.Add(format('user=%s',[edName.Text]));
 
   mysl.SaveToFile(myfilename);
   mysl.Free;

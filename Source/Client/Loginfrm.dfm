@@ -73,7 +73,7 @@ object LoginDlg: TLoginDlg
     Color = clBtnFace
     Enabled = False
     ItemHeight = 16
-    TabOrder = 0
+    TabOrder = 1
     Text = 'localhost'
   end
   object edName: TEdit
@@ -81,7 +81,7 @@ object LoginDlg: TLoginDlg
     Top = 125
     Width = 309
     Height = 24
-    TabOrder = 1
+    TabOrder = 2
     Text = 'admin'
   end
   object edPass: TEdit
@@ -90,7 +90,7 @@ object LoginDlg: TLoginDlg
     Width = 309
     Height = 24
     PasswordChar = '*'
-    TabOrder = 2
+    TabOrder = 0
     Text = '123456'
   end
   object btOK: TBitBtn

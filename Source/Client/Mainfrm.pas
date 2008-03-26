@@ -56,6 +56,8 @@ type
     actMod_ProDoc: TAction;
     N5: TMenuItem;
     ToolButton4: TToolButton;
+    actFile_Close: TAction;
+    N6: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure actmod_FilesExecute(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -69,6 +71,7 @@ type
     procedure ApplicationEvents1Hint(Sender: TObject);
     procedure btbnCancelUpClick(Sender: TObject);
     procedure actMod_ProDocExecute(Sender: TObject);
+    procedure actFile_CloseExecute(Sender: TObject);
   private
     fChildform : TList; //所有子窗口的对象
     fCurrentChildform : TBaseChildDlg;
@@ -301,6 +304,11 @@ end;
 procedure TMainDlg.actMod_ProDocExecute(Sender: TObject);
 begin
   DoChangeClient(TDesignDocumentClientDlg);
+end;
+
+procedure TMainDlg.actFile_CloseExecute(Sender: TObject);
+begin
+  Close;
 end;
 
 end.
