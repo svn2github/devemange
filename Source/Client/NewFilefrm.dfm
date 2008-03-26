@@ -34,13 +34,13 @@ object NewFileDlg: TNewFileDlg
       end
       item
         Caption = #29256#26412
+        Width = 45
       end
       item
         Caption = #26085#26399
-        Width = 150
+        Width = 180
       end
       item
-        Alignment = taRightJustify
         Caption = #22823#23567
         Width = 80
       end>
@@ -50,7 +50,7 @@ object NewFileDlg: TNewFileDlg
     ViewStyle = vsReport
   end
   object BitBtn1: TBitBtn
-    Left = 568
+    Left = 579
     Top = 320
     Width = 100
     Height = 25
@@ -59,7 +59,7 @@ object NewFileDlg: TNewFileDlg
     Kind = bkCancel
   end
   object BitBtn2: TBitBtn
-    Left = 447
+    Left = 458
     Top = 320
     Width = 100
     Height = 25

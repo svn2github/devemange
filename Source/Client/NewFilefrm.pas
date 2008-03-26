@@ -5,6 +5,7 @@
 //
 //  修改:
 //    1) 显示模板只能是最新的 ZNEWVER=TRUE  ver=1.0.1.5  2007-11-8
+//    2) 修改了显示内容时，类型为osfile 才行。ver=1.0.6 2008-3-26
 //
 //
 //
@@ -39,6 +40,7 @@ type
 implementation
 
 uses
+  ClientTypeUnits,
   ShellAPI,
   ClinetSystemUnits,
   FileMangeClientUnits, Mainfrm;
@@ -73,14 +75,15 @@ var
   myfileDlg : TFileManageDlg;
 const
   glSQL = 'select ZID,ZVER,ZNAME,ZEDITDATETIME,ZSIZE,ZExt from  TB_FILE_ITEM ' +
-          'where ZTREE_ID=%d and ZNEWVER=1';
+          'where ZTREE_ID=%d and ZNEWVER=1 and ZSTYPE=%d';
 begin
   if not Assigned(MainDlg.CurrentChildform) or
      not (MainDlg.CurrentChildform is TFileManageDlg)then Exit;
   myfileDlg := MainDlg.CurrentChildform as TFileManageDlg;
 
   lvtemplatefiles.SmallImages := myfileDlg.ImageListFileIcon;
-  cdsFiles.data := ClientSystem.fDBOpr.ReadDataSet(PChar(format(glSQL,[fRootID])));
+  cdsFiles.data := ClientSystem.fDBOpr.ReadDataSet(PChar(format(glSQL,
+    [fRootID,Ord(fsFile)])));
   cdsFiles.First;
   while not cdsFiles.Eof do
   begin
