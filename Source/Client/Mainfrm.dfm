@@ -24,11 +24,12 @@ object MainDlg: TMainDlg
     Height = 525
     Align = alClient
     BevelOuter = bvLowered
+    Caption = #27599#22825#19968#21477#12290
     Font.Charset = GB2312_CHARSET
-    Font.Color = clBlack
-    Font.Height = -15
+    Font.Color = clBlue
+    Font.Height = -21
     Font.Name = #23435#20307
-    Font.Style = []
+    Font.Style = [fsBold]
     ParentFont = False
     TabOrder = 0
     object plupgrade: TPanel
@@ -46,8 +47,8 @@ object MainDlg: TMainDlg
       object Label1: TLabel
         Left = 17
         Top = 30
-        Width = 48
-        Height = 15
+        Width = 72
+        Height = 21
         Caption = 'Label1'
       end
       object Label2: TLabel
@@ -73,6 +74,12 @@ object MainDlg: TMainDlg
         Height = 25
         Anchors = [akTop, akRight]
         Caption = #21319#32423
+        Font.Charset = GB2312_CHARSET
+        Font.Color = clBlack
+        Font.Height = -12
+        Font.Name = #23435#20307
+        Font.Style = []
+        ParentFont = False
         TabOrder = 0
       end
       object btbnNoUpgrade: TBitBtn
@@ -82,6 +89,12 @@ object MainDlg: TMainDlg
         Height = 25
         Anchors = [akTop, akRight]
         Caption = #19981#21319#32423
+        Font.Charset = GB2312_CHARSET
+        Font.Color = clBlack
+        Font.Height = -12
+        Font.Name = #23435#20307
+        Font.Style = []
+        ParentFont = False
         TabOrder = 1
         OnClick = btbnNoUpgradeClick
       end
@@ -224,8 +237,14 @@ object MainDlg: TMainDlg
       OnExecute = actMod_ProDocExecute
     end
     object actFile_Close: TAction
+      Category = #25991#20214
       Caption = #20851#38381
       OnExecute = actFile_CloseExecute
+    end
+    object actFile_TodaySay: TAction
+      Category = #25991#20214
+      Caption = #27599#26085#19968#21477
+      OnExecute = actFile_TodaySayExecute
     end
   end
   object ImageList1: TImageList
@@ -641,6 +660,9 @@ object MainDlg: TMainDlg
     Top = 56
     object f1: TMenuItem
       Caption = #25991#20214'(&F)'
+      object N7: TMenuItem
+        Action = actFile_TodaySay
+      end
       object N6: TMenuItem
         Action = actFile_Close
       end

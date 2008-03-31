@@ -20,6 +20,11 @@ uses
 type
 
   TEditerType = (etAdmin,etUser);  //用户类型
+  TVersion = record
+    fV1,fV2,fV3,fV4 : integer;
+    fName : String;
+    fDate : TDateTime;
+  end;
 
   TClinetSystem  = Class;
 
@@ -39,6 +44,7 @@ type
     fGauge  : TGauge;
     fDeleteFiles : TStringList;   //浏览文件时要删除的内容
     fCancelUpFile : Boolean;      //终止上传或下载文件
+    fVersion : TVersion;          //这个是版本
 
     constructor Create;
     destructor Destroy; override;
@@ -263,6 +269,7 @@ begin
   if fEditer_id <0 then Exit;
   fcdsUsePriv.data := fDBOpr.ReadDataSet(PChar(format(glSQL,[fEditer_id])));
 end;
+
 
 function TClinetSystem.HasModuleAction(AStype: integer;ASubStype:integer; AID: integer;
   AAction: TActionType): Boolean;

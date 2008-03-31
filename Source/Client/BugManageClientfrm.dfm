@@ -539,6 +539,7 @@ inherited BugManageDlg: TBugManageDlg
             DataSource = dsBugItem
             KeyField = 'ZID'
             ListField = 'ZNAME'
+            ListSource = DM.dsOS
             TabOrder = 0
           end
           object DBEdit2: TDBEdit
@@ -624,6 +625,7 @@ inherited BugManageDlg: TBugManageDlg
             DataSource = dsBugItem
             KeyField = 'ZID'
             ListField = 'ZNAME'
+            ListSource = DM.dsUsers
             TabOrder = 8
           end
           object DBEdit3: TDBEdit
@@ -715,6 +717,7 @@ inherited BugManageDlg: TBugManageDlg
             Height = 23
             KeyField = 'ZID'
             ListField = 'ZNAME'
+            ListSource = DM.dsUsers
             TabOrder = 17
             OnCloseUp = dblcSelectUsermailCloseUp
           end

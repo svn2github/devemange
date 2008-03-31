@@ -22,7 +22,7 @@ uses
   Dialogs, ActnList, ToolWin, ComCtrls, Menus, ExtCtrls,
   DBApiIntf,
   ClientTypeUnits,
-  BaseChildfrm, ImgList, StdCtrls, Buttons, AppEvnts;
+  BaseChildfrm, ImgList, StdCtrls, Buttons, AppEvnts, DB, DBClient;
 
 type
   TMainDlg = class(TForm)
@@ -58,6 +58,8 @@ type
     ToolButton4: TToolButton;
     actFile_Close: TAction;
     N6: TMenuItem;
+    actFile_TodaySay: TAction;
+    N7: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure actmod_FilesExecute(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -72,6 +74,7 @@ type
     procedure btbnCancelUpClick(Sender: TObject);
     procedure actMod_ProDocExecute(Sender: TObject);
     procedure actFile_CloseExecute(Sender: TObject);
+    procedure actFile_TodaySayExecute(Sender: TObject);
   private
     fChildform : TList; //所有子窗口的对象
     fCurrentChildform : TBaseChildDlg;
@@ -99,7 +102,8 @@ uses
   BugManageClientfrm,      {BUG管理}
   ProjectManageClientfrm,  {项目管理}
   UserManageClientfrm,     {用户管理}
-  DesignDocumentClientfrm {项目文档}
+  DesignDocumentClientfrm, {项目文档}
+  WriteToDaySayfrm         {每日一句}
 
   ;
 
@@ -164,6 +168,11 @@ begin
 end;
 
 procedure TMainDlg.iniform;
+var
+  mycds : TClientDataSet;
+const
+  glSQL = 'select ZNAME from TB_TODAYSAY ' +
+          'where ZID=(select max(ZID) from TB_TODAYSAY) and ZSTOP=0';
 begin
   if ClientSystem.fDbOpr.Version < cnCurDbOprVersion then
   begin
@@ -173,6 +182,22 @@ begin
   end;
   fChildform := TList.Create;
   StatusBarMain.Panels[1].Text := ' 用户=' + ClientSystem.fEditer;
+
+
+  //每日一句
+  mycds := TClientDataSet.Create(nil);
+  try
+    mycds.Data := ClientSystem.fDbOpr.ReadDataSet(PChar(glSQL));
+    if mycds.RecordCount > 0 then
+      plForm.Caption := mycds.FieldByName('ZNAME').AsString;
+
+  finally
+    mycds.Free;
+  end;
+
+  //版本检查
+  
+
 end;
 
 procedure TMainDlg.FormCreate(Sender: TObject);
@@ -309,6 +334,32 @@ end;
 procedure TMainDlg.actFile_CloseExecute(Sender: TObject);
 begin
   Close;
+end;
+
+procedure TMainDlg.actFile_TodaySayExecute(Sender: TObject);
+var
+  myfrom : TWriteToDaySayDlg;
+begin
+  //权限
+  if ClientSystem.fEditerType <> etAdmin then
+  begin
+    MessageBox(Handle,'无权限','提示',MB_ICONWARNING+MB_OK);
+    Exit;
+  end;
+
+  myfrom := TWriteToDaySayDlg.Create(nil);
+  try
+
+    if myfrom.ShowModal=mrOK then
+    begin
+
+    end;
+  finally
+    myfrom.Free;
+  end;
+
+
+
 end;
 
 end.

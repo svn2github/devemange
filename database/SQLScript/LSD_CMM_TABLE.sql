@@ -360,9 +360,21 @@ create table TB_BUG_PARAMS(
 go
 
 
+/*每日一语*/
+if exists (select * from dbo.sysobjects
+  where id = object_id(N'[dbo].[TB_TODAYSAY]')
+  and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+drop table [dbo].[TB_TODAYSAY]
+go
 
-
-
+create table TB_TODAYSAY(
+	ZID          int IDENTITY (1, 1) not null,                   /*ID值,自动产生内容*/
+	ZNAME        varchar(200),                                   /*内容*/
+	ZDATE        datetime,                                       /*创建时间*/
+	ZSTOP        bit default 1                                   /*停止 1=True 0=False*/                 
+	constraint PK_TB_TODAYSAY primary key(ZID)  
+)
+go
 
 
 
