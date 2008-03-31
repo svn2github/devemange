@@ -172,7 +172,7 @@ var
   mycds : TClientDataSet;
 const
   glSQL = 'select ZNAME from TB_TODAYSAY ' +
-          'where ZID=(select max(ZID) from TB_TODAYSAY) and ZSTOP=0';
+          'where ZID=(select max(ZID) from TB_TODAYSAY where ZSTOP=0)';
 begin
   if ClientSystem.fDbOpr.Version < cnCurDbOprVersion then
   begin
@@ -183,13 +183,14 @@ begin
   fChildform := TList.Create;
   StatusBarMain.Panels[1].Text := ' 用户=' + ClientSystem.fEditer;
 
-
   //每日一句
   mycds := TClientDataSet.Create(nil);
   try
     mycds.Data := ClientSystem.fDbOpr.ReadDataSet(PChar(glSQL));
     if mycds.RecordCount > 0 then
-      plForm.Caption := mycds.FieldByName('ZNAME').AsString;
+      plForm.Caption := mycds.FieldByName('ZNAME').AsString
+    else
+      plForm.Caption := '';
 
   finally
     mycds.Free;
