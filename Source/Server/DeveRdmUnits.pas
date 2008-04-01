@@ -10,6 +10,7 @@
 //     1) 更新了Copyfile() 方法时，对二进制的处理。 ver=1.0.1 2007-11-8
 //     2) 更改了TB_FILE_ITEM 增加ZSTYPE Field ver=1.0.2 2007-12-3
 //     3) 更改了TIDSTMP组件发送邮件时，可能被别的服务阻击的可能. ver=1.0.3 2007-12-18
+//     4) 采用一个数据库的共享连接这个会提高性能。ver=1.0.6 2008-4-1
 //
 //
 ///////////////////////////////////////////////////////////////////////////////
@@ -45,7 +46,6 @@ type
     dspQueryEx3: TDataSetProvider;
     adsQueryEx4: TADODataSet;
     dspQueryEx4: TDataSetProvider;
-    RdmADOConn: TADOConnection;
     dspCommand: TDataSetProvider;
     ADOQuery: TADOQuery;
     SMTP: TIdSMTP;
@@ -78,6 +78,7 @@ type
 implementation
 
 uses
+  S_DataModuleUnits,
   inifiles,
   Variants;
 
@@ -154,6 +155,14 @@ begin
   fDspPools[4].fDsp := dspQueryEx4;
   fDspPools[4].fDspName := 'dspQueryEx4';
 
+  adsSQL.Connection      := gConn;
+  ADOQuery.Connection    := gConn;
+  adsQuery.Connection    := gConn;
+  adsQueryEx.Connection  := gConn;
+  adsQueryEx2.Connection := gConn;
+  adsQueryEx3.Connection := gConn;
+  adsQueryEx4.Connection := gConn;
+
   // 连接数据库
   //
   //Aeecss
@@ -163,20 +172,20 @@ begin
     myDataBase := Format('%s\%s',[CurrBFSSSystem.fAppDir,
              CurrBFSSSystem.fDataBase.fDBName]);
     if not FileExists(myDataBase) then Exit;
-    if  RdmADOConn.Connected then
-      RdmADOConn.Connected := False;
-    RdmADOConn.ConnectionString := format(glconnstr,[myDataBase]);
+    if  gConn.Connected then
+      gConn.Connected := False;
+    gConn.ConnectionString := format(glconnstr,[myDataBase]);
 
   end
   // MSSQL2000
   else begin
-    if RdmADOConn.Connected then
-      RdmADOConn.Connected := False;
-    RdmADOConn.ConnectionString := format(glconnstrmssql2000,[
+    if gConn.Connected then
+      gConn.Connected := False;
+    gConn.ConnectionString := format(glconnstrmssql2000,[
       CurrBFSSSystem.fDataBase.fasPass,
       CurrBFSSSystem.fDataBase.fDBName,
       CurrBFSSSystem.fDataBase.fDBServer]);
-    RdmADOConn.Open;
+    gConn.Open;
   end;
 
 end;
@@ -258,17 +267,17 @@ end;
 
 procedure TBFSSRDM.BeginTrans;
 begin
-  RdmADOConn.BeginTrans;
+  gConn.BeginTrans;
 end;
 
 procedure TBFSSRDM.CommitTrans;
 begin
-  RdmADOConn.CommitTrans;
+  gConn.CommitTrans;
 end;
 
 procedure TBFSSRDM.RollbackTrans;
 begin
-  RdmADOConn.RollbackTrans;
+  gConn.RollbackTrans;
 end;
 
 function TBFSSRDM.dspCommandDataRequest(Sender: TObject;
@@ -316,13 +325,13 @@ begin
   // 文件的拷贝
   //
   Result := -1;
-  RdmADOConn.BeginTrans;
+  gConn.BeginTrans;
   try
     myADOQuery := TADOQuery.Create(nil);
     myNewQuery := TADOQuery.Create(nil);
     try
-      myADOQuery.Connection := RdmADOConn;
-      myNewQuery.Connection := RdmADOConn;
+      myADOQuery.Connection := gConn;
+      myNewQuery.Connection := gConn;
 
       myADOQuery.SQL.Text := format(glSQL,[AFile_ID,AVer]);
       myADOQuery.Open;
@@ -374,12 +383,12 @@ begin
       myNewQuery.Free;
     end;
     Result := myFileID;
-    RdmADoConn.CommitTrans;
+    gConn.CommitTrans;
   except
     on E: Exception do
     begin
       CurrBFSSSystem.WriteLog('文件拷贝出错。'+ E.Message);
-      RdmADOConn.RollbackTrans;
+      gConn.RollbackTrans;
     end;
   end;
 end;
@@ -391,7 +400,7 @@ const
   glSQL2 = 'delete TB_FILE_ITEM where ZID=%d';
 begin
   //删除文件
-  RdmADOConn.BeginTrans;
+  gConn.BeginTrans;
   try
     ADOQuery.Close;
     ADOQuery.SQL.Text := format(glSQL,[AFile_ID]);
@@ -401,13 +410,13 @@ begin
     ADOQuery.SQL.Text := format(glSQL2,[AFile_ID]);
     ADOQuery.ExecSQL;
 
-    RdmADOConn.CommitTrans;
+    gConn.CommitTrans;
     Result := AFile_ID;
   except
     on E: Exception do
     begin
       CurrBFSSSystem.WriteLog('删除文件出错。'+ E.Message);
-      RdmADOConn.RollbackTrans;
+      gConn.RollbackTrans;
       Result := -1;
     end;
   end;

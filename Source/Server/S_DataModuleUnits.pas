@@ -9,7 +9,6 @@ uses
 
 type
   TDM = class(TDataModule)
-    AdoConn: TADOConnection;
     dsUser: TDataSource;
     dsUserPrivilege: TDataSource;
     adsUser: TADODataSet;
@@ -34,8 +33,11 @@ type
 
 var
   DM: TDM;
+  gConn: TADOConnection;
 
 implementation
+uses
+  ActiveX;
 
 {$R *.dfm}
 
@@ -59,21 +61,21 @@ begin
     if not FileExists(myDataBase) then Exit;
     with DM do
     begin
-      if  AdoConn.Connected then
-        AdoConn.Connected := False;
-      AdoConn.ConnectionString := format(glconnstr,[myDataBase]);
+      if  gConn.Connected then
+        gConn.Connected := False;
+      gConn.ConnectionString := format(glconnstr,[myDataBase]);
       adsUser.Open;
     end;
   end
   // MSSQL2000
   else begin
-    if AdoConn.Connected then
-      AdoConn.Connected := False;
-    AdoConn.ConnectionString := format(glconnstrmssql2000,[
+    if gConn.Connected then
+      gConn.Connected := False;
+    gConn.ConnectionString := format(glconnstrmssql2000,[
       CurrBFSSSystem.fDataBase.fasPass,
       CurrBFSSSystem.fDataBase.fDBName,
       CurrBFSSSystem.fDataBase.fDBServer]);
-    AdoConn.Open;
+    gConn.Open;
   end;
 end;
 
@@ -127,13 +129,13 @@ end;
 
 procedure TDM.DoBackDatabase(AFileName:String);
 begin
-  if AdoConn.Connected then
-    AdoConn.Open;
+  if gConn.Connected then
+    gConn.Open;
 
   //MSSQL2000
   if CurrBFSSSystem.fDataBase.fType = dbt_MSSQL2000 then
   begin
-    AdoConn.Execute('Backup database ' + CurrBFSSSystem.fDataBase.fDBName
+    gConn.Execute('Backup database ' + CurrBFSSSystem.fDataBase.fDBName
         + ' to disk = ''' + AFileName + '''' );//+ 'with init');
   end
   else begin
@@ -146,9 +148,9 @@ function TDM.DoRestoreDatabase(AFileName:String):Boolean;
 var
   Tspid:string;
 begin
-  if AdoConn.Connected then  AdoConn.Open;
+  if gConn.Connected then  gConn.Open;
 
-  with AdoConn do
+  with gConn do
   try
     Execute('use master');
     with aqryPublic do
@@ -194,4 +196,17 @@ begin
   end;
 end;
 
+initialization
+begin
+  Coinitialize(nil);
+  gConn:= TADOConnection.Create(nil);
+  gConn.LoginPrompt := False;
+end;
+finalization
+begin
+  gConn.Free;
+  CoUninitialize();
+end;
+
 end.
+

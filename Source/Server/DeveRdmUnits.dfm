@@ -7,13 +7,11 @@ object BFSSRDM: TBFSSRDM
   Height = 422
   Width = 509
   object adsSQL: TADODataSet
-    Connection = RdmADOConn
     Parameters = <>
     Left = 120
     Top = 16
   end
   object adsQuery: TADODataSet
-    Connection = RdmADOConn
     Parameters = <>
     Left = 33
     Top = 87
@@ -31,7 +29,6 @@ object BFSSRDM: TBFSSRDM
     Top = 142
   end
   object adsQueryEx: TADODataSet
-    Connection = RdmADOConn
     Parameters = <>
     Left = 112
     Top = 87
@@ -43,13 +40,11 @@ object BFSSRDM: TBFSSRDM
     Top = 142
   end
   object adsQueryEx2: TADODataSet
-    Connection = RdmADOConn
     Parameters = <>
     Left = 197
     Top = 85
   end
   object adsQueryEx3: TADODataSet
-    Connection = RdmADOConn
     Parameters = <>
     Left = 277
     Top = 85
@@ -61,7 +56,6 @@ object BFSSRDM: TBFSSRDM
     Top = 142
   end
   object adsQueryEx4: TADODataSet
-    Connection = RdmADOConn
     Parameters = <>
     Left = 365
     Top = 85
@@ -72,18 +66,12 @@ object BFSSRDM: TBFSSRDM
     Left = 364
     Top = 142
   end
-  object RdmADOConn: TADOConnection
-    LoginPrompt = False
-    Left = 40
-    Top = 16
-  end
   object dspCommand: TDataSetProvider
     OnDataRequest = dspCommandDataRequest
     Left = 270
     Top = 16
   end
   object ADOQuery: TADOQuery
-    Connection = RdmADOConn
     Parameters = <>
     Left = 192
     Top = 16

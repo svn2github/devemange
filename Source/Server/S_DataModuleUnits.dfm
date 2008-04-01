@@ -5,14 +5,6 @@ object DM: TDM
   Top = 254
   Height = 384
   Width = 337
-  object AdoConn: TADOConnection
-    ConnectOptions = coAsyncConnect
-    LoginPrompt = False
-    Mode = cmShareDenyNone
-    Provider = 'Microsoft.Jet.OLEDB.4.0'
-    Left = 23
-    Top = 22
-  end
   object dsUser: TDataSource
     DataSet = adsUser
     Left = 24
@@ -24,7 +16,6 @@ object DM: TDM
     Top = 144
   end
   object adsUser: TADODataSet
-    Connection = AdoConn
     BeforePost = adsUserBeforePost
     AfterScroll = adsUserAfterScroll
     OnNewRecord = adsUserNewRecord
@@ -35,7 +26,6 @@ object DM: TDM
     Top = 88
   end
   object adsUserPrivilege: TADODataSet
-    Connection = AdoConn
     BeforePost = adsUserPrivilegeBeforePost
     OnFilterRecord = adsUserPrivilegeFilterRecord
     OnNewRecord = adsUserPrivilegeNewRecord
@@ -46,9 +36,8 @@ object DM: TDM
     Top = 87
   end
   object aqryPublic: TADOQuery
-    Connection = AdoConn
     Parameters = <>
-    Left = 96
+    Left = 24
     Top = 24
   end
 end
