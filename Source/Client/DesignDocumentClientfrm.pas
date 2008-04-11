@@ -157,6 +157,17 @@ begin
     cdsData.First;
     while not cdsData.Eof do
     begin
+
+      //
+      // 没有权限不加载
+      //
+      if not HasModuleAction(Ord(bsDocTree),
+        cdsData.FieldByName('ZID').AsInteger,atView) then
+      begin
+        cdsData.Next;
+        Continue;
+      end;
+
       new(myData);
       myData^.fParent := myParent;
       myData^.fID  := cdsData.FieldByName('ZID').AsInteger;

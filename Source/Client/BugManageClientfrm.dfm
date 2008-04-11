@@ -1,8 +1,8 @@
 inherited BugManageDlg: TBugManageDlg
-  Left = 93
-  Top = 142
+  Left = 202
+  Top = 24
   Width = 1099
-  Height = 834
+  Height = 812
   Caption = #38169#35823#31649#29702
   OldCreateOrder = True
   PixelsPerInch = 96
@@ -11,7 +11,7 @@ inherited BugManageDlg: TBugManageDlg
     Left = 0
     Top = 95
     Width = 1091
-    Height = 705
+    Height = 683
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
@@ -19,7 +19,7 @@ inherited BugManageDlg: TBugManageDlg
       Left = 0
       Top = 0
       Width = 1091
-      Height = 705
+      Height = 683
       ActivePage = tsBugItem
       Align = alClient
       TabOrder = 0
@@ -30,7 +30,7 @@ inherited BugManageDlg: TBugManageDlg
           Left = 189
           Top = 0
           Width = 10
-          Height = 675
+          Height = 653
           Beveled = True
           ResizeStyle = rsLine
         end
@@ -38,7 +38,7 @@ inherited BugManageDlg: TBugManageDlg
           Left = 0
           Top = 0
           Width = 189
-          Height = 675
+          Height = 653
           Align = alLeft
           HideSelection = False
           Images = DM.ImageListTree
@@ -54,7 +54,7 @@ inherited BugManageDlg: TBugManageDlg
           Left = 199
           Top = 0
           Width = 884
-          Height = 675
+          Height = 653
           Align = alClient
           BevelOuter = bvNone
           Caption = 'plBugList'
@@ -79,7 +79,7 @@ inherited BugManageDlg: TBugManageDlg
             Left = 0
             Top = 55
             Width = 884
-            Height = 580
+            Height = 558
             Align = alClient
             DataSource = dsBugItem
             Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
@@ -338,7 +338,7 @@ inherited BugManageDlg: TBugManageDlg
           end
           object plBugItemBottom: TPanel
             Left = 0
-            Top = 635
+            Top = 613
             Width = 884
             Height = 40
             Align = alBottom
@@ -726,7 +726,7 @@ inherited BugManageDlg: TBugManageDlg
           Left = 0
           Top = 225
           Width = 1083
-          Height = 450
+          Height = 428
           Align = alClient
           BevelOuter = bvNone
           TabOrder = 1
@@ -822,7 +822,7 @@ inherited BugManageDlg: TBugManageDlg
             Left = 0
             Top = 40
             Width = 1083
-            Height = 410
+            Height = 388
             Align = alClient
             BevelOuter = bvLowered
             Caption = 'Panel1'

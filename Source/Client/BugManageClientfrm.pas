@@ -318,6 +318,16 @@ begin
     ClearNode(APNode); //清空项目
     while not cdsBugTree.Eof do
     begin
+      //
+      // 没有权限不加载
+      //
+      if not HasModuleAction(Ord(bsBugTree),
+        cdsBugTree.FieldByName('ZID').AsInteger,atView) then
+      begin
+        cdsBugTree.Next;
+        Continue;
+      end;
+
       new(myData);
       myData^.fName := cdsBugTree.FieldByName('ZNAME').AsString;
       if Assigned(APNode) and Assigned(APNode.data) then
@@ -541,6 +551,8 @@ begin
   if fLoading then Exit;
   if not Assigned(Node.data) then Exit;
   myData := Node.data;
+
+  ShowStatusBarText(2,format('分部号=%d',[myData^.fid]));
 
   //权限
   if not HasModuleActionByShow(Ord(bsBugTree),myData.fID,atView) then

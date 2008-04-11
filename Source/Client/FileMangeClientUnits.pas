@@ -303,6 +303,17 @@ begin
 
     while not cdsQuery.Eof do
     begin
+
+      //
+      // 没有权限不加载
+      //
+      if not HasModuleAction(Ord(fsmDir),
+        cdsQuery.FieldByName('ZID').AsInteger,atView) then
+      begin
+        cdsQuery.Next;
+        Continue;
+      end;
+
       new(myNodeData);
       if AParentNode <> nil then
         myNodeData^.fParent := AParentNode.data
@@ -378,6 +389,17 @@ begin
     cdsQuery.First;
     while not cdsQuery.Eof do
     begin
+
+      //
+      // 没有权限不加载
+      //
+      if not HasModuleAction(Ord(fsmfile),
+        cdsQuery.FieldByName('ZID').AsInteger,atView) then
+      begin
+        cdsQuery.Next;
+        Continue;
+      end;
+
       new(myItemData);
       myItemData^.fTreeID := ATreeID;
       myItemData^.fID := cdsQuery.FieldByName('ZID').AsInteger;

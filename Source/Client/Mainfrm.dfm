@@ -246,6 +246,11 @@ object MainDlg: TMainDlg
       Caption = #27599#26085#19968#21477
       OnExecute = actFile_TodaySayExecute
     end
+    object actFile_ChangPasswd: TAction
+      Category = #25991#20214
+      Caption = #20462#25913#23494#30721'...'
+      OnExecute = actFile_ChangPasswdExecute
+    end
   end
   object ImageList1: TImageList
     Left = 112
@@ -660,6 +665,9 @@ object MainDlg: TMainDlg
     Top = 56
     object f1: TMenuItem
       Caption = #25991#20214'(&F)'
+      object N8: TMenuItem
+        Action = actFile_ChangPasswd
+      end
       object N7: TMenuItem
         Action = actFile_TodaySay
       end

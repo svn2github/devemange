@@ -60,6 +60,8 @@ type
     N6: TMenuItem;
     actFile_TodaySay: TAction;
     N7: TMenuItem;
+    actFile_ChangPasswd: TAction;
+    N8: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure actmod_FilesExecute(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -75,6 +77,7 @@ type
     procedure actMod_ProDocExecute(Sender: TObject);
     procedure actFile_CloseExecute(Sender: TObject);
     procedure actFile_TodaySayExecute(Sender: TObject);
+    procedure actFile_ChangPasswdExecute(Sender: TObject);
   private
     fChildform : TList; //所有子窗口的对象
     fCurrentChildform : TBaseChildDlg;
@@ -103,7 +106,8 @@ uses
   ProjectManageClientfrm,  {项目管理}
   UserManageClientfrm,     {用户管理}
   DesignDocumentClientfrm, {项目文档}
-  WriteToDaySayfrm         {每日一句}
+  WriteToDaySayfrm,        {每日一句}
+  ChangPasswdfrm           {修改密码}
 
   ;
 
@@ -361,6 +365,47 @@ begin
 
 
 
+end;
+
+procedure TMainDlg.actFile_ChangPasswdExecute(Sender: TObject);
+var
+  mysql : string;
+const
+  glSQL = 'update TB_USER_ITEM set ZPASS=''%s'' where ZID=%d';
+begin
+  //
+  with TChangPasswdDlg.Create(nil) do
+  try
+
+    if ShowModal = mrOk then
+    begin
+      if edPasswd1.Text = '' then
+      begin
+        MessageBox(Handle,'密码不能为空','提示',MB_ICONWARNING+MB_OK);
+        Exit;
+      end;
+
+      if edPasswd1.Text <> edPasswd2.Text then
+      begin
+        MessageBox(Handle,'两次密码不一样','提示',MB_ICONWARNING+MB_OK);
+        Exit;
+      end;
+
+      //执行修改密码
+      mysql := format(glSql,[edPasswd1.Text, ClientSystem.fEditer_id]);
+      if not ClientSystem.fDbOpr.ExeSQL(PChar(mysql)) then
+      begin
+        MessageBox(Handle,'修改密码出错异常错误','提示',MB_ICONERROR+MB_OK);
+        Exit;
+      end
+      else begin
+        MessageBox(Handle,'修改密码成功','提示',MB_OK);
+      end;
+    end;
+
+  finally
+    free;
+  end;
 end;
 
 end.

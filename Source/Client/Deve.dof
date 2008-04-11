@@ -114,8 +114,8 @@ IncludeVerInfo=1
 AutoIncBuild=1
 MajorVer=1
 MinorVer=0
-Release=6
-Build=451
+Release=8
+Build=472
 Debug=0
 PreRelease=0
 Special=0
@@ -126,14 +126,18 @@ CodePage=936
 [Version Info Keys]
 CompanyName=
 FileDescription=
-FileVersion=1.0.6.451
+FileVersion=1.0.8.472
 InternalName=
 LegalCopyright=
 LegalTrademarks=
 OriginalFilename=
 ProductName=
-ProductVersion=1.0.6
+ProductVersion=1.0.8
 Comments=
+[Excluded Packages]
+D:\VCL\XL Report 4\D7Units\d7XLR4_D.bpl=XL Report design-time package for Delphi 7.0
+c:\program files\borland\delphi7\Bin\dcltee70.bpl=TeeChart Components
+c:\program files\borland\delphi7\Bin\dcldss70.bpl=Borland Decision Cube Components
 [HistoryLists\hlUnitAliases]
 Count=1
 Item0=WinTypes=Windows;WinProcs=Windows;DbiTypes=BDE;DbiProcs=BDE;DbiErrs=BDE;
