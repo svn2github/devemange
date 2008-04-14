@@ -308,7 +308,7 @@ begin
       // 没有权限不加载
       //
       if not HasModuleAction(Ord(fsmDir),
-        cdsQuery.FieldByName('ZID').AsInteger,atView) then
+        cdsQuery.FieldByName('ZID').AsInteger,atView) and (APID<>-1) then
       begin
         cdsQuery.Next;
         Continue;
