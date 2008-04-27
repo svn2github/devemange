@@ -78,7 +78,6 @@ object BFSSRDM: TBFSSRDM
   end
   object SMTP: TIdSMTP
     MaxLineAction = maException
-    ReadTimeout = 0
     Port = 25
     AuthenticationType = atNone
     Left = 40
@@ -88,6 +87,7 @@ object BFSSRDM: TBFSSRDM
     AttachmentEncoding = 'MIME'
     BccList = <>
     CCList = <>
+    DeleteTempFiles = False
     Encoding = meMIME
     Priority = mpHigh
     Recipients = <>

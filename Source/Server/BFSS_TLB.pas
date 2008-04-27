@@ -12,17 +12,17 @@ unit BFSS_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 2008-04-01 09:52:30 from Type Library described below.
+// File generated on 2008-4-28 0:16:38 from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: D:\DeveManage\Source\Server\DeveManage.tlb (1)
+// Type Lib: D:\devemanage\Source\Server\DeveManage.tlb (1)
 // LIBID: {D1AF1628-E704-4247-9F5A-F1BCCD264A69}
 // LCID: 0
 // Helpfile: 
 // HelpString: BFSS Library
 // DepndLst: 
-//   (1) v1.0 Midas, (D:\DeveManage\App\MIDAS.DLL)
-//   (2) v2.0 stdole, (C:\WINDOWS\system32\STDOLE2.TLB)
+//   (1) v1.0 Midas, (C:\WINDOWS\system32\midas.dll)
+//   (2) v2.0 stdole, (C:\WINDOWS\system32\stdole2.tlb)
 // ************************************************************************ //
 {$TYPEDADDRESS OFF} // Unit must be compiled without type-checked pointers. 
 {$WARN SYMBOL_PLATFORM OFF}

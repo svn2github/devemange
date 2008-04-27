@@ -114,8 +114,8 @@ IncludeVerInfo=1
 AutoIncBuild=1
 MajorVer=1
 MinorVer=0
-Release=6
-Build=72
+Release=7
+Build=78
 Debug=0
 PreRelease=0
 Special=0
@@ -126,7 +126,7 @@ CodePage=936
 [Version Info Keys]
 CompanyName=
 FileDescription=
-FileVersion=1.0.6.72
+FileVersion=1.0.7.78
 InternalName=
 LegalCopyright=
 LegalTrademarks=
@@ -134,6 +134,12 @@ OriginalFilename=
 ProductName=
 ProductVersion=1.0.6
 Comments=
+[Excluded Packages]
+c:\program files\borland\delphi7\Projects\Bpl\dxPSdxDBTVLnkD7.bpl=ExpressPrinting System ReportLinks (Standard) by Developer Express Inc.
+C:\Program Files\Borland\Delphi7\Projects\Bpl\dxPSLnksD7.bpl=ExpressPrinting System ReportLinks (Standard) by Developer Express Inc.
+D:\VCL\XL Report 4\D7Units\d7XLR4_D.bpl=XL Report design-time package for Delphi 7.0
+c:\program files\borland\delphi7\Bin\dcltee70.bpl=TeeChart Components
+c:\program files\borland\delphi7\Bin\dcldss70.bpl=Borland Decision Cube Components
 [HistoryLists\hlUnitAliases]
 Count=1
 Item0=WinTypes=Windows;WinProcs=Windows;DbiTypes=BDE;DbiProcs=BDE;DbiErrs=BDE;

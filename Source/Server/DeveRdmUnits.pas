@@ -11,6 +11,7 @@
 //     2) 更改了TB_FILE_ITEM 增加ZSTYPE Field ver=1.0.2 2007-12-3
 //     3) 更改了TIDSTMP组件发送邮件时，可能被别的服务阻击的可能. ver=1.0.3 2007-12-18
 //     4) 采用一个数据库的共享连接这个会提高性能。ver=1.0.6 2008-4-1
+//     5) 修改回复邮件的问题 ver=1.0.7 2008-4-28
 //
 //
 ///////////////////////////////////////////////////////////////////////////////
@@ -470,13 +471,13 @@ var
   myTitle : String;
   myContext : String;  //内容
   myID : integer;
-  //myIdMsg: TIdMessage;
 const
   glSQL  = 'select ZTITLE from TB_BUG_ITEM where ZID=%d ';
   glSQL2 = 'select isnull(max(ZID),0) as v from TB_BUG_HISTORY where ZBUG_ID=%d';
   glSQL3 = 'select ZCONTEXT from TB_BUG_HISTORY where ZID=%d';
 begin
   if not CurrBFSSSystem.fSMTPParams.fAction then Exit;
+
   if not SMTP.Connected then
   begin
     SMTP.AuthenticationType := atLogin;
@@ -532,18 +533,29 @@ begin
     //发送内容:
     try
       IdMessage1.Clear;
-      IdMessage1.CharSet := 'gb2312';
+      IdMessage1.MessageParts.Clear;
+      IdMessage1.CharSet := 'BIG5';
+      IdMessage1.Encoding := (meUU);
       IdMessage1.ClearBody;
-      IdMessage1.Body.Add(myContext);
-      IdMessage1.From.address := CurrBFSSSystem.fSMTPParams.fUserName;
+      IdMessage1.Body.Text := myContext;
+      IdMessage1.From.Text := CurrBFSSSystem.fSMTPParams.fUserName;
+      //回复地址
+      //IdMessage1.ReplyTo.EMailAddresses := CurrBFSSSystem.fSMTPParams.fUserName;
+      //
+      IdMessage1.Priority := TIdMessagePriority(2);
+      IdMessage1.ReceiptRecipient.Text := '';
+
       IdMessage1.Subject := myTitle;
       IdMessage1.Recipients.EMailAddresses := AMails;
-      IdMessage1.MessageParts.Clear;
+
       SMTP.Send(IdMessage1);
     finally
 
     end;
   end;
+
+  if SMTP.Connected then
+    SMTP.Disconnect;
 
 end;
 
