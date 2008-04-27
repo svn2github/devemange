@@ -47,6 +47,7 @@ type
     fOpenInherit  : Boolean; //=True 表示继承上级的打开方式
     fOpenExe      : String;  // Exe的路径
     fOpenExt      : String;  // 打开的扩展
+    fPublic       : Boolean; //=True 表示公共,不处量权限
   end;
 
   PFileItem = ^TFileItem;
@@ -64,6 +65,9 @@ type
     fStructVer : integer;
     fType : integer;      //类型
     fSzie : integer;      //文件大小
+    fParentPri : Boolean; //是否采用目录的权限
+    fOwner : Integer;     //创建人
+    fOwnerName : string;
   end;
 
   PBugTreeNode = ^TBugTreeNode;

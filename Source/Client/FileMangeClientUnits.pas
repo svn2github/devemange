@@ -17,6 +17,7 @@ type
     flcEditDateTime,
     flcSize,
     flcEditor,
+    flcOwner,
     flcPath);
 
 const
@@ -26,6 +27,7 @@ const
       '日期',
       '大小',
       '编辑',
+      '创建人',
       '路径' );
 
 type
@@ -90,6 +92,10 @@ type
     N17: TMenuItem;
     BitBtn7: TBitBtn;
     actFile_Newfile: TAction;
+    actTree_SetPublicDir: TAction;
+    N18: TMenuItem;
+    actFile_SetParentPiv: TAction;
+    N19: TMenuItem;
     procedure FormDestroy(Sender: TObject);
     procedure tvFileTreeExpanding(Sender: TObject; Node: TTreeNode;
       var AllowExpansion: Boolean);
@@ -139,6 +145,10 @@ type
       var DefaultDraw: Boolean);
     procedure actFile_NewfileUpdate(Sender: TObject);
     procedure actFile_NewfileExecute(Sender: TObject);
+    procedure actTree_SetPublicDirExecute(Sender: TObject);
+    procedure actTree_SetPublicDirUpdate(Sender: TObject);
+    procedure actFile_SetParentPivUpdate(Sender: TObject);
+    procedure actFile_SetParentPivExecute(Sender: TObject);
   private
     fLoading  : Boolean;
     fColumnToSort : integer; //列的排序索引
@@ -308,7 +318,8 @@ begin
       // 没有权限不加载
       //
       if not HasModuleAction(Ord(fsmDir),
-        cdsQuery.FieldByName('ZID').AsInteger,atView) and (APID<>-1) then
+        cdsQuery.FieldByName('ZID').AsInteger,atView) and (APID<>-1)
+        and not (cdsQuery.FieldByName('ZPUBLIC').AsBoolean) then
       begin
         cdsQuery.Next;
         Continue;
@@ -324,6 +335,7 @@ begin
       myNodeData^.fName := cdsQuery.FieldByName('ZNAME').AsString;
       myNodeData^.fNote := cdsQuery.FieldByName('ZNOTE').AsString;
       myNodeData^.fhasChild := cdsQuery.FieldByName('ZHASCHILD').AsBoolean;
+      myNodeData^.fPublic := cdsQuery.FieldByName('ZPUBLIC').AsBoolean;
       myNode := tvFileTree.Items.AddChild(AParentNode,myNodeData^.fName);
       myNode.Data := myNodeData;
       if myNodeData^.fhasChild then
@@ -335,8 +347,15 @@ begin
         myNode.ImageIndex := 0;
       end
       else begin
-        myNode.SelectedIndex := 2;
-        myNode.ImageIndex := 1;
+        if myNodeData^.fPublic then
+        begin
+          myNode.SelectedIndex := 6;
+          myNode.ImageIndex := 5;
+        end
+        else begin
+          myNode.SelectedIndex := 2;
+          myNode.ImageIndex := 1;
+        end;
       end;
     end;
   finally
@@ -373,8 +392,10 @@ var
   myItem : TListItem;
   myItemData : PFileItem;
 const
-  glSQL = 'select a.*,b.ZNAME as UserName from TB_FILE_ITEM as a  '         +
-          'left join TB_USER_ITEM as b on a.ZEDITER_ID = b.ZID '            +
+  glSQL = 'select a.*,b.ZNAME as UserName,c.ZNAME as OwnerName '+
+          'from TB_FILE_ITEM as a  '         +
+          'left join TB_USER_ITEM as b on a.ZEDITER_ID = b.ZID  '            +
+          'left join TB_USER_ITEM as c on a.ZOWNER = c.ZID ' +
           'where a.ZTREE_ID=%d and a.ZNEWVER=1 and a.ZSTYPE=%d ';  //其中ZNEWVER=TRUE在MSSQL2000有问题
 begin
   ClientSystem.BeginTickCount;
@@ -396,8 +417,15 @@ begin
       if not HasModuleAction(Ord(fsmfile),
         cdsQuery.FieldByName('ZID').AsInteger,atView) then
       begin
-        cdsQuery.Next;
-        Continue;
+        //继承目录的权限
+        if cdsQuery.FieldByName('ZParentPri').AsBoolean then
+        begin
+          
+        end
+        else begin
+          cdsQuery.Next;
+          Continue;
+        end;  
       end;
 
       new(myItemData);
@@ -414,6 +442,9 @@ begin
       myItemdata^.fTYPE := cdsQuery.FieldByName('ZTYPE').AsInteger;
       myItemdata^.fFilePath := cdsQuery.FieldByName('ZFILEPATH').AsString;
       myItemdata^.fSzie := cdsQuery.FieldByName('ZSIZE').AsInteger;
+      myItemdata^.fParentPri := cdsQuery.FieldByName('ZParentPri').AsBoolean;
+      myItemData^.fOwner := cdsQuery.FieldByName('ZOWNER').AsInteger;
+      myItemData^.fOwnerName := cdsQuery.FieldByName('OwnerName').AsString;
 
       myItem := lvFileItem.Items.Add;
       myItem.data := myItemData;
@@ -464,6 +495,8 @@ begin
           else
             AItem.SubItems.Add('');
         end;
+      flcOwner:
+        AItem.SubItems.Add(AItemData^.fOwnerName);
       flcPath:
         begin
           if AItemData^.fStatus = 1 then
@@ -482,7 +515,8 @@ var
 begin
   myNodeData := Node.Data;
   ShowStatusBarText(2,format('分部号=%d',[myNodeData^.fid]));
-  if not HasModuleActionByShow(Ord(fsmDir),myNodeData^.fID,atView) then
+  if not myNodeData.fPublic and
+     not HasModuleActionByShow(Ord(fsmDir),myNodeData^.fID,atView) then
     Exit;
   LoadFileItem(myNodeData^.fID);
 end;
@@ -584,7 +618,8 @@ begin
   myNodeData := tvFileTree.Selected.data;
   myNodeParent := tvFileTree.Selected.Parent.data;
 
-  if not HasModuleAction(Ord(fsmDir),myNodeData.fID,atDelete) then
+  if not myNodeData^.fPublic and
+     not HasModuleAction(Ord(fsmDir),myNodeData.fID,atDelete) then
   begin
     MessageBox(Handle,'没有操作权限','权限',MB_ICONWARNING+MB_OK);
     Exit;
@@ -648,10 +683,12 @@ var
   myNodeData : PFileTreeNode;
   myfileid : integer;
   myfilenote : String;
+  myfilesize : Integer;
+  myParentPiv : Integer;
 const
   glSQL =  'insert into TB_FILE_ITEM (ZTREE_ID,ZSTYPE,ZID,ZVER,ZNAME,ZEDITER_ID,ZFILEPATH, '+
-           'ZSTATUS,ZEXT,ZEDITDATETIME,ZSTRUCTVER,ZTYPE,ZNEWVER,ZNOTE,ZSIZE) ' +
-           'values (%d,%d,%d,%d,''%s'',%d,''%s'',%d,''%s'',''%s'',%d,%d,1,''%s'',%d)';
+           'ZSTATUS,ZEXT,ZEDITDATETIME,ZSTRUCTVER,ZTYPE,ZNEWVER,ZNOTE,ZSIZE,ZParentPri,ZOWNER) ' +
+           'values (%d,%d,%d,%d,''%s'',%d,''%s'',%d,''%s'',''%s'',%d,%d,1,''%s'',%d,%d,%d)';
   glSQL2 = 'select max(ZID)+1 as mymax from TB_FILE_ITEM ';
 begin
   //
@@ -663,14 +700,31 @@ begin
      not Assigned(tvFileTree.Selected.Data) then Exit;
 
   myNodeData := tvFileTree.Selected.Data;
-  if not HasModuleAction(Ord(fsmDir),myNodeData^.fID,atInsert) then
+  if not myNodeData.fPublic and
+     not HasModuleAction(Ord(fsmDir),myNodeData^.fID,atInsert) then
   begin
     MessageBox(Handle,'没有操作权限','权限',MB_ICONWARNING+MB_OK);
     Exit;
   end;
 
+  if myNodeData^.fPublic then
+    myParentPiv := 1
+  else
+    myParentPiv := 0;
+
   if not OpenDialog1.Execute then Exit;
   myfilename := OpenDialog1.FileName;
+
+  myfilesize := ClientSystem.GetFileSize(myfilename);
+  //取出文件大小太大的文件不能上传
+  if (ClientSystem.fEditerType<>etAdmin) then
+  begin
+    if myfilesize > 500  then
+    begin
+      MessageBox(Handle,'文件太大，只能上传500KB的文件。','提示',MB_ICONWARNING+MB_OK);
+      Exit;
+    end;
+  end;
 
   cdsQuery.Data := ClientSystem.fDBOpr.ReadDataSet(PChar(glSQL2));
   myfileid := cdsQuery.fieldByName('mymax').AsInteger;
@@ -695,7 +749,9 @@ begin
       0,
       1,
       myfilenote,
-      ClientSystem.GetFileSize(myfilename)])));
+      ClientSystem.GetFileSize(myfilename),
+      myParentPiv,
+      ClientSystem.fEditer_id])));
 
     if not ClientSystem.UpFile(myfileid,1,myfilename) then
     begin
@@ -713,16 +769,30 @@ end;
 
 procedure TFileManageDlg.actFile_DownLoadFIleExecute(Sender: TObject);
 var
+  myNodeData : PFileTreeNode;
   myfilename : String;
   myItemData : PFileItem;
 begin
   //另存文件
+  myNodeData := tvFileTree.Selected.data;
   myItemData := lvFileItem.Selected.Data;
-  if not Self.HasModuleAction(Ord(fsmfile),myItemData^.fID,atView) then
+  if myItemData^.fParentPri then
   begin
-    MessageBox(Handle,'没有文件操作权限','权限',MB_ICONWARNING+MB_OK);
-    Exit;
+     if not myNodeData^.fPublic and
+       not HasModuleAction(Ord(fsmDir),myNodeData^.fID,atView) then
+    begin
+      MessageBox(Handle,'没有文件操作权限','权限',MB_ICONWARNING+MB_OK);
+      Exit;
+    end
+  end
+  else begin
+    if not HasModuleAction(Ord(fsmFile),myItemData^.fID,atView) then
+    begin
+      MessageBox(Handle,'没有文件操作权限','权限',MB_ICONWARNING+MB_OK);
+      Exit;
+    end;
   end;
+
   SaveDialog.DefaultExt := myItemData^.fExt;
   SaveDialog.FileName := myItemData^.fName;
   if not SaveDialog.Execute then Exit;
@@ -771,26 +841,52 @@ end;
 
 procedure TFileManageDlg.actFile_DeleteFIleExecute(Sender: TObject);
 var
+  myNodeData : PFileTreeNode;
   myItemData : PFileItem;
 begin
   //删除文件
-  ClientSystem.BeginTickCount;
+  myNodeData := tvFileTree.Selected.data;
   myItemData := lvFileItem.Selected.data;
-  if MessageBox(Handle,PChar(format('删除-%s',[myItemData^.fName])),'删除',
-    MB_ICONQUESTION+MB_YESNO)=IDNO then Exit;
 
-  if ClientSystem.fdbOpr.DeleteFile(myitemdata^.fID)>=0 then
+  if myItemData.fParentPri then
   begin
-    lvFileItem.Selected.Delete;
-    Dispose(myItemData);
+    if not myNodeData^.fPublic and
+       not HasModuleAction(Ord(fsmDir),myNodeData^.fID,atUpdate) then
+    begin
+      MessageBox(Handle,'没有文件操作权限','权限',MB_ICONWARNING+MB_OK);
+      Exit;
+    end;
+  end
+  else begin
+    if not HasModuleAction(Ord(fsmFile),myItemData^.fID,atUpdate) then
+    begin
+      MessageBox(Handle,'没有文件操作权限','权限',MB_ICONWARNING+MB_OK);
+      Exit;
+    end;
   end;
-  ClientSystem.EndTickCount;
+
+
+  ClientSystem.BeginTickCount;
+  try
+    if MessageBox(Handle,PChar(format('删除-%s',[myItemData^.fName])),'删除',
+      MB_ICONQUESTION+MB_YESNO)=IDNO then Exit;
+
+    if ClientSystem.fdbOpr.DeleteFile(myitemdata^.fID)>=0 then
+    begin
+      lvFileItem.Selected.Delete;
+      Dispose(myItemData);
+    end;
+  finally
+    ClientSystem.EndTickCount;
+  end;
 end;
 
 procedure TFileManageDlg.actFile_DeleteFIleUpdate(Sender: TObject);
 begin
   (Sender as TAction).Enabled := Assigned(lvFileItem.Selected)
-  and Assigned(lvFileItem.Selected.data);
+  and Assigned(lvFileItem.Selected.data)
+  and Assigned(tvFileTree.Selected) and
+  Assigned(tvFileTree.Selected.data);
 end;
 
 procedure TFileManageDlg.acFile_ShowNoteExecute(Sender: TObject);
@@ -855,7 +951,8 @@ begin
 
   myItemData := lvFileItem.Selected.data;
 
-  if not HasModuleAction(Ord(fsmDir),myItemData^.fTreeID,atUpdate) then
+  if not myItemData.fParentPri and
+     not HasModuleAction(Ord(fsmDir),myItemData^.fTreeID,atUpdate) then
   begin
     MessageBox(Handle,'没有操作权限','权限',MB_ICONWARNING+MB_OK);
     Exit;
@@ -954,7 +1051,9 @@ end;
 procedure TFileManageDlg.actFile_DownLoadFIleUpdate(Sender: TObject);
 begin
   (Sender as TAction).Enabled := Assigned(lvFileItem.Selected)
-  and Assigned(lvFileItem.Selected.data);
+  and Assigned(lvFileItem.Selected.data)
+  and Assigned(tvFileTree.Selected) and
+  Assigned(tvFileTree.Selected.data);
 end;
 
 procedure TFileManageDlg.actTree_ReNameExecute(Sender: TObject);
@@ -1261,11 +1360,22 @@ begin
 
   myreopen := False;
 
-  if not HasModuleAction(Ord(fsmFile),myItemData^.fID,atUpdate) then
+  if myItemData.fParentPri then
   begin
-    MessageBox(Handle,'没有文件操作权限','权限',MB_ICONWARNING+MB_OK);
-    Exit;
-  end;
+    if not myNodeData^.fPublic and
+       not HasModuleAction(Ord(fsmDir),myNodeData^.fID,atUpdate) then
+    begin
+      MessageBox(Handle,'没有文件操作权限','权限',MB_ICONWARNING+MB_OK);
+      Exit;
+    end;
+  end
+  else begin
+    if not HasModuleAction(Ord(fsmFile),myItemData^.fID,atUpdate) then
+    begin
+      MessageBox(Handle,'没有文件操作权限','权限',MB_ICONWARNING+MB_OK);
+      Exit;
+    end;
+  end;  
 
   //1.是否已编辑了
   if ClientSystem.fDBOpr.ReadInt(PChar(format(glSQL1,[
@@ -1425,14 +1535,15 @@ var
   myItemData : PFileItem;
   myfilenote : String;
   myfilename : String;
+  myParentPiv : Integer;
 const
   glSQL  = 'update TB_FILE_ITEM set ZEDITER_ID=-1,ZSTATUS=0 ' +
            'where ZID=%d and ZVER=%d';
   glSQL1 = 'select ZSTATUS,ZEDITER_ID from TB_FILE_ITEM where ZID=%d and ZVER=%d';
   glSQL2 = 'Update TB_FILE_ITEM set ZNEWVER=0 where ZNEWVER=1 and ZID=%d';
   glSQL3 = 'insert into TB_FILE_ITEM (ZTREE_ID,ZSTYPE,ZID,ZVER,ZNAME,ZEDITER_ID,ZFILEPATH, '+
-           'ZSTATUS,ZEXT,ZEDITDATETIME,ZSTRUCTVER,ZTYPE,ZNEWVER,ZNOTE,ZSIZE)  ' +
-           'values (%d,%d,%d,%d,''%s'',%d,''%s'',%d,''%s'',''%s'',%d,%d,1,''%s'',%d)';
+           'ZSTATUS,ZEXT,ZEDITDATETIME,ZSTRUCTVER,ZTYPE,ZNEWVER,ZNOTE,ZSIZE,ZParentPri,ZOWNER)  ' +
+           'values (%d,%d,%d,%d,''%s'',%d,''%s'',%d,''%s'',''%s'',%d,%d,1,''%s'',%d,%d,%d)';
   glSQL4 = 'select isnull(max(ZVER),0)+1 as myver from TB_FILE_ITEM where ZID=%d';
 begin
   //保存文件
@@ -1458,8 +1569,11 @@ begin
   end
   else Exit;
 
- 
   myfilename := myItemData^.ffilepath;
+  if myItemData^.fParentPri then
+    myParentPiv := 1
+  else
+    myParentPiv := 0;
 
   if not FileExists(myfilename) then
   begin
@@ -1493,7 +1607,9 @@ begin
       0,
       1,
       myfilenote,
-      ClientSystem.GetFileSize(myfilename)])));
+      ClientSystem.GetFileSize(myfilename),
+      myParentPiv,{myItemData^.fParentPri,}
+      myItemData^.fOwner ])));
 
     //3.增加文件内容
     if not ClientSystem.UpFile(myItemData^.fID,myItemData^.fVer,myfilename) then
@@ -1541,6 +1657,8 @@ begin
     myitemdata := Item.data;
     if myitemdata^.fStatus = 1 then
       Sender.Canvas.Font.Color := clblue;
+    if myItemdata^.fParentPri then
+      Sender.Canvas.Font.Style := [fsItalic];
   end;
   if fColumnToSort = 0 then
     Sender.Canvas.Brush.Color := cl3DLight
@@ -1570,10 +1688,21 @@ begin
   myNodeData := tvFileTree.Selected.data;
   myItemData := lvFileItem.Selected.data;
 
-  if not HasModuleAction(Ord(fsmFile),myItemData^.fID,atView) then
+  if myItemData^.fParentPri then
   begin
-    MessageBox(Handle,'没有文件操作权限','权限',MB_ICONWARNING+MB_OK);
-    Exit;
+     if not myNodeData^.fPublic and
+       not HasModuleAction(Ord(fsmDir),myNodeData^.fID,atView) then
+    begin
+      MessageBox(Handle,'没有文件操作权限','权限',MB_ICONWARNING+MB_OK);
+      Exit;
+    end
+  end
+  else begin
+    if not HasModuleAction(Ord(fsmFile),myItemData^.fID,atView) then
+    begin
+      MessageBox(Handle,'没有文件操作权限','权限',MB_ICONWARNING+MB_OK);
+      Exit;
+    end;
   end;
 
   //1.下载
@@ -1810,11 +1939,15 @@ var
   myfileid ,myver : integer;
   mynewfileid : integer;
   i : integer;
+  mySQL : string;
+const
+  glSQL = 'update TB_FILE_ITEM set ZOWNER=%d,ZParentPri=%d where ZID=%d ';
 begin
 
   myNodeData := tvFileTree.Selected.data;
   myRootData := tvFileTree.TopItem.Data;
-  if not HasModuleAction(Ord(fsmDir),myNodeData^.fID,atInsert) then
+  if not myNodeData^.fPublic and
+     not HasModuleAction(Ord(fsmDir),myNodeData^.fID,atInsert) then
   begin
     MessageBox(Handle,'没有操作权限','权限',MB_ICONWARNING+MB_OK);
     Exit;
@@ -1825,6 +1958,11 @@ begin
     mynewfileid := ClientSystem.fDBOpr.CopyFile(myfileid,myver,myNodeData^.fID);
     if mynewfileid >=0 then
     begin
+      if myNodeData^.fPublic then //如是公共,则继承目录的权限
+        mySQL := Format(glSQL,[ClientSystem.fEditer_id,1,mynewfileid])
+      else
+        mySQL := Format(glSQL,[ClientSystem.fEditer_id,0,mynewfileid]);
+      ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
       LoadFileItem(myNodeData^.fID);
       if lvFileItem.CanFocus then lvFileItem.SetFocus;
       //定位
@@ -1847,6 +1985,72 @@ end;
 class function TFileManageDlg.GetModuleID: integer;
 begin
   Result := Ord(mtFile);
+end;
+
+procedure TFileManageDlg.actTree_SetPublicDirExecute(Sender: TObject);
+var
+  myNodeData : PFileTreeNode;
+const
+  glSQL  = 'update TB_FILE_TREE set ZPUBLIC=%d where ZID=%d';
+begin
+  myNodeData := tvFileTree.Selected.data;
+  if myNodeData^.fPublic then
+  begin
+    ClientSystem.fDBOpr.ExeSQL(PChar(format(glSQL,[0,myNodeData^.fid])));
+    myNodeData^.fPublic := False;
+  end
+  else begin
+    ClientSystem.fDBOpr.ExeSQL(PChar(format(glSQL,[1,myNodeData^.fid])));
+    myNodeData^.fPublic := True;
+  end;
+
+  if myNodeData^.fPublic then
+  begin
+    tvFileTree.Selected.SelectedIndex := 6;
+    tvFileTree.Selected.ImageIndex := 5;
+  end
+  else begin
+    tvFileTree.Selected.SelectedIndex := 2;
+    tvFileTree.Selected.ImageIndex := 1;
+  end;
+
+end;
+
+procedure TFileManageDlg.actTree_SetPublicDirUpdate(Sender: TObject);
+begin
+  (Sender as TAction).Enabled := (ClientSystem.fEditerType=etAdmin) and
+  Assigned(tvFileTree.Selected) and
+  Assigned(tvFileTree.Selected.data);
+end;
+
+procedure TFileManageDlg.actFile_SetParentPivUpdate(Sender: TObject);
+begin
+  (Sender as TAction).Enabled := Assigned(lvFileItem.Selected)
+  and Assigned(lvFileItem.Selected.data);
+end;
+
+procedure TFileManageDlg.actFile_SetParentPivExecute(Sender: TObject);
+var
+  myItemData : PFileItem;
+const
+  glSQL  = 'update TB_FILE_ITEM set ZParentPri=%d where ZID=%d';// and ZVER=%d';
+begin
+  myItemData := lvFileItem.Selected.data;
+  if myItemData.fOwner <> ClientSystem.fEditer_id then
+  begin
+    MessageBox(Handle,'文件的创建人不是你，你不能设置。','权限',MB_ICONWARNING+MB_OK);
+    Exit;
+  end;
+
+  if myItemData.fParentPri then
+  begin
+    ClientSystem.fDBOpr.ExeSQL(PChar(format(glSQL,[0,myItemData^.fid])));
+    myItemData.fParentPri := False;
+  end
+  else begin
+    ClientSystem.fDBOpr.ExeSQL(PChar(format(glSQL,[1,myItemData^.fid])));
+    myItemData.fParentPri := True;
+  end;
 end;
 
 end.

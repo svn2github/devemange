@@ -14,6 +14,16 @@ type
   TBugColumns = (bcCode,bcTitle,bcType,bcWhoBuild,bcBuildDate,
     bcAssingeto,bcwhoReso,bcResoDate);
 
+  TPageType = (ptDir,ptMe); //按项目分页,按由我创建分页或指给我分页
+
+  TPageTypeRec = record
+    fName : string;
+    fType : TPageType;
+    fIndex : Integer;
+    fIndexCount : Integer;
+    fWhereStr : string; //分页的where条件
+  end;
+
   TBugManageDlg = class(TBaseChildDlg)
     plCenter: TPanel;
     plnovisible: TPanel;
@@ -147,6 +157,9 @@ type
     cbSort: TComboBox;
     Label20: TLabel;
     DBNavigator1: TDBNavigator;
+    N11: TMenuItem;
+    N12: TMenuItem;
+    btnBug_RefreshData: TBitBtn;
     procedure actBug_AddDirExecute(Sender: TObject);
     procedure tvProjectExpanding(Sender: TObject; Node: TTreeNode;
       var AllowExpansion: Boolean);
@@ -202,6 +215,8 @@ type
     procedure actBug_RefreshDataExecute(Sender: TObject);
     procedure dblcSelectUsermailCloseUp(Sender: TObject);
   private
+    fPageType : TPageTypeRec; //分页处理
+
     procedure ClearNode(AParent:TTreeNode);
     function  GetBugItemPageCount(APageIndex:integer;AWhereStr:String):integer; //取出页总数
     procedure LoadBugItem(APageIndex:integer;AWhereStr:String);
@@ -561,8 +576,10 @@ begin
   end;
 
 
+  fPageType.fType := ptDir;
+  fPageType.fWhereStr := 'ZTREE_ID=';
   myPageIndex := myData^.fPageIndex;
-  mywhere := 'ZTREE_ID=' + inttostr(myData^.fID);
+  mywhere := fPageType.fWhereStr {'ZTREE_ID='} + inttostr(myData^.fID);
   myData^.fPageCount := GetBugItemPageCount(myPageindex,myWhere);
   lbPageCount.Caption := format('%d/%d',[
     myData^.fPageIndex,
@@ -752,33 +769,64 @@ var
   myData : PBugTreeNode;
 begin
   if fLoading then Exit;
-  mydata := tvProject.Selected.data;
-  mydata^.fPageIndex := mydata^.fPageIndex + 1;
-  myPageIndex := myData^.fPageIndex;
-  mywhere := 'ZTREE_ID=' + inttostr(myData^.fID);
-  LoadBugItem(myPageindex,myWhere);
-  lbPageCount.Caption := format('%d/%d',[
-    myData^.fPageIndex,
-   myData^.fPageCount]);
- lbProjectName.Caption := format('%s  =>第%d共%d页',[
-    myData^.fName,myData^.fPageIndex,myData^.fPageCount]);
+  //
+  // 有两种情况,如是由我创建的分页,点了下一页则是按项目来分页了.
+  //
+  if fPageType.fType = ptme then
+  begin
+    fPageType.fIndex := fPageType.fIndex + 1;
+    myPageIndex := fPageType.fIndex;
+    mywhere := Format(fPageType.fWhereStr,[ClientSystem.fEditer_id]);
+    LoadBugItem(myPageindex,myWhere);
+    lbPageCount.Caption := format('%d/%d',[
+      fPageType.fIndex,
+      fPageType.fIndexCount]);
+    lbProjectName.Caption := format('%s  =>第%d共%d页',[
+      fPageType.fName,fPageType.fIndex,fPageType.fIndexCount]);
+  end
+  else begin
+    mydata := tvProject.Selected.data;
+    mydata^.fPageIndex := mydata^.fPageIndex + 1;
+    myPageIndex := myData^.fPageIndex;
+    mywhere := 'ZTREE_ID=' + inttostr(myData^.fID);
+    LoadBugItem(myPageindex,myWhere);
+    lbPageCount.Caption := format('%d/%d',[
+      myData^.fPageIndex,
+      myData^.fPageCount]);
+    lbProjectName.Caption := format('%s  =>第%d共%d页',[
+      myData^.fName,myData^.fPageIndex,myData^.fPageCount]);
+  end;
 end;
 
 procedure TBugManageDlg.actBug_NewPageUpdate(Sender: TObject);
 begin
-  (sender as TAction).Enabled := not fLoading
-  and Assigned(tvProject.Selected)
-  and Assigned(tvProject.Selected.data)
-  and (PBugTreeNode(tvProject.Selected.data)^.fPageIndex<
-    PBugTreeNode(tvProject.Selected.data).fPageCount);
+  if fPageType.fType = ptme then
+  begin
+    (sender as TAction).Enabled := not fLoading
+    and (fPageType.fIndex<fPageType.fIndexCount);
+  end
+  else begin
+    (sender as TAction).Enabled := not fLoading
+    and Assigned(tvProject.Selected)
+    and Assigned(tvProject.Selected.data)
+    and (PBugTreeNode(tvProject.Selected.data)^.fPageIndex<
+      PBugTreeNode(tvProject.Selected.data).fPageCount);
+  end;
 end;
 
 procedure TBugManageDlg.actBug_PrivPageUpdate(Sender: TObject);
 begin
-  (sender as TAction).Enabled := not fLoading
-  and Assigned(tvProject.Selected)
-  and Assigned(tvProject.Selected.data)
-  and (PBugTreeNode(tvProject.Selected.data)^.fPageIndex>1);
+  if fPageType.fType = ptme then
+  begin
+    (sender as TAction).Enabled := not fLoading
+    and (fPageType.fIndex>1);
+  end
+  else begin
+    (sender as TAction).Enabled := not fLoading
+    and Assigned(tvProject.Selected)
+    and Assigned(tvProject.Selected.data)
+    and (PBugTreeNode(tvProject.Selected.data)^.fPageIndex>1);
+  end;
 end;
 
 procedure TBugManageDlg.actBug_PrivPageExecute(Sender: TObject);
@@ -787,16 +835,31 @@ var
   mywhere : String;
   myData : PBugTreeNode;
 begin
-  mydata := tvProject.Selected.data;
-  mydata^.fPageIndex := mydata^.fPageIndex - 1;
-  myPageIndex := myData^.fPageIndex;
-  mywhere := 'ZTREE_ID=' + inttostr(myData^.fID);
-  LoadBugItem(myPageindex,myWhere);
-  lbPageCount.Caption := format('%d/%d',[
-    myData^.fPageIndex,
-    myData^.fPageCount]);
-  lbProjectName.Caption := format('%s  =>第%d共%d页',[
-    myData^.fName,myData^.fPageIndex,myData^.fPageCount]);
+  if fLoading then Exit;
+  if fPageType.fType = ptMe then
+  begin
+    fPageType.fIndex := fPageType.fIndex -1;
+    myPageIndex := fPageType.fIndex;
+    mywhere := Format(fPageType.fWhereStr,[ClientSystem.fEditer_id]);
+    LoadBugItem(myPageindex,myWhere);
+    lbPageCount.Caption := format('%d/%d',[
+      fPageType.fIndex,
+      fPageType.fIndexCount]);
+    lbProjectName.Caption := format('%s  =>第%d共%d页',[
+      fPageType.fName,fPageType.fIndex,fPageType.fIndexCount]);
+  end
+  else begin
+    mydata := tvProject.Selected.data;
+    mydata^.fPageIndex := mydata^.fPageIndex - 1;
+    myPageIndex := myData^.fPageIndex;
+    mywhere := 'ZTREE_ID=' + inttostr(myData^.fID);
+    LoadBugItem(myPageindex,myWhere);
+    lbPageCount.Caption := format('%d/%d',[
+      myData^.fPageIndex,
+      myData^.fPageCount]);
+    lbProjectName.Caption := format('%s  =>第%d共%d页',[
+      myData^.fName,myData^.fPageIndex,myData^.fPageCount]);
+  end;
 end;
 
 function TBugManageDlg.GetBugItemPageCount(APageIndex: integer;
@@ -840,10 +903,17 @@ end;
 
 procedure TBugManageDlg.actBug_FirstPageUpdate(Sender: TObject);
 begin
-  (sender as TAction).Enabled := not fLoading
-  and Assigned(tvProject.Selected)
-  and Assigned(tvProject.Selected.data)
-  and (PBugTreeNode(tvProject.Selected.data)^.fPageIndex<>1);
+  if fPageType.fType = ptMe then
+  begin
+    (sender as TAction).Enabled := not fLoading
+    and (fPageType.fIndex<>1);
+  end
+  else begin
+    (sender as TAction).Enabled := not fLoading
+    and Assigned(tvProject.Selected)
+    and Assigned(tvProject.Selected.data)
+    and (PBugTreeNode(tvProject.Selected.data)^.fPageIndex<>1);
+  end;
 end;
 
 procedure TBugManageDlg.actBug_FirstPageExecute(Sender: TObject);
@@ -852,25 +922,47 @@ var
   mywhere : String;
   myData : PBugTreeNode;
 begin
-  mydata := tvProject.Selected.data;
-  mydata^.fPageIndex := 1;
-  myPageIndex := myData^.fPageIndex;
-  mywhere := 'ZTREE_ID=' + inttostr(myData^.fID);
-  LoadBugItem(myPageindex,myWhere);
-  lbPageCount.Caption := format('%d/%d',[
-    myData^.fPageIndex,
-    myData^.fPageCount]);
-  lbProjectName.Caption := format('%s  =>第%d共%d页',[
-    myData^.fName,myData^.fPageIndex,myData^.fPageCount]);
+  if fLoading then Exit;
+  if fPageType.fType = ptMe then
+  begin
+    fPageType.fIndex := 1;
+    myPageIndex := 1;
+    mywhere := Format(fPageType.fWhereStr,[ClientSystem.fEditer_id]);
+    LoadBugItem(myPageindex,myWhere);
+    lbPageCount.Caption := format('%d/%d',[
+      1,
+      fPageType.fIndexCount]);
+    lbProjectName.Caption := format('%s  =>第%d共%d页',[
+      fPageType.fName,fPageType.fIndex,fPageType.fIndexCount]);
+  end
+  else begin
+    mydata := tvProject.Selected.data;
+    mydata^.fPageIndex := 1;
+    myPageIndex := myData^.fPageIndex;
+    mywhere := 'ZTREE_ID=' + inttostr(myData^.fID);
+    LoadBugItem(myPageindex,myWhere);
+    lbPageCount.Caption := format('%d/%d',[
+      myData^.fPageIndex,
+      myData^.fPageCount]);
+    lbProjectName.Caption := format('%s  =>第%d共%d页',[
+      myData^.fName,myData^.fPageIndex,myData^.fPageCount]);
+  end;
 end;
 
 procedure TBugManageDlg.actBug_LastPageUpdate(Sender: TObject);
 begin
-  (sender as TAction).Enabled := not fLoading
-  and Assigned(tvProject.Selected)
-  and Assigned(tvProject.Selected.data)
-  and (PBugTreeNode(tvProject.Selected.data)^.fPageIndex<>
-    PBugTreeNode(tvProject.Selected.data).fPageCount);
+  if fPageType.fType = ptMe then
+  begin
+    (sender as TAction).Enabled := not fLoading
+    and (fPageType.fIndex<>fPageType.fIndexCount);
+  end
+  else begin
+    (sender as TAction).Enabled := not fLoading
+    and Assigned(tvProject.Selected)
+    and Assigned(tvProject.Selected.data)
+    and (PBugTreeNode(tvProject.Selected.data)^.fPageIndex<>
+      PBugTreeNode(tvProject.Selected.data).fPageCount);
+  end;
 end;
 
 procedure TBugManageDlg.actBug_LastPageExecute(Sender: TObject);
@@ -879,16 +971,31 @@ var
   mywhere : String;
   myData : PBugTreeNode;
 begin
-  mydata := tvProject.Selected.data;
-  mydata^.fPageIndex := mydata^.fPageCount;
-  myPageIndex := myData^.fPageIndex;
-  mywhere := 'ZTREE_ID=' + inttostr(myData^.fID);
-  LoadBugItem(myPageindex,myWhere);
-  lbPageCount.Caption := format('%d/%d',[
-    myData^.fPageIndex,
-    myData^.fPageCount]);
-  lbProjectName.Caption := format('%s  =>第%d共%d页',[
-    myData^.fName,myData^.fPageIndex,myData^.fPageCount]);
+  if fLoading then Exit;
+  if fPageType.fType = ptme then
+  begin
+    fPageType.fIndex := fPageType.fIndexCount;
+    myPageIndex := fPageType.fIndex;
+    mywhere := Format(fPageType.fWhereStr,[ClientSystem.fEditer_id]);
+    LoadBugItem(myPageindex,myWhere);
+    lbPageCount.Caption := format('%d/%d',[
+      fPageType.fIndex,
+      fPageType.fIndexCount]);
+    lbProjectName.Caption := format('%s  =>第%d共%d页',[
+      fPageType.fName,fPageType.fIndex,fPageType.fIndexCount]);
+  end
+  else begin
+    mydata := tvProject.Selected.data;
+    mydata^.fPageIndex := mydata^.fPageCount;
+    myPageIndex := myData^.fPageIndex;
+    mywhere := 'ZTREE_ID=' + inttostr(myData^.fID);
+    LoadBugItem(myPageindex,myWhere);
+    lbPageCount.Caption := format('%d/%d',[
+      myData^.fPageIndex,
+      myData^.fPageCount]);
+    lbProjectName.Caption := format('%s  =>第%d共%d页',[
+      myData^.fName,myData^.fPageIndex,myData^.fPageCount]);
+  end;
 end;
 
 procedure TBugManageDlg.pcBugChanging(Sender: TObject;
@@ -1099,9 +1206,9 @@ procedure TBugManageDlg.actBugHistory_AddExecute(Sender: TObject);
 var
   myRecNo : integer;
 begin
+  myRecNo := cdsBugHistory.RecNo;
   cdsBugHistory.DisableControls;
   try
-    myRecNo := cdsBugHistory.RecNo;
     cdsBugHistory.Append; //增加
     cdsBugHistory.FieldByName('ZSTATUS').AsInteger := Ord(bgsAction);
     with TBugAeplyDlg.Create(nil) do
@@ -1113,7 +1220,6 @@ begin
         cdsBugHistory.EnableControls;
         cdsBugHistory.Cancel;
         cdsBugHistory.DisableControls;
-        cdsBugHistory.RecNo := myRecNo;
         Exit;
       end;
       cdsBugHistory.FieldByName('ZFILEPATH').AsString := edPath.Text;
@@ -1122,6 +1228,7 @@ begin
     end;
   finally
     cdsBugHistory.EnableControls;
+    cdsBugHistory.RecNo := myRecNo;
   end;
 end;
 
@@ -1592,57 +1699,61 @@ procedure TBugManageDlg.actBug_MeBuildExecute(Sender: TObject);
 var
   myPageIndex:integer;
   mywhere : String;
-  myData : PBugTreeNode;
 begin
-  mydata := tvProject.Selected.data;
-  mydata^.fPageIndex := 1;
-  myPageIndex := myData^.fPageIndex;
-  mywhere := format('ZOPENEDBY=%d',[ClientSystem.fEditer_id]);
-  myData^.fPageCount := GetBugItemPageCount(myPageindex,myWhere);
+  fPageType.fType := ptMe;
+  fPageType.fWhereStr := 'ZOPENEDBY=%d';
+  fPageType.fIndex := 1;
+  fPageType.fName := '由我创建';
+  myPageIndex := 1;
+  mywhere := format(fPageType.fWhereStr{'ZOPENEDBY=%d'},[ClientSystem.fEditer_id]);
+  fPageType.fIndexCount := GetBugItemPageCount(myPageindex,myWhere);
   LoadBugItem(myPageindex,myWhere);
   lbPageCount.Caption := format('%d/%d',[
-    myData^.fPageIndex,
-    myData^.fPageCount]);
+    fPageType.fIndex,
+    fPageType.fIndexCount]);
   lbProjectName.Caption := format('%s  =>第%d共%d页',[
-    myData^.fName,myData^.fPageIndex,myData^.fPageCount]);
+    fPageType.fName,fPageType.fIndex,fPageType.fIndexCount]);
 end;
 
 procedure TBugManageDlg.actBug_AssingToMeExecute(Sender: TObject);
 var
   myPageIndex:integer;
   mywhere : String;
-  myData : PBugTreeNode;
 begin
-  mydata := tvProject.Selected.data;
-  mydata^.fPageIndex := 1;
-  myPageIndex := myData^.fPageIndex;
-  mywhere := format('ZASSIGNEDTO=%d',[ClientSystem.fEditer_id]);
-  myData^.fPageCount := GetBugItemPageCount(myPageindex,myWhere);
+  fPageType.fType := ptMe;
+  fPageType.fWhereStr := 'ZASSIGNEDTO=%d';
+  fPageType.fName := '指派给我';
+  fPageType.fIndex := 1;
+  myPageIndex := 1;
+  mywhere := format(fPageType.fWhereStr{'ZASSIGNEDTO=%d'},[ClientSystem.fEditer_id]);
+  fPageType.fIndexCount := GetBugItemPageCount(myPageindex,myWhere);
   LoadBugItem(myPageindex,myWhere);
   lbPageCount.Caption := format('%d/%d',[
-    myData^.fPageIndex,
-    myData^.fPageCount]);
+    fPageType.fIndex,
+    fPageType.fIndexCount]);
   lbProjectName.Caption := format('%s  =>第%d共%d页',[
-    myData^.fName,myData^.fPageIndex,myData^.fPageCount]);
+    fPageType.fName,fPageType.fIndex,fPageType.fIndexCount]);
 end;
 
 procedure TBugManageDlg.actBug_ResoMeExecute(Sender: TObject);
 var
   myPageIndex:integer;
   mywhere : String;
-  myData : PBugTreeNode;
 begin
-  mydata := tvProject.Selected.data;
-  mydata^.fPageIndex := 1;
-  myPageIndex := myData^.fPageIndex;
-  mywhere := format('ZRESOLVEDBY=%d',[ClientSystem.fEditer_id]);
-  myData^.fPageCount := GetBugItemPageCount(myPageindex,myWhere);
+  fPageType.fType := ptMe;
+  fPageType.fWhereStr := 'ZRESOLVEDBY=%d';
+  fPageType.fIndex := 1;
+  fPageType.fName := '由我解决';
+
+  myPageIndex := 1;
+  mywhere := format(fPageType.fWhereStr{'ZRESOLVEDBY=%d'},[ClientSystem.fEditer_id]);
+  fPageType.fIndexCount:= GetBugItemPageCount(myPageindex,myWhere);
   LoadBugItem(myPageindex,myWhere);
   lbPageCount.Caption := format('%d/%d',[
-    myData^.fPageIndex,
-    myData^.fPageCount]);
+    fPageType.fIndex,
+    fPageType.fIndexCount]);
   lbProjectName.Caption := format('%s  =>第%d共%d页',[
-    myData^.fName,myData^.fPageIndex,myData^.fPageCount]);
+    fPageType.fName,fPageType.fIndex,fPageType.fIndexCount]);
 end;
 
 function TBugManageDlg.UpBugFile(APro_ID:integer;AFileName: String;
@@ -1696,16 +1807,30 @@ var
   myPageindex : integer;
   mywhere : String;
 begin
-  myBugData := tvProject.Selected.data;
-  myPageIndex := myBugData^.fPageIndex;
-  mywhere := 'ZTREE_ID=' + inttostr(myBugData^.fID);
-  myBugData^.fPageCount := GetBugItemPageCount(myPageindex,myWhere);
-  lbPageCount.Caption := format('%d/%d',[
-    myBugData^.fPageIndex,
-    myBugData^.fPageCount]);
-  LoadBugItem(myPageindex,myWhere);
-  lbProjectName.Caption := format('%s  =>第%d共%d页',[
-    myBugData^.fName,myBugData^.fPageIndex,myBugData^.fPageCount]);
+  if fPageType.fType = ptMe then
+  begin
+    myPageindex := fPageType.fIndex;
+    mywhere := Format(fPageType.fWhereStr,[ClientSystem.fEditer_id]);
+    fPageType.fIndexCount := GetBugItemPageCount(myPageindex,myWhere);
+    LoadBugItem(myPageindex,myWhere);
+    lbPageCount.Caption := format('%d/%d',[
+      fPageType.fIndex,
+      fPageType.fIndexCount]);
+    lbProjectName.Caption := format('%s  =>第%d共%d页',[
+      fPageType.fName,fPageType.fIndex,fPageType.fIndexCount]);
+  end
+  else begin
+    myBugData := tvProject.Selected.data;
+    myPageIndex := myBugData^.fPageIndex;
+    mywhere := 'ZTREE_ID=' + inttostr(myBugData^.fID);
+    myBugData^.fPageCount := GetBugItemPageCount(myPageindex,myWhere);
+    LoadBugItem(myPageindex,myWhere);
+    lbPageCount.Caption := format('%d/%d',[
+      myBugData^.fPageIndex,
+      myBugData^.fPageCount]);
+    lbProjectName.Caption := format('%s  =>第%d共%d页',[
+      myBugData^.fName,myBugData^.fPageIndex,myBugData^.fPageCount]);
+  end;
 end;
 
 procedure TBugManageDlg.dblcSelectUsermailCloseUp(Sender: TObject);

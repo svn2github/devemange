@@ -379,7 +379,10 @@ end;
 
 procedure TProjectManageClientDlg.actPro_AddExecute(Sender: TObject);
 begin
-  cdsProjectItem.Append;
+  if ClientSystem.fEditerType = etAdmin then
+    cdsProjectItem.Append
+  else
+    MessageBox(Handle,'无权限','增加',MB_ICONWARNING+MB_OK);
 end;
 
 procedure TProjectManageClientDlg.cbEditProItemClick(Sender: TObject);
@@ -479,7 +482,10 @@ end;
 
 procedure TProjectManageClientDlg.actPro_SaveExecute(Sender: TObject);
 begin
-  cdsProjectItem.Post;
+  if ClientSystem.fEditerType = etAdmin then
+    cdsProjectItem.Post
+  else
+    MessageBox(Handle,'无权限','增加',MB_ICONWARNING+MB_OK);
 end;
 
 procedure TProjectManageClientDlg.actPro_DelUpdate(Sender: TObject);
@@ -491,6 +497,12 @@ end;
 
 procedure TProjectManageClientDlg.actPro_DelExecute(Sender: TObject);
 begin
+  if not (ClientSystem.fEditerType = etAdmin) then
+  begin
+    MessageBox(Handle,'无权限','增加',MB_ICONWARNING+MB_OK);
+    Exit;
+  end;  
+
   if MessageBox(Handle,'确定删除项目?','询问',MB_ICONERROR+MB_YESNO)=IDNO then
     Exit;
   cdsProjectItem.Delete;
@@ -746,6 +758,11 @@ end;
 
 procedure TProjectManageClientDlg.actVer_AddExecute(Sender: TObject);
 begin
+  if not (ClientSystem.fEditerType=etAdmin) then
+  begin
+    MessageBox(Handle,'无权限','提示',MB_ICONERROR+MB_OK);
+    Exit;
+  end;
   if  not HasModuleActionByShow(Ord(psVersion),
       cdsProjectItem.FieldByName('ZID').AsInteger,atInsert) then
     Exit;
@@ -760,6 +777,11 @@ end;
 
 procedure TProjectManageClientDlg.actVer_SaveExecute(Sender: TObject);
 begin
+  if not (ClientSystem.fEditerType=etAdmin) then
+  begin
+    MessageBox(Handle,'无权限','提示',MB_ICONERROR+MB_OK);
+    Exit;
+  end;
   if  not HasModuleActionByShow(Ord(psVersion),
       cdsProjectItem.FieldByName('ZID').AsInteger,atUpdate) then
     Exit;
@@ -863,6 +885,12 @@ end;
 
 procedure TProjectManageClientDlg.actVer_DelExecute(Sender: TObject);
 begin
+  if not (ClientSystem.fEditerType=etAdmin) then
+  begin
+    MessageBox(Handle,'无权限','提示',MB_ICONERROR+MB_OK);
+    Exit;
+  end;
+
   if  not HasModuleActionByShow(Ord(psVersion),
       cdsProjectItem.FieldByName('ZID').AsInteger,atDelete) then
     Exit;

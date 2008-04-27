@@ -1,6 +1,6 @@
 inherited ProjectManageClientDlg: TProjectManageClientDlg
-  Left = 72
-  Top = 128
+  Left = 101
+  Top = 89
   Width = 1153
   Caption = #39033#30446#31649#29702
   OldCreateOrder = True

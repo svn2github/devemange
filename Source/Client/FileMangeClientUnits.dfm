@@ -1,6 +1,6 @@
 object FileManageDlg: TFileManageDlg
-  Left = 270
-  Top = 161
+  Left = 287
+  Top = 85
   Width = 800
   Height = 631
   Caption = #32593#32476#25991#20214#31649#29702
@@ -63,6 +63,10 @@ object FileManageDlg: TFileManageDlg
         end
         item
           Caption = #32534#36753#20154
+          Width = 80
+        end
+        item
+          Caption = #21019#24314#20154
           Width = 80
         end
         item
@@ -350,6 +354,18 @@ object FileManageDlg: TFileManageDlg
       OnExecute = actFile_NewfileExecute
       OnUpdate = actFile_NewfileUpdate
     end
+    object actTree_SetPublicDir: TAction
+      Category = #20998#37096
+      Caption = #35774#32622'('#21462#28040')'#20844#20849#30446#24405
+      OnExecute = actTree_SetPublicDirExecute
+      OnUpdate = actTree_SetPublicDirUpdate
+    end
+    object actFile_SetParentPiv: TAction
+      Category = #25991#20214
+      Caption = #35774#32622'('#21462#28040')'#32487#25215#30446#24405#26435#38480
+      OnExecute = actFile_SetParentPivExecute
+      OnUpdate = actFile_SetParentPivUpdate
+    end
   end
   object pmTree: TPopupMenu
     AutoHotkeys = maManual
@@ -367,10 +383,13 @@ object FileManageDlg: TFileManageDlg
     object N9: TMenuItem
       Action = actTree_OpenModlue
     end
+    object N18: TMenuItem
+      Action = actTree_SetPublicDir
+    end
   end
   object pmFile: TPopupMenu
     AutoHotkeys = maManual
-    Left = 647
+    Left = 648
     Top = 45
     object N10: TMenuItem
       Action = actFile_Openfile
@@ -410,6 +429,9 @@ object FileManageDlg: TFileManageDlg
     end
     object N2: TMenuItem
       Action = actFile_DeleteFIle
+    end
+    object N19: TMenuItem
+      Action = actFile_SetParentPiv
     end
   end
   object cdsOpenMode: TClientDataSet
