@@ -3,6 +3,7 @@
 *         网络文件管理器
 *         文件名：BFSS_TABLES.SQ  版本：1.0
 *         创建日期：2007-11-9    作者:龙仕云
+*         最后修改时间:2008-4-28
 *
 * 
 *   注意: 
@@ -11,6 +12,8 @@
 *   修改内容:
 *       1.将项目文档改为txt的格式 2008-3-10   
 *       2.增加任务单功能. 2008-3-11
+*       3.文件管理的文件权限,可以设计为与目录一样的权限. 2008-4-28
+*          这样我们不可以一一对每一个文件都做权限。
 *
 ******************************************************************************/
 
@@ -28,11 +31,12 @@ drop table [dbo].[TB_FILE_TREE]
 go
 
 create table TB_FILE_TREE(
-	ZID	int IDENTITY (1, 1) not null,     /*ID并自动产生编号*/
+	ZID	int IDENTITY (1, 1) not null, /*ID并自动产生编号*/
 	ZPID    int not null default -1,      /*上级ID=-1表示根目录 默认值为-1 */
 	ZNAME	varchar(200) not null,        /*名称*/
 	ZNOTE	varchar(200),                 /*说明*/
 	ZHASCHILD bit not null,               /*=True表示有下级*/
+	ZPublic  bit not null default 0,      /*公共 表示没有权限处理 2008-4-28*/
 	constraint PK_TB_FILE_TREE primary key(ZID)
 )
 go
@@ -46,12 +50,12 @@ go
 
 create table TB_FILE_ITEM(
 	ZTREE_ID       int not null,           /*树ID*/
-    ZSTYPE         int not null,           /*类型，分文件管理，bug管理，项目文档*/ 
-	ZID	       int not null,               /*文件id*/
+        ZSTYPE         int not null,           /*类型，分文件管理，bug管理，项目文档*/ 
+	ZID	       int not null,           /*文件id*/
 	ZVER           int not null,           /*文件的版本号*/
 	ZNAME          varchar(200) not null,  /*名称*/
 	ZEDITER_ID     int ,                   /*编辑人*/
-        ZFILEPATH      varchar(200),       /*文件路径*/
+        ZFILEPATH      varchar(200),           /*文件路径*/
 	ZSTATUS        int not null,           /*状态 = 0 表示没有人编辑 =1表示在编辑*/	
 	ZEXT           varchar(10),            /*文件的扩展名*/
 	ZEDITDATETIME  datetime,               /*文件编辑时间*/
@@ -60,6 +64,8 @@ create table TB_FILE_ITEM(
 	ZNEWVER        bit not null,           /*是否是最新版本*/
 	ZNOTE          text,                   /*文件说明*/
 	ZSIZE          int not null,           /*文件大小*/
+	ZParentPri     bit not null default 0, /*是否采用上级树目录的权限 2008-4-28*/
+	ZOWNER         int not null default 1, /*文件的创建人 1=admin 2008-4-28*/
 	constraint PK_TB_FILE_ITEM primary key(ZTREE_ID,ZTYPE,ZID,ZVER)
 )
 go
