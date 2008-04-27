@@ -1159,7 +1159,7 @@ begin
       ClientSystem.fDbOpr.RollbackTrans;
     end;
   end
-  else begin
+  else begin   //新建
     myZID := ClientSystem.fDbOpr.ReadInt(PChar(glSQL));
     if DataSet.FieldByName('ZASSIGNEDTO').AsInteger >=0 then
       myAssingdate := 'getdate()'
@@ -1190,6 +1190,8 @@ begin
       DataSet.FieldByName('ZID').AsInteger := myZID;
       DataSet.FieldByName('ZISNEW').AsBoolean := False;
       ClientSystem.fDbOpr.CommitTrans;
+      //邮件通知
+      Mailto(DataSet.FieldByName('ZMAILTO').AsString);
     except
       ClientSystem.fDbOpr.RollbackTrans;
     end;
