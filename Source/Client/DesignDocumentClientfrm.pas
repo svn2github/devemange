@@ -162,7 +162,7 @@ begin
       // 没有权限不加载
       //
       if not HasModuleAction(Ord(bsDocTree),
-        cdsData.FieldByName('ZID').AsInteger,atView) then
+        cdsData.FieldByName('ZID').AsInteger,atView) and (APID<>-1) then
       begin
         cdsData.Next;
         Continue;

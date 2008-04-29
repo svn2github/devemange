@@ -1,6 +1,6 @@
 inherited DesignDocumentClientDlg: TDesignDocumentClientDlg
-  Left = 203
-  Top = 68
+  Left = 519
+  Top = 112
   Width = 1076
   Caption = #35774#35745#25991#26723
   OldCreateOrder = True
