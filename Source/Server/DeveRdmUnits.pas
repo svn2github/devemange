@@ -468,11 +468,11 @@ end;
 procedure TBFSSRDM.MailTo(AStyle: Integer; const AMails: WideString;
   AContextID: Integer);
 var
-  myTitle : String;
+  myTitle,myTreePath : String;
   myContext : String;  //内容
   myID : integer;
 const
-  glSQL  = 'select ZTITLE from TB_BUG_ITEM where ZID=%d ';
+  glSQL  = 'select ZTREEPATH,ZTITLE from TB_BUG_ITEM where ZID=%d ';
   glSQL2 = 'select isnull(max(ZID),0) as v from TB_BUG_HISTORY where ZBUG_ID=%d';
   glSQL3 = 'select ZCONTEXT from TB_BUG_HISTORY where ZID=%d';
 begin
@@ -514,6 +514,7 @@ begin
           if adsSQL.RecordCount = 0 then Exit;
 
           myTitle := adsSQL.FieldByName('ZTITLE').AsString;
+          myTreePath := adsSQL.FieldByName('ZTREEPATH').AsString;
           adsSQL.Close;
           adsSQL.CommandText :=  format(glSQL2,[AContextID]);
           adsSQL.Open;
@@ -533,11 +534,15 @@ begin
     //发送内容:
     try
       IdMessage1.Clear;
+      IdMessage1.ContentType := 'text/html';
       IdMessage1.MessageParts.Clear;
       IdMessage1.CharSet := 'BIG5';
       IdMessage1.Encoding := (meUU);
       IdMessage1.ClearBody;
-      IdMessage1.Body.Text := myContext;
+
+      IdMessage1.Body.Add(myTreePath);
+      IdMessage1.Body.Add('----------------------------------------------------');
+      IdMessage1.Body.Add(myContext);
       IdMessage1.From.Text := CurrBFSSSystem.fSMTPParams.fUserName;
       //回复地址
       //IdMessage1.ReplyTo.EMailAddresses := CurrBFSSSystem.fSMTPParams.fUserName;
@@ -545,7 +550,7 @@ begin
       IdMessage1.Priority := TIdMessagePriority(2);
       IdMessage1.ReceiptRecipient.Text := '';
 
-      IdMessage1.Subject := myTitle;
+      IdMessage1.Subject := Format('#%d %s',[AContextID,myTitle]);
       IdMessage1.Recipients.EMailAddresses := AMails;
 
       SMTP.Send(IdMessage1);
