@@ -1011,7 +1011,8 @@ begin
       //LoadBugHistory(-1); //
     end
     else begin
-      lbBugCaption.Caption := cdsBugItem.FieldByName('ZTITLE').AsString;
+      lbBugCaption.Caption := Format('#%d %s',[cdsBugItem.FieldByName('ZID').AsInteger,
+        cdsBugItem.FieldByName('ZTITLE').AsString]);
       LoadBugHistory(cdsBugItem.FieldByName('ZID').Asinteger);
     end;
   end
@@ -1061,6 +1062,7 @@ begin
   DataSet.FieldByName('ZOPENEDDATE').AsDateTime := ClientSystem.SysNow;
   DataSet.FieldByName('ZISNEW').AsBoolean := True;
   DataSet.FieldByName('ZRESOLUTION').AsInteger := -1; //解决方案
+  DataSet.FieldByName('ZMAILTO').AsString := Format('%s(%d)',[ClientSystem.fEditer,ClientSystem.fEditer_id]);
 end;
 
 procedure TBugManageDlg.actBug_AddBugExecute(Sender: TObject);
@@ -1205,10 +1207,7 @@ begin
 end;
 
 procedure TBugManageDlg.actBugHistory_AddExecute(Sender: TObject);
-var
-  myRecNo : integer;
 begin
-  myRecNo := cdsBugHistory.RecNo;
   cdsBugHistory.DisableControls;
   try
     cdsBugHistory.Append; //增加
@@ -1230,7 +1229,6 @@ begin
     end;
   finally
     cdsBugHistory.EnableControls;
-    cdsBugHistory.RecNo := myRecNo;
   end;
 end;
 
@@ -1483,6 +1481,8 @@ var
   myFileID : integer;
   mySQL : string;
   myProID : integer;
+  mymailstr : string;
+  myeditid : Integer;  //编号人,可能是回复人,或是解决人
 const
   glSQL  =  'insert TB_BUG_HISTORY (ZBUG_ID,ZUSER_ID,ZSTATUS,ZCONTEXT,' +
             'ZACTIONDATE,ZANNEXFILE_ID,ZANNEXFILENAME) ' +
@@ -1492,7 +1492,7 @@ const
 
   glSQL3 = 'update TB_BUG_ITEM set ZLASTEDITEDBY=%d,ZLASTEDITEDDATE=getdate(), '+
            'ZSTATUS=%d,ZRESOLVEDBY=%d,ZRESOLUTION=%d,ZRESOLVEDVER=%d, ' +
-           'ZRESOLVEDDATE=getdate()' + 
+           'ZRESOLVEDDATE=getdate(),ZMAILTO=''%s''' +
            'where ZID=%d';
 begin
   if fLoading then Exit;
@@ -1570,14 +1570,36 @@ begin
     ClientSystem.fDbOpr.BeginTrans;
     try
       ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
+
+      //如没有加入解决人的邮箱,则自动增加入
+      if DataSet.FieldByName('ZSTATUS').AsInteger = Ord(bgsDeath) then
+        myeditid := cdsBugItem.FieldByName('ZRESOLVEDBY').AsInteger
+      else
+        myeditid := DataSet.FieldByName('ZUSER_ID').AsInteger;
+      if DM.cdsUser.Locate('ZID',myeditid,[loPartialKey]) then
+      begin
+        mymailstr := Format('%s(%d)',[DM.cdsUser.FieldByName('ZNAME').AsString,
+          DM.cdsUser.FieldByName('ZID').AsInteger]);
+        if Pos(mymailstr,cdsBugItem.FieldByName('ZMAILTO').AsString)=0 then
+        begin
+          if not (cdsBugItem.State in [dsEdit,dsInsert]) then
+            cdsBugItem.Edit;
+          cdsBugItem.FieldByName('ZMAILTO').AsString :=
+            cdsBugItem.FieldByName('ZMAILTO').AsString + ';' + mymailstr;
+          //cdsBugItem.Post; //这地方有问题
+        end;
+      end;
+
       if DataSet.FieldByName('ZSTATUS').AsInteger = Ord(bgsDeath) then
       begin
+
         mySQL := format(glSQL3,[
           DataSet.FieldByName('ZUSER_ID').Asinteger,
           DataSet.FieldByName('ZSTATUS').Asinteger,
           ClientSystem.fEditer_id,
           cdsBugPlan.FieldByName('ZID').AsInteger,
           cdsProject.FieldByName('ZID').AsInteger,
+          cdsBugItem.FieldByName('ZMAILTO').AsString,
           DataSet.FieldByName('ZBUG_ID').Asinteger]);
 
       end
@@ -1588,6 +1610,7 @@ begin
           -1,
           -1,
           -1,
+          cdsBugItem.FieldByName('ZMAILTO').AsString,
           DataSet.FieldByName('ZBUG_ID').Asinteger]);
       end;
 
@@ -1650,14 +1673,16 @@ end;
 procedure TBugManageDlg.actBugHistory_PrivBugExecute(Sender: TObject);
 begin
   cdsBugItem.Prior;
-  lbBugCaption.Caption := cdsBugItem.FieldByName('ZTITLE').AsString;
+  lbBugCaption.Caption := Format('#%d %s',[cdsBugItem.FieldByName('ZID').AsInteger,
+    cdsBugItem.FieldByName('ZTITLE').AsString]);
   LoadBugHistory(cdsBugItem.FieldByName('ZID').Asinteger);
 end;
 
 procedure TBugManageDlg.actBugHistory_NextBugExecute(Sender: TObject);
 begin
   cdsBugItem.Next;
-  lbBugCaption.Caption := cdsBugItem.FieldByName('ZTITLE').AsString;
+  lbBugCaption.Caption := Format('#%d %s',[cdsBugItem.FieldByName('ZID').AsInteger,
+    cdsBugItem.FieldByName('ZTITLE').AsString]);
   LoadBugHistory(cdsBugItem.FieldByName('ZID').Asinteger);
 end;
 
@@ -1838,21 +1863,26 @@ end;
 procedure TBugManageDlg.dblcSelectUsermailCloseUp(Sender: TObject);
 var
   mystr : String;
+  myaddstr : string;
 begin
-  if dblcSelectUsermail.Text = '' then Exit;
-  
+  if (Sender as TDBLookupComboBox).Text = '' then Exit;
+
   if cdsBugItem.State in [dsBrowse] then
     cdsBugItem.Edit;
 
-  myStr := cdsBugItem.FieldByName('ZMAILTO').AsString;
-  if mystr <> '' then
-    myStr := myStr + format(';%s(%d)',[
-      DM.cdsUser.FieldByName('ZNAME').AsString,
-      DM.cdsUser.FieldByName('ZID').AsInteger])
-  else
-    myStr := myStr + format('%s(%d)',[
+  myaddstr := format('%s(%d)',[
       DM.cdsUser.FieldByName('ZNAME').AsString,
       DM.cdsUser.FieldByName('ZID').AsInteger]);
+
+  myStr := cdsBugItem.FieldByName('ZMAILTO').AsString;
+  if mystr <> '' then
+  begin
+    if Pos(myaddstr,mystr) <= 0 then
+      myStr := myStr + ';' + myaddstr;
+  end
+  else
+    myStr := myStr + myaddstr;
+
   cdsBugItem.FieldByName('ZMAILTO').AsString := myStr;
 end;
 
@@ -1873,29 +1903,14 @@ begin
     //先加入创建人
     DM.cdsUser.ControlsDisabled;
     try
-      if (cdsBugItem.FieldByName('ZOPENEDBY').AsInteger <> ClientSystem.fEditer_id)
-         and  DM.cdsUser.Locate('ZID',
-           cdsBugItem.FieldByName('ZOPENEDBY').AsInteger,[loPartialKey]) then
-      begin
-        mysl.Add(format('%s(%d)',[DM.cdsUser.FieldByName('ZNAME').AsString,
-          DM.cdsUser.FieldByName('ZID').AsInteger]));
-        myMails.Add(DM.cdsUser.FieldByName('ZEMAIL').AsString);
-      end;
-
-      if (cdsBugItem.FieldByName('ZRESOLVEDBY').AsInteger <> ClientSystem.fEditer_id)
-         and DM.cdsUser.Locate('ZID',
-          cdsBugItem.FieldByName('ZRESOLVEDBY').AsInteger,[loPartialKey]) then
-      begin
-        myStr := format('%s(%d)',[DM.cdsUser.FieldByName('ZNAME').AsString,
-          DM.cdsUser.FieldByName('ZID').AsInteger]);
-        if mysl.IndexOf(myStr) < 0 then
-          mysl.Add(myStr);
-        myMails.Add(DM.cdsUser.FieldByName('ZEMAIL').AsString);
-      end;
-
+     
       ClientSystem.SplitStr(AEmailto,mysv,';');
       for i:=0 to  mysv.Count -1 do
       begin
+        //如是当前的编辑内都不必要发送了
+        if (Trim(mysv.Strings[i])='') or
+           (mysv.Strings[i]=Format('%s(%d)',[ClientSystem.fEditer,ClientSystem.fEditer_id])) then
+          Continue;
         if mysl.IndexOf(mysv[i]) < 0 then
         begin
           mysl.Add(mysv[i]);
