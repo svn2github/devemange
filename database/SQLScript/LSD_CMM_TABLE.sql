@@ -392,7 +392,8 @@ go
 
 create table TB_SYSPARAMS(
 	ZNAME        varchar(20),                                   /*Ãû³Æ*/
-	ZVALUE       varchar(200)
+	ZVALUE       varchar(200),
+	ZREMARK      varchar(100)                                   /*±¸×¢*/ 
 	constraint PK_TB_SYSPARAMS primary key(ZNAME)  
 )
 go

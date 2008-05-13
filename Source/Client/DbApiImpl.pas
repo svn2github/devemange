@@ -2,12 +2,13 @@
 //
 // 接口的定义实现内容
 // 创建日期:2007-11-1 作者:龙仕云
-// 版本: 1.0.0 
+// 版本: 1.0.1 
 //
 //
 //  1.修改了写日志目录没有创建时,出错. 2008-3-20
 //  2.处理连接不上提示错误 2008-3-20
 //  3.增加 GetSysDateTime的方法(); 2008-3-24 by mrlong
+//  4.修改 ReadVariant()方法一直没有写实现 2008-5-13
 //
 //
 //
@@ -336,7 +337,14 @@ end;
 
 function TBfssDBOpr.ReadVariant(const SqlStr: PChar): OleVariant;
 begin
-
+  if not RemoteServer.Connected then Exit;
+  fcdsQuery.Close;
+  fcdsQuery.ProviderName := RemoteServer.AppServer.GetDSPName;
+  fcdsQuery.CommandText := SqlStr;
+  fcdsQuery.Open;
+  if fcdsQuery.Fields.Count > 0 then
+    Result := fcdsQuery.Fields[0].Value;
+  fcdsQuery.Close;
 end;
 
 procedure TBfssDBOpr.ReceiveData(const Data: IDataBlock);

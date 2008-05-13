@@ -4,6 +4,7 @@ inherited WriteToDaySayDlg: TWriteToDaySayDlg
   Width = 662
   Height = 458
   Caption = #27599#26085#19968#21477
+  OldCreateOrder = True
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 15

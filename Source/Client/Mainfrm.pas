@@ -62,6 +62,10 @@ type
     N7: TMenuItem;
     actFile_ChangPasswd: TAction;
     N8: TMenuItem;
+    actMod_WebBrowes: TAction;
+    btnMod_WebBrowes: TToolButton;
+    actFile_SysParams: TAction;
+    N9: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure actmod_FilesExecute(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -78,6 +82,8 @@ type
     procedure actFile_CloseExecute(Sender: TObject);
     procedure actFile_TodaySayExecute(Sender: TObject);
     procedure actFile_ChangPasswdExecute(Sender: TObject);
+    procedure actMod_WebBrowesExecute(Sender: TObject);
+    procedure actFile_SysParamsExecute(Sender: TObject);
   private
     fChildform : TList; //所有子窗口的对象
     fCurrentChildform : TBaseChildDlg;
@@ -106,10 +112,11 @@ uses
   ProjectManageClientfrm,  {项目管理}
   UserManageClientfrm,     {用户管理}
   DesignDocumentClientfrm, {项目文档}
+  WikiClientfrm,           {wiki} 
   WriteToDaySayfrm,        {每日一句}
   ChangPasswdfrm           {修改密码}
 
-  ;
+  , SetSysParamsfrm;
 
 {$R *.dfm}
 
@@ -405,6 +412,29 @@ begin
 
   finally
     free;
+  end;
+end;
+
+procedure TMainDlg.actMod_WebBrowesExecute(Sender: TObject);
+begin
+  //
+  DoChangeClient(TWikiClientDlg);
+end;
+
+procedure TMainDlg.actFile_SysParamsExecute(Sender: TObject);
+begin
+  //权限
+  if ClientSystem.fEditerType <> etAdmin then
+  begin
+    MessageBox(Handle,'无权限','提示',MB_ICONWARNING+MB_OK);
+    Exit;
+  end;
+
+  with TSetParamsDlg.Create(nil) do
+  try
+    ShowModal;                                  
+  finally
+    Free;
   end;
 end;
 
