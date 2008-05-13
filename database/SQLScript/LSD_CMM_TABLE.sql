@@ -14,6 +14,7 @@
 *       2.增加任务单功能. 2008-3-11
 *       3.文件管理的文件权限,可以设计为与目录一样的权限. 2008-4-28
 *          这样我们不可以一一对每一个文件都做权限。
+*       4.增加系统参数表 TB_SYSPARAMS 2006-5-13
 *
 ******************************************************************************/
 
@@ -381,6 +382,21 @@ create table TB_TODAYSAY(
 	constraint PK_TB_TODAYSAY primary key(ZID)  
 )
 go
+
+/*系统参数表*/
+if exists (select * from dbo.sysobjects
+  where id = object_id(N'[dbo].[TB_SYSPARAMS]')
+  and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+drop table [dbo].[TB_SYSPARAMS]
+go
+
+create table TB_SYSPARAMS(
+	ZNAME        varchar(20),                                   /*名称*/
+	ZVALUE       varchar(200)
+	constraint PK_TB_SYSPARAMS primary key(ZNAME)  
+)
+go
+
 
 
 

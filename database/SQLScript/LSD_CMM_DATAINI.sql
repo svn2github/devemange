@@ -50,5 +50,7 @@ insert into TB_TASK_PARAMS (ZTYPE,ZID,ZNAME) values(1,5,'激活');
 /*任务单类型*/
 insert into TB_TASK_PARAMS (ZTYPE,ZID,ZNAME) values(2,0,'新增功能');
 insert into TB_TASK_PARAMS (ZTYPE,ZID,ZNAME) values(2,1,'变更功能');
+/*系统参数*/
+insert into TB_SYSPARAMS (ZNAME,ZVALUE) values('wiki','');
 
 GO
