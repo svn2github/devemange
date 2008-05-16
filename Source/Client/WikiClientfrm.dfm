@@ -1,6 +1,6 @@
 inherited WikiClientDlg: TWikiClientDlg
-  Left = 275
-  Top = 115
+  Left = 197
+  Top = 67
   Caption = 'Wiki'
   OldCreateOrder = True
   PixelsPerInch = 96
@@ -85,5 +85,35 @@ inherited WikiClientDlg: TWikiClientDlg
     OnMessage = aplctnvnts1Message
     Left = 48
     Top = 56
+  end
+  object pmWbCommand: TPopupMenu
+    AutoHotkeys = maManual
+    Left = 88
+    Top = 56
+    object N1: TMenuItem
+      Action = actwb_Copy
+    end
+    object N2: TMenuItem
+      Action = actwb_Cut
+    end
+    object N3: TMenuItem
+      Action = actwb_Paste
+    end
+  end
+  object actlstwb: TActionList
+    Left = 120
+    Top = 56
+    object actwb_Copy: TAction
+      Caption = #25991#23383#22797#21046
+      OnExecute = actwb_CopyExecute
+    end
+    object actwb_Cut: TAction
+      Caption = #25991#23383#21098#20999
+      OnExecute = actwb_CutExecute
+    end
+    object actwb_Paste: TAction
+      Caption = #25991#23383#31896#36148
+      OnExecute = actwb_PasteExecute
+    end
   end
 end

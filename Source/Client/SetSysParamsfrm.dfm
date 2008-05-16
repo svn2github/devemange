@@ -1,6 +1,6 @@
 inherited SetParamsDlg: TSetParamsDlg
-  Left = 361
-  Top = 182
+  Left = 428
+  Top = 195
   Width = 641
   Height = 404
   Caption = #21442#25968#35774#32622

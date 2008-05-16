@@ -100,7 +100,7 @@ create table TB_USER_ITEM(
 	ZPASS      varchar(20),                          /*密码*/
 	ZSTOP      bit,                                  /*是否禁用*/
 	ZTYPE      int not null,                         /*类型=0系统用户,不能删除*/
-	ZEMAIL     varchar(20),                          /*邮箱*/
+	ZEMAIL     varchar(50),                          /*邮箱*/
 	ZGROUP_ID  int,                                  /*组ID*/
 	ZPRIVGROUP int,                                  /*权限组*/
 	constraint PK_TB_USER_ITEM primary key(ZID)       

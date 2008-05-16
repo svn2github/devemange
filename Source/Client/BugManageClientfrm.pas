@@ -1486,7 +1486,7 @@ var
 const
   glSQL  =  'insert TB_BUG_HISTORY (ZBUG_ID,ZUSER_ID,ZSTATUS,ZCONTEXT,' +
             'ZACTIONDATE,ZANNEXFILE_ID,ZANNEXFILENAME) ' +
-            'values(%d,%d,%d,''%s'',''%s'',%d,''%s'')';
+            'values(%d,%d,%d,''%s'',getdate(),%d,''%s'')';
   glSQL2 = 'update TB_BUG_HISTORY set ZCONTEXT=''%s'',ZACTIONDATE=getdate() '+
            'where ZID=%d';
 
@@ -1527,7 +1527,6 @@ begin
     
   end
   else begin
-
     if DataSet.FieldByName('ZSTATUS').AsInteger < 0 then
     begin
       with TSelectBugStatusDlg.Create(nil) do
@@ -1563,14 +1562,13 @@ begin
       DataSet.FieldByName('ZUSER_ID').AsInteger,
       DataSet.FieldByName('ZSTATUS').AsInteger,
       DataSet.FieldByName('ZCONTEXT').AsString,
-      DataSet.FieldByName('ZACTIONDATE').AsString,
+      //DataSet.FieldByName('ZACTIONDATE').AsString, //采用了getdate();
       DataSet.FieldByName('ZANNEXFILE_ID').AsInteger,
       DataSet.FieldByName('ZANNEXFILENAME').AsString]);
 
     ClientSystem.fDbOpr.BeginTrans;
     try
       ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
-
       //如没有加入解决人的邮箱,则自动增加入
       if DataSet.FieldByName('ZSTATUS').AsInteger = Ord(bgsDeath) then
         myeditid := cdsBugItem.FieldByName('ZRESOLVEDBY').AsInteger
