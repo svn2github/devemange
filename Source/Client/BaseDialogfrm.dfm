@@ -1,6 +1,6 @@
 object BaseDialog: TBaseDialog
-  Left = 480
-  Top = 434
+  Left = 452
+  Top = 341
   Width = 523
   Height = 356
   Caption = 'BaseDialog'

@@ -1,6 +1,6 @@
 object MainDlg: TMainDlg
-  Left = 400
-  Top = 222
+  Left = 387
+  Top = 197
   BorderIcons = [biSystemMenu]
   BorderStyle = bsDialog
   Caption = 'BFFS'

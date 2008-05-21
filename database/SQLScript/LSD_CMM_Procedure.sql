@@ -82,3 +82,74 @@ exec (@strSQL)
 --print @strSQL
 
 go
+
+
+
+/*Bug管理器的发布邮件*/
+/*
+创建: 2008-5-21  mrlong
+目的: 取出问题的邮件内容
+修改：
+编号   时间         修改人             修改内容
+*/
+
+CREATE   PROCEDURE pt_MaintoByBug 
+@BugID int, --BugID号
+@mailtitle varchar(200) output, --返回的标题
+@mailtext varchar(4000) output --返回的内容
+as
+declare @TreePath  varchar(200)
+declare @Title varchar(200)
+declare @Auathor varchar(20)  
+declare @BugMaxID int
+declare @BugContext varchar(4000)
+declare @BugReplay  varchar(20)
+begin
+
+
+--取出标题及作者
+declare my_cursor cursor 
+for
+select a.ZTREEPATH,a.ZTITLE,b.ZNAME from TB_BUG_ITEM as a, TB_USER_ITEM as b where a.ZID=@BugID and
+a.ZOPENEDBY=b.ZID
+
+open my_cursor
+fetch next from my_cursor into @TreePath,@Title,@Auathor
+close   my_cursor  
+deallocate my_cursor
+
+--取现回复最大值
+declare my_cursor cursor
+for
+select isnull(max(ZID),0)  from TB_BUG_HISTORY where ZBUG_ID=@BugID 
+open my_cursor
+fetch next from my_cursor into @BugMaxID
+close my_cursor
+deallocate my_cursor
+
+--取出回复内容
+if @BugMaxID > 0
+begin
+	declare my_cursor cursor
+	for
+	select a.ZCONTEXT,b.ZNAME  from TB_BUG_HISTORY as a , TB_USER_ITEM as b where a.ZID=@BugMaxID and
+	a.ZUSER_ID=b.ZID
+	open my_cursor
+	fetch next from my_cursor into @BugContext,@BugReplay
+	close my_cursor
+	deallocate my_cursor
+end
+
+--格式
+set @mailtitle = @Title
+set @mailtext  = @TreePath  + char(13) +char(10)+
+'-------------------------------------------------------------------------------------------' + char(13) + char(10)+
+@BugContext + char(13) +char(10)+char(13)+char(10)+
+'创建人:' +  @Auathor + '   回复人:' + @BugReplay
+
+
+--set @mailtitle = "国家"
+--set @mailtext  = "bbbbbbbbbbbbb"
+
+end
+GO

@@ -95,4 +95,9 @@ object BFSSRDM: TBFSSRDM
     Left = 88
     Top = 280
   end
+  object spExce: TADOStoredProc
+    Parameters = <>
+    Left = 56
+    Top = 16
+  end
 end

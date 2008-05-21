@@ -12,6 +12,7 @@
 //     3) 更改了TIDSTMP组件发送邮件时，可能被别的服务阻击的可能. ver=1.0.3 2007-12-18
 //     4) 采用一个数据库的共享连接这个会提高性能。ver=1.0.6 2008-4-1
 //     5) 修改回复邮件的问题 ver=1.0.7 2008-4-28
+//     6) 更新邮件回复采用存储过程 ver=1.0.8 2008-5-21
 //
 //
 ///////////////////////////////////////////////////////////////////////////////
@@ -51,6 +52,7 @@ type
     ADOQuery: TADOQuery;
     SMTP: TIdSMTP;
     IdMessage1: TIdMessage;
+    spExce: TADOStoredProc;
     procedure RemoteDataModuleCreate(Sender: TObject);
     procedure RemoteDataModuleDestroy(Sender: TObject);
     function dspCommandDataRequest(Sender: TObject;
@@ -163,6 +165,7 @@ begin
   adsQueryEx2.Connection := gConn;
   adsQueryEx3.Connection := gConn;
   adsQueryEx4.Connection := gConn;
+  spExce.Connection      := gConn;
 
   // 连接数据库
   //
@@ -471,10 +474,12 @@ var
   myTitle,myTreePath : String;
   myContext : String;  //内容
   myID : integer;
+  myAuatherID : integer; //作者
+  myReplyID   : integer; //回复人
 const
-  glSQL  = 'select ZTREEPATH,ZTITLE from TB_BUG_ITEM where ZID=%d ';
+  glSQL  = 'select ZTREEPATH,ZTITLE,ZOPENEDDATE from TB_BUG_ITEM where ZID=%d ';
   glSQL2 = 'select isnull(max(ZID),0) as v from TB_BUG_HISTORY where ZBUG_ID=%d';
-  glSQL3 = 'select ZCONTEXT from TB_BUG_HISTORY where ZID=%d';
+  glSQL3 = 'select ZCONTEXT,ZUSER_ID from TB_BUG_HISTORY where ZID=%d';
 begin
   if not CurrBFSSSystem.fSMTPParams.fAction then Exit;
 
@@ -507,6 +512,20 @@ begin
     case AStyle of
       0: {bug}
         begin
+          spExce.Close;
+          spExce.ProcedureName:='pt_MaintoByBug';
+          spExce.Parameters.Clear;
+          spExce.Parameters.CreateParameter('BugID',ftInteger,pdInput,1,1);
+          spExce.Parameters.CreateParameter('mailtitle',ftString,pdoutput,200,1);
+          spExce.Parameters.CreateParameter('mailtext ',ftString,pdoutput,4000,1);
+          spExce.Parameters[0].Value := AContextID;
+          spExce.ExecProc;
+          if not VarIsNull(spExce.Parameters[1].Value) then
+            myTitle   := spExce.Parameters[1].Value;
+          if not VarIsNull(spExce.Parameters[2].Value) then
+            myContext := spExce.Parameters[2].Value;
+        end;
+          {
           if adsSQL.Active then
             adsSQL.Close;
           adsSQL.CommandText := format(glSQL,[AContextID]);
@@ -515,6 +534,7 @@ begin
 
           myTitle := adsSQL.FieldByName('ZTITLE').AsString;
           myTreePath := adsSQL.FieldByName('ZTREEPATH').AsString;
+          myAuatherID  := adsSQL.FieldByName('ZOPENEDDATE').AsInteger;
           adsSQL.Close;
           adsSQL.CommandText :=  format(glSQL2,[AContextID]);
           adsSQL.Open;
@@ -525,10 +545,16 @@ begin
             adsSQL.CommandText := format(glSQL3,[myID]);
             adsSQl.Open;
             if adsSQL.RecordCount > 0 then
+            begin
               myContext := adsSQL.FieldByName('ZCONTEXT').AsString;
-          end;
-
-        end;
+              myReplyID := adsSQL.FieldByName('ZUSER_ID').AsInteger;
+            end;
+          end
+          else
+            myReplyID := myAuatherID;
+          }
+      else
+        Exit;    
     end;
 
     //发送内容:
@@ -539,9 +565,6 @@ begin
       IdMessage1.CharSet := 'BIG5';
       IdMessage1.Encoding := (meUU);
       IdMessage1.ClearBody;
-
-      IdMessage1.Body.Add(myTreePath);
-      IdMessage1.Body.Add('----------------------------------------------------');
       IdMessage1.Body.Add(myContext);
       IdMessage1.From.Text := CurrBFSSSystem.fSMTPParams.fUserName;
       //回复地址

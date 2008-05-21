@@ -4,7 +4,8 @@
 //
 //  修改内容:
 //     1)更改权限为正向权限. 用户类型为管理员则有全部权限能力.
-//     2)增加插件的功能 2008-3-19 
+//     2)增加插件的功能 2008-3-19
+//     2)增加版本号 2008-5-21
 //
 //
 //
@@ -32,6 +33,7 @@ type
   private
     fTickCount : word;
     function GetSysNow: TDateTime;
+    procedure GetExeVer;
   public
     fAppDir : String;
     fTempDir : String;            //临时目录
@@ -45,6 +47,7 @@ type
     fDeleteFiles : TStringList;   //浏览文件时要删除的内容
     fCancelUpFile : Boolean;      //终止上传或下载文件
     fVersion : TVersion;          //这个是版本
+    fVer : array[0..3] of  Integer; 
 
     constructor Create;
     destructor Destroy; override;
@@ -87,7 +90,10 @@ uses
 type
    TByteArray = array of byte;
 { TClinetSystem }
+{
+procedure TSysClientClass.GetExeVer;
 
+    }
 procedure TClinetSystem.BeginTickCount;
 begin
   fTickCount := gettickcount;
@@ -122,7 +128,7 @@ begin
   fCancelUpFile := False;
   if not DirectoryExists(fAppDir + '\' + gcLogDir) then
     CreateDir(fAppDir + '\' + gcLogDir);
-
+  GetExeVer();
 end;
 
 destructor TClinetSystem.Destroy;
@@ -234,6 +240,31 @@ begin
     SendMessage(Application.MainForm.Handle,
       gcMSG_TickCount,(myendcount-fTickCount),0);
     fTickCount := 0;
+  end;
+end;
+
+procedure TClinetSystem.GetExeVer;
+var
+  VerInfoSize: DWORD;
+  VerInfo: Pointer;
+  VerValueSize: DWORD;
+  VerValue: PVSFixedFileInfo;
+  Dummy: DWORD;
+begin
+  VerInfoSize := GetFileVersionInfoSize(PChar(ParamStr(0)), Dummy);
+  if VerInfoSize <> 0 then
+  begin
+    GetMem(VerInfo, VerInfoSize);
+    GetFileVersionInfo(PChar(ParamStr(0)), 0, VerInfoSize, VerInfo);
+    VerQueryValue(VerInfo, '\', Pointer(VerValue), VerValueSize);
+    with VerValue^ do
+    begin
+      fVer[0] := dwFileVersionMS shr 16;
+      fVer[1] := dwFileVersionMS and $FFFF;
+      fVer[2] := dwFileVersionLS shr 16;
+      fVer[3] := dwFileVersionLS and $FFFF;
+    end;
+    FreeMem(VerInfo, VerInfoSize);
   end;
 end;
 

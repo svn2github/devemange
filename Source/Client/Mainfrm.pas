@@ -154,7 +154,10 @@ begin
   fCurrentChildform.Parent := plForm;
   fCurrentChildform.Show;
   myBaseform.Showfrm;
-  Caption := Application.Title + '('+ ClientSystem.fHost + ')-' + fCurrentChildform.Caption;
+  with ClientSystem do
+    Caption := Format('%s 版本=%d.%d.%d(build%d) IP=%s -%s',
+        [Application.Title,fVer[0],fVer[1],fVer[2],fVer[3],ClientSystem.fHost,
+        fCurrentChildform.Caption]);
   if Assigned(myoldform) then
     myoldform.Closefrm;
     
@@ -207,7 +210,12 @@ begin
     mycds.Free;
   end;
 
+  with ClientSystem do
+    Caption := Format('%s 版本=%d.%d.%d(build%d)',
+        [Application.Title,fVer[0],fVer[1],fVer[2],fVer[3]]);
+
   //版本检查
+
   
 
 end;

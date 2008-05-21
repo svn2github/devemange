@@ -53,7 +53,11 @@ uses
   begin
     with TLoginDlg.Create(nil) do
     try
+      with ClientSystem do
+        Caption := Format('µÇÂ¼ °æ±¾=%d.%d.%d(build%d)',
+        [fVer[0],fVer[1],fVer[2],fVer[3]]);
       LoadContextByReg;
+
       Result := ShowModal = mrOK;
       if Result then  SaveContextToReg;
     finally
