@@ -1,6 +1,6 @@
 object MainDlg: TMainDlg
-  Left = 195
-  Top = 104
+  Left = 74
+  Top = 84
   Width = 870
   Height = 640
   Caption = 'DeveManage'
@@ -267,6 +267,11 @@ object MainDlg: TMainDlg
       Category = #25991#20214
       Caption = #21442#25968#35774#32622'...'
       OnExecute = actFile_SysParamsExecute
+    end
+    object actMod_Stat: TAction
+      Category = #19994#21153
+      Caption = #32479#35745
+      OnExecute = actMod_StatExecute
     end
   end
   object ImageList1: TImageList
@@ -711,6 +716,9 @@ object MainDlg: TMainDlg
       end
       object N4: TMenuItem
         Action = actManage_User
+      end
+      object N10: TMenuItem
+        Action = actMod_Stat
       end
     end
   end

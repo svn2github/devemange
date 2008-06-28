@@ -33,6 +33,12 @@ type
 
     //显示状态文字
     procedure ShowStatusBarText(Aindex:integer;AStr:String);
+
+    //显示进度窗口
+    procedure ShowProgress(const Title: string;ACount:integer);
+    procedure HideProgress;
+    procedure UpdateProgress(Value: Integer);
+    procedure UpdateProgressTitle(const Title: string);
   end;
 
 var
@@ -40,7 +46,7 @@ var
 
 implementation
 uses
-  ClinetSystemUnits, Mainfrm;
+  ClinetSystemUnits, Mainfrm,CnProgressFrm;
 
 {$R *.dfm}
 
@@ -80,6 +86,11 @@ begin
       '提示',MB_ICONWARNING+MB_OK);
 end;
 
+procedure TBaseChildDlg.HideProgress;
+begin
+  CnProgressFrm.HideProgress;  
+end;
+
 procedure TBaseChildDlg.initBase;
 begin
   fLoading := False;
@@ -91,12 +102,27 @@ begin
   //子类重载
 end;
 
+procedure TBaseChildDlg.ShowProgress(const Title: string; ACount: integer);
+begin
+  CnProgressFrm.ShowProgress(Title,ACount);
+end;
+
 procedure TBaseChildDlg.ShowStatusBarText(Aindex: integer; AStr: String);
 begin
   if Application.MainForm is TMainDlg then
   begin
     (Application.MainForm as TMainDlg).StatusBarMain.Panels[Aindex].Text := AStr;
   end;
+end;
+
+procedure TBaseChildDlg.UpdateProgress(Value: Integer);
+begin
+  CnProgressFrm.UpdateProgress(Value);
+end;
+
+procedure TBaseChildDlg.UpdateProgressTitle(const Title: string);
+begin
+  CnProgressFrm.UpdateProgressTitle(Title);
 end;
 
 end.

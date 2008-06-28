@@ -53,6 +53,8 @@ type
     SMTP: TIdSMTP;
     IdMessage1: TIdMessage;
     spExce: TADOStoredProc;
+    spDataSet: TADOStoredProc;
+    dspDataSet: TDataSetProvider;
     procedure RemoteDataModuleCreate(Sender: TObject);
     procedure RemoteDataModuleDestroy(Sender: TObject);
     function dspCommandDataRequest(Sender: TObject;
@@ -74,6 +76,7 @@ type
     function UpFileChunk(AFile_ID: Integer; AVer: Integer; AGroupID: Integer; AStream: OleVariant): Integer; safecall;
     procedure MailTo(AStyle: Integer; const AMails: WideString; AContextID: Integer); safecall;
     function GetSysDateTime: OleVariant; safecall;
+
   public
     { Public declarations }
   end;
@@ -166,6 +169,7 @@ begin
   adsQueryEx3.Connection := gConn;
   adsQueryEx4.Connection := gConn;
   spExce.Connection      := gConn;
+  spDataSet.Connection   := gConn;
 
   // 连接数据库
   //
@@ -215,6 +219,7 @@ begin
 
   adsSQL.CommandText := format(glSQL,[AName,APass]);
   adsSQL.Open;
+  
   if adsSQL.RecordCount > 0 then
   begin
     if adsSQL.FieldByName('ZSTOP').AsBoolean then
@@ -465,7 +470,7 @@ end;
 
 //
 // AStyle : 类型 目前只有bug=0
-// AMails : 邮箱，多个用 ; 号分开
+// AMails : 邮箱，多个用 ; 号分开 ,在Task 时,这个是任务的ID号
 // AContextID : 为内容的ID,根据Style来定的,如是bug则是Bug_ID值
 //
 procedure TBFSSRDM.MailTo(AStyle: Integer; const AMails: WideString;
@@ -476,6 +481,8 @@ var
   myID : integer;
   myAuatherID : integer; //作者
   myReplyID   : integer; //回复人
+  myMailTo    : string;  //邮件的发送
+  mySubject   : string;
 const
   glSQL  = 'select ZTREEPATH,ZTITLE,ZOPENEDDATE from TB_BUG_ITEM where ZID=%d ';
   glSQL2 = 'select isnull(max(ZID),0) as v from TB_BUG_HISTORY where ZBUG_ID=%d';
@@ -524,35 +531,31 @@ begin
             myTitle   := spExce.Parameters[1].Value;
           if not VarIsNull(spExce.Parameters[2].Value) then
             myContext := spExce.Parameters[2].Value;
+          myMailTo :=  AMails;
+          mySubject := Format('#%d %s',[AContextID,myTitle]);
         end;
-          {
-          if adsSQL.Active then
-            adsSQL.Close;
-          adsSQL.CommandText := format(glSQL,[AContextID]);
-          adsSQL.Open;
-          if adsSQL.RecordCount = 0 then Exit;
-
-          myTitle := adsSQL.FieldByName('ZTITLE').AsString;
-          myTreePath := adsSQL.FieldByName('ZTREEPATH').AsString;
-          myAuatherID  := adsSQL.FieldByName('ZOPENEDDATE').AsInteger;
-          adsSQL.Close;
-          adsSQL.CommandText :=  format(glSQL2,[AContextID]);
-          adsSQL.Open;
-          if adsSQL.RecordCount > 0 then
-          begin
-            myID := adsSQL.FieldByName('v').AsInteger;
-            adsSQL.Close;
-            adsSQL.CommandText := format(glSQL3,[myID]);
-            adsSQl.Open;
-            if adsSQL.RecordCount > 0 then
-            begin
-              myContext := adsSQL.FieldByName('ZCONTEXT').AsString;
-              myReplyID := adsSQL.FieldByName('ZUSER_ID').AsInteger;
-            end;
-          end
+      1:  {task}
+        begin
+          spExce.Close;
+          spExce.ProcedureName:='pt_MaintoByTask';
+          spExce.Parameters.Clear;
+          spExce.Parameters.CreateParameter('TaskCode' ,ftString,pdInput,30,1);
+          spExce.Parameters.CreateParameter('mailtitle',ftString,pdoutput,200,1);
+          spExce.Parameters.CreateParameter('mailtext ',ftString,pdoutput,4000,1);
+          spExce.Parameters.CreateParameter('mailto',   ftString,pdoutput,1000,1);
+          spExce.Parameters[0].Value := AMails;  //这个是任务ID
+          spExce.ExecProc;
+          if not VarIsNull(spExce.Parameters[1].Value) then
+            myTitle   := spExce.Parameters[1].Value;
+          if not VarIsNull(spExce.Parameters[2].Value) then
+            myContext := spExce.Parameters[2].Value;
+          if not VarIsNull(spExce.Parameters[3].Value) then
+            myMailTo := spExce.Parameters[3].Value
           else
-            myReplyID := myAuatherID;
-          }
+            Exit; //没有地址不发了
+          mySubject := myTitle;
+
+        end;
       else
         Exit;    
     end;
@@ -573,8 +576,8 @@ begin
       IdMessage1.Priority := TIdMessagePriority(2);
       IdMessage1.ReceiptRecipient.Text := '';
 
-      IdMessage1.Subject := Format('#%d %s',[AContextID,myTitle]);
-      IdMessage1.Recipients.EMailAddresses := AMails;
+      IdMessage1.Subject := mySubject;
+      IdMessage1.Recipients.EMailAddresses := myMailTo;
 
       SMTP.Send(IdMessage1);
     finally
@@ -592,6 +595,7 @@ function TBFSSRDM.GetSysDateTime: OleVariant;
 begin
   Result := now();
 end;
+
 
 
 initialization

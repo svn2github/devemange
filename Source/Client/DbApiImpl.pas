@@ -312,6 +312,7 @@ begin
   fcdsQuery.Close;
 end;
 
+
 function TBfssDBOpr.ReadInt(const SqlStr: PChar): Integer;
 begin
   Result := -1;

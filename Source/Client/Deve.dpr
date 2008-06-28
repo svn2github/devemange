@@ -15,7 +15,8 @@ uses
   SelectUsersfrm in 'SelectUsersfrm.pas' {SelectUsersDlg},
   TaskScorefrm in 'TaskScorefrm.pas' {TaskScoreDlg},
   WikiClientfrm in 'WikiClientfrm.pas' {WikiClientDlg},
-  SetSysParamsfrm in 'SetSysParamsfrm.pas' {SetParamsDlg};
+  SetSysParamsfrm in 'SetSysParamsfrm.pas' {SetParamsDlg},
+  StatManageClientfrm in 'StatManageClientfrm.pas' {StatManageClientDlg};
 
 {$R *.res}
 

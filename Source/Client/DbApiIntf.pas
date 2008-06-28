@@ -71,9 +71,13 @@ type
     function DeleteFile(AFile_ID: Integer): Integer; safecall;
     function UpFileChunk(AFile_ID: Integer; AVer: Integer; AGroupID: Integer; AStream: OleVariant): Integer; safecall;
     //
-    // AStyle 类型，目前只有Bug=0
+    // AStyle 类型，目前只有Bug=0 , Task=1
     // AMails 表示邮箱列表如 mrlong.com@gmail.com;mrlng_xp@163.com
-    // AContextID 内容，是按类型来确定的。如bug则是bug_id值
+    // AContextID 内容，是按类型来确定的。如bug则是bug_id值, Task 是任务ID值=-1
+    //
+    //在任务单的情况下 作者:龙仕云 2008-6-28
+    // AMails : string 表示任务单号
+    //
     //
     procedure MailTo(AStyle: Integer; const AMails: WideString; AContextID: Integer); safecall;
 

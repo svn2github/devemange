@@ -148,8 +148,167 @@ set @mailtext  = @TreePath  + char(13) +char(10)+
 '创建人:' +  @Auathor + '   回复人:' + @BugReplay
 
 
---set @mailtitle = "国家"
---set @mailtext  = "bbbbbbbbbbbbb"
+end
+GO
+
+/*
+创建: 2008-6-28  作者:龙仕云
+目的: 准备任务单的邮件内容
+修改：
+编号   时间         修改人             修改内容
+
+*/
+
+CREATE    PROCEDURE pt_MaintoByTask
+@TaskCode  varchar(30), --任务号,是唯一号
+@mailtitle varchar(200) output,   --返回的标题
+@mailtext varchar(4000) output, --返回的内容
+@mailto   varchar(1000) output --返回的发送邮件的人,多个采用;分开
+
+as
+declare @ProName  varchar(200) --项目的名称
+declare @Prover varchar(50) --项目的版本号
+declare @Title varchar(200)
+declare @Auathor varchar(20)   --创建任务的人
+declare @TaskContext varchar(4000) --任务的内容
+declare @TaskStatus varchar(20) --任务单状态
+declare @myMail varchar(50)
+
+
+begin
+
+
+--取出标题及作者
+declare my_cursor cursor 
+for
+select  a.ZName as TaskName,b.ZNAME as UserName,c.ZNAME as ProName , d.ZVER , e.ZName as STATUS ,a.ZDESIGN ,b.ZEMAIL from TB_TASK as a
+left join  TB_USER_ITEM as b  on a.ZUSER_ID=b.ZID 
+left join  TB_PRO_ITEM   as c  on a.ZPRO_ID=c.ZID
+left join  TB_PRO_VERSION as d on d.ZID=a.ZPRO_VERSION_ID
+left join  TB_TASK_PARAMS as e on e.ZTYPE=1 and e.ZID=a.ZSTATUS 
+where a.ZCODE=@TaskCode 
+
+open my_cursor
+fetch next from my_cursor into @mailtitle,@Auathor,@ProName,@Prover,@TaskStatus,@TaskContext,@mailto
+close   my_cursor  
+deallocate my_cursor
+
+
+--取出任务的执行人,注意取消执行人
+declare my_cursor cursor
+for
+select b.ZEMAIL  from TB_TASK_USER as a
+left join TB_USER_ITEM as b on a.ZUSER_ID=b.ZID
+where a.ZTASK_CODE=@TaskCode and a.ZCANCEL=1 
+
+open my_cursor
+fetch next from my_cursor into @myMail
+while( @@fetch_status = 0)
+begin
+  --print @myMail
+  set @mailto =isnull(@mailto,'')+';'+@myMail
+  fetch next from my_cursor into @myMail
+end
+
+close   my_cursor  
+deallocate my_cursor
+
+--格式
+
+set @mailtext  = '项目:' + @ProName + '  版本:' + @Prover + char(13) + char(10) + 
+'任务:' + @mailtitle  + char(13) +char(10)+
+'状态:' + @TaskStatus + char(13)+char(10)+
+'-------------------------------------------------------------------------------------------' + char(13) + char(10)+
+@TaskContext + char(13) +char(10)+char(13)+char(10)+
+'任务创建人:' +  @Auathor 
+
+set @mailtitle =  '【' + @TaskStatus+' 】'+ @mailtitle
+
 
 end
 GO
+
+
+
+/*
+创建: 2008-6-28  作者:龙仕云
+目的: 统计
+修改：
+编号   时间         修改人             修改内容
+
+*/
+
+CREATE    PROCEDURE pt_StatBugTaskCount
+@StatbeginDate datetime,
+@StatendDate datetime
+
+as
+
+declare @myUserName varchar(20)
+declare @myUser_ID int
+declare @c1 int
+declare @c2 int
+declare @c3 int
+declare @c4 int
+
+set @c1=0
+set @c2=0
+set @c3=0
+set @c4=0
+
+--建表
+if exists(select 1 from sysobjects where id=object_id('temp_stat')and type = 'u')
+  drop table temp_stat
+  
+create table temp_stat
+  (
+  ZUSERNAME varchar(20),
+  ZAnswerBugCount int , --处理问题数 c1
+  ZSubmitBugCount  int, --提交的问题数 c2
+  ZReplyBugCount int,    --回复问题数 c3
+)
+
+
+
+--先按人员表进行遍历
+declare my_cursor cursor
+for
+select a.ZNAME,a.ZID  from TB_USER_ITEM as a
+where a.ZSTOP=0
+
+open my_cursor
+fetch next from my_cursor into @myUserName,@myUser_ID
+while( @@fetch_status = 0)
+begin
+  
+------bug
+  select @c1= count(a.ZID)   from TB_BUG_ITEM as a 
+  where  a.ZRESOLVEDBY=@myUser_ID and a.ZSTATUS=1 --1表示修改完成
+  
+  select @c2= count(a.ZID)   from TB_BUG_ITEM as a 
+  where  a.ZOPENEDBY=@myUser_ID 
+
+  select @c3= count(a.ZID)   from TB_BUG_HISTORY as a 
+  where  a.ZUSER_ID=@myUser_ID
+------Task
+	
+  insert into temp_stat(
+       ZUSERNAME,
+       ZAnswerBugCount,
+       ZSubmitBugCount,
+       ZReplyBugCount) 
+  values(
+       @myUserName,
+       @c1,
+       @c2,
+       @c3) 
+  fetch next from my_cursor into @myUserName, @myUser_ID
+end
+
+close   my_cursor  
+deallocate my_cursor
+
+select * from temp_stat
+GO
+
+

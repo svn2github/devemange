@@ -683,7 +683,6 @@ var
   myNodeData : PFileTreeNode;
   myfileid : integer;
   myfilenote : String;
-  myfilesize : Integer;
   myParentPiv : Integer;
 const
   glSQL =  'insert into TB_FILE_ITEM (ZTREE_ID,ZSTYPE,ZID,ZVER,ZNAME,ZEDITER_ID,ZFILEPATH, '+
@@ -715,15 +714,11 @@ begin
   if not OpenDialog1.Execute then Exit;
   myfilename := OpenDialog1.FileName;
 
-  myfilesize := ClientSystem.GetFileSize(myfilename);
   //取出文件大小太大的文件不能上传
-  if (ClientSystem.fEditerType<>etAdmin) then
+  if not ClientSystem.AllowFileSize(myfilename) then
   begin
-    if myfilesize > 500  then
-    begin
-      MessageBox(Handle,'文件太大，只能上传500KB的文件。','提示',MB_ICONWARNING+MB_OK);
-      Exit;
-    end;
+    MessageBox(Handle,'文件太大，只能上传500KB的文件。','提示',MB_ICONWARNING+MB_OK);
+    Exit;
   end;
 
   cdsQuery.Data := ClientSystem.fDBOpr.ReadDataSet(PChar(glSQL2));

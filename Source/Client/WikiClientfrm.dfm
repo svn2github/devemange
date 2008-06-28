@@ -1,6 +1,6 @@
 inherited WikiClientDlg: TWikiClientDlg
-  Left = 197
-  Top = 67
+  Left = 147
+  Top = 133
   Caption = 'Wiki'
   OldCreateOrder = True
   PixelsPerInch = 96
@@ -62,6 +62,16 @@ inherited WikiClientDlg: TWikiClientDlg
       Enabled = False
       TabOrder = 4
       OnClick = btnStopClick
+    end
+    object btnRefresh: TBitBtn
+      Left = 480
+      Top = 7
+      Width = 100
+      Height = 25
+      Caption = #21047#26032
+      Enabled = False
+      TabOrder = 5
+      OnClick = btnRefreshClick
     end
   end
   object wbwiki: TWebBrowser

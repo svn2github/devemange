@@ -102,9 +102,7 @@ type
     cdsTemp: TClientDataSet;
     cdsStatus: TClientDataSet;
     dsStatus: TDataSource;
-    cbEditDesing: TCheckBox;
     actTask_Save: TAction;
-    BitBtn12: TBitBtn;
     pcTasKUser: TPageControl;
     tsDesign: TTabSheet;
     Splitter4: TSplitter;
@@ -170,6 +168,8 @@ type
     Label8: TLabel;
     Label15: TLabel;
     DBEdit13: TDBEdit;
+    cbEditDesing: TCheckBox;
+    btnTask_Save: TBitBtn;
     procedure actPro_AddExecute(Sender: TObject);
     procedure cbEditProItemClick(Sender: TObject);
     procedure actPro_AddUpdate(Sender: TObject);
@@ -1229,6 +1229,8 @@ begin
           cdsTask.Post;
         end;
       end;
+      //执行邮件通知
+      ClientSystem.fDbOpr.MailTo(1,cdsTask.FieldByName('ZCODE').AsString,-1);
     end;
   finally
     myfrom.Free;
@@ -1382,7 +1384,8 @@ begin
     ClientSystem.fDbOpr.BeginTrans;
     try
       ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
-          ClientSystem.fDbOpr.CommitTrans;
+      ClientSystem.fDbOpr.CommitTrans;
+
     except
       DataSet.Cancel;
       ClientSystem.fDbOpr.RollbackTrans;
@@ -1523,6 +1526,8 @@ begin
     mydate2 := strtodate(formatdatetime('yyyy-mm-dd',strtodatetime(cdsTask.FieldByName('ZSUCCESSDATE').AsString)));
     cdsTask.FieldByName('ZDAY').AsInteger := Trunc(mydate2-mydate1)+1;
     cdsTask.Post;
+    //执行邮件通知
+    ClientSystem.fDbOpr.MailTo(1,cdsTask.FieldByName('ZCODE').AsString,-1);
   end
   else begin
     MessageBox(Handle,'不是你的任务，不能提交完成。','提示',
@@ -1556,6 +1561,8 @@ begin
       cdsTask.FieldByName('ZCLOSEDATE').AsString :=
           formatdatetime('yyyy-mm-dd hh:ss:mm',ClientSystem.SysNow);
       cdsTask.Post;
+      //执行邮件通知
+      ClientSystem.fDbOpr.MailTo(1,cdsTask.FieldByName('ZCODE').AsString,-1);
     end
     else begin
       MessageBox(Handle,'不是你创建的任务，不能关闭。','提示',
@@ -1595,6 +1602,8 @@ begin
           cdsTask.Edit;
         cdsTask.FieldByName('ZSTATUS').AsInteger := Ord(tsing);
         cdsTask.Post;
+        //执行邮件通知
+        ClientSystem.fDbOpr.MailTo(1,cdsTask.FieldByName('ZCODE').AsString,-1);
       end
       else begin
         MessageBox(Handle,'不是你执行任务或创建任务，不能提交激活。','提示',
@@ -1639,6 +1648,7 @@ begin
           cdsTaskUser.FieldByName('ZSCOREDATE').AsString :=
             formatdatetime('yyyy-mm-dd hh:ss:mm',ClientSystem.SysNow);
           cdsTaskUser.Post;
+
         end
         else
           cdsTaskUser.Cancel;

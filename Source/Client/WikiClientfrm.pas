@@ -25,6 +25,7 @@ type
     N1: TMenuItem;
     N2: TMenuItem;
     N3: TMenuItem;
+    btnRefresh: TBitBtn;
     procedure btnHomeClick(Sender: TObject);
     procedure btnBackClick(Sender: TObject);
     procedure btnForwardClick(Sender: TObject);
@@ -38,6 +39,7 @@ type
     procedure actwb_CopyExecute(Sender: TObject);
     procedure actwb_CutExecute(Sender: TObject);
     procedure actwb_PasteExecute(Sender: TObject);
+    procedure btnRefreshClick(Sender: TObject);
   private
     { Private declarations }
     fOleInPlaceActiveObject:   IOleInPlaceActiveObject;
@@ -85,6 +87,7 @@ procedure TWikiClientDlg.wbwikiDownloadBegin(Sender: TObject);
 begin
   Animate1.Active := True;
   btnStop.Enabled := True;
+  btnRefresh.Enabled := False;
 end;
 
 procedure TWikiClientDlg.wbwikiDocumentComplete(Sender: TObject;
@@ -92,6 +95,7 @@ procedure TWikiClientDlg.wbwikiDocumentComplete(Sender: TObject;
 begin
   Animate1.Active := False;
   btnStop.Enabled := False;
+  btnRefresh.Enabled := True;
 end;
 
 procedure TWikiClientDlg.btnStopClick(Sender: TObject);
@@ -162,6 +166,11 @@ end;
 procedure TWikiClientDlg.actwb_PasteExecute(Sender: TObject);
 begin
   wbwiki.ExecWB(OLECMDID_PASTE,0);
+end;
+
+procedure TWikiClientDlg.btnRefreshClick(Sender: TObject);
+begin
+  wbwiki.Refresh2;
 end;
 
 initialization

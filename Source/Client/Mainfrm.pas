@@ -66,6 +66,8 @@ type
     btnMod_WebBrowes: TToolButton;
     actFile_SysParams: TAction;
     N9: TMenuItem;
+    actMod_Stat: TAction;
+    N10: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure actmod_FilesExecute(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -84,6 +86,7 @@ type
     procedure actFile_ChangPasswdExecute(Sender: TObject);
     procedure actMod_WebBrowesExecute(Sender: TObject);
     procedure actFile_SysParamsExecute(Sender: TObject);
+    procedure actMod_StatExecute(Sender: TObject);
   private
     fChildform : TList; //所有子窗口的对象
     fCurrentChildform : TBaseChildDlg;
@@ -112,7 +115,8 @@ uses
   ProjectManageClientfrm,  {项目管理}
   UserManageClientfrm,     {用户管理}
   DesignDocumentClientfrm, {项目文档}
-  WikiClientfrm,           {wiki} 
+  StatManageClientfrm,     {统计}
+  WikiClientfrm,           {wiki}
   WriteToDaySayfrm,        {每日一句}
   ChangPasswdfrm           {修改密码}
 
@@ -444,6 +448,11 @@ begin
   finally
     Free;
   end;
+end;
+
+procedure TMainDlg.actMod_StatExecute(Sender: TObject);
+begin
+  DoChangeClient(TStatManageClientDlg);
 end;
 
 end.

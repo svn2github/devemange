@@ -68,6 +68,7 @@ type
     function StreamToOleVariant(Stream: TStream; Count: Integer): OleVariant;
     //其他
     function GetFileSize(const FileName: String): LongInt;
+    function AllowFileSize(const FileName:String):Boolean; //是否是可以上传文件的大小
     procedure SplitStr(AStr:String;ASl:TStringList;AChar:Char=';');  //折分字符
 
     property SysNow : TDateTime read GetSysNow;  //取出系统的时间
@@ -94,6 +95,22 @@ type
 procedure TSysClientClass.GetExeVer;
 
     }
+function TClinetSystem.AllowFileSize(const FileName: String): Boolean;
+var
+  myfilesize : Integer;
+begin
+  Result := True;
+  myfilesize := GetFileSize(FileName);
+  //取出文件大小太大的文件不能上传
+  if (ClientSystem.fEditerType<>etAdmin) then
+  begin
+    if myfilesize > 500  then
+    begin
+      Result := False;
+    end;
+  end;
+end;
+
 procedure TClinetSystem.BeginTickCount;
 begin
   fTickCount := gettickcount;
@@ -549,7 +566,8 @@ begin
 
   Result := False;
   Self.BeginTickCount;
-  fDBOpr.BeginTrans;
+  // 不作回滚操作,移到外面做 作者:龙仕云 2008-6-28
+  //fDBOpr.BeginTrans;
   try
     fDBOpr.ExeSQL(PChar(format(glSQL,[
       ATree_ID, 
@@ -572,10 +590,10 @@ begin
       ClientSystem.fDBOpr.RollbackTrans;
       Exit;
     end;
-    ClientSystem.fDBOpr.CommitTrans;
+    //ClientSystem.fDBOpr.CommitTrans;
     Result := True;
   except
-    ClientSystem.fDBOpr.RollbackTrans;
+    //ClientSystem.fDBOpr.RollbackTrans;
     Result := False;
     Self.EndTickCount;
   end;

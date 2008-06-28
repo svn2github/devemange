@@ -85,7 +85,6 @@ type
     BitBtn5: TBitBtn;
     DBLookupComboBox5: TDBLookupComboBox;
     DBEdit3: TDBEdit;
-    lbBugCaption: TLabel;
     actBugItem_Save: TAction;
     actBugItem_Cancel: TAction;
     actBugHistory_Add: TAction;
@@ -160,6 +159,9 @@ type
     N11: TMenuItem;
     N12: TMenuItem;
     btnBug_RefreshData: TBitBtn;
+    pnlContextTop: TPanel;
+    lbBugCaption: TLabel;
+    DBText6: TDBText;
     procedure actBug_AddDirExecute(Sender: TObject);
     procedure tvProjectExpanding(Sender: TObject; Node: TTreeNode;
       var AllowExpansion: Boolean);
@@ -1496,6 +1498,7 @@ const
            'where ZID=%d';
 begin
   if fLoading then Exit;
+  //只是修改内容,这个比较少
   if not DataSet.FieldByName('ZISNEW').AsBoolean then
   begin
     if DataSet.FieldByName('ZUSER_ID').AsInteger <> ClientSystem.fEditer_id then
@@ -1509,6 +1512,7 @@ begin
       DataSet.FieldByName('ZID').AsInteger]);
 
     ClientSystem.fDbOpr.BeginTrans;
+    ShowProgress('保存...',0);
     try
       ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
       mySQL := format(glSQL3,[
@@ -1522,10 +1526,12 @@ begin
       ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
       ClientSystem.fDbOpr.CommitTrans;
     except
+      HideProgress;
       ClientSystem.fDbOpr.RollbackTrans;
     end;
     
   end
+  //新增回复
   else begin
     if DataSet.FieldByName('ZSTATUS').AsInteger < 0 then
     begin
@@ -1542,32 +1548,50 @@ begin
       end;
     end;
 
-    myFileID := -1;
-    //要上传附件文件,如存在则上传
-    if FileExists(DataSet.FieldByName('ZFILEPATH').AsString) then
-    begin
-      myFileName := DataSet.FieldByName('ZFILEPATH').AsString;
-      myProID := cdsBugItem.FieldByName('ZPRO_ID').Asinteger;
-      if not UpBugFile(myProID,myFileName,myFileID) then
-      begin
-        MessageBox(Handle,'上传附件有问题。','提示',MB_ICONERROR+MB_OK);
-        Exit;
-      end;
-      DataSet.FieldByName('ZANNEXFILENAME').AsString :=ExtractFileName(myfileName);
-      DataSet.FieldByName('ZANNEXFILE_ID').AsInteger := myFileID;
-    end;
-
-    mySQL := format(glSQL,[
-      DataSet.FieldByName('ZBUG_ID').AsInteger,
-      DataSet.FieldByName('ZUSER_ID').AsInteger,
-      DataSet.FieldByName('ZSTATUS').AsInteger,
-      DataSet.FieldByName('ZCONTEXT').AsString,
-      //DataSet.FieldByName('ZACTIONDATE').AsString, //采用了getdate();
-      DataSet.FieldByName('ZANNEXFILE_ID').AsInteger,
-      DataSet.FieldByName('ZANNEXFILENAME').AsString]);
-
     ClientSystem.fDbOpr.BeginTrans;
     try
+      ShowProgress('保存...',4);
+      try
+      myFileID := -1;
+      UpdateProgressTitle('上传文件...');
+      UpdateProgress(1);
+      //要上传附件文件,如存在则上传
+      if FileExists(DataSet.FieldByName('ZFILEPATH').AsString) then
+      begin
+        myFileName := DataSet.FieldByName('ZFILEPATH').AsString;
+        //取出文件大小太大的文件不能上传
+        if not ClientSystem.AllowFileSize(myfilename) then
+        begin
+          MessageBox(Handle,'文件太大，只能上传500KB的文件。',
+            '提示',MB_ICONWARNING+MB_OK);
+          ClientSystem.fDbOpr.RollbackTrans;
+          Exit;
+        end;
+
+        myProID := cdsBugItem.FieldByName('ZPRO_ID').Asinteger;
+        if not UpBugFile(myProID,myFileName,myFileID) then
+        begin
+          MessageBox(Handle,'上传附件有问题。','提示',MB_ICONERROR+MB_OK);
+          ClientSystem.fDbOpr.RollbackTrans;
+          Exit;
+        end;
+        DataSet.FieldByName('ZANNEXFILENAME').AsString :=ExtractFileName(myfileName);
+        DataSet.FieldByName('ZANNEXFILE_ID').AsInteger := myFileID;
+      end;
+
+
+      UpdateProgressTitle('保存回复...');
+      UpdateProgress(2);
+      mySQL := format(glSQL,[
+        DataSet.FieldByName('ZBUG_ID').AsInteger,
+        DataSet.FieldByName('ZUSER_ID').AsInteger,
+        DataSet.FieldByName('ZSTATUS').AsInteger,
+        DataSet.FieldByName('ZCONTEXT').AsString,
+        //DataSet.FieldByName('ZACTIONDATE').AsString, //采用了getdate();
+        DataSet.FieldByName('ZANNEXFILE_ID').AsInteger,
+        DataSet.FieldByName('ZANNEXFILENAME').AsString]);
+
+
       ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
       //如没有加入解决人的邮箱,则自动增加入
       if DataSet.FieldByName('ZSTATUS').AsInteger = Ord(bgsDeath) then
@@ -1612,6 +1636,9 @@ begin
           DataSet.FieldByName('ZBUG_ID').Asinteger]);
       end;
 
+      UpdateProgressTitle('更新问题内容...');
+      UpdateProgress(3);
+
       ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
       DataSet.FieldByName('ZISNEW').AsBoolean := False;
       ClientSystem.fDbOpr.CommitTrans;
@@ -1642,11 +1669,15 @@ begin
         cdsBugItem.Post;
       end;
 
+      UpdateProgressTitle('邮件通知...');
+      UpdateProgress(4);
       //邮件通知
       Mailto(cdsBugItem.FieldByName('ZMAILTO').AsString);
+
+      finally HideProgress; end;
     except
-      if myFileID >=0 then  //如已上传了附件，则要删除掉。
-        ClientSystem.fdbOpr.DeleteFile(myFileID);
+      //if myFileID >=0 then  //如已上传了附件，则要删除掉。
+      //  ClientSystem.fdbOpr.DeleteFile(myFileID);
       ClientSystem.fDbOpr.RollbackTrans;
     end;
   end;
