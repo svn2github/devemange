@@ -9,6 +9,7 @@
 //  2.处理连接不上提示错误 2008-3-20
 //  3.增加 GetSysDateTime的方法(); 2008-3-24 by mrlong
 //  4.修改 ReadVariant()方法一直没有写实现 2008-5-13
+//  5.修改 fSocketServer.SupportCallbacks := False 不支持回调 by mrlong 2008-5-31 ver=1.0.2
 //
 //
 //
@@ -27,6 +28,9 @@ type
   TBfssDBOpr = class(TInterfacedObject, IDbOperator)
   private
     fLogFile:textfile;
+
+    fHost : String;     //SocketServer Host
+    fPort : Integer;
 
     function GetRemoteServer: TCustomRemoteServer;
     procedure SendData(const Data: IDataBlock);
@@ -126,6 +130,8 @@ begin
   if RemoteServer.Connected then
     RemoteServer.Connected := False;
 
+  fHost := AHost;
+  fPort := APort;  
   if Self.fConnectStype = csDCOM then
   begin
     with  RemoteServer as TDCOMConnection do
@@ -189,6 +195,7 @@ var
 begin
   fDOMServer    := TDCOMConnection.Create(nil);
   fSocketServer := TBffsSocketConnection.Create(nil);
+  fSocketServer.SupportCallbacks := False; //不支持回调 by mrlong 2008-5-31
   fSocketServer.SendDataEvent := SendData;
   fSocketServer.ReceiveDataEvent := ReceiveData;
 
@@ -355,7 +362,14 @@ end;
 function TBfssDBOpr.ReConnect: Boolean;
 begin
   RemoteServer.Connected := False;
+  if (fConnectStype = csSocket) and
+     (RemoteServer is TBffsSocketConnection) then
+  begin
+    (RemoteServer as TBffsSocketConnection).Host := fHost;
+    (RemoteServer as TBffsSocketConnection).Port := fPort;
+  end;
   RemoteServer.Connected := True;
+
   Result := RemoteServer.Connected;
 end;
 
