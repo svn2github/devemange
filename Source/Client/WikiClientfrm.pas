@@ -40,6 +40,7 @@ type
     procedure actwb_CutExecute(Sender: TObject);
     procedure actwb_PasteExecute(Sender: TObject);
     procedure btnRefreshClick(Sender: TObject);
+    procedure wbwikiDownloadComplete(Sender: TObject);
   private
     { Private declarations }
     fOleInPlaceActiveObject:   IOleInPlaceActiveObject;
@@ -93,8 +94,8 @@ end;
 procedure TWikiClientDlg.wbwikiDocumentComplete(Sender: TObject;
   const pDisp: IDispatch; var URL: OleVariant);
 begin
-  Animate1.Active := False;
-  btnStop.Enabled := False;
+  Animate1.Active    := False;
+  btnStop.Enabled    := False;
   btnRefresh.Enabled := True;
 end;
 
@@ -170,7 +171,14 @@ end;
 
 procedure TWikiClientDlg.btnRefreshClick(Sender: TObject);
 begin
-  wbwiki.Refresh2;
+  if not wbwiki.Busy then wbwiki.Refresh;
+end;
+
+procedure TWikiClientDlg.wbwikiDownloadComplete(Sender: TObject);
+begin
+  Animate1.Active    := False;
+  btnStop.Enabled    := False;
+  btnRefresh.Enabled := True;
 end;
 
 initialization

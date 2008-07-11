@@ -145,25 +145,33 @@ begin
     end;
   end;
 
+
+  myBaseform.ShowProgress('打开...',0);
+
   if not Assigned(myBaseform) then
   begin
     myBaseform := NewClient.Create(nil);
     myBaseform.initBase;
     fChildform.Add(myBaseform);
   end;
-  myoldform := fCurrentChildform;
-  fCurrentChildform := myBaseform;
-  fCurrentChildform.BorderStyle := bsNone;
-  fCurrentChildform.Align := alClient;
-  fCurrentChildform.Parent := plForm;
-  fCurrentChildform.Show;
-  myBaseform.Showfrm;
-  with ClientSystem do
-    Caption := Format('%s 版本=%d.%d.%d(build%d) IP=%s -%s',
+
+  try
+    myoldform := fCurrentChildform;
+    fCurrentChildform := myBaseform;
+    fCurrentChildform.BorderStyle := bsNone;
+    fCurrentChildform.Align := alClient;
+    fCurrentChildform.Parent := plForm;
+    fCurrentChildform.Show;
+    myBaseform.Showfrm;
+    with ClientSystem do
+      Caption := Format('%s 版本=%d.%d.%d(build%d) IP=%s -%s',
         [Application.Title,fVer[0],fVer[1],fVer[2],fVer[3],ClientSystem.fHost,
         fCurrentChildform.Caption]);
-  if Assigned(myoldform) then
-    myoldform.Closefrm;
+    if Assigned(myoldform) then
+      myoldform.Closefrm;
+  finally
+    myBaseform.HideProgress;
+  end;
     
   //改变输入焦点
   ActiveControl := FindNextControl(ActiveControl, True, True, False);

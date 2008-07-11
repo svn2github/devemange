@@ -18,7 +18,7 @@ unit DbApiImpl;
 
 interface
 uses
-  Classes,DBClient,SysUtils,
+  Classes,DBClient,SysUtils,DB,
   MConnect,SConnect,
   DBSocketConnection,
   DbApiIntf;
@@ -83,6 +83,7 @@ type
     function Version : integer;stdcall;
     function AppServer : Variant; stdcall;
 
+    //6
 
   end;
 
@@ -92,6 +93,8 @@ var
   function CreateBfssDBOpr(): IDbOperator; stdcall;
 
 implementation
+uses
+  Variants;
 
   function CreateBfssDBOpr(): IDbOperator;
   begin
@@ -311,6 +314,8 @@ begin
   Result := fcdsQuery.Data;
   fcdsQuery.Close;
 end;
+
+
 
 
 function TBfssDBOpr.ReadInt(const SqlStr: PChar): Integer;

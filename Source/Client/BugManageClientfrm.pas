@@ -1440,11 +1440,13 @@ procedure TBugManageDlg.actBugHistory_ReSetExecute(Sender: TObject);
 var
   myRecNO : integer;
 begin
+  if MessageBox(Handle,'你是不真要激活问题吗,如有疑问先与问题处理人联系.',
+    '激活问题',MB_ICONQUESTION+MB_YESNO)=IDNO then Exit;
   cdsBugHistory.DisableControls;
   try
     myRecNo := cdsBugHistory.RecNo;
     cdsBugHistory.Append;
-    cdsBugHistory.FieldByName('ZSTATUS').AsInteger := Ord(bgsAction);
+    cdsBugHistory.FieldByName('ZSTATUS').AsInteger := Ord(bgsReAction);
     with TBugAeplyDlg.Create(nil) do
     try
       dblcQustionType.Enabled := False;

@@ -20,17 +20,17 @@ object FileManageDlg: TFileManageDlg
   TextHeight = 16
   object Splitter1: TSplitter
     Left = 220
-    Top = 78
+    Top = 46
     Width = 10
-    Height = 519
+    Height = 551
     Beveled = True
     ResizeStyle = rsLine
   end
   object plfilelist: TPanel
     Left = 230
-    Top = 78
+    Top = 46
     Width = 562
-    Height = 519
+    Height = 551
     Align = alClient
     BevelOuter = bvNone
     Caption = 'plfilelist'
@@ -40,7 +40,7 @@ object FileManageDlg: TFileManageDlg
       Left = 0
       Top = 41
       Width = 562
-      Height = 435
+      Height = 467
       Hint = #28857#20987#21015#21487#20197#36827#34892#21015#20869#23481#30340#25490#24207#12290
       Align = alClient
       Columns = <
@@ -143,7 +143,7 @@ object FileManageDlg: TFileManageDlg
     end
     object plMainBottom: TPanel
       Left = 0
-      Top = 476
+      Top = 508
       Width = 562
       Height = 43
       Align = alBottom
@@ -188,16 +188,16 @@ object FileManageDlg: TFileManageDlg
   end
   object plTree: TPanel
     Left = 0
-    Top = 78
+    Top = 46
     Width = 220
-    Height = 519
+    Height = 551
     Align = alLeft
     TabOrder = 1
     object tvFileTree: TTreeView
       Left = 1
       Top = 1
       Width = 218
-      Height = 517
+      Height = 549
       Align = alClient
       HideSelection = False
       Images = DM.ImageListTree
@@ -213,7 +213,7 @@ object FileManageDlg: TFileManageDlg
     Left = 0
     Top = 0
     Width = 792
-    Height = 78
+    Height = 46
     Align = alTop
     Caption = 'plNoVisible'
     TabOrder = 2
@@ -221,12 +221,12 @@ object FileManageDlg: TFileManageDlg
   end
   object OpenDialog1: TOpenDialog
     Filter = '*.*|*.*'
-    Left = 607
+    Left = 87
     Top = 5
   end
   object SaveDialog: TSaveDialog
     Filter = '*.*|*.*'
-    Left = 639
+    Left = 119
     Top = 5
   end
   object cdsQuery: TClientDataSet
@@ -237,7 +237,7 @@ object FileManageDlg: TFileManageDlg
     Top = 5
   end
   object ActionList1: TActionList
-    Left = 712
+    Left = 152
     Top = 5
     object actFile_DeleteFIle: TAction
       Category = #25991#20214
@@ -369,8 +369,8 @@ object FileManageDlg: TFileManageDlg
   end
   object pmTree: TPopupMenu
     AutoHotkeys = maManual
-    Left = 607
-    Top = 45
+    Left = 183
+    Top = 5
     object N5: TMenuItem
       Action = actTree_AddDir
     end
@@ -389,8 +389,8 @@ object FileManageDlg: TFileManageDlg
   end
   object pmFile: TPopupMenu
     AutoHotkeys = maManual
-    Left = 648
-    Top = 45
+    Left = 224
+    Top = 5
     object N10: TMenuItem
       Action = actFile_Openfile
     end
@@ -437,11 +437,11 @@ object FileManageDlg: TFileManageDlg
   object cdsOpenMode: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 81
-    Top = 7
+    Left = 52
+    Top = 5
   end
   object ImageListFileIcon: TImageList
-    Left = 720
-    Top = 45
+    Left = 256
+    Top = 5
   end
 end

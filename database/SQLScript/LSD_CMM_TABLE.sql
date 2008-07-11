@@ -316,13 +316,14 @@ create table TB_BUG_ITEM(
 	ZOPENEDDATE    datetime not null,                         /*创建时间*/
 	ZOPENVER       int not null,                              /*当时有问题的版本*/
 	ZASSIGNEDTO    int,                                       /*分派给*/
-    ZASSIGNEDDATE  datetime,                                  /*分派时间*/
+        ZASSIGNEDDATE  datetime,                                  /*分派时间*/
 	ZRESOLVEDBY    int,                                       /*解决人*/
 	ZRESOLUTION    int,                                       /*解决方案*/
 	ZRESOLVEDVER   int,                                       /*解决的版本*/
 	ZRESOLVEDDATE  datetime,                                  /*解决的时间*/
 	ZLASTEDITEDBY  int not null,                              /*最后修改的人*/
-	ZLASTEDITEDDATE datetime not null,                        /*最后修改的时间*/                                  
+	ZLASTEDITEDDATE datetime not null,                        /*最后修改的时间*/ 
+	ZOVERFRACTION  bit not null default 0                     /*=True表示已记过分了*/ 
 	
 	constraint PK_TB_BUG_ITEM primary key(ZID desc,ZTREE_ID)   
 )

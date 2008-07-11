@@ -87,6 +87,7 @@ type
     function Connected(): Boolean; stdcall;
     function Version : integer;stdcall;
     function AppServer : Variant; stdcall;
+
   end;
 
 

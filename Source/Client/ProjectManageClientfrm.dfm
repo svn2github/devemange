@@ -1,6 +1,6 @@
 inherited ProjectManageClientDlg: TProjectManageClientDlg
-  Left = 42
-  Top = 97
+  Left = 85
+  Top = 121
   Width = 1094
   Caption = #39033#30446#31649#29702
   OldCreateOrder = True
@@ -516,6 +516,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
             TitleFont.Height = -15
             TitleFont.Name = #23435#20307
             TitleFont.Style = []
+            OnDrawColumnCell = dgTaskListDrawColumnCell
             Columns = <
               item
                 Expanded = False

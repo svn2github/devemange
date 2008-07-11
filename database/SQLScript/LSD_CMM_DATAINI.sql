@@ -18,6 +18,7 @@ insert into TB_PRO_DOCUMENT (ZPID,ZNAME,ZSTYLE,ZHASCHILD) values(-1,'$/',0,0);
 /*BUG的状态*/
 insert into TB_BUG_PARAMS (ZTYPE,ZID,ZNAME) values(1,0,'活动');
 insert into TB_BUG_PARAMS (ZTYPE,ZID,ZNAME) values(1,1,'修改完成');
+insert into TB_BUG_PARAMS (ZTYPE,ZID,ZNAME) values(1,2,'被激活');
 /*BUG的解决方案*/
 insert into TB_BUG_PARAMS (ZTYPE,ZID,ZNAME) values(2,0,'修改');
 insert into TB_BUG_PARAMS (ZTYPE,ZID,ZNAME) values(2,1,'不是问题，不修改');

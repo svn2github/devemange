@@ -103,11 +103,18 @@ object BFSSRDM: TBFSSRDM
   object spDataSet: TADOStoredProc
     Parameters = <>
     Left = 31
-    Top = 214
+    Top = 206
   end
   object dspDataSet: TDataSetProvider
     DataSet = spDataSet
     Left = 32
-    Top = 268
+    Top = 264
+  end
+  object cdsDataSet: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    ProviderName = 'dspDataSet'
+    Left = 32
+    Top = 320
   end
 end

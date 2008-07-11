@@ -312,3 +312,144 @@ select * from temp_stat
 GO
 
 
+/*
+创建: 2008-6-28  作者:龙仕云
+目的: 统计
+修改：
+编号   时间         修改人             修改内容
+
+*/
+
+CREATE    PROCEDURE pt_StatBugTaskCount
+@StatbeginDate datetime,
+@StatendDate datetime
+
+as
+
+declare @myUserName varchar(20)
+declare @myUser_ID int
+declare @c1 int
+declare @c2 int
+declare @c3 int
+declare @c4 int
+declare @c5 int
+declare @c6 int
+declare @c7 int
+
+set @c1=0
+set @c2=0
+set @c3=0
+set @c4=0
+set @c5=0
+set @c6=0
+set @c7=0
+
+--建表
+if exists(select 1 from sysobjects where id=object_id('temp_stat')and type = 'u')
+  drop table temp_stat
+  
+create table temp_stat
+  (
+  ZUSERNAME varchar(20) ,
+  ZAnswerBugCount int , --处理问题数 c1
+  ZSubmitBugCount  int, --提交的问题数 c2
+  ZReplyBugCount int,    --回复问题数 c3
+  ZReActionBug int,       --问题被激活数 c4
+  ZBugFraction int,          --问题分数
+
+  ZTaskCount int,            --完成的任务数
+  ZTaskFraction int,         --任务分数
+ ZTotal int                       --总分
+  
+  
+)
+
+
+
+--先按人员表进行遍历
+declare my_cursor cursor
+for
+select a.ZNAME,a.ZID  from TB_USER_ITEM as a
+where a.ZSTOP=0
+
+open my_cursor
+fetch next from my_cursor into @myUserName,@myUser_ID
+while( @@fetch_status = 0)
+begin
+ 
+-----------------------------------bug----------------------------------------
+
+  /*解决问题*/
+  select @c1= count(a.ZID)   from TB_BUG_ITEM as a 
+  where  a.ZRESOLVEDBY=@myUser_ID and a.ZSTATUS=1 and  --1表示修改完成
+              (a.ZRESOLVEDDATE between  @StatbeginDate and  @StatendDate)
+         
+   /*创建问题*/
+  select @c2= count(a.ZID)   from TB_BUG_ITEM as a   
+  where  a.ZOPENEDBY=@myUser_ID and
+             (a.ZOPENEDDATE between  @StatbeginDate and  @StatendDate)
+  
+  /*回复问题*/
+  select @c3= count(a.ZID)   from TB_BUG_HISTORY as a 
+  where  a.ZUSER_ID=@myUser_ID and ( ZSTATUS=0)  and --0表示活动的
+    (a.ZACTIONDATE between @StatbeginDate and  @StatendDate )
+ 
+   /*被激活数*/
+  select @c4=count(a.ZID) from  TB_BUG_ITEM as a 
+  where  a.ZSTATUS=2 and (a.ZOVERFRACTION=1) and   --  ZOVERFRACTION =1表示已记分
+  exists(select * from TB_BUG_HISTORY as b where b.ZSTATUS=2 and b.ZBUG_ID=a.ZID 
+          and b.ZUSER_ID= @myUser_ID
+           and b.ZACTIONDATE between @StatbeginDate and  @StatendDate)
+
+  /*计算分数*/  
+  select @c5= count(a.ZID)   from TB_BUG_ITEM as a 
+  where  a.ZRESOLVEDBY=@myUser_ID and a.ZSTATUS=1 and  --1表示修改完成
+             (a.ZOVERFRACTION=0) and
+              (a.ZRESOLVEDDATE between  @StatbeginDate and  @StatendDate)
+
+  
+
+-------------------------------Task--------------------------------------------
+  /*计算任务单个数*/
+ select @c6=count(a.ZTASK_CODE) from  TB_TASK_USER as a
+ where (a.ZUSER_ID=@myUser_ID)  and
+  ( a.ZSCOREDATE between @StatbeginDate and  @StatendDate)
+
+  /*任务得分*/
+   select @c7=sum(a.ZSCORE) from  TB_TASK_USER as a , TB_TASK as b
+ where (a.ZUSER_ID=@myUser_ID)  and (a.ZTASK_CODE=b.ZCODE) and (b.ZSTATUS=4) and
+  ( a.ZSCOREDATE between @StatbeginDate and  @StatendDate)
+
+
+	
+  insert into temp_stat(
+       ZUSERNAME,
+       ZAnswerBugCount,
+       ZSubmitBugCount,
+       ZReplyBugCount,
+       ZReActionBug,
+       ZBugFraction,
+       ZTaskCount,
+       ZTaskFraction,
+      ZTotal
+     ) 
+  values(
+       @myUserName,
+       @c1,
+       @c2,
+       @c3,
+       @c4,
+       @c5,
+       @c6,
+       @c7,
+        @c5+@c7); 
+  fetch next from my_cursor into @myUserName, @myUser_ID
+end
+
+close   my_cursor  
+deallocate my_cursor
+
+select * from temp_stat
+GO
+
+

@@ -55,6 +55,7 @@ type
     spExce: TADOStoredProc;
     spDataSet: TADOStoredProc;
     dspDataSet: TDataSetProvider;
+    cdsDataSet: TClientDataSet;
     procedure RemoteDataModuleCreate(Sender: TObject);
     procedure RemoteDataModuleDestroy(Sender: TObject);
     function dspCommandDataRequest(Sender: TObject;
@@ -308,6 +309,10 @@ begin
           Result := format('%d.%d',[BFSSMajorVersion,
             BFSSMinorVersion]);
       end;
+    varArray:  //数组时,这是可能会产生存储过程
+      begin
+
+      end;
     else begin
 
     end;
@@ -476,11 +481,8 @@ end;
 procedure TBFSSRDM.MailTo(AStyle: Integer; const AMails: WideString;
   AContextID: Integer);
 var
-  myTitle,myTreePath : String;
+  myTitle : String;
   myContext : String;  //内容
-  myID : integer;
-  myAuatherID : integer; //作者
-  myReplyID   : integer; //回复人
   myMailTo    : string;  //邮件的发送
   mySubject   : string;
 const
@@ -595,8 +597,6 @@ function TBFSSRDM.GetSysDateTime: OleVariant;
 begin
   Result := now();
 end;
-
-
 
 initialization
   TComponentFactory.Create(ComServer, TBFSSRDM,

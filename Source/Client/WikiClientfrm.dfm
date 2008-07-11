@@ -1,6 +1,6 @@
 inherited WikiClientDlg: TWikiClientDlg
-  Left = 147
-  Top = 133
+  Left = 165
+  Top = 127
   Caption = 'Wiki'
   OldCreateOrder = True
   PixelsPerInch = 96
@@ -83,6 +83,7 @@ inherited WikiClientDlg: TWikiClientDlg
     TabOrder = 1
     OnCommandStateChange = wbwikiCommandStateChange
     OnDownloadBegin = wbwikiDownloadBegin
+    OnDownloadComplete = wbwikiDownloadComplete
     OnDocumentComplete = wbwikiDocumentComplete
     ControlData = {
       4C000000175900007F3A00000000000000000000000000000000000000000000

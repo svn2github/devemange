@@ -223,6 +223,8 @@ type
     procedure actTask_ScoreExecute(Sender: TObject);
     procedure actTask_AddItemUpdate(Sender: TObject);
     procedure actTask_CreateBymeExecute(Sender: TObject);
+    procedure dgTaskListDrawColumnCell(Sender: TObject; const Rect: TRect;
+      DataCol: Integer; Column: TColumn; State: TGridDrawState);
   private
     { Private declarations }
     procedure LoadProjectItem();
@@ -1584,6 +1586,9 @@ procedure TProjectManageClientDlg.actTask_ActionExecute(Sender: TObject);
 var
   mycsd : TClientDataSet;
 begin
+  if MessageBox(Handle,'你是不真要激活任务单吗,如有疑问先与任务单处理人联系.',
+    '激活任务单',MB_ICONQUESTION+MB_YESNO)=IDNO then Exit;
+    
   if cdsTaskUser.Locate('ZUSER_ID;ZCANCEL',VarArrayOf([ClientSystem.fEditer_id,0]),
     [loPartialKey]) then
   begin
@@ -1708,6 +1713,17 @@ begin
     mycds.free;
     fLoading := myb;
   end;
+end;
+
+procedure TProjectManageClientDlg.dgTaskListDrawColumnCell(Sender: TObject;
+  const Rect: TRect; DataCol: Integer; Column: TColumn;
+  State: TGridDrawState);
+begin
+  if (cdsTask.FieldByName('ZSTATUS').AsInteger = Ord(tsClose)) then
+  begin
+    dgTaskList.Canvas.Font.Color := clblue;
+  end;
+  dgTaskList.DefaultDrawColumnCell(Rect,DataCol,Column,State);
 end;
 
 end.

@@ -41,5 +41,13 @@ object ProgressForm: TProgressForm
       Smooth = True
       TabOrder = 0
     end
+    object ani1: TAnimate
+      Left = 148
+      Top = 10
+      Width = 80
+      Height = 50
+      CommonAVI = aviFindFolder
+      StopFrame = 29
+    end
   end
 end

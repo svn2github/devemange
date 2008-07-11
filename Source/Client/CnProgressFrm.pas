@@ -61,6 +61,7 @@ type
   TProgressForm = class(TForm)
     pnl1: TPanel;
     ProgressBar: TProgressBar;
+    ani1: TAnimate;
     lblTitle: TLabel;
   private
     { Private declarations }
@@ -95,21 +96,19 @@ begin
   else
     ProgressForm.BringToFront;
   ProgressForm.lblTitle.Caption := Title;
-  ProgressForm.ProgressBar.Position := 0;
-  ProgressForm.ProgressBar.Max := ACount;
+  if ACount = 0 then
+  begin
+    ProgressForm.ani1.Visible := True;
+    ProgressForm.ProgressBar.Visible := False;
+    ProgressForm.ani1.Active := True;
+  end
+  else begin
+    ProgressForm.ani1.Visible := False;
+    ProgressForm.ProgressBar.Visible := True;
+    ProgressForm.ProgressBar.Position := 0;
+    ProgressForm.ProgressBar.Max := ACount;
+  end;
   ProgressForm.Show;
-{ FormList.Clear;
-  with FormList.LockList do
-  try
-    for i := 0 to Screen.FormCount - 1 do
-      if (Screen.Forms[i] <> ProgressForm) and Screen.Forms[i].Enabled then
-      begin
-        Add(Screen.Forms[i]);    // 保存当前可用的窗体列表
-        Screen.Forms[i].Enabled := False; // 禁用窗体
-      end;
-  finally
-    FormList.UnlockList;
-  end;  }
 
   // xierenxixi 修改
   FormList := DisableTaskWindows(ProgressForm.Handle);

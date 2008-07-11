@@ -1,6 +1,6 @@
 inherited BugManageDlg: TBugManageDlg
-  Left = 142
-  Top = 125
+  Left = 122
+  Top = 70
   Width = 1036
   Height = 692
   Caption = #38169#35823#31649#29702
@@ -442,7 +442,7 @@ inherited BugManageDlg: TBugManageDlg
           object Label4: TLabel
             Left = 18
             Top = 15
-            Width = 71
+            Width = 77
             Height = 15
             Caption = #39033'    '#30446#65306
           end
@@ -699,7 +699,7 @@ inherited BugManageDlg: TBugManageDlg
             Left = 549
             Top = 108
             Width = 144
-            Height = 24
+            Height = 23
             DataField = 'ZRESOLVEDDATE'
             DataSource = dsBugItem
             TabOrder = 16

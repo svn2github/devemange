@@ -1,11 +1,11 @@
 object MainDlg: TMainDlg
-  Left = 387
-  Top = 197
+  Left = 419
+  Top = 188
   BorderIcons = [biSystemMenu]
   BorderStyle = bsDialog
   Caption = 'BFFS'
-  ClientHeight = 401
-  ClientWidth = 492
+  ClientHeight = 307
+  ClientWidth = 491
   Color = clBtnFace
   Font.Charset = GB2312_CHARSET
   Font.Color = clWindowText
@@ -20,53 +20,32 @@ object MainDlg: TMainDlg
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 15
-  object pcMain: TPageControl
-    Left = 0
-    Top = 41
-    Width = 492
-    Height = 341
-    ActivePage = tsLogin
-    Align = alClient
-    TabOrder = 0
-    object tsLogin: TTabSheet
-      Caption = #23458#25143#31471
-      ImageIndex = 1
-    end
-    object tsDataBase: TTabSheet
-      Caption = #25968#25454#22791#20221#24674#22797
-      ImageIndex = 2
-      object BitBtn6: TBitBtn
-        Left = 24
-        Top = 24
-        Width = 100
-        Height = 25
-        Action = actSys_dbBackup
-        Caption = #25968#25454#22791#20221
-        TabOrder = 0
-      end
-      object BitBtn8: TBitBtn
-        Left = 24
-        Top = 64
-        Width = 100
-        Height = 25
-        Action = actSys_dbRestore
-        Caption = #25968#25454#24674#22797
-        TabOrder = 1
-      end
-    end
+  object lbl1: TLabel
+    Left = 48
+    Top = 96
+    Width = 263
+    Height = 29
+    Caption = #26381#21153#22120#27491#22312#36816#34892'....'
+    Font.Charset = GB2312_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -29
+    Font.Name = #23435#20307
+    Font.Style = []
+    ParentFont = False
   end
   object plMain: TPanel
     Left = 0
     Top = 0
-    Width = 492
+    Width = 491
     Height = 41
     Align = alTop
-    TabOrder = 1
+    TabOrder = 0
+    Visible = False
   end
   object StatusBar: TStatusBar
     Left = 0
-    Top = 382
-    Width = 492
+    Top = 288
+    Width = 491
     Height = 19
     Panels = <
       item
@@ -75,6 +54,24 @@ object MainDlg: TMainDlg
       item
         Width = 50
       end>
+  end
+  object btn1: TBitBtn
+    Left = 200
+    Top = 248
+    Width = 100
+    Height = 25
+    Action = actSys_dbBackup
+    Caption = #25968#25454#22791#20221
+    TabOrder = 2
+  end
+  object btn2: TBitBtn
+    Left = 320
+    Top = 248
+    Width = 100
+    Height = 25
+    Action = actSys_dbRestore
+    Caption = #25968#25454#24674#22797
+    TabOrder = 3
   end
   object PopupMenu: TPopupMenu
     AutoHotkeys = maManual
@@ -132,7 +129,7 @@ object MainDlg: TMainDlg
     Top = 7
   end
   object ImageList: TImageList
-    Left = 240
+    Left = 304
     Top = 8
     Bitmap = {
       494C010102000400040010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
