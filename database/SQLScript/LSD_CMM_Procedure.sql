@@ -442,7 +442,7 @@ begin
        @c5,
        @c6,
        @c7,
-        @c5+@c7); 
+       isnull(@c5,0)+isnull(@c7,0)); 
   fetch next from my_cursor into @myUserName, @myUser_ID
 end
 
@@ -450,6 +450,101 @@ close   my_cursor
 deallocate my_cursor
 
 select * from temp_stat
+GO
+
+
+
+/*
+创建: 2008-7-11  作者:龙仕云
+目的: 统计项目的处理情况
+修改：
+编号   时间         修改人             修改内容
+
+*/
+
+CREATE    PROCEDURE pt_StatBugProjectTaskCount
+@StatbeginDate datetime,
+@StatendDate datetime
+
+as
+
+declare @myProName varchar(200)
+declare @myPro_ID int
+declare @c1 int
+declare @c2 int
+declare @c3 int
+
+
+set @c1=0
+set @c2=0
+set @c3=0
+
+
+--建表
+if exists(select 1 from sysobjects where id=object_id('temp_prostat')and type = 'u')
+  drop table temp_prostat
+  
+create table temp_prostat
+  (
+  ZPRONAME varchar(200) ,  --项目名称
+  ZSubmitBugCount  int,  --提交的问题数 c1
+  ZAnswerBugCount int , --处理问题数 c2
+  ZNoAnswerBugCount int  --没有处理的问题数 c3
+)
+
+
+
+--先按表进行遍历
+declare my_cursor cursor
+for
+select a.ZNAME,a.ZID  from TB_BUG_TREE as a order by a.ZID,a.ZSORT
+
+open my_cursor
+fetch next from my_cursor into @myProName,@myPro_ID
+while( @@fetch_status = 0)
+begin
+ 
+-----------------------------------bug----------------------------------------
+
+        
+   /*创建问题*/
+  select @c1= count(a.ZID)   from TB_BUG_ITEM as a   
+  where  a.ZTREE_ID=@myPro_ID and
+             (a.ZOPENEDDATE between  @StatbeginDate and  @StatendDate)
+
+  /*解决问题*/
+  select @c2= count(a.ZID)   from TB_BUG_ITEM as a 
+  where  a.ZTREE_ID=@myPro_ID and a.ZSTATUS=1 and  --1表示修改完成
+              (a.ZOPENEDDATE between  @StatbeginDate and  @StatendDate)
+
+  
+  /*没有和理问题数*/
+  select @c3= count(a.ZID)   from TB_BUG_ITEM as a 
+  where  a.ZTREE_ID=@myPro_ID and a.ZSTATUS<>1 and  --1表示修改完成
+              (a.ZOPENEDDATE between  @StatbeginDate and  @StatendDate)
+
+
+
+	
+  insert into temp_prostat(
+      ZPRONAME ,
+      ZSubmitBugCount,
+      ZAnswerBugCount,
+      ZNoAnswerBugCount 
+     ) 
+  values(
+       @myProName,
+       @c1,
+       @c2,
+       @c3 ); 
+
+  fetch next from my_cursor into @myProName, @myPro_ID
+end
+
+close   my_cursor  
+deallocate my_cursor
+
+select * from temp_prostat
 GO
 
 

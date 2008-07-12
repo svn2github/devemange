@@ -270,7 +270,7 @@ object MainDlg: TMainDlg
     end
     object actMod_Stat: TAction
       Category = #19994#21153
-      Caption = #32479#35745
+      Caption = #32479#35745#27719#24635
       OnExecute = actMod_StatExecute
     end
   end

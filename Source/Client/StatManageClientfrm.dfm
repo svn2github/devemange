@@ -1,35 +1,35 @@
 inherited StatManageClientDlg: TStatManageClientDlg
-  Left = 206
-  Top = 229
-  Width = 758
-  Height = 407
-  Caption = #32479#35745
+  Left = 215
+  Top = 194
+  Width = 918
+  Height = 467
+  Caption = #32479#35745#27719#24635
   OldCreateOrder = True
   PixelsPerInch = 96
   TextHeight = 15
   object pnlTool: TPanel
     Left = 0
     Top = 0
-    Width = 750
+    Width = 910
     Height = 40
     Align = alTop
     TabOrder = 0
     object lbl1: TLabel
-      Left = 24
+      Left = 5
       Top = 16
       Width = 45
       Height = 15
       Caption = #26399#38388#65306
     end
     object lbl2: TLabel
-      Left = 201
+      Left = 174
       Top = 14
       Width = 15
       Height = 15
       Caption = #33267
     end
     object dtp1: TDateTimePicker
-      Left = 65
+      Left = 46
       Top = 11
       Width = 121
       Height = 23
@@ -39,7 +39,7 @@ inherited StatManageClientDlg: TStatManageClientDlg
       TabOrder = 0
     end
     object dtp2: TDateTimePicker
-      Left = 229
+      Left = 199
       Top = 11
       Width = 118
       Height = 23
@@ -49,8 +49,8 @@ inherited StatManageClientDlg: TStatManageClientDlg
       TabOrder = 1
     end
     object btnStat: TBitBtn
-      Left = 378
-      Top = 10
+      Left = 327
+      Top = 9
       Width = 100
       Height = 25
       Action = actStat
@@ -58,28 +58,68 @@ inherited StatManageClientDlg: TStatManageClientDlg
       TabOrder = 2
     end
     object btnExportExcel: TBitBtn
-      Left = 488
-      Top = 10
+      Left = 763
+      Top = 9
       Width = 100
       Height = 25
       Action = actExportExcel
       Caption = #23548#20986#21040'Excel'
       TabOrder = 3
     end
+    object btnUpMother: TBitBtn
+      Left = 437
+      Top = 9
+      Width = 100
+      Height = 25
+      Action = actUpMother
+      Caption = #19978#19968#20010#26376
+      TabOrder = 4
+    end
+    object btnDownMother: TBitBtn
+      Left = 546
+      Top = 9
+      Width = 100
+      Height = 25
+      Action = actDownMother
+      Caption = #19979#19968#20010#26376
+      TabOrder = 5
+    end
+    object btnCurrMother: TBitBtn
+      Left = 655
+      Top = 9
+      Width = 100
+      Height = 25
+      Action = actCurrMother
+      Caption = #24403#21069#26376#20221
+      TabOrder = 6
+    end
   end
-  object dbgrdData: TDBGrid
+  object tbc1: TTabControl
     Left = 0
     Top = 40
-    Width = 750
-    Height = 333
+    Width = 910
+    Height = 393
     Align = alClient
-    DataSource = dsData
     TabOrder = 1
-    TitleFont.Charset = GB2312_CHARSET
-    TitleFont.Color = clWindowText
-    TitleFont.Height = -15
-    TitleFont.Name = #23435#20307
-    TitleFont.Style = []
+    Tabs.Strings = (
+      #25353#22995#21517#32479#35745
+      #25353#39033#30446#32479#35745)
+    TabIndex = 0
+    OnChanging = tbc1Changing
+    object dbgrdData: TDBGrid
+      Left = 4
+      Top = 26
+      Width = 902
+      Height = 363
+      Align = alClient
+      DataSource = dsData
+      TabOrder = 0
+      TitleFont.Charset = GB2312_CHARSET
+      TitleFont.Color = clWindowText
+      TitleFont.Height = -15
+      TitleFont.Name = #23435#20307
+      TitleFont.Style = []
+    end
   end
   object cdsData: TClientDataSet
     Aggregates = <>
@@ -101,6 +141,25 @@ inherited StatManageClientDlg: TStatManageClientDlg
     end
     object actExportExcel: TAction
       Caption = #23548#20986#21040'Excel'
+      OnExecute = actExportExcelExecute
+      OnUpdate = actExportExcelUpdate
     end
+    object actDownMother: TAction
+      Caption = #19979#19968#20010#26376
+      OnExecute = actDownMotherExecute
+    end
+    object actUpMother: TAction
+      Caption = #19978#19968#20010#26376
+      OnExecute = actUpMotherExecute
+    end
+    object actCurrMother: TAction
+      Caption = #24403#21069#26376#20221
+      OnExecute = actCurrMotherExecute
+    end
+  end
+  object dlgSave1: TSaveDialog
+    Filter = 'Excel(*xls)|*.xls'
+    Left = 528
+    Top = 96
   end
 end

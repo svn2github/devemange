@@ -1,6 +1,6 @@
 inherited ProjectManageClientDlg: TProjectManageClientDlg
-  Left = 85
-  Top = 121
+  Left = 157
+  Top = 109
   Width = 1094
   Caption = #39033#30446#31649#29702
   OldCreateOrder = True
@@ -505,7 +505,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
             Left = 0
             Top = 0
             Width = 401
-            Height = 442
+            Height = 402
             Align = alClient
             DataSource = dsTask
             Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
@@ -543,6 +543,57 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
                 Visible = True
               end>
           end
+          object pnlTaskListBottom: TPanel
+            Left = 0
+            Top = 402
+            Width = 401
+            Height = 40
+            Align = alBottom
+            TabOrder = 1
+            object lblPage: TLabel
+              Left = 334
+              Top = 15
+              Width = 56
+              Height = 15
+              Caption = 'lblPage'
+            end
+            object btnTask_FirstPage: TBitBtn
+              Left = 9
+              Top = 10
+              Width = 75
+              Height = 25
+              Action = actTask_FirstPage
+              Caption = #31532#19968#39029
+              TabOrder = 0
+            end
+            object btnTask_UpPage: TBitBtn
+              Left = 89
+              Top = 10
+              Width = 75
+              Height = 25
+              Action = actTask_UpPage
+              Caption = #19978#19968#39029
+              TabOrder = 1
+            end
+            object btnTask_NextPage: TBitBtn
+              Left = 169
+              Top = 10
+              Width = 75
+              Height = 25
+              Action = actTask_NextPage
+              Caption = #19979#19968#39029
+              TabOrder = 2
+            end
+            object btnTask_Lastpage: TBitBtn
+              Left = 251
+              Top = 10
+              Width = 75
+              Height = 25
+              Action = actTask_Lastpage
+              Caption = #26368#21518#19968#39029
+              TabOrder = 3
+            end
+          end
         end
         object plTaskContext: TPanel
           Left = 411
@@ -557,7 +608,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
             Top = 0
             Width = 665
             Height = 442
-            ActivePage = tsUser
+            ActivePage = tsDesign
             Align = alClient
             TabOrder = 0
             TabPosition = tpBottom
@@ -1191,6 +1242,30 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
       Category = #20219#21153#21333
       Caption = #30001#25105#21019#24314#30340
       OnExecute = actTask_CreateBymeExecute
+    end
+    object actTask_FirstPage: TAction
+      Category = #20219#21153#21333
+      Caption = #31532#19968#39029
+      OnExecute = actTask_FirstPageExecute
+      OnUpdate = actTask_FirstPageUpdate
+    end
+    object actTask_NextPage: TAction
+      Category = #20219#21153#21333
+      Caption = #19979#19968#39029
+      OnExecute = actTask_NextPageExecute
+      OnUpdate = actTask_NextPageUpdate
+    end
+    object actTask_UpPage: TAction
+      Category = #20219#21153#21333
+      Caption = #19978#19968#39029
+      OnExecute = actTask_UpPageExecute
+      OnUpdate = actTask_UpPageUpdate
+    end
+    object actTask_Lastpage: TAction
+      Category = #20219#21153#21333
+      Caption = #26368#21518#19968#39029
+      OnExecute = actTask_LastpageExecute
+      OnUpdate = actTask_LastpageUpdate
     end
   end
   object dsProVersion: TDataSource

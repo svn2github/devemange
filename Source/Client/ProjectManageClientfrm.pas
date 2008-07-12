@@ -23,6 +23,14 @@ uses
 
 
 type
+
+  TTaskPageRec = record
+    fCount : integer;
+    fPageindex : integer;
+    fwhere : string;
+  end;
+
+
   TProjectManageClientDlg = class(TBaseChildDlg)
     plonvisible: TPanel;
     plcenter: TPanel;
@@ -170,6 +178,16 @@ type
     DBEdit13: TDBEdit;
     cbEditDesing: TCheckBox;
     btnTask_Save: TBitBtn;
+    pnlTaskListBottom: TPanel;
+    actTask_FirstPage: TAction;
+    actTask_NextPage: TAction;
+    actTask_UpPage: TAction;
+    actTask_Lastpage: TAction;
+    btnTask_FirstPage: TBitBtn;
+    btnTask_UpPage: TBitBtn;
+    btnTask_NextPage: TBitBtn;
+    btnTask_Lastpage: TBitBtn;
+    lblPage: TLabel;
     procedure actPro_AddExecute(Sender: TObject);
     procedure cbEditProItemClick(Sender: TObject);
     procedure actPro_AddUpdate(Sender: TObject);
@@ -225,9 +243,21 @@ type
     procedure actTask_CreateBymeExecute(Sender: TObject);
     procedure dgTaskListDrawColumnCell(Sender: TObject; const Rect: TRect;
       DataCol: Integer; Column: TColumn; State: TGridDrawState);
+    procedure actTask_FirstPageUpdate(Sender: TObject);
+    procedure actTask_FirstPageExecute(Sender: TObject);
+    procedure actTask_LastpageUpdate(Sender: TObject);
+    procedure actTask_LastpageExecute(Sender: TObject);
+    procedure actTask_UpPageUpdate(Sender: TObject);
+    procedure actTask_UpPageExecute(Sender: TObject);
+    procedure actTask_NextPageUpdate(Sender: TObject);
+    procedure actTask_NextPageExecute(Sender: TObject);
   private
     { Private declarations }
+    fTaskPageRec : TTaskPageRec;
+    
     procedure LoadProjectItem();
+    function  GetTaskItemPageCount(APageIndex:integer;AWhereStr:String):integer; //取出页总数
+    procedure LoadTaskItem(APageIndex:integer;Awhere:String); //加载任务单
     function BuildCode_Task():String; //生成任务单号
   public
     procedure initBase; override;
@@ -552,11 +582,9 @@ var
   c,i : integer;
   myField : TFieldDef;
   myb : Boolean;
+  mywherestr : string;
 const
   glSQL  = 'select * from TB_PRO_VERSION where ZPRO_ID=%d Order by ZID desc';
-  glSQL2 = 'select * from TB_PRO_DOCUMENT where ZPRO_ID=%d';
-  glSQL3 = 'select * from TB_TASK where ZPRO_ID=%d and ZPRO_VERSION_ID=%d ' +
-           'Order by ZDATE DESC';
 begin
   //1.项目版本
   if pcProject.ActivePage = tsProjectVer then
@@ -618,6 +646,7 @@ begin
       fLoading := myb;
     end;
   end
+  //任务单
   else if pcProject.ActivePage = tsTask then
   begin
     //权限
@@ -637,101 +666,14 @@ begin
     myb := fLoading;
     fLoading := True;
     try
-      if cdsTemp.Active then
-        cdsTemp.Close;
-      cdsTemp.Data := ClientSystem.fDbOpr.ReadDataSet(PChar(
-          Format(glSQL3,[
-            cdsProjectItem.FieldByName('ZID').Asinteger,
-            cdsProVersion.FieldByName('ZID').AsInteger])));
+      mywherestr := format('ZPRO_ID=%d and ZPRO_VERSION_ID=%d',
+        [cdsProjectItem.FieldByName('ZID').Asinteger,
+        cdsProVersion.FieldByName('ZID').AsInteger]);
 
-
-      if cdsTask.FieldDefs.Count = 0 then
-      begin
-        cdsTask.Fields.Clear;
-        cdsTask.FieldDefs.Assign(cdsTemp.FieldDefs);
-        for i:=0 to cdsTask.FieldDefs.Count -1 do
-          cdsTask.FieldDefs[i].CreateField(cdsTask);
-
-        with cdsTask.FieldDefs do
-        begin
-          myField := AddFieldDef;
-          myField.Name := 'ZNO';
-          myField.DataType := ftInteger;
-          with myField.CreateField(cdsTask) do FieldKind := fkCalculated;
-
-          myField := AddFieldDef;
-          myField.Name := 'ZISNEW';   //是否是新增
-          myField.DataType := ftBoolean;
-          myField.CreateField(cdsTask);
-
-          myField := AddFieldDef;
-          myField.Name := 'ZSTATUSNAME';  //状态名称
-          myField.DataType := ftString;
-          with myField.CreateField(cdsTask) do
-          begin
-            FieldKind := fkLookup;
-            KeyFields         := 'ZSTATUS';
-            LookupDataSet     := cdsStatus;
-            LookupKeyFields   := 'ZID';
-            LookupResultField := 'ZNAME';
-          end;
-
-          myField := AddFieldDef;
-          myField.Name := 'ZTYPENAME';    //类型名称
-          myField.DataType := ftString;
-          myfield.Size := 50;
-          with myfield.CreateField(cdsTask) do
-          begin
-            FieldKind         := fkLookup;
-            KeyFields         := 'ZTYPE';
-            LookupDataSet     := cdsTaskType;
-            LookupKeyFields   := 'ZID';
-            LookupResultField := 'ZNAME';
-          end;
-
-          myField := AddFieldDef;
-          myField.Name := 'ZUSERNAME';
-          myField.DataType := ftString;
-          myfield.Size := 50;
-          with myfield.CreateField(cdsTask) do
-          begin
-            FieldKind         := fkLookup;
-            KeyFields         := 'ZUSER_ID';
-            LookupDataSet     := dm.cdsUser;
-            LookupKeyFields   := 'ZID';
-            LookupResultField := 'ZNAME';
-          end;
-
-        end;
-        cdsTask.CreateDataSet;
-      end//end count
-      else begin
-        cdsTask.DisableControls;
-        try
-          while not cdsTask.IsEmpty do cdsTask.Delete;
-        finally
-          cdsTask.EnableControls;
-        end;
-      end;
-
-      //生成数据
-      cdsTask.DisableControls;
-      try
-        cdsTemp.First;
-        while not cdsTemp.Eof do
-        begin
-          cdsTask.Append;
-          cdsTask.FieldByName('ZISNEW').AsBoolean := False;
-          for i:=0 to cdsTemp.FieldDefs.Count -1 do
-            cdsTask.FieldByName(cdsTemp.FieldDefs[i].Name).AsVariant :=
-              cdsTemp.FieldByName(cdsTemp.FieldDefs[i].Name).AsVariant;
-          cdsTask.Post;
-          cdsTemp.Next;
-        end;
-        cdsTask.First;
-      finally
-        cdsTask.EnableControls;
-      end;
+      fTaskPageRec.fCount := GetTaskItemPageCount(1,mywherestr);
+      fTaskPageRec.fPageindex := 1;
+      fTaskPageRec.fwhere :=mywherestr;
+      LoadTaskItem(1,mywherestr);
 
     finally
       fLoading := myb;
@@ -1065,7 +1007,7 @@ begin
   DataSet.FieldByName('ZPRO_VERSION_ID').AsInteger :=
     cdsProVersion.FieldByName('ZID').AsInteger;
   DataSet.FieldByName('ZPALNDAY').AsInteger := 0;
-  DataSet.FieldByName('ZDESIGN').AsString := '#设计说明';
+  DataSet.FieldByName('ZDESIGN').AsString   := '#设计说明';
   DataSet.FieldByName('ZTESTCASE').AsString := '#测试用例';
   DataSet.FieldByName('ZISNEW').AsBoolean := True;
 end;
@@ -1397,45 +1339,20 @@ end;
 
 procedure TProjectManageClientDlg.actTask_ToMeExecute(Sender: TObject);
 var
-  i : integer;
-  mySQL : String;
-  mycds : TClientDataSet;
   myb : Boolean;
-const
-  glSQL = 'select a.* from TB_TASK as a ' +
-          'left join  TB_TASK_USER as b on a.ZCODE=b.ZTASK_CODE ' +
-          'where b.ZCANCEL=0 and b.ZUSER_ID=%d Order by ZDATE DESC';
 begin
-  //
-  cdsTask.DisableControls;
-  try
-    while not cdsTask.IsEmpty do cdsTask.Delete;
-  finally
-    cdsTask.EnableControls;
-  end;
   //生成数据
   myb := fLoading;
   fLoading := True;
-  mycds := TClientDataSet.Create(nil);
   cdsTask.DisableControls;
   try
-    mySQL := format(glSQL,[ClientSystem.fEditer_id]);
-    mycds.Data := ClientSystem.fDbOpr.ReadDataSet(PChar(mySQL));
-    mycds.First;
-    while not mycds.Eof do
-    begin
-      cdsTask.Append;
-      cdsTask.FieldByName('ZISNEW').AsBoolean := False;
-      for i:=0 to mycds.FieldDefs.Count -1 do
-        cdsTask.FieldByName(mycds.FieldDefs[i].Name).AsVariant :=
-          mycds.FieldByName(mycds.FieldDefs[i].Name).AsVariant;
-      cdsTask.Post;
-      mycds.Next;
-    end;
-    cdsTask.First;
+    fTaskPageRec.fwhere := format('ZCODE in (Select  ZTASK_CODE from TB_TASK_USER as b ' +
+        ' where ZCODE=b.ZTASK_CODE and b.ZCANCEL=0 and b.ZUSER_ID=%d)',[ClientSystem.fEditer_id]);
+    fTaskPageRec.fPageindex := 1;
+    fTaskPageRec.fCount := Self.GetTaskItemPageCount(1,fTaskPageRec.fwhere);
+    LoadTaskItem(1,fTaskpageRec.fwhere);
   finally
     cdsTask.EnableControls;
-    mycds.free;
     fLoading := myb;
   end;
 end;
@@ -1674,43 +1591,21 @@ end;
 procedure TProjectManageClientDlg.actTask_CreateBymeExecute(
   Sender: TObject);
 var
-  i : integer;
-  mySQL : String;
-  mycds : TClientDataSet;
   myb : Boolean;
-const
-  glSQL = 'select * from TB_TASK where ZUSER_ID=%d ';
 begin
-  //
-  cdsTask.DisableControls;
-  try
-    while not cdsTask.IsEmpty do cdsTask.Delete;
-  finally
-    cdsTask.EnableControls;
-  end;
   //生成数据
   myb := fLoading;
   fLoading := True;
-  mycds := TClientDataSet.Create(nil);
   cdsTask.DisableControls;
   try
-    mySQL := format(glSQL,[ClientSystem.fEditer_id]);
-    mycds.Data := ClientSystem.fDbOpr.ReadDataSet(PChar(mySQL));
-    mycds.First;
-    while not mycds.Eof do
-    begin
-      cdsTask.Append;
-      cdsTask.FieldByName('ZISNEW').AsBoolean := False;
-      for i:=0 to mycds.FieldDefs.Count -1 do
-        cdsTask.FieldByName(mycds.FieldDefs[i].Name).AsVariant :=
-          mycds.FieldByName(mycds.FieldDefs[i].Name).AsVariant;
-      cdsTask.Post;
-      mycds.Next;
-    end;
+    fTaskPageRec.fwhere := format('ZUSER_ID=%d',[ClientSystem.fEditer_id]);
+    fTaskPageRec.fPageindex := 1;
+    fTaskPageRec.fCount := Self.GetTaskItemPageCount(1,fTaskPageRec.fwhere);
+    LoadTaskItem(1,fTaskPageRec.fwhere);
+
     cdsTask.First;
   finally
     cdsTask.EnableControls;
-    mycds.free;
     fLoading := myb;
   end;
 end;
@@ -1724,6 +1619,192 @@ begin
     dgTaskList.Canvas.Font.Color := clblue;
   end;
   dgTaskList.DefaultDrawColumnCell(Rect,DataCol,Column,State);
+end;
+
+procedure TProjectManageClientDlg.LoadTaskItem(APageIndex: integer;
+  Awhere: String);
+var
+  mySQL  : string;
+  i : integer;
+  myfield : TFieldDef;
+  myb : Boolean;
+const
+    glSQL = 'exec pt_SplitPage ''TB_TASK'',' +
+          '''ZCODE,ZTYPE,ZNAME,ZUSER_ID,ZPRO_ID,ZPRO_VERSION_ID,ZDESIGN,ZTESTCASE,' +
+          'ZSTATUS,ZDATE,ZPALNDAY,ZBEGINDATE,ZDAY,ZSUCCESSDATE,ZCLOSEDATE'', ' +
+          '''%s'',20,%d,%d,1,''%s''';
+begin
+
+  mySQL := format(glSQL,[
+      'ZDATE',
+      APageIndex,
+      0,Awhere]);
+
+  myb := fLoading;
+  fLoading := True;
+  cdsTask.DisableControls;
+  ShowProgress('读取数据...',0);
+  try
+    lblPage.Caption := format('%d/%d',[fTaskPageRec.fPageindex,
+      fTaskPageRec.fCount]);
+    if cdsTemp.Active then  cdsTemp.Close;
+      cdsTemp.Data := ClientSystem.fDbOpr.ReadDataSet(PChar(mySQL));
+    if cdsTask.FieldDefs.Count = 0 then
+    begin
+      cdsTask.Fields.Clear;
+      cdsTask.FieldDefs.Assign(cdsTemp.FieldDefs);
+      for i:=0 to cdsTask.FieldDefs.Count -1 do
+        cdsTask.FieldDefs[i].CreateField(cdsTask);
+
+      with cdsTask.FieldDefs do
+      begin
+        myField := AddFieldDef;
+        myField.Name := 'ZNO';
+        myField.DataType := ftInteger;
+        with myField.CreateField(cdsTask) do FieldKind := fkCalculated;
+
+        myField := AddFieldDef;
+        myField.Name := 'ZISNEW';   //是否是新增
+        myField.DataType := ftBoolean;
+        myField.CreateField(cdsTask);
+
+        myField := AddFieldDef;
+        myField.Name := 'ZSTATUSNAME';  //状态名称
+        myField.DataType := ftString;
+        with myField.CreateField(cdsTask) do
+        begin
+          FieldKind := fkLookup;
+          KeyFields         := 'ZSTATUS';
+          LookupDataSet     := cdsStatus;
+          LookupKeyFields   := 'ZID';
+          LookupResultField := 'ZNAME';
+        end;
+
+        myField := AddFieldDef;
+        myField.Name := 'ZTYPENAME';    //类型名称
+        myField.DataType := ftString;
+        myfield.Size := 50;
+        with myfield.CreateField(cdsTask) do
+        begin
+          FieldKind         := fkLookup;
+          KeyFields         := 'ZTYPE';
+          LookupDataSet     := cdsTaskType;
+          LookupKeyFields   := 'ZID';
+          LookupResultField := 'ZNAME';
+        end;
+
+        myField := AddFieldDef;
+        myField.Name := 'ZUSERNAME';
+        myField.DataType := ftString;
+        myfield.Size := 50;
+        with myfield.CreateField(cdsTask) do
+        begin
+          FieldKind         := fkLookup;
+          KeyFields         := 'ZUSER_ID';
+          LookupDataSet     := dm.cdsUser;
+          LookupKeyFields   := 'ZID';
+          LookupResultField := 'ZNAME';
+        end;
+
+      end;
+      cdsTask.CreateDataSet;
+    end//end count
+    else begin
+      while not cdsTask.IsEmpty do cdsTask.Delete;
+    end;
+
+    //生成数据
+    cdsTemp.First;
+    while not cdsTemp.Eof do
+    begin
+      cdsTask.Append;
+      cdsTask.FieldByName('ZISNEW').AsBoolean := False;
+      for i:=0 to cdsTemp.FieldDefs.Count -1 do
+        cdsTask.FieldByName(cdsTemp.FieldDefs[i].Name).AsVariant :=
+          cdsTemp.FieldByName(cdsTemp.FieldDefs[i].Name).AsVariant;
+      cdsTask.Post;
+      cdsTemp.Next;
+    end;
+    cdsTask.First;
+
+  finally
+    cdsTask.EnableControls;
+    fLoading := myb;
+    HideProgress;
+  end;
+end;
+
+function TProjectManageClientDlg.GetTaskItemPageCount(APageIndex: integer;
+  AWhereStr: String): integer;
+var
+  mySQL  : string;
+  myRowCount : integer;
+  mywhere : string;
+const
+  glSQL = 'exec pt_SplitPage ''TB_TASK'',' +
+          '''ZCODE'', ''%s'',20,%d,%d,1,''%s''';
+  //               页码,以总数=1, 条件where
+begin
+  mywhere := AWhereStr;
+  mySQL := format(glSQL,[
+      '',
+      APageIndex,
+      1, //不是取总数
+      mywhere]);
+  myRowCount := ClientSystem.fDbOpr.ReadInt(PChar(mySQL));
+  Result := myRowCount div 20;
+  if (myRowCount mod 20) > 0 then
+    Result := Result + 1;
+end;
+
+
+procedure TProjectManageClientDlg.actTask_FirstPageUpdate(Sender: TObject);
+begin
+  (Sender as TAction).Enabled := not fLoading
+    and (fTaskPageRec.fPageindex<>1);
+end;
+
+procedure TProjectManageClientDlg.actTask_FirstPageExecute(
+  Sender: TObject);
+begin
+  fTaskPageRec.fPageindex := 1;
+  LoadTaskItem(1,fTaskPageRec.fwhere);
+end;
+
+procedure TProjectManageClientDlg.actTask_LastpageUpdate(Sender: TObject);
+begin
+  (Sender as TAction).Enabled := not fLoading
+  and (fTaskPageRec.fPageindex<>fTaskPageRec.fCount);
+end;
+
+procedure TProjectManageClientDlg.actTask_LastpageExecute(Sender: TObject);
+begin
+  fTaskPageRec.fPageindex := fTaskPageRec.fCount;
+  LoadTaskItem(fTaskPageRec.fCount,fTaskPageRec.fwhere);
+end;
+
+procedure TProjectManageClientDlg.actTask_UpPageUpdate(Sender: TObject);
+begin
+  (sender as TAction).Enabled := not fLoading
+  and (fTaskPageRec.fPageindex>1);
+end;
+
+procedure TProjectManageClientDlg.actTask_UpPageExecute(Sender: TObject);
+begin
+  fTaskPageRec.fPageindex := fTaskPageRec.fPageindex-1;
+  LoadTaskItem(fTaskPageRec.fPageindex,fTaskPageRec.fwhere);
+end;
+
+procedure TProjectManageClientDlg.actTask_NextPageUpdate(Sender: TObject);
+begin
+  (sender as TAction).Enabled := not fLoading
+  and (fTaskPageRec.fPageindex<fTaskPageRec.fCount);
+end;
+
+procedure TProjectManageClientDlg.actTask_NextPageExecute(Sender: TObject);
+begin
+  fTaskPageRec.fPageindex := fTaskPageRec.fPageindex+1;
+  LoadTaskItem(fTaskPageRec.fPageindex,fTaskPageRec.fwhere);
 end;
 
 end.
