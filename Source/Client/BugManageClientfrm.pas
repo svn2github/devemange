@@ -11,8 +11,8 @@ uses
 
 type
 
-  TBugColumns = (bcCode,bcTitle,bcType,bcWhoBuild,bcBuildDate,
-    bcAssingeto,bcwhoReso,bcResoDate);
+  TBugColumns = (bcCode,bcTitle,bcWhoBuild,bcAssingeto,bcwhoReso,bcType,bcBuildDate
+    ,bcResoDate);
 
   TPageType = (ptDir,ptMe); //按项目分页,按由我创建分页或指给我分页
 
@@ -1756,19 +1756,24 @@ var
   myPageIndex:integer;
   mywhere : String;
 begin
-  fPageType.fType := ptMe;
-  fPageType.fWhereStr := 'ZOPENEDBY=%d';
-  fPageType.fIndex := 1;
-  fPageType.fName := '由我创建';
-  myPageIndex := 1;
-  mywhere := format(fPageType.fWhereStr{'ZOPENEDBY=%d'},[ClientSystem.fEditer_id]);
-  fPageType.fIndexCount := GetBugItemPageCount(myPageindex,myWhere);
-  LoadBugItem(myPageindex,myWhere);
-  lbPageCount.Caption := format('%d/%d',[
-    fPageType.fIndex,
-    fPageType.fIndexCount]);
-  lbProjectName.Caption := format('%s  =>第%d共%d页',[
-    fPageType.fName,fPageType.fIndex,fPageType.fIndexCount]);
+  ShowProgress('读取数据...',0);
+  try
+    fPageType.fType := ptMe;
+    fPageType.fWhereStr := 'ZOPENEDBY=%d';
+    fPageType.fIndex := 1;
+    fPageType.fName := '由我创建';
+    myPageIndex := 1;
+    mywhere := format(fPageType.fWhereStr{'ZOPENEDBY=%d'},[ClientSystem.fEditer_id]);
+    fPageType.fIndexCount := GetBugItemPageCount(myPageindex,myWhere);
+    LoadBugItem(myPageindex,myWhere);
+    lbPageCount.Caption := format('%d/%d',[
+      fPageType.fIndex,
+      fPageType.fIndexCount]);
+    lbProjectName.Caption := format('%s  =>第%d共%d页',[
+      fPageType.fName,fPageType.fIndex,fPageType.fIndexCount]);
+  finally
+    Self.HideProgress;
+  end;
 end;
 
 procedure TBugManageDlg.actBug_AssingToMeExecute(Sender: TObject);
@@ -1776,19 +1781,24 @@ var
   myPageIndex:integer;
   mywhere : String;
 begin
-  fPageType.fType := ptMe;
-  fPageType.fWhereStr := 'ZASSIGNEDTO=%d';
-  fPageType.fName := '指派给我';
-  fPageType.fIndex := 1;
-  myPageIndex := 1;
-  mywhere := format(fPageType.fWhereStr{'ZASSIGNEDTO=%d'},[ClientSystem.fEditer_id]);
-  fPageType.fIndexCount := GetBugItemPageCount(myPageindex,myWhere);
-  LoadBugItem(myPageindex,myWhere);
-  lbPageCount.Caption := format('%d/%d',[
-    fPageType.fIndex,
-    fPageType.fIndexCount]);
-  lbProjectName.Caption := format('%s  =>第%d共%d页',[
-    fPageType.fName,fPageType.fIndex,fPageType.fIndexCount]);
+  ShowProgress('读取数据...',0);
+  try
+    fPageType.fType := ptMe;
+    fPageType.fWhereStr := 'ZASSIGNEDTO=%d';
+    fPageType.fName := '指派给我';
+    fPageType.fIndex := 1;
+    myPageIndex := 1;
+    mywhere := format(fPageType.fWhereStr{'ZASSIGNEDTO=%d'},[ClientSystem.fEditer_id]);
+    fPageType.fIndexCount := GetBugItemPageCount(myPageindex,myWhere);
+    LoadBugItem(myPageindex,myWhere);
+    lbPageCount.Caption := format('%d/%d',[
+      fPageType.fIndex,
+      fPageType.fIndexCount]);
+    lbProjectName.Caption := format('%s  =>第%d共%d页',[
+      fPageType.fName,fPageType.fIndex,fPageType.fIndexCount]);
+  finally
+    Self.HideProgress;
+  end;
 end;
 
 procedure TBugManageDlg.actBug_ResoMeExecute(Sender: TObject);
@@ -1796,20 +1806,25 @@ var
   myPageIndex:integer;
   mywhere : String;
 begin
-  fPageType.fType := ptMe;
-  fPageType.fWhereStr := 'ZRESOLVEDBY=%d';
-  fPageType.fIndex := 1;
-  fPageType.fName := '由我解决';
+  ShowProgress('读取数据...',0);
+  try
+    fPageType.fType := ptMe;
+    fPageType.fWhereStr := 'ZRESOLVEDBY=%d';
+    fPageType.fIndex := 1;
+    fPageType.fName := '由我解决';
 
-  myPageIndex := 1;
-  mywhere := format(fPageType.fWhereStr{'ZRESOLVEDBY=%d'},[ClientSystem.fEditer_id]);
-  fPageType.fIndexCount:= GetBugItemPageCount(myPageindex,myWhere);
-  LoadBugItem(myPageindex,myWhere);
-  lbPageCount.Caption := format('%d/%d',[
-    fPageType.fIndex,
-    fPageType.fIndexCount]);
-  lbProjectName.Caption := format('%s  =>第%d共%d页',[
-    fPageType.fName,fPageType.fIndex,fPageType.fIndexCount]);
+    myPageIndex := 1;
+    mywhere := format(fPageType.fWhereStr{'ZRESOLVEDBY=%d'},[ClientSystem.fEditer_id]);
+    fPageType.fIndexCount:= GetBugItemPageCount(myPageindex,myWhere);
+    LoadBugItem(myPageindex,myWhere);
+    lbPageCount.Caption := format('%d/%d',[
+      fPageType.fIndex,
+      fPageType.fIndexCount]);
+    lbProjectName.Caption := format('%s  =>第%d共%d页',[
+      fPageType.fName,fPageType.fIndex,fPageType.fIndexCount]);
+  finally
+    Self.HideProgress;
+  end;
 end;
 
 function TBugManageDlg.UpBugFile(APro_ID:integer;AFileName: String;
@@ -1863,29 +1878,34 @@ var
   myPageindex : integer;
   mywhere : String;
 begin
-  if fPageType.fType = ptMe then
-  begin
-    myPageindex := fPageType.fIndex;
-    mywhere := Format(fPageType.fWhereStr,[ClientSystem.fEditer_id]);
-    fPageType.fIndexCount := GetBugItemPageCount(myPageindex,myWhere);
-    LoadBugItem(myPageindex,myWhere);
-    lbPageCount.Caption := format('%d/%d',[
-      fPageType.fIndex,
-      fPageType.fIndexCount]);
-    lbProjectName.Caption := format('%s  =>第%d共%d页',[
-      fPageType.fName,fPageType.fIndex,fPageType.fIndexCount]);
-  end
-  else begin
-    myBugData := tvProject.Selected.data;
-    myPageIndex := myBugData^.fPageIndex;
-    mywhere := 'ZTREE_ID=' + inttostr(myBugData^.fID);
-    myBugData^.fPageCount := GetBugItemPageCount(myPageindex,myWhere);
-    LoadBugItem(myPageindex,myWhere);
-    lbPageCount.Caption := format('%d/%d',[
-      myBugData^.fPageIndex,
-      myBugData^.fPageCount]);
-    lbProjectName.Caption := format('%s  =>第%d共%d页',[
-      myBugData^.fName,myBugData^.fPageIndex,myBugData^.fPageCount]);
+  ShowProgress('读取数据...',0);
+  try
+    if fPageType.fType = ptMe then
+    begin
+      myPageindex := fPageType.fIndex;
+      mywhere := Format(fPageType.fWhereStr,[ClientSystem.fEditer_id]);
+      fPageType.fIndexCount := GetBugItemPageCount(myPageindex,myWhere);
+      LoadBugItem(myPageindex,myWhere);
+      lbPageCount.Caption := format('%d/%d',[
+        fPageType.fIndex,
+        fPageType.fIndexCount]);
+      lbProjectName.Caption := format('%s  =>第%d共%d页',[
+        fPageType.fName,fPageType.fIndex,fPageType.fIndexCount]);
+    end
+    else begin
+      myBugData := tvProject.Selected.data;
+      myPageIndex := myBugData^.fPageIndex;
+      mywhere := 'ZTREE_ID=' + inttostr(myBugData^.fID);
+      myBugData^.fPageCount := GetBugItemPageCount(myPageindex,myWhere);
+      LoadBugItem(myPageindex,myWhere);
+      lbPageCount.Caption := format('%d/%d',[
+        myBugData^.fPageIndex,
+        myBugData^.fPageCount]);
+      lbProjectName.Caption := format('%s  =>第%d共%d页',[
+        myBugData^.fName,myBugData^.fPageIndex,myBugData^.fPageCount]);
+    end;
+  finally
+    Self.HideProgress;
   end;
 end;
 
@@ -1987,7 +2007,7 @@ var
   myPageIndex:integer;
   mywhere : String;
 const
-  glSQL  = 'select ZID,ZNAME from TB_BUG_TREE Order by ZSORT';
+  glSQL  = 'select ZID,ZNAME,ZPRO_ID from TB_BUG_TREE Order by ZSORT';
 begin
   //
   //  注意每个模块是有权限的,不是每个人都可以有权限
@@ -2012,7 +2032,8 @@ begin
         end;
 
         cbbModule.Items.Add(cdstemp.FieldByName('ZNAME').AsString);
-        cbbModuleID.Items.Add(cdstemp.FieldByName('ZID').AsString);
+        cbbModuleID.Items.Add(cdstemp.FieldByName('ZPRO_ID').AsString);
+        cbbTreeID.Items.Add(cdstemp.FieldByName('ZID').AsString);
         cdstemp.Next;
       end;
       dtpAmod.DateTime   := now();
@@ -2025,19 +2046,27 @@ begin
     edtCode.SelectAll;
     if ShowModal=mrOK then
     begin
-      mywhere := GetwhereStr();
-      fPageType.fType := ptMe;
-      fPageType.fWhereStr := mywhere;
-      fPageType.fIndex := 1;
-      fPageType.fName := '高级查询';
-      myPageIndex := 1;
-      fPageType.fIndexCount := GetBugItemPageCount(myPageindex,myWhere);
-      LoadBugItem(myPageindex,myWhere);
-      lbPageCount.Caption := format('%d/%d',[
-        fPageType.fIndex,
-        fPageType.fIndexCount]);
-      lbProjectName.Caption := format('%s  =>第%d共%d页',[
-      fPageType.fName,fPageType.fIndex,fPageType.fIndexCount]);
+      fHighQuery.Hide;
+      Application.ProcessMessages;
+      ShowProgress('读取数据...',0);
+      try
+
+        mywhere := GetwhereStr();
+        fPageType.fType := ptMe;
+        fPageType.fWhereStr := mywhere;
+        fPageType.fIndex := 1;
+        fPageType.fName := '高级查询';
+        myPageIndex := 1;
+        fPageType.fIndexCount := GetBugItemPageCount(myPageindex,myWhere);
+        LoadBugItem(myPageindex,myWhere);
+        lbPageCount.Caption := format('%d/%d',[
+          fPageType.fIndex,
+          fPageType.fIndexCount]);
+        lbProjectName.Caption := format('%s  =>第%d共%d页',[
+        fPageType.fName,fPageType.fIndex,fPageType.fIndexCount]);
+      finally
+        HideProgress;
+      end;
     end;
 
   end;

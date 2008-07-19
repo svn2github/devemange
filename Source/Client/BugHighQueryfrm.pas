@@ -32,12 +32,14 @@ type
     dblkcbbBugtype: TDBLookupComboBox;
     chkAmideBugVer: TCheckBox;
     dblkcbbAmdieVer: TDBLookupComboBox;
-    btnGetAmdieVer: TBitBtn;
     cdsAmdieVer: TClientDataSet;
     dsAmdieVer: TDataSource;
     cbbModuleID: TComboBox;
     chkCode: TCheckBox;
     edtCode: TEdit;
+    chkSelectAll: TCheckBox;
+    btnAll: TBitBtn;
+    cbbTreeID: TComboBox;
     procedure chkmoduleClick(Sender: TObject);
     procedure btntodayClick(Sender: TObject);
     procedure btntodayBugClick(Sender: TObject);
@@ -45,8 +47,9 @@ type
     procedure btnyesterdaybugClick(Sender: TObject);
     procedure btngetvesionClick(Sender: TObject);
     procedure cbbModuleChange(Sender: TObject);
-    procedure btnGetAmdieVerClick(Sender: TObject);
     procedure edtCodeChange(Sender: TObject);
+    procedure chkSelectAllClick(Sender: TObject);
+    procedure btnAllClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -104,6 +107,7 @@ begin
     cdsProject.Tag := strtoint(cbbModuleID.Items[cbbModule.ItemIndex]);
     mySQL := format(glSQL,[strtoint(cbbModuleID.Items[cbbModule.ItemIndex])]);
     cdsProject.Data := ClientSystem.fDbOpr.ReadDataSet(PChar(mySQL));
+    cdsAmdieVer.Data := cdsProject.Data;
   end;
 end;
 
@@ -130,15 +134,15 @@ begin
   mystr := '';
   if chkmodule.Checked then
   begin
-    mystr := format('ZTREE_ID=%s',[cbbModuleID.Items[cbbModule.ItemIndex]]);
+    mystr := format('ZTREE_ID=%s',[cbbTreeID.Items[cbbModule.ItemIndex]]);
   end
   else begin
     for i:=0 to cbbModule.Items.Count -1 do
     begin
       if mystr = '' then
-        mystr := format('ZTREE_ID=%s',[cbbModuleID.Items[i]])
+        mystr := format('ZTREE_ID=%s',[cbbTreeID.Items[i]])
       else
-        mystr := mystr + ' or ' +  format('ZTREE_ID=%s',[cbbModuleID.Items[i]]);
+        mystr := mystr + ' or ' +  format('ZTREE_ID=%s',[cbbTreeID.Items[i]]);
     end;
   end;
 
@@ -191,24 +195,35 @@ begin
 
 end;
 
-procedure TBugHighQueryDlg.btnGetAmdieVerClick(Sender: TObject);
-var
-  mySQL :  String;
-const
-  glSQL  = 'select ZID,ZVER from TB_PRO_VERSION where ZPRO_ID=%d Order by ZID DESC';
-begin
-  if cbbModule.ItemIndex < 0 then Exit;
-  if cdsAmdieVer.Tag <> strtoint(cbbModuleID.Items[cbbModule.ItemIndex]) then
-  begin
-    cdsAmdieVer.Tag := strtoint(cbbModuleID.Items[cbbModule.ItemIndex]);
-    mySQL := format(glSQL,[strtoint(cbbModuleID.Items[cbbModule.ItemIndex])]);
-    cdsAmdieVer.Data := ClientSystem.fDbOpr.ReadDataSet(PChar(mySQL));
-  end;
-end;
-
 procedure TBugHighQueryDlg.edtCodeChange(Sender: TObject);
 begin
   chkCode.Checked := edtCode.Text <> '';
+end;
+
+procedure TBugHighQueryDlg.chkSelectAllClick(Sender: TObject);
+begin
+  //
+  chkCode.Checked := chkSelectAll.Checked;
+  chkmodule.Checked := chkSelectAll.Checked;
+  chkVersion.Checked := chkSelectAll.Checked;
+  chkAmideBugVer.Checked := chkSelectAll.Checked;
+  chktodayAmind.Checked := chkSelectAll.Checked;
+  chktodayBug.Checked := chkSelectAll.Checked;
+  chkBugType.Checked := chkSelectAll.Checked;
+
+end;
+
+procedure TBugHighQueryDlg.btnAllClick(Sender: TObject);
+begin
+  chkCode.Checked        := False;
+  chkmodule.Checked      := False;
+  chkVersion.Checked     := False;
+  chkAmideBugVer.Checked := False;
+  chktodayAmind.Checked  := False;
+  chktodayBug.Checked    := False;
+  chkBugType.Checked     := False;
+  ModalResult := mrOK;
+
 end;
 
 end.

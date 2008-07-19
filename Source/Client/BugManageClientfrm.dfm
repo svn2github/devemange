@@ -1,7 +1,7 @@
 inherited BugManageDlg: TBugManageDlg
-  Left = 114
-  Top = 116
-  Width = 1036
+  Left = 28
+  Top = 201
+  Width = 1171
   Height = 692
   Caption = #38169#35823#31649#29702
   OldCreateOrder = True
@@ -10,7 +10,7 @@ inherited BugManageDlg: TBugManageDlg
   object plCenter: TPanel
     Left = 0
     Top = 95
-    Width = 1028
+    Width = 1163
     Height = 563
     Align = alClient
     BevelOuter = bvNone
@@ -18,7 +18,7 @@ inherited BugManageDlg: TBugManageDlg
     object pcBug: TPageControl
       Left = 0
       Top = 0
-      Width = 1028
+      Width = 1163
       Height = 563
       ActivePage = tsBugItem
       Align = alClient
@@ -53,7 +53,7 @@ inherited BugManageDlg: TBugManageDlg
         object plBugList: TPanel
           Left = 199
           Top = 0
-          Width = 821
+          Width = 956
           Height = 533
           Align = alClient
           BevelOuter = bvNone
@@ -62,7 +62,7 @@ inherited BugManageDlg: TBugManageDlg
           object lbProjectName: TLabel
             Left = 0
             Top = 40
-            Width = 821
+            Width = 956
             Height = 15
             Align = alTop
             Caption = 'lbProjectName'
@@ -78,7 +78,7 @@ inherited BugManageDlg: TBugManageDlg
           object dgBugItem: TDBGrid
             Left = 0
             Top = 55
-            Width = 821
+            Width = 956
             Height = 438
             Align = alClient
             DataSource = dsBugItem
@@ -97,6 +97,7 @@ inherited BugManageDlg: TBugManageDlg
                 FieldName = 'ZID'
                 Title.Alignment = taCenter
                 Title.Caption = #32534#21495
+                Width = 65
                 Visible = True
               end
               item
@@ -104,15 +105,7 @@ inherited BugManageDlg: TBugManageDlg
                 FieldName = 'ZTITLE'
                 Title.Alignment = taCenter
                 Title.Caption = #38382#39064
-                Width = 300
-                Visible = True
-              end
-              item
-                Expanded = False
-                FieldName = 'ZBUGTYPE'
-                Title.Alignment = taCenter
-                Title.Caption = #31867#22411
-                Width = 80
+                Width = 500
                 Visible = True
               end
               item
@@ -120,6 +113,30 @@ inherited BugManageDlg: TBugManageDlg
                 FieldName = 'ZOPENEDNAME'
                 Title.Alignment = taCenter
                 Title.Caption = #30001#35841#21019#24314
+                Width = 70
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'ZASSIGNEDNAME'
+                Title.Alignment = taCenter
+                Title.Caption = #25351#27966#32473
+                Width = 70
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'ZRESOLVEDNAME'
+                Title.Alignment = taCenter
+                Title.Caption = #30001#35841#35299#20915
+                Width = 70
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'ZRESOLUTIONNAME'
+                Title.Alignment = taCenter
+                Title.Caption = #35299#20915#26041#26696
                 Width = 80
                 Visible = True
               end
@@ -133,26 +150,10 @@ inherited BugManageDlg: TBugManageDlg
               end
               item
                 Expanded = False
-                FieldName = 'ZASSIGNEDNAME'
+                FieldName = 'ZBUGTYPE'
                 Title.Alignment = taCenter
-                Title.Caption = #25351#27966#32473
+                Title.Caption = #38382#39064#31867#22411
                 Width = 80
-                Visible = True
-              end
-              item
-                Expanded = False
-                FieldName = 'ZRESOLVEDNAME'
-                Title.Alignment = taCenter
-                Title.Caption = #30001#35841#35299#20915
-                Width = 80
-                Visible = True
-              end
-              item
-                Expanded = False
-                FieldName = 'ZRESOLUTIONNAME'
-                Title.Alignment = taCenter
-                Title.Caption = #35299#20915#26041#26696
-                Width = 100
                 Visible = True
               end
               item
@@ -167,7 +168,7 @@ inherited BugManageDlg: TBugManageDlg
           object plBugTop: TPanel
             Left = 0
             Top = 0
-            Width = 821
+            Width = 956
             Height = 40
             Align = alTop
             BevelOuter = bvNone
@@ -316,7 +317,7 @@ inherited BugManageDlg: TBugManageDlg
           object plBugItemBottom: TPanel
             Left = 0
             Top = 493
-            Width = 821
+            Width = 956
             Height = 40
             Align = alBottom
             BevelOuter = bvNone
@@ -388,7 +389,7 @@ inherited BugManageDlg: TBugManageDlg
         object Splitter2: TSplitter
           Left = 0
           Top = 218
-          Width = 1020
+          Width = 1155
           Height = 10
           Cursor = crVSplit
           Align = alTop
@@ -398,7 +399,7 @@ inherited BugManageDlg: TBugManageDlg
         object ScrollBox1: TScrollBox
           Left = 0
           Top = 18
-          Width = 1020
+          Width = 1155
           Height = 200
           Align = alTop
           TabOrder = 0
@@ -696,7 +697,7 @@ inherited BugManageDlg: TBugManageDlg
         object plBugHistory: TPanel
           Left = 0
           Top = 228
-          Width = 1020
+          Width = 1155
           Height = 305
           Align = alClient
           BevelOuter = bvNone
@@ -704,14 +705,14 @@ inherited BugManageDlg: TBugManageDlg
           object plBugHistoryTop: TPanel
             Left = 0
             Top = 0
-            Width = 1020
+            Width = 1155
             Height = 40
             Align = alTop
             BevelOuter = bvNone
             Color = clGray
             TabOrder = 0
             DesignSize = (
-              1020
+              1155
               40)
             object Label13: TLabel
               Left = 15
@@ -779,7 +780,7 @@ inherited BugManageDlg: TBugManageDlg
               TabOrder = 4
             end
             object DBNavigator1: TDBNavigator
-              Left = 822
+              Left = 957
               Top = 8
               Width = 176
               Height = 25
@@ -792,7 +793,7 @@ inherited BugManageDlg: TBugManageDlg
           object Panel1: TPanel
             Left = 0
             Top = 40
-            Width = 1020
+            Width = 1155
             Height = 265
             Align = alClient
             BevelOuter = bvLowered
@@ -949,7 +950,7 @@ inherited BugManageDlg: TBugManageDlg
         object pnlContextTop: TPanel
           Left = 0
           Top = 0
-          Width = 1020
+          Width = 1155
           Height = 18
           Align = alTop
           BevelOuter = bvNone
@@ -957,8 +958,8 @@ inherited BugManageDlg: TBugManageDlg
           object lbBugCaption: TLabel
             Left = 0
             Top = 0
-            Width = 905
-            Height = 18
+            Width = 96
+            Height = 15
             Align = alClient
             Caption = 'lbBugCaption'
             Color = clGray
@@ -994,7 +995,7 @@ inherited BugManageDlg: TBugManageDlg
   object plnovisible: TPanel
     Left = 0
     Top = 0
-    Width = 1028
+    Width = 1163
     Height = 95
     Align = alTop
     Alignment = taRightJustify

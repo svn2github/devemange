@@ -144,7 +144,7 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
     Left = 408
     Top = 68
     Width = 75
-    Height = 25
+    Height = 51
     Caption = #33719#21462#29256#26412
     TabOrder = 16
     OnClick = btngetvesionClick
@@ -177,22 +177,13 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
     ListSource = dsAmdieVer
     TabOrder = 19
   end
-  object btnGetAmdieVer: TBitBtn
-    Left = 410
-    Top = 99
-    Width = 75
-    Height = 25
-    Caption = #33719#21462#29256#26412
-    TabOrder = 20
-    OnClick = btnGetAmdieVerClick
-  end
   object cbbModuleID: TComboBox
     Left = 408
     Top = 37
     Width = 97
     Height = 23
     ItemHeight = 15
-    TabOrder = 21
+    TabOrder = 20
     Text = 'cbbModuleID'
     Visible = False
   end
@@ -202,7 +193,7 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
     Width = 81
     Height = 17
     Caption = #32534#21495#65306
-    TabOrder = 22
+    TabOrder = 21
   end
   object edtCode: TEdit
     Left = 203
@@ -211,6 +202,34 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
     Height = 23
     TabOrder = 0
     OnChange = edtCodeChange
+  end
+  object chkSelectAll: TCheckBox
+    Left = 24
+    Top = 413
+    Width = 73
+    Height = 17
+    Caption = #20840#36873
+    TabOrder = 22
+    OnClick = chkSelectAllClick
+  end
+  object btnAll: TBitBtn
+    Left = 253
+    Top = 408
+    Width = 100
+    Height = 25
+    Caption = #20840#37096#38382#39064
+    TabOrder = 23
+    OnClick = btnAllClick
+  end
+  object cbbTreeID: TComboBox
+    Left = 511
+    Top = 36
+    Width = 88
+    Height = 23
+    ItemHeight = 15
+    TabOrder = 24
+    Text = 'cbbTreeID'
+    Visible = False
   end
   object cdsProject: TClientDataSet
     Tag = -1
