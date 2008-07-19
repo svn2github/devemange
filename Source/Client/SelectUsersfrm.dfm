@@ -6,6 +6,7 @@ inherited SelectUsersDlg: TSelectUsersDlg
   ClientHeight = 433
   ClientWidth = 559
   OldCreateOrder = True
+  Position = poMainFormCenter
   PixelsPerInch = 96
   TextHeight = 15
   object DBGrid1: TDBGrid

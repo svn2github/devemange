@@ -1,6 +1,6 @@
 inherited BugManageDlg: TBugManageDlg
-  Left = 122
-  Top = 70
+  Left = 114
+  Top = 116
   Width = 1036
   Height = 692
   Caption = #38169#35823#31649#29702
@@ -172,13 +172,6 @@ inherited BugManageDlg: TBugManageDlg
             Align = alTop
             BevelOuter = bvNone
             TabOrder = 1
-            object Label20: TLabel
-              Left = 583
-              Top = 12
-              Width = 8
-              Height = 15
-              Caption = '='
-            end
             object BitBtn3: TBitBtn
               Left = 11
               Top = 8
@@ -294,33 +287,8 @@ inherited BugManageDlg: TBugManageDlg
                 FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
                 FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00}
             end
-            object cbFindVer: TComboBox
-              Left = 448
-              Top = 9
-              Width = 132
-              Height = 23
-              Style = csDropDownList
-              Color = clSkyBlue
-              ItemHeight = 15
-              TabOrder = 4
-              Items.Strings = (
-                ''
-                #20986#29616#38382#39064#30340#29256#26412
-                #35299#20915#38382#39064#30340#29256#26412)
-            end
-            object DBLookupComboBox7: TDBLookupComboBox
-              Left = 595
-              Top = 9
-              Width = 111
-              Height = 23
-              Color = clSkyBlue
-              KeyField = 'ZID'
-              ListField = 'ZVER'
-              ListSource = dsProject
-              TabOrder = 5
-            end
             object cbSort: TComboBox
-              Left = 716
+              Left = 564
               Top = 9
               Width = 102
               Height = 23
@@ -329,11 +297,20 @@ inherited BugManageDlg: TBugManageDlg
               Color = clSkyBlue
               ItemHeight = 15
               ItemIndex = 0
-              TabOrder = 6
+              TabOrder = 4
               Text = #32534#21495
               Items.Strings = (
                 #32534#21495
                 #26368#21518#20462#25913#26102#38388)
+            end
+            object btnBug_HighQuery: TBitBtn
+              Left = 448
+              Top = 8
+              Width = 100
+              Height = 25
+              Action = actBug_HighQuery
+              Caption = #39640#32423#26597#35810'...'
+              TabOrder = 5
             end
           end
           object plBugItemBottom: TPanel
@@ -1168,6 +1145,11 @@ inherited BugManageDlg: TBugManageDlg
       OnExecute = actBug_RefreshDataExecute
       OnUpdate = actBug_RefreshDataUpdate
     end
+    object actBug_HighQuery: TAction
+      Category = #38382#39064#21015#34920
+      Caption = #39640#32423#26597#35810'...'
+      OnExecute = actBug_HighQueryExecute
+    end
   end
   object pmBugTree: TPopupMenu
     AutoHotkeys = maManual
@@ -1205,6 +1187,9 @@ inherited BugManageDlg: TBugManageDlg
     Top = 16
     object N8: TMenuItem
       Action = actBug_AddBug
+    end
+    object N13: TMenuItem
+      Action = actBug_HighQuery
     end
     object N9: TMenuItem
       Caption = '-'
@@ -1296,5 +1281,11 @@ inherited BugManageDlg: TBugManageDlg
     DataSet = cdsBugStatus
     Left = 376
     Top = 48
+  end
+  object cdstemp: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 432
+    Top = 16
   end
 end

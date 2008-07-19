@@ -7,7 +7,7 @@ uses
   Dialogs, BaseChildfrm, ExtCtrls, ComCtrls, DB, DBClient,
 
   ClientTypeUnits, ActnList, Menus, Grids, DBGrids, StdCtrls, Buttons,
-  DBCtrls, Mask, dbcgrids;
+  DBCtrls, Mask, dbcgrids,BugHighQueryfrm;
 
 type
 
@@ -146,15 +146,12 @@ type
     BitBtn17: TBitBtn;
     actBug_AssingToMe: TAction;
     actBug_ResoMe: TAction;
-    cbFindVer: TComboBox;
-    DBLookupComboBox7: TDBLookupComboBox;
     actBugHistory_OpenFile: TAction;
     actBug_RefreshData: TAction;
     N10: TMenuItem;
     dblcSelectUsermail: TDBLookupComboBox;
     Label19: TLabel;
     cbSort: TComboBox;
-    Label20: TLabel;
     DBNavigator1: TDBNavigator;
     N11: TMenuItem;
     N12: TMenuItem;
@@ -162,6 +159,10 @@ type
     pnlContextTop: TPanel;
     lbBugCaption: TLabel;
     DBText6: TDBText;
+    actBug_HighQuery: TAction;
+    N13: TMenuItem;
+    cdstemp: TClientDataSet;
+    btnBug_HighQuery: TBitBtn;
     procedure actBug_AddDirExecute(Sender: TObject);
     procedure tvProjectExpanding(Sender: TObject; Node: TTreeNode;
       var AllowExpansion: Boolean);
@@ -216,8 +217,10 @@ type
     procedure actBug_RefreshDataUpdate(Sender: TObject);
     procedure actBug_RefreshDataExecute(Sender: TObject);
     procedure dblcSelectUsermailCloseUp(Sender: TObject);
+    procedure actBug_HighQueryExecute(Sender: TObject);
   private
     fPageType : TPageTypeRec; //分页处理
+    fHighQuery : TBugHighQueryDlg;
 
     procedure ClearNode(AParent:TTreeNode);
     function  GetBugItemPageCount(APageIndex:integer;AWhereStr:String):integer; //取出页总数
@@ -228,6 +231,7 @@ type
   public
     { Public declarations }
     procedure initBase; override;
+    procedure freeBase; override;
     procedure LoadBugTree(APID:integer;APNode:TTreeNode);
     class function GetModuleID : integer;override;
   end;
@@ -315,6 +319,7 @@ begin
   end;
 
   LoadBugTree(-1,nil);
+  fHighQuery := nil;
 end;
 
 procedure TBugManageDlg.LoadBugTree(APID: integer; APNode: TTreeNode);
@@ -556,9 +561,6 @@ var
   myPageIndex:integer;
   mywhere : String;
   myData : PBugTreeNode;
-  mySQL : string;
-const
-  glSQL  = 'select ZID,ZVER from TB_PRO_VERSION where ZPRO_ID=%d Order by ZID DESC';
 begin
   //
   //加载问题列表
@@ -590,14 +592,6 @@ begin
   lbProjectName.Caption := format('%s  =>第%d共%d页',[
     myData^.fName,myData^.fPageIndex,myData^.fPageCount]);
 
-
-  //读取项目
-  if cdsProject.Tag <> myData^.fPRO_ID then
-  begin
-    cdsProject.Tag := myData^.fPRO_ID;
-    mySQL := format(glSQL,[myData^.fPRO_ID]);
-    cdsProject.Data := ClientSystem.fDbOpr.ReadDataSet(PChar(mySQL));
-  end;
 end;
 
 procedure TBugManageDlg.LoadBugItem(APageIndex: integer;
@@ -619,11 +613,6 @@ const
 begin
 
   mywhere := AWhereStr;
-  case cbFindVer.ItemIndex of
-    1: mywhere := mywhere + ' and ZOPENVER=' + inttostr(cdsProject.FieldByName('ZID').AsInteger);
-    2: mywhere := mywhere + ' and ZRESOLVEDVER=' + inttostr(cdsProject.FieldByName('ZID').AsInteger);
-  end;
-
   if cbSort.ItemIndex = 0 then  //按编号排序
     mySQL := format(glSQL,[
       'ZID',
@@ -877,10 +866,6 @@ const
   //                                             页码,以总数=1, 条件where
 begin
   mywhere := AWhereStr;
-  case cbFindVer.ItemIndex of
-    1: mywhere := mywhere + ' and ZOPENVER=' + inttostr(cdsProject.FieldByName('ZID').AsInteger);
-    2: mywhere := mywhere + ' and ZRESOLVEDVER=' + inttostr(cdsProject.FieldByName('ZID').AsInteger);
-  end;
 
   if cbSort.ItemIndex = 0 then  //按编号排序
     mySQL := format(glSQL,[
@@ -1002,6 +987,10 @@ end;
 
 procedure TBugManageDlg.pcBugChanging(Sender: TObject;
   var AllowChange: Boolean);
+var
+  mySQL : string;  
+const
+  glSQL  = 'select ZID,ZVER from TB_PRO_VERSION where ZPRO_ID=%d Order by ZID DESC';
 begin
   AllowChange := (not cdsBugItem.IsEmpty) or (pcBug.ActivePageIndex = 1);
   if not AllowChange then Exit;
@@ -1013,6 +1002,14 @@ begin
       //LoadBugHistory(-1); //
     end
     else begin
+      //读取项目
+      if cdsProject.Tag <> cdsBugItem.FieldByName('ZPRO_ID').AsInteger then
+      begin
+        cdsProject.Tag := cdsBugItem.FieldByName('ZPRO_ID').AsInteger;
+        mySQL := format(glSQL,[cdsBugItem.FieldByName('ZPRO_ID').AsInteger]);
+        cdsProject.Data := ClientSystem.fDbOpr.ReadDataSet(PChar(mySQL));
+      end;
+
       lbBugCaption.Caption := Format('#%d %s',[cdsBugItem.FieldByName('ZID').AsInteger,
         cdsBugItem.FieldByName('ZTITLE').AsString]);
       LoadBugHistory(cdsBugItem.FieldByName('ZID').Asinteger);
@@ -1057,6 +1054,7 @@ begin
     myPBugData := myPBugData^.fParent;
   end;
 
+  DataSet.FieldByName('ZPRO_ID').AsInteger  := myBugData^.fPRO_ID;
   DataSet.FieldByName('ZTREEPATH').AsString := myPath;
   DataSet.FieldByName('ZTREE_ID').AsInteger := myBugData^.fID;
   DataSet.FieldByName('ZSTATUS').AsInteger   := 0; //0=要修改的
@@ -1982,6 +1980,74 @@ begin
     mysv.Free;
     myMails.Free;
   end;
+end;
+
+procedure TBugManageDlg.actBug_HighQueryExecute(Sender: TObject);
+var
+  myPageIndex:integer;
+  mywhere : String;
+const
+  glSQL  = 'select ZID,ZNAME from TB_BUG_TREE Order by ZSORT';
+begin
+  //
+  //  注意每个模块是有权限的,不是每个人都可以有权限
+  //
+  //
+  if not Assigned(fHighQuery) then
+  begin
+    fHighQuery := TBugHighQueryDlg.Create(nil);
+    //对内容进行初期化
+    with fHighQuery do
+    begin
+      cdstemp.Data := ClientSystem.fDbOpr.ReadDataSet(PChar(glSQL));
+      cdstemp.First;
+      while not cdstemp.Eof do
+      begin
+        //权限
+        if not HasModuleAction(Ord(bsBugTree),
+          cdstemp.FieldByName('ZID').AsInteger,atView) then
+        begin
+          cdstemp.Next;
+          Continue;
+        end;
+
+        cbbModule.Items.Add(cdstemp.FieldByName('ZNAME').AsString);
+        cbbModuleID.Items.Add(cdstemp.FieldByName('ZID').AsString);
+        cdstemp.Next;
+      end;
+      dtpAmod.DateTime   := now();
+      dtpBugday.DateTime := now();
+      GetBugType();
+    end;
+  end;
+  with fHighQuery  do
+  begin
+    edtCode.SelectAll;
+    if ShowModal=mrOK then
+    begin
+      mywhere := GetwhereStr();
+      fPageType.fType := ptMe;
+      fPageType.fWhereStr := mywhere;
+      fPageType.fIndex := 1;
+      fPageType.fName := '高级查询';
+      myPageIndex := 1;
+      fPageType.fIndexCount := GetBugItemPageCount(myPageindex,myWhere);
+      LoadBugItem(myPageindex,myWhere);
+      lbPageCount.Caption := format('%d/%d',[
+        fPageType.fIndex,
+        fPageType.fIndexCount]);
+      lbProjectName.Caption := format('%s  =>第%d共%d页',[
+      fPageType.fName,fPageType.fIndex,fPageType.fIndexCount]);
+    end;
+
+  end;
+end;
+
+procedure TBugManageDlg.freeBase;
+begin
+  inherited;
+  if Assigned(fHighQuery) then
+    fHighQuery.Free;
 end;
 
 end.
