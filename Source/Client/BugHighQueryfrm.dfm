@@ -144,7 +144,7 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
     Left = 408
     Top = 68
     Width = 75
-    Height = 51
+    Height = 53
     Caption = #33719#21462#29256#26412
     TabOrder = 16
     OnClick = btngetvesionClick

@@ -170,7 +170,17 @@ begin
   mystr := '';
   if chktodayAmind.Checked then
   begin
-    mystr := format('ZRESOLVEDDATE=%s',[datetostr(dtpAmod.date)]);
+    mystr := format('(ZRESOLVEDDATE between ''%s'' and ''%s'') and (ZSTATUS=1) ',
+      [''''+datetostr(dtpAmod.Date)+'''',''''+datetostr(dtpAmod.Date+1)+'''']);
+  end;
+  if mystr <> '' then mywhere := mywhere + ' and ' + mystr;
+
+  //创建问题的时间
+  mystr := '';
+  if chktodayBug.Checked then
+  begin
+    mystr := format('(ZOPENEDDATE between ''%s'' and ''%s'')  ',
+      [''''+datetostr(dtpBugday.Date)+'''',''''+datetostr(dtpBugday.Date+1)+'''']);
   end;
   if mystr <> '' then mywhere := mywhere + ' and ' + mystr;
 

@@ -1,6 +1,6 @@
 inherited BugManageDlg: TBugManageDlg
   Left = 28
-  Top = 201
+  Top = 48
   Width = 1171
   Height = 692
   Caption = #38169#35823#31649#29702
@@ -802,14 +802,14 @@ inherited BugManageDlg: TBugManageDlg
             object dbcBugHistory: TDBCtrlGrid
               Left = 1
               Top = 1
-              Width = 1018
+              Width = 1153
               Height = 263
               Align = alClient
               AllowDelete = False
               AllowInsert = False
               DataSource = dsBugBugHistory
               PanelHeight = 87
-              PanelWidth = 1001
+              PanelWidth = 1136
               TabOrder = 0
               SelectedColor = clMedGray
               object DBText1: TDBText
@@ -916,7 +916,7 @@ inherited BugManageDlg: TBugManageDlg
                 Transparent = True
               end
               object DBText5: TDBText
-                Left = 965
+                Left = 1100
                 Top = 3
                 Width = 25
                 Height = 16
@@ -936,7 +936,7 @@ inherited BugManageDlg: TBugManageDlg
               object DBMemo1: TDBMemo
                 Left = 7
                 Top = 22
-                Width = 983
+                Width = 1118
                 Height = 37
                 Anchors = [akLeft, akTop, akRight, akBottom]
                 DataField = 'ZCONTEXT'
@@ -958,8 +958,8 @@ inherited BugManageDlg: TBugManageDlg
           object lbBugCaption: TLabel
             Left = 0
             Top = 0
-            Width = 96
-            Height = 15
+            Width = 1040
+            Height = 18
             Align = alClient
             Caption = 'lbBugCaption'
             Color = clGray
@@ -972,7 +972,7 @@ inherited BugManageDlg: TBugManageDlg
             ParentFont = False
           end
           object DBText6: TDBText
-            Left = 905
+            Left = 1040
             Top = 0
             Width = 115
             Height = 18

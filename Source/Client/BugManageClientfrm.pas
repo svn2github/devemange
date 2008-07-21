@@ -1254,7 +1254,7 @@ procedure TBugManageDlg.actBugHistory_ResoluUpdate(Sender: TObject);
 begin
   (Sender as TAction).Enabled :=
     not cdsBugItem.FieldByName('ZISNEW').AsBoolean and
-    (cdsBugItem.FieldByName('ZSTATUS').AsInteger = Ord(bgsAction))
+    (cdsBugItem.FieldByName('ZSTATUS').AsInteger in [Ord(bgsAction),Ord(bgsReAction)])
     and not (cdsBugHistory.State in [dsEdit,dsInsert]);
 end;
 
