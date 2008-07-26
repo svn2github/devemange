@@ -5,7 +5,7 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, BaseDialogfrm, StdCtrls, Buttons, ComCtrls, DBCtrls, DB,
-  DBClient;
+  DBClient, ExtCtrls;
 
 type
   TBugHighQueryDlg = class(TBaseDialog)
@@ -40,6 +40,12 @@ type
     chkSelectAll: TCheckBox;
     btnAll: TBitBtn;
     cbbTreeID: TComboBox;
+    chkBugLevel: TCheckBox;
+    dblkcbbBugLevel: TDBLookupComboBox;
+    cdsBugLevel: TClientDataSet;
+    dsBugLevel: TDataSource;
+    chkStatus: TCheckBox;
+    rg1: TRadioGroup;
     procedure chkmoduleClick(Sender: TObject);
     procedure btntodayClick(Sender: TObject);
     procedure btntodayBugClick(Sender: TObject);
@@ -119,9 +125,10 @@ end;
 
 procedure TBugHighQueryDlg.GetBugType;
 const
-  glSQL = 'select ZID,ZNAME from TB_BUG_PARAMS where ZTYPE=4';
+  glSQL = 'select ZID,ZNAME from TB_BUG_PARAMS where ZTYPE=%d';
 begin
-  cdsBugType.Data := ClientSystem.fDbOpr.ReadDataSet(PChar(glSQL));
+  cdsBugType.Data  := ClientSystem.fDbOpr.ReadDataSet(PChar(format(glSQL,[4])));
+  cdsBugLevel.Data := ClientSystem.fDbOpr.ReadDataSet(PChar(format(glSQL,[5])));
 end;
 
 function TBugHighQueryDlg.GetwhereStr:string;
@@ -200,8 +207,25 @@ begin
   end;
   if mystr <> '' then mywhere := mywhere + ' and ' + mystr;
 
+  //问题等级
+  mystr := '';
+  if chkBugLevel.Checked then
+  begin
+    mystr := format('ZLEVEL=%d',[cdsBugLevel.FieldByName('ZID').AsInteger]);
+  end;
+  if mystr <> '' then mywhere := mywhere + ' and ' + mystr;
 
-  Result := mywhere; 
+  //问题状态
+  mystr := '';
+  if chkStatus.Checked then
+  begin
+    if rg1.ItemIndex = 0 then mystr := '(ZSTATUS=0 or ZSTATUS=2) '
+    else mystr := 'ZSTATUS=1';
+  end;
+  if mystr <> '' then mywhere := mywhere + ' and ' + mystr;
+
+
+  Result := mywhere;
 
 end;
 

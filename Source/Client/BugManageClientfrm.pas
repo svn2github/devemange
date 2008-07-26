@@ -163,6 +163,8 @@ type
     N13: TMenuItem;
     cdstemp: TClientDataSet;
     btnBug_HighQuery: TBitBtn;
+    actBug_Moveto: TAction;
+    N14: TMenuItem;
     procedure actBug_AddDirExecute(Sender: TObject);
     procedure tvProjectExpanding(Sender: TObject; Node: TTreeNode;
       var AllowExpansion: Boolean);
@@ -218,6 +220,9 @@ type
     procedure actBug_RefreshDataExecute(Sender: TObject);
     procedure dblcSelectUsermailCloseUp(Sender: TObject);
     procedure actBug_HighQueryExecute(Sender: TObject);
+    procedure actBug_MovetoExecute(Sender: TObject);
+    procedure actBug_MovetoUpdate(Sender: TObject);
+    procedure pcBugChange(Sender: TObject);
   private
     fPageType : TPageTypeRec; //分页处理
     fHighQuery : TBugHighQueryDlg;
@@ -987,14 +992,10 @@ end;
 
 procedure TBugManageDlg.pcBugChanging(Sender: TObject;
   var AllowChange: Boolean);
-var
-  mySQL : string;  
-const
-  glSQL  = 'select ZID,ZVER from TB_PRO_VERSION where ZPRO_ID=%d Order by ZID DESC';
 begin
   AllowChange := (not cdsBugItem.IsEmpty) or (pcBug.ActivePageIndex = 1);
   if not AllowChange then Exit;
-  
+
   if pcBug.ActivePageIndex = 0 then
   begin
     if cdsBugItem.FieldByName('ZISNEW').AsBoolean then
@@ -1002,14 +1003,6 @@ begin
       //LoadBugHistory(-1); //
     end
     else begin
-      //读取项目
-      if cdsProject.Tag <> cdsBugItem.FieldByName('ZPRO_ID').AsInteger then
-      begin
-        cdsProject.Tag := cdsBugItem.FieldByName('ZPRO_ID').AsInteger;
-        mySQL := format(glSQL,[cdsBugItem.FieldByName('ZPRO_ID').AsInteger]);
-        cdsProject.Data := ClientSystem.fDbOpr.ReadDataSet(PChar(mySQL));
-      end;
-
       lbBugCaption.Caption := Format('#%d %s',[cdsBugItem.FieldByName('ZID').AsInteger,
         cdsBugItem.FieldByName('ZTITLE').AsString]);
       LoadBugHistory(cdsBugItem.FieldByName('ZID').Asinteger);
@@ -1076,7 +1069,8 @@ begin
     Exit;
 
   lbBugCaption.Caption := '发现新问题 by ' + ClientSystem.fEditer;
-  pcBug.ActivePage := tsBugContext;
+  pcBug.ActivePageIndex := 1;
+  pcBugChange(nil);
   if cdsBugItem.State in [dsEdit,dsInsert] then
     cdsBugItem.Post;
   LoadBugHistory(-1); //因为OnpageChange没有处理
@@ -2015,30 +2009,35 @@ begin
   //
   if not Assigned(fHighQuery) then
   begin
-    fHighQuery := TBugHighQueryDlg.Create(nil);
-    //对内容进行初期化
-    with fHighQuery do
-    begin
-      cdstemp.Data := ClientSystem.fDbOpr.ReadDataSet(PChar(glSQL));
-      cdstemp.First;
-      while not cdstemp.Eof do
+    ShowProgress('请稍候...',0);
+    try
+      fHighQuery := TBugHighQueryDlg.Create(nil);
+      //对内容进行初期化
+      with fHighQuery do
       begin
-        //权限
-        if not HasModuleAction(Ord(bsBugTree),
-          cdstemp.FieldByName('ZID').AsInteger,atView) then
+        cdstemp.Data := ClientSystem.fDbOpr.ReadDataSet(PChar(glSQL));
+        cdstemp.First;
+        while not cdstemp.Eof do
         begin
-          cdstemp.Next;
-          Continue;
-        end;
+          //权限
+          if not HasModuleAction(Ord(bsBugTree),
+            cdstemp.FieldByName('ZID').AsInteger,atView) then
+          begin
+            cdstemp.Next;
+            Continue;
+          end;
 
-        cbbModule.Items.Add(cdstemp.FieldByName('ZNAME').AsString);
-        cbbModuleID.Items.Add(cdstemp.FieldByName('ZPRO_ID').AsString);
-        cbbTreeID.Items.Add(cdstemp.FieldByName('ZID').AsString);
-        cdstemp.Next;
+          cbbModule.Items.Add(cdstemp.FieldByName('ZNAME').AsString);
+          cbbModuleID.Items.Add(cdstemp.FieldByName('ZPRO_ID').AsString);
+          cbbTreeID.Items.Add(cdstemp.FieldByName('ZID').AsString);
+          cdstemp.Next;
+        end;
+        dtpAmod.DateTime   := now();
+        dtpBugday.DateTime := now();
+        GetBugType();
       end;
-      dtpAmod.DateTime   := now();
-      dtpBugday.DateTime := now();
-      GetBugType();
+    finally
+      HideProgress;
     end;
   end;
   with fHighQuery  do
@@ -2077,6 +2076,72 @@ begin
   inherited;
   if Assigned(fHighQuery) then
     fHighQuery.Free;
+end;
+
+procedure TBugManageDlg.actBug_MovetoExecute(Sender: TObject);
+var
+  myid : integer;
+  myDirId : integer;
+  mystr : string;
+  mySQL : string;
+const
+  glSQL1 = 'select ZPRO_ID,ZNAME from TB_BUG_TREE where ZID=%d';
+  glSQL2 = 'update TB_BUG_ITEM set ZTREE_ID=%d,ZPRO_ID=%d,ZTREEPATH=''%s'' where ZID=%d';
+begin
+  //
+  // 权限,只有创建人,可管理人员才能移动
+  //
+  if (ClientSystem.fEditerType <> etAdmin) and
+     (cdsBugItem.FieldByName('ZOPENEDBY').AsInteger<>ClientSystem.fEditer_id) then
+  begin
+    MessageBox(Handle,'只有问题的创建人或管理人才能移动问题','提示',MB_ICONWARNING+MB_OK);
+    Exit;
+  end;
+
+  myDirId := cdsBugItem.FieldByName('ZTREE_ID').AsInteger;
+  mystr := InputBox('输入新的分部号','分部号:',inttostr(myDirId));
+
+  if strtointdef(mystr,myDirID) <> myDirID then
+  begin
+    myDirID := strtointdef(mystr,myDirID);
+    //确定有没有这个ID号
+    cdstemp.data := ClientSystem.fDbOpr.ReadDataSet(PChar(format(glSQL1,[myDirID])));
+    if cdstemp.RecordCount = 0 then
+    begin
+      MessageBox(Handle,'你的分部号不存在','提示',MB_ICONWARNING+MB_OK);
+      Exit;
+    end;
+    myid := cdsBugItem.FieldByName('ZID').AsInteger;
+    mySQL := format(glSQL2,[myDirID,
+      cdstemp.FieldByName('ZPRO_ID').AsInteger ,
+      cdstemp.FieldByName('ZNAME').AsString, myid]);
+    ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
+    cdsBugItem.Delete; //移去当前行
+  end;
+
+end;
+
+procedure TBugManageDlg.actBug_MovetoUpdate(Sender: TObject);
+begin
+  (Sender as TAction).Enabled := (cdsBugItem.RecordCount > 0)
+end;
+
+procedure TBugManageDlg.pcBugChange(Sender: TObject);
+var
+  mySQL : string;
+const
+  glSQL  = 'select ZID,ZVER from TB_PRO_VERSION where ZPRO_ID=%d Order by ZID DESC';
+begin
+  //读取项目
+  if pcBug.ActivePageIndex = 1 then
+  begin
+    if cdsProject.Tag <> cdsBugItem.FieldByName('ZPRO_ID').AsInteger then
+    begin
+      cdsProject.Tag := cdsBugItem.FieldByName('ZPRO_ID').AsInteger;
+      mySQL := format(glSQL,[cdsBugItem.FieldByName('ZPRO_ID').AsInteger]);
+      cdsProject.Data := ClientSystem.fDbOpr.ReadDataSet(PChar(mySQL));
+    end;
+  end;
 end;
 
 end.

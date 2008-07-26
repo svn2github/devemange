@@ -1,6 +1,6 @@
 inherited BugHighQueryDlg: TBugHighQueryDlg
-  Left = 360
-  Top = 170
+  Left = 317
+  Top = 181
   BorderStyle = bsDialog
   Caption = #39640#32423#26597#35810
   ClientHeight = 448
@@ -150,8 +150,8 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
     OnClick = btngetvesionClick
   end
   object dblkcbbBugtype: TDBLookupComboBox
-    Left = 203
-    Top = 214
+    Left = 202
+    Top = 212
     Width = 194
     Height = 23
     KeyField = 'ZID'
@@ -231,6 +231,43 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
     Text = 'cbbTreeID'
     Visible = False
   end
+  object chkBugLevel: TCheckBox
+    Left = 32
+    Top = 246
+    Width = 97
+    Height = 17
+    Caption = #38382#39064#31561#32423#65306
+    TabOrder = 25
+  end
+  object dblkcbbBugLevel: TDBLookupComboBox
+    Left = 202
+    Top = 243
+    Width = 194
+    Height = 23
+    KeyField = 'ZID'
+    ListField = 'ZNAME'
+    ListSource = dsBugLevel
+    TabOrder = 26
+  end
+  object chkStatus: TCheckBox
+    Left = 32
+    Top = 288
+    Width = 97
+    Height = 17
+    Caption = #38382#39064#29366#24577#65306
+    TabOrder = 27
+  end
+  object rg1: TRadioGroup
+    Left = 200
+    Top = 274
+    Width = 368
+    Height = 36
+    Columns = 2
+    Items.Strings = (
+      #27809#26377#35299#20915
+      #24050#35299#20915)
+    TabOrder = 28
+  end
   object cdsProject: TClientDataSet
     Tag = -1
     Aggregates = <>
@@ -263,6 +300,17 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
   object dsAmdieVer: TDataSource
     DataSet = cdsAmdieVer
     Left = 120
+    Top = 400
+  end
+  object cdsBugLevel: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 160
+    Top = 368
+  end
+  object dsBugLevel: TDataSource
+    DataSet = cdsBugLevel
+    Left = 160
     Top = 400
   end
 end

@@ -23,6 +23,7 @@ inherited BugManageDlg: TBugManageDlg
       ActivePage = tsBugItem
       Align = alClient
       TabOrder = 0
+      OnChange = pcBugChange
       OnChanging = pcBugChanging
       object tsBugItem: TTabSheet
         Caption = #38382#39064#21015#34920
@@ -1151,6 +1152,13 @@ inherited BugManageDlg: TBugManageDlg
       Caption = #39640#32423#26597#35810'...'
       OnExecute = actBug_HighQueryExecute
     end
+    object actBug_Moveto: TAction
+      Category = #38382#39064#21015#34920
+      Caption = #31227#21160#33267'...'
+      Hint = #23558#38382#39064#31227#21160#21040#21035#30340#26639#30446#19979
+      OnExecute = actBug_MovetoExecute
+      OnUpdate = actBug_MovetoUpdate
+    end
   end
   object pmBugTree: TPopupMenu
     AutoHotkeys = maManual
@@ -1191,6 +1199,9 @@ inherited BugManageDlg: TBugManageDlg
     end
     object N13: TMenuItem
       Action = actBug_HighQuery
+    end
+    object N14: TMenuItem
+      Action = actBug_Moveto
     end
     object N9: TMenuItem
       Caption = '-'
