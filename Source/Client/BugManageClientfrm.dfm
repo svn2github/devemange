@@ -1,6 +1,6 @@
 inherited BugManageDlg: TBugManageDlg
-  Left = 28
-  Top = 48
+  Left = 12
+  Top = 83
   Width = 1171
   Height = 692
   Caption = #38169#35823#31649#29702
@@ -870,7 +870,7 @@ inherited BugManageDlg: TBugManageDlg
                 Caption = #38468#20214':'
               end
               object DBText3: TDBText
-                Left = 349
+                Left = 343
                 Top = 64
                 Width = 476
                 Height = 17
@@ -934,6 +934,18 @@ inherited BugManageDlg: TBugManageDlg
                 ParentColor = False
                 ParentFont = False
               end
+              object dbtxtZFILESAVE: TDBText
+                Left = 992
+                Top = 64
+                Width = 89
+                Height = 17
+                Cursor = crHandPoint
+                Hint = #38468#20214#21478#23384#20026'....'
+                Anchors = [akRight, akBottom]
+                DataField = 'ZFILESAVE'
+                DataSource = dsBugBugHistory
+                OnClick = dbtxtZFILESAVEClick
+              end
               object DBMemo1: TDBMemo
                 Left = 7
                 Top = 22
@@ -959,8 +971,8 @@ inherited BugManageDlg: TBugManageDlg
           object lbBugCaption: TLabel
             Left = 0
             Top = 0
-            Width = 1040
-            Height = 18
+            Width = 96
+            Height = 15
             Align = alClient
             Caption = 'lbBugCaption'
             Color = clGray
@@ -1159,6 +1171,12 @@ inherited BugManageDlg: TBugManageDlg
       OnExecute = actBug_MovetoExecute
       OnUpdate = actBug_MovetoUpdate
     end
+    object actBugHistory_Savetofile: TAction
+      Category = #38382#39064#20869#23481
+      Caption = #21478#23384#20026'...'
+      Hint = #23558#38468#20214#21478#23384#20026'...'
+      OnExecute = actBugHistory_SavetofileExecute
+    end
   end
   object pmBugTree: TPopupMenu
     AutoHotkeys = maManual
@@ -1298,6 +1316,10 @@ inherited BugManageDlg: TBugManageDlg
     Aggregates = <>
     Params = <>
     Left = 432
+    Top = 16
+  end
+  object dlgSave1: TSaveDialog
+    Left = 480
     Top = 16
   end
 end

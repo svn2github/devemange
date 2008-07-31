@@ -207,10 +207,10 @@ create table TB_TASK(
 	ZTESTCASE       text,                                   /*测试用例*/
 	ZSTATUS         int not null,                           /*状态 待分发=0 ; 执行中=1 ; 撤消=2; 完成=3 ; 关闭=4;激活=5*/
 	ZDATE           datetime,                               /*制单时间*/
-	ZPALNDAY        int not null default 1,                  /*计划工期(天)*/
+	ZPALNDAY        float not null default 1,                  /*计划工期(天)*/
 
 	ZBEGINDATE      datetime,	                            /*任务开始时间 由任务执行人生成,这时状态变更为执行中*/
-	ZDAY            int,                                    /*实际的天数*/
+	ZDAY            float,                                    /*实际的天数*/
 	ZSUCCESSDATE    datetime,                               /*完成时间*/
 	ZCLOSEDATE      datetime,                               /*关闭时间*/
 	

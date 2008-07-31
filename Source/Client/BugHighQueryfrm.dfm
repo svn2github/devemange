@@ -1,9 +1,9 @@
 inherited BugHighQueryDlg: TBugHighQueryDlg
-  Left = 317
-  Top = 181
+  Left = 416
+  Top = 129
   BorderStyle = bsDialog
   Caption = #39640#32423#26597#35810
-  ClientHeight = 448
+  ClientHeight = 452
   ClientWidth = 620
   OldCreateOrder = True
   Position = poMainFormCenter
@@ -203,22 +203,13 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
     TabOrder = 0
     OnChange = edtCodeChange
   end
-  object chkSelectAll: TCheckBox
-    Left = 24
-    Top = 413
-    Width = 73
-    Height = 17
-    Caption = #20840#36873
-    TabOrder = 22
-    OnClick = chkSelectAllClick
-  end
   object btnAll: TBitBtn
     Left = 253
     Top = 408
     Width = 100
     Height = 25
     Caption = #20840#37096#38382#39064
-    TabOrder = 23
+    TabOrder = 22
     OnClick = btnAllClick
   end
   object cbbTreeID: TComboBox
@@ -227,7 +218,7 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
     Width = 88
     Height = 23
     ItemHeight = 15
-    TabOrder = 24
+    TabOrder = 23
     Text = 'cbbTreeID'
     Visible = False
   end
@@ -237,7 +228,7 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
     Width = 97
     Height = 17
     Caption = #38382#39064#31561#32423#65306
-    TabOrder = 25
+    TabOrder = 24
   end
   object dblkcbbBugLevel: TDBLookupComboBox
     Left = 202
@@ -247,7 +238,7 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
     KeyField = 'ZID'
     ListField = 'ZNAME'
     ListSource = dsBugLevel
-    TabOrder = 26
+    TabOrder = 25
   end
   object chkStatus: TCheckBox
     Left = 32
@@ -255,7 +246,7 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
     Width = 97
     Height = 17
     Caption = #38382#39064#29366#24577#65306
-    TabOrder = 27
+    TabOrder = 26
   end
   object rg1: TRadioGroup
     Left = 200
@@ -266,51 +257,109 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
     Items.Strings = (
       #27809#26377#35299#20915
       #24050#35299#20915)
+    TabOrder = 27
+  end
+  object chkBugCreateor: TCheckBox
+    Left = 32
+    Top = 328
+    Width = 97
+    Height = 17
+    Caption = #38382#39064#21019#24314#20154':'
     TabOrder = 28
+  end
+  object cbBugAmdorer: TCheckBox
+    Left = 32
+    Top = 361
+    Width = 97
+    Height = 17
+    Caption = #38382#39064#35299#20915#20154':'
+    TabOrder = 29
+  end
+  object DBLookupComboBox1: TDBLookupComboBox
+    Left = 202
+    Top = 321
+    Width = 201
+    Height = 23
+    KeyField = 'ZID'
+    ListField = 'ZNAME'
+    ListSource = dsBugCreaeter
+    TabOrder = 30
+  end
+  object dblkcbb1: TDBLookupComboBox
+    Left = 202
+    Top = 352
+    Width = 201
+    Height = 23
+    KeyField = 'ZID'
+    ListField = 'ZNAME'
+    ListSource = dsAmder
+    TabOrder = 31
   end
   object cdsProject: TClientDataSet
     Tag = -1
     Aggregates = <>
     Params = <>
-    Left = 40
-    Top = 368
+    Left = 416
+    Top = 208
   end
   object dsProject: TDataSource
     DataSet = cdsProject
-    Left = 40
-    Top = 400
+    Left = 416
+    Top = 240
   end
   object cdsBugType: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 80
-    Top = 368
+    Left = 456
+    Top = 208
   end
   object dsBugType: TDataSource
     DataSet = cdsBugType
-    Left = 80
-    Top = 400
+    Left = 456
+    Top = 240
   end
   object cdsAmdieVer: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 118
-    Top = 368
+    Left = 494
+    Top = 208
   end
   object dsAmdieVer: TDataSource
     DataSet = cdsAmdieVer
-    Left = 120
-    Top = 400
+    Left = 496
+    Top = 240
   end
   object cdsBugLevel: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 160
-    Top = 368
+    Left = 536
+    Top = 208
   end
   object dsBugLevel: TDataSource
     DataSet = cdsBugLevel
-    Left = 160
-    Top = 400
+    Left = 536
+    Top = 240
+  end
+  object cdsBugCreater: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 424
+    Top = 317
+  end
+  object dsBugCreaeter: TDataSource
+    DataSet = cdsBugCreater
+    Left = 426
+    Top = 349
+  end
+  object cdsBugAdmder: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 460
+    Top = 316
+  end
+  object dsAmder: TDataSource
+    DataSet = cdsBugAdmder
+    Left = 461
+    Top = 348
   end
 end

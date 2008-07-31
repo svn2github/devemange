@@ -37,7 +37,6 @@ type
     cbbModuleID: TComboBox;
     chkCode: TCheckBox;
     edtCode: TEdit;
-    chkSelectAll: TCheckBox;
     btnAll: TBitBtn;
     cbbTreeID: TComboBox;
     chkBugLevel: TCheckBox;
@@ -46,6 +45,14 @@ type
     dsBugLevel: TDataSource;
     chkStatus: TCheckBox;
     rg1: TRadioGroup;
+    chkBugCreateor: TCheckBox;
+    cbBugAmdorer: TCheckBox;
+    DBLookupComboBox1: TDBLookupComboBox;
+    dblkcbb1: TDBLookupComboBox;
+    cdsBugCreater: TClientDataSet;
+    dsBugCreaeter: TDataSource;
+    cdsBugAdmder: TClientDataSet;
+    dsAmder: TDataSource;
     procedure chkmoduleClick(Sender: TObject);
     procedure btntodayClick(Sender: TObject);
     procedure btntodayBugClick(Sender: TObject);
@@ -54,7 +61,6 @@ type
     procedure btngetvesionClick(Sender: TObject);
     procedure cbbModuleChange(Sender: TObject);
     procedure edtCodeChange(Sender: TObject);
-    procedure chkSelectAllClick(Sender: TObject);
     procedure btnAllClick(Sender: TObject);
   private
     { Private declarations }
@@ -224,6 +230,21 @@ begin
   end;
   if mystr <> '' then mywhere := mywhere + ' and ' + mystr;
 
+  //问题创建人
+  mystr := '';
+  if chkBugCreateor.Checked then
+  begin
+    mystr := format('ZOPENEDBY=%d',[cdsBugCreater.FieldByName('ZID').AsInteger]);
+  end;
+  if mystr <> '' then mywhere := mywhere + ' and ' + mystr;
+
+  //问题解决人
+  mystr := '';
+  if cbBugAmdorer.Checked then
+  begin
+    mystr := format('ZRESOLVEDBY=%d',[cdsBugAdmder.FieldByName('ZID').AsInteger]);
+  end;
+  if mystr <> '' then mywhere := mywhere + ' and ' + mystr;
 
   Result := mywhere;
 
@@ -232,19 +253,6 @@ end;
 procedure TBugHighQueryDlg.edtCodeChange(Sender: TObject);
 begin
   chkCode.Checked := edtCode.Text <> '';
-end;
-
-procedure TBugHighQueryDlg.chkSelectAllClick(Sender: TObject);
-begin
-  //
-  chkCode.Checked := chkSelectAll.Checked;
-  chkmodule.Checked := chkSelectAll.Checked;
-  chkVersion.Checked := chkSelectAll.Checked;
-  chkAmideBugVer.Checked := chkSelectAll.Checked;
-  chktodayAmind.Checked := chkSelectAll.Checked;
-  chktodayBug.Checked := chkSelectAll.Checked;
-  chkBugType.Checked := chkSelectAll.Checked;
-
 end;
 
 procedure TBugHighQueryDlg.btnAllClick(Sender: TObject);
@@ -256,8 +264,10 @@ begin
   chktodayAmind.Checked  := False;
   chktodayBug.Checked    := False;
   chkBugType.Checked     := False;
+  chkStatus.Checked      := False;
+  chkBugCreateor.Checked := False;
+  cbBugAmdorer.Checked   := False;
   ModalResult := mrOK;
-
 end;
 
 end.

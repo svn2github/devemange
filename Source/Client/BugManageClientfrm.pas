@@ -165,6 +165,9 @@ type
     btnBug_HighQuery: TBitBtn;
     actBug_Moveto: TAction;
     N14: TMenuItem;
+    actBugHistory_Savetofile: TAction;
+    dlgSave1: TSaveDialog;
+    dbtxtZFILESAVE: TDBText;
     procedure actBug_AddDirExecute(Sender: TObject);
     procedure tvProjectExpanding(Sender: TObject; Node: TTreeNode;
       var AllowExpansion: Boolean);
@@ -223,6 +226,9 @@ type
     procedure actBug_MovetoExecute(Sender: TObject);
     procedure actBug_MovetoUpdate(Sender: TObject);
     procedure pcBugChange(Sender: TObject);
+    procedure lblSavetofileClick(Sender: TObject);
+    procedure actBugHistory_SavetofileExecute(Sender: TObject);
+    procedure dbtxtZFILESAVEClick(Sender: TObject);
   private
     fPageType : TPageTypeRec; //分页处理
     fHighQuery : TBugHighQueryDlg;
@@ -1345,10 +1351,18 @@ begin
         myfield := FieldDefs.AddFieldDef;
         myfield.Name :='ZISNEW';
         myfield.DataType := ftBoolean;
+
         myfield := FieldDefs.AddFieldDef;
         myfield.Name :='ZFILEPATH';
         myfield.DataType := ftString;
         myfield.Size := 100; //附件的路径
+
+        myfield := FieldDefs.AddFieldDef;
+        myfield.Name :='ZFILESAVE';
+        myfield.DataType := ftString;
+        myfield.Size := 10; //另存为
+
+
 
         //因为 ZID只读有问题，所以去掉 ,并将自动计算去掉
         for i:=0 to FieldDefs.Count -1 do
@@ -1414,6 +1428,9 @@ begin
         for i:=0 to mycds.FieldDefs.Count -1 do
           cdsBugHistory.FieldByName(mycds.FieldDefs[i].Name).AsVariant :=
             mycds.FieldByName(mycds.FieldDefs[i].Name).AsVariant;
+
+        if cdsBugHistory.FieldByName('ZANNEXFILENAME').AsString <> '' then
+          cdsBugHistory.FieldByName('ZFILESAVE').AsString := '另存为...';
         cdsBugHistory.Post;
         mycds.Next;
       end;
@@ -2034,6 +2051,8 @@ begin
         end;
         dtpAmod.DateTime   := now();
         dtpBugday.DateTime := now();
+        cdsBugCreater.CloneCursor(DM.cdsUser,True);
+        cdsBugAdmder.CloneCursor(DM.cdsUser,True);
         GetBugType();
       end;
     finally
@@ -2142,6 +2161,51 @@ begin
       cdsProject.Data := ClientSystem.fDbOpr.ReadDataSet(PChar(mySQL));
     end;
   end;
+end;
+
+procedure TBugManageDlg.lblSavetofileClick(Sender: TObject);
+begin
+  actBugHistory_Savetofile.Execute;
+end;
+
+procedure TBugManageDlg.actBugHistory_SavetofileExecute(Sender: TObject);
+var
+  myfileid : integer;
+  myfilename : string;
+  myname : string;
+  myver : integer;
+const
+  glSQL  = 'select isnull(max(ZVER),-1) from  TB_FILE_ITEM where ZID=%d';
+begin
+  myfileid   := cdsBugHistory.FieldByName('ZANNEXFILE_ID').AsInteger;
+  myfilename := cdsBugHistory.FieldByName('ZANNEXFILEName').AsString;
+  dlgSave1.FileName := myfilename;
+  if Pos('.',myfilename) > 0 then
+    dlgSave1.DefaultExt := Copy(myfilename,Pos('.',myfilename)+1,Maxint);
+
+  if dlgSave1.Execute then
+  begin
+    Application.ProcessMessages;
+    myver := ClientSystem.fDbOpr.ReadInt(PChar(Format(glSQL,[myfileid])));
+    if myver < 0 then
+    begin
+      MessageBox(Handle,'文件在服务器已不存在,另存文件失败','提示',MB_ICONERROR+MB_OK);
+      Exit;
+    end;
+
+    myname := dlgSave1.FileName;
+    if ClientSystem.DonwFileToFileName(myfileid,myver,myname) then
+    begin
+      ShowMessage('另存文件成功')
+    end
+    else
+      MessageBox(Handle,'另存文件失败','提示',MB_ICONERROR+MB_OK);
+  end;
+end;
+
+procedure TBugManageDlg.dbtxtZFILESAVEClick(Sender: TObject);
+begin
+  actBugHistory_Savetofile.Execute;
 end;
 
 end.

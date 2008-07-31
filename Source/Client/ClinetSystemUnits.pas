@@ -231,13 +231,17 @@ var
   myfilename : String;
   myver : integer;
 const
-  glSQL  = 'select isnull(max(ZVER),0) from  TB_FILE_ITEM where ZID=%d';
+  glSQL  = 'select isnull(max(ZVER),-1) from  TB_FILE_ITEM where ZID=%d';
 begin
   Result := False;
   if not DirectoryExists(fAppDir + '\' +gcfiledir) then
     if not CreateDir(fAppDir + '\' +gcfiledir) then Exit;
   myfilename := format('%s\%s\%s',[fAppDir,gcfiledir,AfileName]);
   myver := self.fDbOpr.ReadInt(PChar(Format(glSQL,[AFile_id])));
+  if myver < 0 then
+  begin
+    Exit;
+  end;
   if DonwFileToFileName(Afile_id,myver,myfilename) then
   begin
     AfileName := myfilename;

@@ -11,6 +11,8 @@
 //
 //   1.增加一个数据包如小于100字节，则不压。 21008-3-19
 //
+//    2. 在 SConnect 内的 InternalClose 方法中将 18000 改为 500 作者:龙仕云 2008-7-30
+//
 //
 ///////////////////////////////////////////////////////////////////////////////
 unit DBSocketConnection;
@@ -61,6 +63,7 @@ type
 //-------------------------
   TBffsSocketConnection = Class(TStreamedConnection)
   private
+    FBffsTransport : ITransport;
     FPort: Integer;
     FHost: string;
     FAddress: string;
@@ -197,7 +200,9 @@ begin
   SocketTransport.Address := FAddress;
   SocketTransport.Port := FPort;
   SocketTransport.fOwner := Self;
-  Result := SocketTransport as ITransport;
+
+  FBffsTransport := SocketTransport as ITransport;
+  Result := FBffsTransport;
 end;
 
 procedure TBffsSocketConnection.DoConnect;
@@ -242,7 +247,7 @@ end;
 
 function TBffsSocketConnection.IsAddressStored: Boolean;
 begin
-  Result := (ObjectBroker = nil) and (Address <> '');  
+  Result := (ObjectBroker = nil) and (Address <> '');
 end;
 
 function TBffsSocketConnection.IsHostStored: Boolean;
