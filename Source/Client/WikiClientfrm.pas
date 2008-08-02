@@ -46,6 +46,7 @@ type
     fOleInPlaceActiveObject:   IOleInPlaceActiveObject;
   public
     { Public declarations }
+    procedure initBase; override;
   end;
 
 
@@ -179,6 +180,12 @@ begin
   Animate1.Active    := False;
   btnStop.Enabled    := False;
   btnRefresh.Enabled := True;
+end;
+
+procedure TWikiClientDlg.initBase;
+begin
+  //
+  Animate1.ResName := 'MOV';
 end;
 
 initialization

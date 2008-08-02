@@ -403,6 +403,8 @@ inherited BugManageDlg: TBugManageDlg
           Width = 1155
           Height = 200
           Align = alTop
+          Color = clBtnFace
+          ParentColor = False
           TabOrder = 0
           object Label1: TLabel
             Left = 16
@@ -812,7 +814,7 @@ inherited BugManageDlg: TBugManageDlg
               PanelHeight = 87
               PanelWidth = 1136
               TabOrder = 0
-              SelectedColor = clMedGray
+              SelectedColor = clMoneyGreen
               object DBText1: TDBText
                 Left = 67
                 Top = 3
@@ -944,6 +946,12 @@ inherited BugManageDlg: TBugManageDlg
                 Anchors = [akRight, akBottom]
                 DataField = 'ZFILESAVE'
                 DataSource = dsBugBugHistory
+                Font.Charset = GB2312_CHARSET
+                Font.Color = clMaroon
+                Font.Height = -15
+                Font.Name = #23435#20307
+                Font.Style = []
+                ParentFont = False
                 OnClick = dbtxtZFILESAVEClick
               end
               object DBMemo1: TDBMemo
@@ -971,8 +979,8 @@ inherited BugManageDlg: TBugManageDlg
           object lbBugCaption: TLabel
             Left = 0
             Top = 0
-            Width = 96
-            Height = 15
+            Width = 1040
+            Height = 18
             Align = alClient
             Caption = 'lbBugCaption'
             Color = clGray

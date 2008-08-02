@@ -1,34 +1,34 @@
 inherited NewTaskDlg: TNewTaskDlg
-  Left = 307
-  Top = 183
+  Left = 292
+  Top = 159
   BorderStyle = bsDialog
   Caption = #26032#24314#20219#21153#21333
-  ClientHeight = 379
-  ClientWidth = 726
+  ClientHeight = 430
+  ClientWidth = 719
   OldCreateOrder = True
   PixelsPerInch = 96
   TextHeight = 15
   object BitBtn1: TBitBtn
-    Left = 552
-    Top = 328
+    Left = 600
+    Top = 387
     Width = 100
     Height = 25
     TabOrder = 0
     Kind = bkCancel
   end
   object BitBtn2: TBitBtn
-    Left = 440
-    Top = 328
+    Left = 488
+    Top = 387
     Width = 100
     Height = 25
     TabOrder = 1
     Kind = bkOK
   end
   object GroupBox1: TGroupBox
-    Left = 17
+    Left = 14
     Top = 17
-    Width = 689
-    Height = 120
+    Width = 691
+    Height = 135
     Caption = #22522#26412#24773#20917
     TabOrder = 2
     object Label1: TLabel
@@ -56,7 +56,7 @@ inherited NewTaskDlg: TNewTaskDlg
       Caption = #20219#21153#21517#31216#65306
     end
     object Label3: TLabel
-      Left = 332
+      Left = 333
       Top = 53
       Width = 38
       Height = 15
@@ -80,14 +80,14 @@ inherited NewTaskDlg: TNewTaskDlg
       ParentColor = False
     end
     object Label10: TLabel
-      Left = 332
+      Left = 333
       Top = 32
       Width = 60
       Height = 15
       Caption = #29256#26412#21495#65306
     end
     object DBText3: TDBText
-      Left = 397
+      Left = 427
       Top = 27
       Width = 200
       Height = 17
@@ -99,14 +99,14 @@ inherited NewTaskDlg: TNewTaskDlg
     object DBEdit1: TDBEdit
       Left = 107
       Top = 76
-      Width = 494
+      Width = 521
       Height = 23
       DataField = 'ZNAME'
       DataSource = ProjectManageClientDlg.dsTask
       TabOrder = 0
     end
     object DBLookupComboBox1: TDBLookupComboBox
-      Left = 399
+      Left = 427
       Top = 49
       Width = 200
       Height = 23
@@ -117,10 +117,22 @@ inherited NewTaskDlg: TNewTaskDlg
       ListSource = ProjectManageClientDlg.dsTaskType
       TabOrder = 1
     end
+    object dbchkAddWork: TDBCheckBox
+      Left = 108
+      Top = 108
+      Width = 97
+      Height = 17
+      Caption = #21152#29677#20219#21153#21333
+      DataField = 'ZOVERWORK'
+      DataSource = ProjectManageClientDlg.dsTask
+      TabOrder = 2
+      ValueChecked = 'True'
+      ValueUnchecked = 'False'
+    end
   end
   object GroupBox2: TGroupBox
     Left = 15
-    Top = 146
+    Top = 158
     Width = 692
     Height = 135
     Caption = #20219#21153#36827#24230
@@ -170,7 +182,7 @@ inherited NewTaskDlg: TNewTaskDlg
       TabOrder = 0
     end
     object DBEdit3: TDBEdit
-      Left = 440
+      Left = 442
       Top = 26
       Width = 200
       Height = 23
@@ -188,7 +200,7 @@ inherited NewTaskDlg: TNewTaskDlg
       TabOrder = 2
     end
     object DBEdit5: TDBEdit
-      Left = 440
+      Left = 442
       Top = 59
       Width = 200
       Height = 23
@@ -204,6 +216,33 @@ inherited NewTaskDlg: TNewTaskDlg
       DataField = 'ZCLOSEDATE'
       DataSource = ProjectManageClientDlg.dsTask
       TabOrder = 4
+    end
+  end
+  object GroupBox3: TGroupBox
+    Left = 16
+    Top = 302
+    Width = 688
+    Height = 75
+    Caption = #23457#26680
+    TabOrder = 4
+    object Label11: TLabel
+      Left = 16
+      Top = 24
+      Width = 83
+      Height = 15
+      Caption = #25351#23450#23457#26680#20154':'
+    end
+    object dblkcbbName: TDBLookupComboBox
+      Left = 112
+      Top = 19
+      Width = 203
+      Height = 23
+      DataField = 'ZCHECKNAME'
+      DataSource = ProjectManageClientDlg.dsTask
+      KeyField = 'ZID'
+      ListField = 'ZNAME'
+      ListSource = ProjectManageClientDlg.dsCheckName
+      TabOrder = 0
     end
   end
 end

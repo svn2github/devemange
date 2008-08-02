@@ -43,9 +43,9 @@ inherited WikiClientDlg: TWikiClientDlg
       OnClick = btnForwardClick
     end
     object Animate1: TAnimate
-      Left = 782
+      Left = 728
       Top = 0
-      Width = 80
+      Width = 134
       Height = 40
       Align = alRight
       Color = clBtnFace

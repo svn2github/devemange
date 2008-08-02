@@ -10,17 +10,19 @@ type
   TTaskScoreDlg = class(TBaseDialog)
     BitBtn1: TBitBtn;
     BitBtn2: TBitBtn;
-    Label1: TLabel;
-    DBEdit1: TDBEdit;
     Label2: TLabel;
     Label3: TLabel;
     DBText1: TDBText;
     Label4: TLabel;
-    DBEdit2: TDBEdit;
     Label5: TLabel;
     Bevel1: TBevel;
     Label6: TLabel;
     Label7: TLabel;
+    Label8: TLabel;
+    dbedtZTASKSCORE: TDBEdit;
+    dbedtZRATE: TDBEdit;
+    Label9: TLabel;
+    dbmmoZREMASK: TDBMemo;
   private
     { Private declarations }
   public

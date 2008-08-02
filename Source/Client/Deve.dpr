@@ -16,6 +16,7 @@ uses
   StatManageClientfrm in 'StatManageClientfrm.pas' {StatManageClientDlg};
 
 {$R *.res}
+{$R resource.res}
 
 begin
   Application.Initialize;

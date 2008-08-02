@@ -114,6 +114,13 @@ inherited UserManageClientDlg: TUserManageClientDlg
               Title.Alignment = taCenter
               Title.Caption = #26435#38480#32452
               Visible = True
+            end
+            item
+              Expanded = False
+              FieldName = 'ZCHECKTASK'
+              Title.Alignment = taCenter
+              Title.Caption = #20219#21153#21333#23457#26680
+              Visible = True
             end>
         end
         object plUserTop: TPanel

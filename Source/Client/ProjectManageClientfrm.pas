@@ -188,6 +188,18 @@ type
     btnTask_NextPage: TBitBtn;
     btnTask_Lastpage: TBitBtn;
     lblPage: TLabel;
+    dbchkOverWork: TDBCheckBox;
+    grp1: TGroupBox;
+    Label16: TLabel;
+    dsCheckName: TDataSource;
+    cdsCheckName: TClientDataSet;
+    dblkcbbZCHECKNAME: TDBLookupComboBox;
+    Label17: TLabel;
+    dbedtZTASKSCORE: TDBEdit;
+    lbl1: TLabel;
+    dbedtZRATE: TDBEdit;
+    actTASK_MeCheck: TAction;
+    btnTASK_MeCheck: TBitBtn;
     procedure actPro_AddExecute(Sender: TObject);
     procedure cbEditProItemClick(Sender: TObject);
     procedure actPro_AddUpdate(Sender: TObject);
@@ -251,6 +263,8 @@ type
     procedure actTask_UpPageExecute(Sender: TObject);
     procedure actTask_NextPageUpdate(Sender: TObject);
     procedure actTask_NextPageExecute(Sender: TObject);
+    procedure cdsTaskUserNewRecord(DataSet: TDataSet);
+    procedure actTASK_MeCheckExecute(Sender: TObject);
   private
     { Private declarations }
     fTaskPageRec : TTaskPageRec;
@@ -397,6 +411,11 @@ begin
   finally
     mycds.Free;
   end;
+
+  cdsCheckName.CloneCursor(DM.cdsUser,true);
+  cdsCheckName.Filtered := False;
+  cdsCheckName.Filter   := 'not (ZCHECKTASK=0)';
+  cdsCheckName.Filtered := True;
 
 
 
@@ -1010,6 +1029,7 @@ begin
   DataSet.FieldByName('ZDESIGN').AsString   := '#设计说明';
   DataSet.FieldByName('ZTESTCASE').AsString := '#测试用例';
   DataSet.FieldByName('ZISNEW').AsBoolean := True;
+  DataSet.FieldByName('ZOVERWORK').AsBoolean := False;
 end;
 
 function TProjectManageClientDlg.BuildCode_Task: String;
@@ -1023,13 +1043,13 @@ var
   mySQL : String;
 const
   glSQL = 'insert TB_TASK(ZCODE,ZTYPE,ZNAME,ZUSER_ID,ZPRO_ID, ' +
-          'ZPRO_VERSION_ID,ZDESIGN,ZTESTCASE,ZSTATUS,ZDATE,ZPALNDAY) ' +
-          'values(''%s'',%d,''%s'',%d,%d,%d,''%s'',''%s'',%d,''%s'',%d)';
+          'ZPRO_VERSION_ID,ZDESIGN,ZTESTCASE,ZSTATUS,ZDATE,ZPALNDAY,ZCHECKNAME,ZOVERWORK) ' +
+          'values(''%s'',%d,''%s'',%d,%d,%d,''%s'',''%s'',%d,''%s'',%d,%d%d)';
   glSQL2 = 'update TB_TASK set ZSTATUS=%d,ZDESIGN=''%s'',ZTESTCASE=''%s'' ' +
            'where ZCODE=''%s''';
   glSQL3 = 'update TB_TASK set ZSTATUS=%d,ZDESIGN=''%s'',ZTESTCASE=''%s'', ' +
            'ZNAME=''%s'',ZPALNDAY=%d,ZBEGINDATE=''%s'',ZDAY=%d, ' +
-           'ZSUCCESSDATE=''%s'',ZCLOSEDATE=''%s''' +
+           'ZSUCCESSDATE=''%s'',ZCLOSEDATE=''%s'',ZCHECKNAME=%d,ZOVERWORK=%d ' +
            'where ZCODE=''%s''';
 
 begin
@@ -1037,6 +1057,7 @@ begin
   //保存
   if DataSet.FieldByName('ZISNEW').AsBoolean then
   begin
+
     mySQL := format(glSQL,[
       DataSet.FieldByName('ZCODE').AsString,
       DataSet.FieldByName('ZTYPE').AsInteger,
@@ -1048,7 +1069,9 @@ begin
       DataSet.FieldByName('ZTESTCASE').AsString,
       DataSet.FieldByName('ZSTATUS').AsInteger,
       DataSet.FieldByName('ZDATE').AsString,
-      DataSet.FieldByName('ZPALNDAY').AsInteger]);
+      DataSet.FieldByName('ZPALNDAY').AsInteger,
+      DataSet.FieldByName('ZCHECKNAME').AsInteger,
+      Ord(DataSet.FieldByName('ZOVERWORK').AsBoolean)]);
 
     ClientSystem.fDbOpr.BeginTrans;
     try
@@ -1073,6 +1096,8 @@ begin
         DataSet.FieldByName('ZDAY').AsInteger,
         DataSet.FieldByName('ZSUCCESSDATE').AsString,
         DataSet.FieldByName('ZCLOSEDATE').AsString,
+        DataSet.FieldByName('ZCHECKNAME').AsInteger,
+        Ord(DataSet.FieldByName('ZOVERWORK').AsBoolean),
         DataSet.FieldByName('ZCODE').AsString]);
     end
     else begin
@@ -1106,14 +1131,7 @@ begin
     cdsTask.Post;
   if cdsTaskUser.State in [dsEdit,dsInsert] then
   begin
-    if cdsTask.FieldByName('ZUSER_ID').AsInteger <> ClientSystem.fEditer_id then
-    begin
-      MessageBox(Handle,'不是你创建的任务单，不能评分。','提示',
-        MB_ICONWARNING+MB_OK);
-      cdsTaskUser.Cancel;
-    end
-    else
-      cdsTaskUser.Post;
+    cdsTaskUser.Post;
   end;
   if cdsTaskItem.State in [dsEdit,dsInsert] then
     cdsTaskItem.Post;
@@ -1137,6 +1155,7 @@ var
   i : integer;
   myfrom : TSelectUsersDlg;
 begin
+
   //只有我创建的任务才能分给别人
   if (cdsTask.FieldByName('ZUSER_ID').AsInteger <> ClientSystem.fEditer_id) then
   begin
@@ -1149,32 +1168,40 @@ begin
   try
     if myfrom.ShowModal = mrOK then
     begin
-      for i:=0 to myfrom.lbUserCode.Count -1 do
-      begin
-        if not
-          cdsTaskUser.Locate('ZUSER_ID',myfrom.lbUserCode.Items[i],
-            [loPartialKey]) then
+      Application.ProcessMessages;
+      
+      ShowProgress('更新内容...',0);
+      try
+        for i:=0 to myfrom.lbUserCode.Count -1 do
         begin
-          //加入库内
-          cdsTaskUser.Append;
-          cdsTaskUser.FieldByName('ZISNEW').AsBoolean := True;
-          cdsTaskUser.FieldByName('ZTASK_CODE').AsString :=
-            cdsTask.FieldByName('ZCODE').AsString;
-          cdsTaskUser.FieldByName('ZUSER_ID').AsInteger :=
-            strtoint(myfrom.lbUserCode.Items[i]);
-          cdsTaskUser.FieldByName('ZCANCEL').AsBoolean := False;
-          cdsTaskUser.Post;
+          if not
+            cdsTaskUser.Locate('ZUSER_ID',myfrom.lbUserCode.Items[i],
+              [loPartialKey]) then
+          begin
+            //加入库内
+            cdsTaskUser.Append;
+            cdsTaskUser.FieldByName('ZISNEW').AsBoolean := True;
+            cdsTaskUser.FieldByName('ZTASK_CODE').AsString :=
+              cdsTask.FieldByName('ZCODE').AsString;
+            cdsTaskUser.FieldByName('ZUSER_ID').AsInteger :=
+              strtoint(myfrom.lbUserCode.Items[i]);
+            cdsTaskUser.FieldByName('ZCANCEL').AsBoolean := False;
+            cdsTaskUser.Post;
 
-          if not(cdsTask.State in [dsEdit,dsInsert]) then
-            cdsTask.Edit;
-          cdsTask.FieldByName('ZSTATUS').AsInteger := Ord(tsing);
-          cdsTask.FieldByName('ZBEGINDATE').AsString :=
-            formatdatetime('yyyy-mm-dd hh:ss:mm',ClientSystem.SysNow);
-          cdsTask.Post;
+            if not(cdsTask.State in [dsEdit,dsInsert]) then
+              cdsTask.Edit;
+            cdsTask.FieldByName('ZSTATUS').AsInteger := Ord(tsing);
+            cdsTask.FieldByName('ZBEGINDATE').AsString :=
+              formatdatetime('yyyy-mm-dd hh:ss:mm',ClientSystem.SysNow);
+            cdsTask.Post;
+          end;
         end;
+        //执行邮件通知
+        UpdateProgressTitle('邮件通知...');
+        ClientSystem.fDbOpr.MailTo(1,cdsTask.FieldByName('ZCODE').AsString,-1);
+      finally
+        HideProgress();
       end;
-      //执行邮件通知
-      ClientSystem.fDbOpr.MailTo(1,cdsTask.FieldByName('ZCODE').AsString,-1);
     end;
   finally
     myfrom.Free;
@@ -1287,9 +1314,9 @@ var
   myd : integer;
   mySQL : string;
 const
-  glSQL = 'insert into TB_TASK_USER (ZTASK_CODE,ZUSER_ID) values(''%s'',%d)';
-  glSQL2 = 'update TB_TASK_USER set ZPERFACT=%d,ZSCORE=%d,ZREMASK=''%s'', ' +
-           ' ZCANCEL=%d,ZSCOREDATE=''%s'' where ZTASK_CODE=''%s'' and ZUSER_ID=%d';
+  glSQL = 'insert into TB_TASK_USER (ZTASK_CODE,ZUSER_ID,ZCANCEL) values(''%s'',%d,0)';
+  glSQL2 = 'update TB_TASK_USER set ZPERFACT=%f,ZSCORE=%f,ZREMASK=''%s'', ' +
+           ' ZCANCEL=%d,ZSCOREDATE=''%s'',ZTASKSCORE=%f,ZRATE=%f where ZTASK_CODE=''%s'' and ZUSER_ID=%d';
 begin
   //
   if fLoading then Exit;
@@ -1318,11 +1345,14 @@ begin
 
     myd := Ord(dataset.FieldByName('ZCANCEL').AsBoolean);
     mysql := format(glSQL2,[
-      dataSet.FieldByName('ZPERFACT').AsInteger,
-      dataSet.FieldByName('ZSCORE').AsInteger,
+      dataSet.FieldByName('ZPERFACT').AsFloat,
+      dataSet.FieldByName('ZSCORE').AsFloat,
       dataset.FieldByName('ZREMASK').AsString,
       myd,
       dataset.FieldByName('ZSCOREDATE').AsString, //评分时间
+      dataSet.FieldByName('ZTASKSCORE').AsFloat,
+      dataSet.FieldByName('ZRATE').AsFloat,
+
       dataset.FieldByName('ZTASK_CODE').AsString,
       dataset.FieldByName('ZUSER_ID').AsInteger ]);
     ClientSystem.fDbOpr.BeginTrans;
@@ -1435,18 +1465,23 @@ begin
   if cdsTaskUser.Locate('ZUSER_ID;ZCANCEL',VarArrayOf([ClientSystem.fEditer_id,0]),
     [loPartialKey]) then
   begin
-    if not (cdsTask.State in [dsEdit,dsInsert]) then
-      cdsTask.Edit;
-    cdsTask.FieldByName('ZSTATUS').AsInteger := Ord(tsSccuess);
-    cdsTask.FieldByName('ZSUCCESSDATE').AsString :=
-      formatdatetime('yyyy-mm-dd hh:ss:mm',ClientSystem.SysNow);
-    //计算完成的工期
-    mydate1 := strtodate(formatdatetime('yyyy-mm-dd',strtodatetime(cdsTask.FieldByName('ZBEGINDATE').AsString)));
-    mydate2 := strtodate(formatdatetime('yyyy-mm-dd',strtodatetime(cdsTask.FieldByName('ZSUCCESSDATE').AsString)));
-    cdsTask.FieldByName('ZDAY').AsInteger := Trunc(mydate2-mydate1)+1;
-    cdsTask.Post;
-    //执行邮件通知
-    ClientSystem.fDbOpr.MailTo(1,cdsTask.FieldByName('ZCODE').AsString,-1);
+    ShowProgress('更新内容...',0);
+    try
+      if not (cdsTask.State in [dsEdit,dsInsert]) then
+        cdsTask.Edit;
+      cdsTask.FieldByName('ZSTATUS').AsInteger := Ord(tsSccuess);
+      cdsTask.FieldByName('ZSUCCESSDATE').AsDateTime := ClientSystem.SysNow;
+      //计算完成的工期
+      mydate1 := strtodate(formatdatetime('yyyy-mm-dd',strtodatetime(cdsTask.FieldByName('ZBEGINDATE').AsString)));
+      mydate2 := strtodate(formatdatetime('yyyy-mm-dd',strtodatetime(cdsTask.FieldByName('ZSUCCESSDATE').AsString)));
+      cdsTask.FieldByName('ZDAY').AsInteger := Trunc(mydate2-mydate1)+1;
+      cdsTask.Post;
+      //执行邮件通知
+      UpdateProgressTitle('邮件通知...');
+      ClientSystem.fDbOpr.MailTo(1,cdsTask.FieldByName('ZCODE').AsString,-1);
+    finally
+      HideProgress;
+    end;
   end
   else begin
     MessageBox(Handle,'不是你的任务，不能提交完成。','提示',
@@ -1471,17 +1506,23 @@ begin
     Exit;
   mycds := TClientDataSet.Create(nil);
   try
-    mycds.CloneCursor(cdsTask,False);
+    mycds.CloneCursor(cdsTaskUser,False);
     if mycds.Locate('ZUSER_ID',ClientSystem.fEditer_id,[loPartialKey]) then
     begin
-      if not (cdsTask.State in [dsEdit,dsInsert]) then
-        cdsTask.Edit;
-      cdsTask.FieldByName('ZSTATUS').AsInteger := Ord(tsClose);
-      cdsTask.FieldByName('ZCLOSEDATE').AsString :=
-          formatdatetime('yyyy-mm-dd hh:ss:mm',ClientSystem.SysNow);
-      cdsTask.Post;
-      //执行邮件通知
-      ClientSystem.fDbOpr.MailTo(1,cdsTask.FieldByName('ZCODE').AsString,-1);
+      ShowProgress('更新内容...',0);
+      try
+        if not (cdsTask.State in [dsEdit,dsInsert]) then
+          cdsTask.Edit;
+        cdsTask.FieldByName('ZSTATUS').AsInteger := Ord(tsClose);
+        cdsTask.FieldByName('ZCLOSEDATE').AsString :=
+            formatdatetime('yyyy-mm-dd hh:ss:mm',ClientSystem.SysNow);
+        cdsTask.Post;
+        //执行邮件通知
+        UpdateProgressTitle('邮件通知...');
+        ClientSystem.fDbOpr.MailTo(1,cdsTask.FieldByName('ZCODE').AsString,-1);
+      finally
+        HideProgress;
+      end;
     end
     else begin
       MessageBox(Handle,'不是你创建的任务，不能关闭。','提示',
@@ -1500,8 +1541,6 @@ begin
 end;
 
 procedure TProjectManageClientDlg.actTask_ActionExecute(Sender: TObject);
-var
-  mycsd : TClientDataSet;
 begin
   if MessageBox(Handle,'你是不真要激活任务单吗,如有疑问先与任务单处理人联系.',
     '激活任务单',MB_ICONQUESTION+MB_YESNO)=IDNO then Exit;
@@ -1515,25 +1554,17 @@ begin
     cdsTask.Post;
   end
   else begin
-    mycsd := TClientDataSet.Create(nil);
+    ShowProgress('更新内容...',0);
     try
-      mycsd.CloneCursor(cdsTask,False);
-      if mycsd.Locate('ZUSER_ID',ClientSystem.fEditer_id,[loPartialKey]) then
-      begin
-        if not (cdsTask.State in [dsEdit,dsInsert]) then
-          cdsTask.Edit;
-        cdsTask.FieldByName('ZSTATUS').AsInteger := Ord(tsing);
-        cdsTask.Post;
-        //执行邮件通知
-        ClientSystem.fDbOpr.MailTo(1,cdsTask.FieldByName('ZCODE').AsString,-1);
-      end
-      else begin
-        MessageBox(Handle,'不是你执行任务或创建任务，不能提交激活。','提示',
-          MB_ICONWARNING+MB_OK);
-        Exit;
-      end;
+      if not (cdsTask.State in [dsEdit,dsInsert]) then
+        cdsTask.Edit;
+      cdsTask.FieldByName('ZSTATUS').AsInteger := Ord(tsing);
+      cdsTask.Post;
+      //执行邮件通知
+      UpdateProgressTitle('邮件通知...');
+      ClientSystem.fDbOpr.MailTo(1,cdsTask.FieldByName('ZCODE').AsString,-1);
     finally
-      mycsd.Free;
+      HideProgress;
     end;
   end;
 end;
@@ -1558,19 +1589,30 @@ begin
   mycds := TClientDataSet.Create(nil);
   mycds.CloneCursor(cdsTask,False);  //为了处理locate()方法定位问题。
   try
-    if mycds.Locate('ZUSER_ID',ClientSystem.fEditer_id,[loPartialKey]) then
+    if cdsTask.FieldByName('ZCHECKNAME').AsInteger <> ClientSystem.fEditer_id then
+    begin
+      MessageBox(Handle,'这个任务单没有指定你来审核，不能评分。','提示',
+        MB_ICONWARNING+MB_OK);
+      Exit;
+    end;
+    
+    if mycds.Locate('ZCHECKNAME',ClientSystem.fEditer_id,[loPartialKey]) then
     begin
       myfrom := TTaskScoreDlg.Create(nil);
       try
         if not (cdsTaskUser.State in [dsEdit,dsInsert]) then
           cdsTaskUser.Edit;
-          
+
+        //加班处理
+        if cdsTask.FieldByName('ZOVERWORK').AsBoolean then
+          cdsTaskUser.FieldByName('ZRATE').AsFloat := 1.5;
+
         if myfrom.ShowModal() = mrOK then
         begin
-          cdsTaskUser.FieldByName('ZSCOREDATE').AsString :=
-            formatdatetime('yyyy-mm-dd hh:ss:mm',ClientSystem.SysNow);
+          cdsTaskUser.FieldByName('ZSCORE').AsFloat :=
+            cdsTaskUser.FieldByName('ZTASKSCORE').AsFloat * cdsTaskUser.FieldByName('ZRATE').AsFloat;
+          cdsTaskUser.FieldByName('ZSCOREDATE').AsDateTime := ClientSystem.SysNow;
           cdsTaskUser.Post;
-
         end
         else
           cdsTaskUser.Cancel;
@@ -1631,7 +1673,7 @@ var
 const
     glSQL = 'exec pt_SplitPage ''TB_TASK'',' +
           '''ZCODE,ZTYPE,ZNAME,ZUSER_ID,ZPRO_ID,ZPRO_VERSION_ID,ZDESIGN,ZTESTCASE,' +
-          'ZSTATUS,ZDATE,ZPALNDAY,ZBEGINDATE,ZDAY,ZSUCCESSDATE,ZCLOSEDATE'', ' +
+          'ZSTATUS,ZDATE,ZPALNDAY,ZBEGINDATE,ZDAY,ZSUCCESSDATE,ZCLOSEDATE,ZCHECKNAME,ZOVERWORK'', ' +
           '''%s'',20,%d,%d,1,''%s''';
 begin
 
@@ -1805,6 +1847,32 @@ procedure TProjectManageClientDlg.actTask_NextPageExecute(Sender: TObject);
 begin
   fTaskPageRec.fPageindex := fTaskPageRec.fPageindex+1;
   LoadTaskItem(fTaskPageRec.fPageindex,fTaskPageRec.fwhere);
+end;
+
+procedure TProjectManageClientDlg.cdsTaskUserNewRecord(DataSet: TDataSet);
+begin
+  DataSet.FieldByName('ZCANCEL').AsBoolean := False;
+end;
+
+procedure TProjectManageClientDlg.actTASK_MeCheckExecute(Sender: TObject);
+var
+  myb : Boolean;
+begin
+  //生成数据
+  myb := fLoading;
+  fLoading := True;
+  cdsTask.DisableControls;
+  try
+    fTaskPageRec.fwhere := format('ZCHECKNAME=%d',[ClientSystem.fEditer_id]);
+    fTaskPageRec.fPageindex := 1;
+    fTaskPageRec.fCount := Self.GetTaskItemPageCount(1,fTaskPageRec.fwhere);
+    LoadTaskItem(1,fTaskPageRec.fwhere);
+
+    cdsTask.First;
+  finally
+    cdsTask.EnableControls;
+    fLoading := myb;
+  end;
 end;
 
 end.

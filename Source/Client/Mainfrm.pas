@@ -125,6 +125,7 @@ uses
 {$R *.dfm}
 
 
+
 { TMainDlg }
 
 procedure TMainDlg.DoChangeClient(NewClient: TBaseChildClass);

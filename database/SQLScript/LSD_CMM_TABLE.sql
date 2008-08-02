@@ -15,6 +15,7 @@
 *       3.文件管理的文件权限,可以设计为与目录一样的权限. 2008-4-28
 *          这样我们不可以一一对每一个文件都做权限。
 *       4.增加系统参数表 TB_SYSPARAMS 2006-5-13
+*       5.TB_USER 内增加 TCHECKTASK : bit 2008-8-2
 *
 ******************************************************************************/
 
@@ -103,6 +104,7 @@ create table TB_USER_ITEM(
 	ZEMAIL     varchar(50),                          /*邮箱*/
 	ZGROUP_ID  int,                                  /*组ID*/
 	ZPRIVGROUP int,                                  /*权限组*/
+	ZCHECKTASK bit default 0,                        /*审核任务单* 2008-8-2*/
 	constraint PK_TB_USER_ITEM primary key(ZID)       
 )
 go
@@ -199,20 +201,22 @@ go
 create table TB_TASK(
 	ZCODE           varchar(30) not null,                   /*自行按一定的规则生成 人员编号_TASK_时间*/
 	ZTYPE           int not null,                           /*类型 新增功能=0,变更功能=1*/
-	ZNAME			varchar(100),                           /*名称*/
-	ZUSER_ID        int ,									/*任务单制单人,并有关闭任务单功能*/
+	ZNAME			varchar(100),                   /*名称*/
+	ZUSER_ID        int ,					/*创建人*/				/*任务单制单人,并有关闭任务单功能*/
 	ZPRO_ID         int not null,                           /*项目ID*/
 	ZPRO_VERSION_ID int not null,                           /*项目版本,只有定版后才能生成任务单*/
 	ZDESIGN         text,                                   /*项目的设计说明*/
 	ZTESTCASE       text,                                   /*测试用例*/
 	ZSTATUS         int not null,                           /*状态 待分发=0 ; 执行中=1 ; 撤消=2; 完成=3 ; 关闭=4;激活=5*/
 	ZDATE           datetime,                               /*制单时间*/
-	ZPALNDAY        float not null default 1,                  /*计划工期(天)*/
+	ZPALNDAY        float not null default 1,               /*计划工期(天)*/
 
-	ZBEGINDATE      datetime,	                            /*任务开始时间 由任务执行人生成,这时状态变更为执行中*/
-	ZDAY            float,                                    /*实际的天数*/
+	ZBEGINDATE      datetime,	                        /*任务开始时间 由任务执行人生成,这时状态变更为执行中*/
+	ZDAY            float,                                  /*实际的天数*/
 	ZSUCCESSDATE    datetime,                               /*完成时间*/
 	ZCLOSEDATE      datetime,                               /*关闭时间*/
+	ZCHECKNAME      int not null default 0,                 /*审核人*/
+	ZOVERWORK       bit  default 0,                         /*是否是加班任务单*/
 	
 	
 	constraint PK_TB_TASK primary key(ZCODE) 
@@ -226,13 +230,15 @@ if exists (select * from dbo.sysobjects
 drop table [dbo].[TB_TASK_USER]
 go
 create table TB_TASK_USER(
-	ZTASK_CODE		varchar(30) not null,
-	ZUSER_ID        int not null,							/*执行的人*/
-	ZPERFACT        int,                                    /*满分分数*/
-	ZSCORE          int,                                    /*得分*/
+	ZTASK_CODE      varchar(30) not null,
+	ZUSER_ID        int not null,			        /*执行的人*/
+	ZTASKSCORE      float,                                  /*任务得分*/ 
+	ZPERFACT        float,                                  /*满分分数*/
+	ZSCORE          float,                                  /*得分 = 任务得分*分数倍数*/
 	ZREMASK         varchar(200),                           /*备注*/
 	ZSCOREDATE      datetime,                               /*评分的时间，用于统计一个月的得分*/
-	ZCANCEL			bit not null default 1,                 /*取消执行*/
+        ZRATE           float not null default 1,               /*分数倍数*/ 
+	ZCANCEL	        bit not null default 1,                 /*取消执行*/
 	constraint PK_TB_TASK_USER primary key(ZTASK_CODE,ZUSER_ID)
 )
 go

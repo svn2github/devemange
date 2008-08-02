@@ -92,7 +92,10 @@ procedure ShowProgress(const Title: string;ACount:integer);
 //  i: Integer;
 begin
   if not Assigned(ProgressForm) then
-    ProgressForm := TProgressForm.Create(Application.MainForm)
+  begin
+    ProgressForm := TProgressForm.Create(Application.MainForm);
+    ProgressForm.ani1.ResName := 'MOV';
+  end
   else
     ProgressForm.BringToFront;
   ProgressForm.lblTitle.Caption := Title;

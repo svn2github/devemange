@@ -1,3 +1,11 @@
+///////////////////////////////////////////////////////////////////////////////
+//
+//  用户管理
+// 1.增加任务审核的设置 作者:龙仕云 2008-8-2
+//
+//
+//
+///////////////////////////////////////////////////////////////////////////////
 unit UserManageClientfrm;
 
 interface
@@ -174,11 +182,11 @@ var
   mySQL : string;
 const
   glSQL  = 'update TB_USER_ITEM set ZNAME=''%s'',ZPASS=''%s'',ZSTOP=%d,ZTYPE=%d,'+
-           'ZEMAIL=''%s'',ZGROUP_ID=%d,ZPRIVGROUP=%d ' +
+           'ZEMAIL=''%s'',ZGROUP_ID=%d,ZPRIVGROUP=%d,ZCHECKTASK=%d ' +
            'where ZID=%d';
   glSQL2 = 'insert TB_USER_ITEM(ZNAME,ZPASS,ZSTOP,ZTYPE,ZEMAIL,ZGROUP_ID,'+
-           'ZPRIVGROUP) ' +
-           'values(''%s'',''%s'',%d,%d,''%s'',%d,%d)';
+           'ZPRIVGROUP,ZCHECKTASK) ' +
+           'values(''%s'',''%s'',%d,%d,''%s'',%d,%d,%d)';
 begin
   if fLoading then Exit;
   if not DataSet.FieldByName('ZISNEW').AsBoolean then
@@ -191,6 +199,7 @@ begin
       DataSet.FieldByName('ZEMAIL').AsString,
       DataSet.FieldByName('ZGROUP_ID').AsInteger,
       DataSet.FieldByName('ZPRIVGROUP').AsInteger,
+      Ord(DataSet.FieldByName('ZCHECKTASK').AsBoolean),
       DataSet.FieldByName('ZID').Asinteger]);
     ClientSystem.fDbOpr.BeginTrans;
     try
@@ -208,7 +217,8 @@ begin
       DataSet.FieldByName('ZTYPE').AsInteger,
       DataSet.FieldByName('ZEMAIL').AsString,
       DataSet.FieldByName('ZGROUP_ID').AsInteger,
-      DataSet.FieldByName('ZPRIVGROUP').AsInteger]);
+      DataSet.FieldByName('ZPRIVGROUP').AsInteger,
+      Ord(DataSet.FieldByName('ZCHECKTASK').AsBoolean)]);
     ClientSystem.fDbOpr.BeginTrans;
     try
       ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
@@ -226,6 +236,7 @@ begin
   DataSet.FieldByName('ZTYPE').AsInteger := 1;
   DataSet.FieldByName('ZISNEW').AsBoolean := True;
   DataSet.FieldByName('ZISLOAD').AsBoolean := False;
+  DataSet.FieldByName('ZCHECKTASK').AsBoolean := False;
 end;
 
 procedure TUserManageClientDlg.actUser_DelExecute(Sender: TObject);

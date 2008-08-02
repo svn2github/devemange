@@ -32,6 +32,10 @@ type
     DBEdit4: TDBEdit;
     DBEdit5: TDBEdit;
     DBEdit6: TDBEdit;
+    GroupBox3: TGroupBox;
+    Label11: TLabel;
+    dblkcbbName: TDBLookupComboBox;
+    dbchkAddWork: TDBCheckBox;
   private
     { Private declarations }
   public
