@@ -1,0 +1,1 @@
+BRCC32 resource.rc resource.res
