@@ -36,6 +36,8 @@ type
     Label11: TLabel;
     dblkcbbName: TDBLookupComboBox;
     dbchkAddWork: TDBCheckBox;
+    chkSelf: TCheckBox;
+    edtSelfSrce: TEdit;
   private
     { Private declarations }
   public

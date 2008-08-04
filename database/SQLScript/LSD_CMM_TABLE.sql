@@ -239,6 +239,7 @@ create table TB_TASK_USER(
 	ZSCOREDATE      datetime,                               /*评分的时间，用于统计一个月的得分*/
         ZRATE           float not null default 1,               /*分数倍数*/ 
 	ZCANCEL	        bit not null default 1,                 /*取消执行*/
+	ZSELFSCORE      float,                                  /*自定分数*/
 	constraint PK_TB_TASK_USER primary key(ZTASK_CODE,ZUSER_ID)
 )
 go

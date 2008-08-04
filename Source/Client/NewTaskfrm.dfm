@@ -1,6 +1,6 @@
 inherited NewTaskDlg: TNewTaskDlg
-  Left = 292
-  Top = 159
+  Left = 309
+  Top = 103
   BorderStyle = bsDialog
   Caption = #26032#24314#20219#21153#21333
   ClientHeight = 430
@@ -221,20 +221,20 @@ inherited NewTaskDlg: TNewTaskDlg
   object GroupBox3: TGroupBox
     Left = 16
     Top = 302
-    Width = 688
+    Width = 689
     Height = 75
-    Caption = #23457#26680
+    Caption = #20219#21153#23457#26680
     TabOrder = 4
     object Label11: TLabel
       Left = 16
-      Top = 24
+      Top = 29
       Width = 83
       Height = 15
       Caption = #25351#23450#23457#26680#20154':'
     end
     object dblkcbbName: TDBLookupComboBox
       Left = 112
-      Top = 19
+      Top = 24
       Width = 203
       Height = 23
       DataField = 'ZCHECKNAME'
@@ -243,6 +243,21 @@ inherited NewTaskDlg: TNewTaskDlg
       ListField = 'ZNAME'
       ListSource = ProjectManageClientDlg.dsCheckName
       TabOrder = 0
+    end
+    object chkSelf: TCheckBox
+      Left = 336
+      Top = 28
+      Width = 191
+      Height = 17
+      Caption = #25351#27966#32473#33258#24049','#24182#33258#23450#20998#25968':'
+      TabOrder = 1
+    end
+    object edtSelfSrce: TEdit
+      Left = 527
+      Top = 24
+      Width = 134
+      Height = 23
+      TabOrder = 2
     end
   end
 end
