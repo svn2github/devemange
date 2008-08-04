@@ -1,6 +1,6 @@
 inherited ProjectManageClientDlg: TProjectManageClientDlg
-  Left = 62
-  Top = 145
+  Left = 141
+  Top = 90
   Width = 1035
   Height = 623
   Caption = #39033#30446#31649#29702
@@ -618,7 +618,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
             Top = 0
             Width = 606
             Height = 425
-            ActivePage = tsUser
+            ActivePage = tsDesign
             Align = alClient
             TabOrder = 0
             TabPosition = tpBottom
@@ -774,7 +774,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
                     Caption = #24471#20998#65306
                   end
                   object Label3: TLabel
-                    Left = 26
+                    Left = 24
                     Top = 161
                     Width = 45
                     Height = 15
@@ -782,14 +782,14 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
                   end
                   object Label4: TLabel
                     Left = 24
-                    Top = 189
+                    Top = 254
                     Width = 75
                     Height = 15
                     Caption = #35780#20998#26102#38388#65306
                   end
                   object DBText3: TDBText
-                    Left = 100
-                    Top = 189
+                    Left = 106
+                    Top = 252
                     Width = 200
                     Height = 17
                     Color = clMoneyGreen
@@ -799,7 +799,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
                   end
                   object Label5: TLabel
                     Left = 24
-                    Top = 247
+                    Top = 285
                     Width = 180
                     Height = 15
                     Caption = #27880#24847#65292#35780#20998#21518#28857#20851#38381#20219#21153#12290
@@ -845,24 +845,15 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
                     ReadOnly = True
                     TabOrder = 1
                   end
-                  object DBEdit3: TDBEdit
-                    Left = 100
-                    Top = 157
-                    Width = 400
-                    Height = 23
-                    DataField = 'ZREMASK'
-                    DataSource = dsTaskUser
-                    TabOrder = 2
-                  end
                   object DBCheckBox1: TDBCheckBox
-                    Left = 329
-                    Top = 27
+                    Left = 339
+                    Top = 29
                     Width = 97
                     Height = 17
                     Caption = #21462#28040#25191#34892#20154
                     DataField = 'ZCANCEL'
                     DataSource = dsTaskUser
-                    TabOrder = 3
+                    TabOrder = 2
                     ValueChecked = 'True'
                     ValueUnchecked = 'False'
                   end
@@ -875,7 +866,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
                     DataField = 'ZTASKSCORE'
                     DataSource = dsTaskUser
                     ReadOnly = True
-                    TabOrder = 4
+                    TabOrder = 3
                   end
                   object dbedtZRATE: TDBEdit
                     Left = 381
@@ -886,7 +877,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
                     DataField = 'ZRATE'
                     DataSource = dsTaskUser
                     ReadOnly = True
-                    TabOrder = 5
+                    TabOrder = 4
                   end
                   object dbedtZSELFSCORE: TDBEdit
                     Left = 101
@@ -894,6 +885,15 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
                     Width = 198
                     Height = 23
                     DataField = 'ZSELFSCORE'
+                    DataSource = dsTaskUser
+                    TabOrder = 5
+                  end
+                  object dbmmoZREMASK: TDBMemo
+                    Left = 103
+                    Top = 153
+                    Width = 394
+                    Height = 79
+                    DataField = 'ZREMASK'
                     DataSource = dsTaskUser
                     TabOrder = 6
                   end

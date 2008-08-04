@@ -131,7 +131,6 @@ type
     Label2: TLabel;
     DBEdit1: TDBEdit;
     DBEdit2: TDBEdit;
-    DBEdit3: TDBEdit;
     Label3: TLabel;
     Label4: TLabel;
     DBText3: TDBText;
@@ -202,6 +201,7 @@ type
     btnTASK_MeCheck: TBitBtn;
     lbl2: TLabel;
     dbedtZSELFSCORE: TDBEdit;
+    dbmmoZREMASK: TDBMemo;
     procedure actPro_AddExecute(Sender: TObject);
     procedure cbEditProItemClick(Sender: TObject);
     procedure actPro_AddUpdate(Sender: TObject);
@@ -1032,6 +1032,10 @@ begin
       begin
         ShowProgress('ÓÊ¼þÍ¨Öª...',0);
         try
+          cdsTask.Edit;
+          cdsTask.FieldByName('ZBEGINDATE').AsString :=
+          formatdatetime('yyyy-mm-dd hh:ss:mm',ClientSystem.SysNow);
+          cdsTask.Post;
           ClientSystem.fDbOpr.MailTo(1,cdsTask.FieldByName('ZCODE').AsString,-1);
         finally
           HideProgress;

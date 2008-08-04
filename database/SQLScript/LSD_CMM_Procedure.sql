@@ -151,11 +151,13 @@ set @mailtext  = @TreePath  + char(13) +char(10)+
 end
 GO
 
+
 /*
 创建: 2008-6-28  作者:龙仕云
 目的: 准备任务单的邮件内容
 修改：
 编号   时间         修改人             修改内容
+ 1     2008-8-4    龙仕云      增加审核人的邮件发送
 
 */
 
@@ -173,6 +175,7 @@ declare @Auathor varchar(20)   --创建任务的人
 declare @TaskContext varchar(4000) --任务的内容
 declare @TaskStatus varchar(20) --任务单状态
 declare @myMail varchar(50)
+declare @CheckMail varchar(50) --审核人的邮箱
 
 
 begin
@@ -181,18 +184,21 @@ begin
 --取出标题及作者
 declare my_cursor cursor 
 for
-select  a.ZName as TaskName,b.ZNAME as UserName,c.ZNAME as ProName , d.ZVER , e.ZName as STATUS ,a.ZDESIGN ,b.ZEMAIL from TB_TASK as a
+select  a.ZName as TaskName,b.ZNAME as UserName,c.ZNAME as ProName , d.ZVER , e.ZName as STATUS ,a.ZDESIGN ,b.ZEMAIL,f.ZEMAIL as CheckMail  
+from TB_TASK as a
 left join  TB_USER_ITEM as b  on a.ZUSER_ID=b.ZID 
 left join  TB_PRO_ITEM   as c  on a.ZPRO_ID=c.ZID
 left join  TB_PRO_VERSION as d on d.ZID=a.ZPRO_VERSION_ID
 left join  TB_TASK_PARAMS as e on e.ZTYPE=1 and e.ZID=a.ZSTATUS 
+left join  TB_USER_ITEM as f on a.ZCHECKNAME=f.ZID
 where a.ZCODE=@TaskCode 
 
 open my_cursor
-fetch next from my_cursor into @mailtitle,@Auathor,@ProName,@Prover,@TaskStatus,@TaskContext,@mailto
+fetch next from my_cursor into @mailtitle,@Auathor,@ProName,@Prover,@TaskStatus,@TaskContext,@mailto,@CheckMail
 close   my_cursor  
 deallocate my_cursor
 
+set @mailto =isnull(@mailto,'')+';' + isnull(@CheckMail,'')
 
 --取出任务的执行人,注意取消执行人
 declare my_cursor cursor

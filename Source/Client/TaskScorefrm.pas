@@ -14,15 +14,16 @@ type
     Label3: TLabel;
     DBText1: TDBText;
     Label4: TLabel;
-    Label5: TLabel;
     Bevel1: TBevel;
-    Label6: TLabel;
-    Label7: TLabel;
     Label8: TLabel;
     dbedtZTASKSCORE: TDBEdit;
     dbedtZRATE: TDBEdit;
     Label9: TLabel;
     dbmmoZREMASK: TDBMemo;
+    Label1: TLabel;
+    dbtxtZPERFACT: TDBText;
+    lbl1: TLabel;
+    Label5: TLabel;
   private
     { Private declarations }
   public
