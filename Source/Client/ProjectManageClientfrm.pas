@@ -202,6 +202,15 @@ type
     lbl2: TLabel;
     dbedtZSELFSCORE: TDBEdit;
     dbmmoZREMASK: TDBMemo;
+    pnlBugInfo: TPanel;
+    Label18: TLabel;
+    edtBugCode: TEdit;
+    btnFindBug: TBitBtn;
+    dbedtZTITLE: TDBEdit;
+    dbtxt1: TDBText;
+    cdsBug: TClientDataSet;
+    dsBug: TDataSource;
+    btnAddDesText: TBitBtn;
     procedure actPro_AddExecute(Sender: TObject);
     procedure cbEditProItemClick(Sender: TObject);
     procedure actPro_AddUpdate(Sender: TObject);
@@ -267,6 +276,8 @@ type
     procedure actTask_NextPageExecute(Sender: TObject);
     procedure cdsTaskUserNewRecord(DataSet: TDataSet);
     procedure actTASK_MeCheckExecute(Sender: TObject);
+    procedure btnFindBugClick(Sender: TObject);
+    procedure btnAddDesTextClick(Sender: TObject);
   private
     { Private declarations }
     fTaskPageRec : TTaskPageRec;
@@ -432,7 +443,7 @@ end;
 
 procedure TProjectManageClientDlg.actPro_AddExecute(Sender: TObject);
 begin
-  if ClientSystem.fEditerType = etAdmin then
+ if ClientSystem.fEditerType = etAdmin then
     cdsProjectItem.Append
   else
     MessageBox(Handle,'无权限','增加',MB_ICONWARNING+MB_OK);
@@ -723,14 +734,12 @@ end;
 
 procedure TProjectManageClientDlg.actVer_AddExecute(Sender: TObject);
 begin
-  if not (ClientSystem.fEditerType=etAdmin) then
+  if  not HasModuleActionByShow(Ord(psVersion),
+      cdsProjectItem.FieldByName('ZID').AsInteger,atInsert) then
   begin
     MessageBox(Handle,'无权限','提示',MB_ICONERROR+MB_OK);
     Exit;
   end;
-  if  not HasModuleActionByShow(Ord(psVersion),
-      cdsProjectItem.FieldByName('ZID').AsInteger,atInsert) then
-    Exit;
   cdsProVersion.Append;
 end;
 
@@ -742,14 +751,13 @@ end;
 
 procedure TProjectManageClientDlg.actVer_SaveExecute(Sender: TObject);
 begin
-  if not (ClientSystem.fEditerType=etAdmin) then
+
+  if  not HasModuleActionByShow(Ord(psVersion),
+      cdsProjectItem.FieldByName('ZID').AsInteger,atUpdate) then
   begin
     MessageBox(Handle,'无权限','提示',MB_ICONERROR+MB_OK);
     Exit;
   end;
-  if  not HasModuleActionByShow(Ord(psVersion),
-      cdsProjectItem.FieldByName('ZID').AsInteger,atUpdate) then
-    Exit;
 
   cdsProVersion.Post;
 end;
@@ -850,15 +858,13 @@ end;
 
 procedure TProjectManageClientDlg.actVer_DelExecute(Sender: TObject);
 begin
-  if not (ClientSystem.fEditerType=etAdmin) then
+
+  if  not HasModuleActionByShow(Ord(psVersion),
+      cdsProjectItem.FieldByName('ZID').AsInteger,atDelete) then
   begin
     MessageBox(Handle,'无权限','提示',MB_ICONERROR+MB_OK);
     Exit;
   end;
-
-  if  not HasModuleActionByShow(Ord(psVersion),
-      cdsProjectItem.FieldByName('ZID').AsInteger,atDelete) then
-    Exit;
 
   if MessageBox(Handle,'删除吗?','询问',MB_ICONQUESTION+MB_YESNO)=IDNO then Exit;
   cdsProVersion.Delete;
@@ -1192,8 +1198,8 @@ var
 begin
 
   //只有我创建的任务才能分给别人
-  if (cdsTask.FieldByName('ZUSER_ID').AsInteger <> ClientSystem.fEditer_id) or
-     (cdsTask.FieldByName('ZCHECKNAME').AsInteger <> ClientSystem.fEditer_id) then
+  if not ((cdsTask.FieldByName('ZUSER_ID').AsInteger = ClientSystem.fEditer_id) or
+     (cdsTask.FieldByName('ZCHECKNAME').AsInteger = ClientSystem.fEditer_id)) then
   begin
     MessageBox(Handle,'不是你创建的任务或是不是你审核的任务，不能指派给别人。','提示',
       MB_ICONWARNING+MB_OK);
@@ -1563,8 +1569,8 @@ begin
         if not (cdsTask.State in [dsEdit,dsInsert]) then
           cdsTask.Edit;
         cdsTask.FieldByName('ZSTATUS').AsInteger := Ord(tsClose);
-        cdsTask.FieldByName('ZCLOSEDATE').AsString :=
-            formatdatetime('yyyy-mm-dd hh:ss:mm',ClientSystem.SysNow);
+        cdsTask.FieldByName('ZCLOSEDATE').AsDateTime := ClientSystem.SysNow;
+            //formatdatetime('yyyy-mm-dd hh:ss:mm',ClientSystem.SysNow);
         cdsTask.Post;
         //执行邮件通知
         UpdateProgressTitle('邮件通知...');
@@ -1590,37 +1596,31 @@ begin
 end;
 
 procedure TProjectManageClientDlg.actTask_ActionExecute(Sender: TObject);
-var
-  mycds : TClientDataSet;
 begin
   if MessageBox(Handle,'你是不真要激活任务单吗,如有疑问先与任务单处理人联系.',
     '激活任务单',MB_ICONQUESTION+MB_YESNO)=IDNO then Exit;
 
-  mycds := TClientDataSet.Create(nil);
   try
-    if cdsTaskUser.Locate('ZUSER_ID;ZCANCEL',VarArrayOf([ClientSystem.fEditer_id,0]),
-      [loPartialKey]) then
-    begin
+    if not (cdsTask.State in [dsEdit,dsInsert]) then
+      cdsTask.Edit;
+    cdsTask.FieldByName('ZSTATUS').AsInteger := Ord(tsing);
+    cdsTask.Post;
+
+    ShowProgress('更新内容...',0);
+    try
       if not (cdsTask.State in [dsEdit,dsInsert]) then
         cdsTask.Edit;
       cdsTask.FieldByName('ZSTATUS').AsInteger := Ord(tsing);
       cdsTask.Post;
-
-      ShowProgress('更新内容...',0);
-      try
-        if not (cdsTask.State in [dsEdit,dsInsert]) then
-          cdsTask.Edit;
-        cdsTask.FieldByName('ZSTATUS').AsInteger := Ord(tsing);
-        cdsTask.Post;
-        //执行邮件通知
-        UpdateProgressTitle('邮件通知...');
-        ClientSystem.fDbOpr.MailTo(1,cdsTask.FieldByName('ZCODE').AsString,-1);
-      finally
-        HideProgress;
-      end;
+      //执行邮件通知
+      UpdateProgressTitle('邮件通知...');
+      ClientSystem.fDbOpr.MailTo(1,cdsTask.FieldByName('ZCODE').AsString,-1);
+    finally
+      HideProgress;
     end;
+
   finally
-    mycds.Free;
+
   end;
 end;
 
@@ -1934,6 +1934,47 @@ begin
     cdsTask.EnableControls;
     fLoading := myb;
   end;
+end;
+
+procedure TProjectManageClientDlg.btnFindBugClick(Sender: TObject);
+var
+  mySQL : string;
+const
+  glSQL = ' select a.ZTITLE,b.ZNAME from TB_BUG_ITEM as a, TB_BUG_PARAMS as b ' + 
+          ' where a.ZID=%d and b.ZTYPE=1 and a.ZSTATUS=b.ZID';
+begin
+  if  edtBugCode.Text = '' then
+  begin
+    MessageBox(Handle,'问题编号 # 不能为空.','查询',MB_ICONWARNING+MB_OK);
+    Exit;
+  end;
+
+  ShowProgress('查询...',0);
+  try
+    mySQL := format(glSQL,[strtointdef(edtBugCode.Text,0)]);
+    cdsBug.Data := ClientSystem.fDbOpr.ReadDataSet(PChar(mySQL));
+  finally
+    HideProgress;
+  end;
+                                   end;
+
+procedure TProjectManageClientDlg.btnAddDesTextClick(Sender: TObject);
+begin
+
+  if cdsTask.RecNo < 0 then Exit;
+
+  if not cbEditDesing.Checked then
+  begin
+    MessageBox(Handle,'不可以修改,请先勾上编辑.','编辑',MB_ICONWARNING+MB_OK);
+    Exit;
+  end;
+
+  if not (cdsTask.State in [dsEdit,dsInsert]) then
+    cdsTask.Edit;
+  cdsTask.FieldByName('ZDESIGN').AsString := cdsTask.FieldByName('ZDESIGN').AsString
+    +#10#13+ format('  #%s %s 状态:%s',[
+    edtBugCode.Text ,dbedtZTITLE.Text,dbtxt1.Caption]);
+
 end;
 
 end.

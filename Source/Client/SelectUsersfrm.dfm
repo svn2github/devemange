@@ -2,7 +2,7 @@ inherited SelectUsersDlg: TSelectUsersDlg
   Left = 311
   Top = 192
   BorderStyle = bsDialog
-  Caption = #36873#36873#25321#29992#25143
+  Caption = #36873#25321#29992#25143
   ClientHeight = 433
   ClientWidth = 561
   OldCreateOrder = True
