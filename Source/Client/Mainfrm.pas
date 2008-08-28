@@ -68,6 +68,13 @@ type
     N9: TMenuItem;
     actMod_Stat: TAction;
     N10: TMenuItem;
+    N11: TMenuItem;
+    actTool_CheckFileContext: TAction;
+    N12: TMenuItem;
+    btnMod_ProductDown: TToolButton;
+    actMod_ProductDown: TAction;
+    Wiki1: TMenuItem;
+    N13: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure actmod_FilesExecute(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -87,6 +94,8 @@ type
     procedure actMod_WebBrowesExecute(Sender: TObject);
     procedure actFile_SysParamsExecute(Sender: TObject);
     procedure actMod_StatExecute(Sender: TObject);
+    procedure actTool_CheckFileContextExecute(Sender: TObject);
+    procedure actMod_ProductDownExecute(Sender: TObject);
   private
     fChildform : TList; //所有子窗口的对象
     fCurrentChildform : TBaseChildDlg;
@@ -117,8 +126,10 @@ uses
   DesignDocumentClientfrm, {项目文档}
   StatManageClientfrm,     {统计}
   WikiClientfrm,           {wiki}
+  ProductDownLoadClientfrm,{产品池}
   WriteToDaySayfrm,        {每日一句}
-  ChangPasswdfrm           {修改密码}
+  ChangPasswdfrm,          {修改密码}
+  CnProgressFrm
 
   , SetSysParamsfrm;
 
@@ -146,7 +157,6 @@ begin
     end;
   end;
 
-
   myBaseform.ShowProgress('打开...',0);
 
   if not Assigned(myBaseform) then
@@ -173,7 +183,7 @@ begin
   finally
     myBaseform.HideProgress;
   end;
-    
+
   //改变输入焦点
   ActiveControl := FindNextControl(ActiveControl, True, True, False);
 end;
@@ -438,7 +448,6 @@ end;
 
 procedure TMainDlg.actMod_WebBrowesExecute(Sender: TObject);
 begin
-  //
   DoChangeClient(TWikiClientDlg);
 end;
 
@@ -462,6 +471,48 @@ end;
 procedure TMainDlg.actMod_StatExecute(Sender: TObject);
 begin
   DoChangeClient(TStatManageClientDlg);
+end;
+
+procedure TMainDlg.actTool_CheckFileContextExecute(Sender: TObject);
+var
+  myfid : integer;
+  myfcid : integer;
+  mySQL : string;
+const
+  glSQL1 = 'select max(ZID) from TB_FILE_ITEM';
+  glSQL2 = 'select max(ZFILE_ID) from TB_FILE_CONTEXT';
+  glSQL3 = 'delete TB_FILE_CONTEXT where ZFILE_ID=%d';
+begin
+  //
+  CnProgressFrm.ShowProgress('检查修复...',0);
+  try
+
+    myfid := ClientSystem.fDbOpr.ReadInt(glSQL1);
+    myfcid := ClientSystem.fDbOpr.ReadInt(glSQL2);
+    if myfcid > myfid then
+    begin
+      CnProgressFrm.HideProgress;
+      if MessageBox(Handle,'发现文件的确无法上传,是否要修复?','修复',
+        MB_ICONQUESTION+MB_YESNO)=IDNO then Exit;
+      CnProgressFrm.ShowProgress('修复中...',0);
+
+      mySQL := format(glSQL3,[myfcid]);
+      ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
+    end
+    else begin
+      CnProgressFrm.HideProgress;
+      MessageBox(Handle,'检查完成,没有发现问题','修复',
+        MB_USERICON+MB_OK);
+    end;
+
+  finally
+    CnProgressFrm.HideProgress;
+  end;
+end;
+
+procedure TMainDlg.actMod_ProductDownExecute(Sender: TObject);
+begin
+  DoChangeClient(TProductDownLoadClientDlg);
 end;
 
 end.

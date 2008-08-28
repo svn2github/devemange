@@ -1,4 +1,4 @@
-unit WikiClientfrm;
+unit ProductDownLoadClientfrm;
 
 interface
 
@@ -8,16 +8,16 @@ uses
   ComCtrls, StdCtrls, Buttons, ExtCtrls;
 
 type
-  TWikiClientDlg = class(TWebClientDlg)
+  TProductDownLoadClientDlg = class(TWebClientDlg)
   private
     { Private declarations }
   public
     { Public declarations }
-    procedure initBase; override;
+      procedure initBase; override;
   end;
 
 var
-  WikiClientDlg: TWikiClientDlg;
+  ProductDownLoadClientDlg: TProductDownLoadClientDlg;
 
 implementation
 
@@ -25,11 +25,11 @@ uses ClinetSystemUnits;
 
 {$R *.dfm}
 
-{ TWikiClientDlg }
+{ TProductDownLoadClientDlg }
 
-procedure TWikiClientDlg.initBase;
+procedure TProductDownLoadClientDlg.initBase;
 const
-  glSQL = 'select ZVALUE from TB_SYSPARAMS where ZNAME=''wiki''';
+  glSQL = 'select ZVALUE from TB_SYSPARAMS where ZNAME=''ProductDownload''';
 begin
   HomeURL := ClientSystem.fDbOpr.ReadVariant(glSQL);
   inherited;

@@ -1,7 +1,5 @@
-inherited WikiClientDlg: TWikiClientDlg
-  Left = 193
-  Top = 99
-  Caption = 'WikiClientDlg'
+inherited ProductDownLoadClientDlg: TProductDownLoadClientDlg
+  Caption = #20135#21697#27744
   PixelsPerInch = 96
   TextHeight = 15
   inherited wbwiki: TWebBrowser
