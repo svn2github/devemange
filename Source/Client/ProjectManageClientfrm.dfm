@@ -1,6 +1,6 @@
 inherited ProjectManageClientDlg: TProjectManageClientDlg
-  Left = 45
-  Top = 122
+  Left = 66
+  Top = 90
   Width = 964
   Height = 623
   Caption = #39033#30446#31649#29702
@@ -855,14 +855,14 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
                   end
                   object Label4: TLabel
                     Left = 24
-                    Top = 254
+                    Top = 325
                     Width = 75
                     Height = 15
                     Caption = #35780#20998#26102#38388#65306
                   end
                   object DBText3: TDBText
                     Left = 106
-                    Top = 252
+                    Top = 323
                     Width = 200
                     Height = 17
                     Color = clMoneyGreen
@@ -872,7 +872,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
                   end
                   object Label5: TLabel
                     Left = 24
-                    Top = 285
+                    Top = 356
                     Width = 173
                     Height = 15
                     Caption = #27880#24847':'#35780#20998#21518#28857#20851#38381#20219#21153#12290
@@ -965,9 +965,10 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
                     Left = 103
                     Top = 153
                     Width = 394
-                    Height = 79
+                    Height = 156
                     DataField = 'ZREMASK'
                     DataSource = dsTaskUser
+                    ScrollBars = ssVertical
                     TabOrder = 6
                   end
                 end

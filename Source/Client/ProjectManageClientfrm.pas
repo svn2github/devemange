@@ -1304,7 +1304,7 @@ begin
       cdsTaskUser.First;
       plScore.Visible := myme or (cdsTask.FieldByName('ZUSER_ID').AsInteger=
         ClientSystem.fEditer_id) or (cdsTask.FieldByName('ZCHECKNAME').AsInteger=
-        ClientSystem.fEditer_id) ;
+        ClientSystem.fEditer_id) or (ClientSystem.fEditerType=etAdmin);
     finally
       mycds.Free;
       cdsTaskUser.EnableConstraints;
@@ -1673,6 +1673,8 @@ begin
           cdsTaskUser.FieldByName('ZSCORE').AsFloat :=
             cdsTaskUser.FieldByName('ZTASKSCORE').AsFloat * cdsTaskUser.FieldByName('ZRATE').AsFloat;
           cdsTaskUser.FieldByName('ZSCOREDATE').AsDateTime := ClientSystem.SysNow;
+          cdsTaskUser.FieldByName('ZREMASK').AsString := cdsTaskUser.FieldByName('ZREMASK').AsString + #13#10 +
+            myfrom.fScoreStr;
           cdsTaskUser.Post;
         end
         else
