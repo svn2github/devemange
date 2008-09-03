@@ -49,6 +49,7 @@ type
   public
     { Public declarations }
     fScoreStr : string; //评分的内容
+    fTaskScore : Extended; //任务分数
   end;
 
 var
@@ -71,6 +72,7 @@ begin
   //
   myTotal := strtofloat(dbtxtZPERFACT.Caption);
   myv := 0;
+  fTaskScore := 0;
   if chkAmount.Checked then
   begin
     v := myTotal * strtofloatdef(edtAmountRate.Text,0) /100;
@@ -115,6 +117,7 @@ begin
   fScoreStr := mystr;
 
   dbedtZTASKSCORE.Text := floattostr(myv);
+  fTaskScore := myv;
 
 end;
 

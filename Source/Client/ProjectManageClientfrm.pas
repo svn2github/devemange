@@ -1670,8 +1670,9 @@ begin
 
         if myfrom.ShowModal() = mrOK then
         begin
+          cdsTaskUser.FieldByName('ZTASKSCORE').AsFloat := myfrom.fTaskScore;
           cdsTaskUser.FieldByName('ZSCORE').AsFloat :=
-            cdsTaskUser.FieldByName('ZTASKSCORE').AsFloat * cdsTaskUser.FieldByName('ZRATE').AsFloat;
+            myfrom.fTaskScore{cdsTaskUser.FieldByName('ZTASKSCORE').AsFloat} * cdsTaskUser.FieldByName('ZRATE').AsFloat;
           cdsTaskUser.FieldByName('ZSCOREDATE').AsDateTime := ClientSystem.SysNow;
           cdsTaskUser.FieldByName('ZREMASK').AsString := cdsTaskUser.FieldByName('ZREMASK').AsString + #13#10 +
             myfrom.fScoreStr;
