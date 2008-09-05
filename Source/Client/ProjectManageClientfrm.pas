@@ -161,7 +161,6 @@ type
     Label7: TLabel;
     Label6: TLabel;
     DBEdit4: TDBEdit;
-    DBEdit5: TDBEdit;
     DBEdit8: TDBEdit;
     DBEdit11: TDBEdit;
     DBEdit12: TDBEdit;
@@ -211,6 +210,7 @@ type
     cdsBug: TClientDataSet;
     dsBug: TDataSource;
     btnAddDesText: TBitBtn;
+    dblkcbbZPRO_ID: TDBLookupComboBox;
     procedure actPro_AddExecute(Sender: TObject);
     procedure cbEditProItemClick(Sender: TObject);
     procedure actPro_AddUpdate(Sender: TObject);
@@ -688,19 +688,12 @@ begin
       pcProject.ActivePageIndex := 0;
       Exit;
     end;
-    if (not cdsProVersion.Active) or (cdsProVersion.IsEmpty) then
-    begin
-      MessageBox(Handle,'请选择版本号','提示',MB_ICONWARNING+MB_OK);
-      pcProject.ActivePageIndex := 0;
-      Exit;
-    end;
 
     myb := fLoading;
     fLoading := True;
     try
-      mywherestr := format('ZPRO_ID=%d and ZPRO_VERSION_ID=%d',
-        [cdsProjectItem.FieldByName('ZID').Asinteger,
-        cdsProVersion.FieldByName('ZID').AsInteger]);
+      mywherestr := format('ZPRO_ID=%d',
+        [cdsProjectItem.FieldByName('ZID').Asinteger]);
 
       fTaskPageRec.fCount := GetTaskItemPageCount(1,mywherestr);
       fTaskPageRec.fPageindex := 1;
@@ -1009,12 +1002,15 @@ begin
 
   myform := TNewTaskDlg.Create(nil);
   try
+    myform.cdsCloneProjectName.CloneCursor(cdsProjectItem,True);
     if cdsTask.State in [dsEdit,dsInsert] then
       cdsTask.Post;
     cdsTask.Append;
     if myform.ShowModal() = mrOK then
     begin
       Application.ProcessMessages;
+      //项目的版本号
+      cdsTask.FieldByName('ZPRO_VERSION_ID').AsInteger := myform.cdsCloneProjectName.FieldByname('ZHIGHVERID').AsInteger;
       //指派给自己
       if myform.chkSelf.Checked then
       begin
@@ -1065,7 +1061,7 @@ begin
   DataSet.FieldByName('ZPRO_ID').AsInteger :=
     cdsProjectItem.FieldByName('ZID').AsInteger;
   DataSet.FieldByName('ZPRO_VERSION_ID').AsInteger :=
-    cdsProVersion.FieldByName('ZID').AsInteger;
+    cdsProjectItem.FieldByName('ZHIGHVERID').AsInteger;
   DataSet.FieldByName('ZPALNDAY').AsInteger := 0;
   DataSet.FieldByName('ZDESIGN').AsString   := '#设计说明';
   DataSet.FieldByName('ZTESTCASE').AsString := '#测试用例';

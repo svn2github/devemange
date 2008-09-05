@@ -1,6 +1,6 @@
 inherited ProjectManageClientDlg: TProjectManageClientDlg
-  Left = 66
-  Top = 90
+  Left = 26
+  Top = 73
   Width = 964
   Height = 623
   Caption = #39033#30446#31649#29702
@@ -1152,17 +1152,6 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
                   ReadOnly = True
                   TabOrder = 0
                 end
-                object DBEdit5: TDBEdit
-                  Left = 116
-                  Top = 90
-                  Width = 200
-                  Height = 23
-                  Color = clBtnFace
-                  DataField = 'ZPRO_ID'
-                  DataSource = dsTask
-                  ReadOnly = True
-                  TabOrder = 1
-                end
                 object DBEdit8: TDBEdit
                   Left = 115
                   Top = 157
@@ -1170,7 +1159,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
                   Height = 23
                   DataField = 'ZBEGINDATE'
                   DataSource = dsTask
-                  TabOrder = 2
+                  TabOrder = 1
                 end
                 object DBEdit11: TDBEdit
                   Left = 115
@@ -1179,7 +1168,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
                   Height = 23
                   DataField = 'ZPALNDAY'
                   DataSource = dsTask
-                  TabOrder = 3
+                  TabOrder = 2
                 end
                 object DBEdit12: TDBEdit
                   Left = 115
@@ -1188,7 +1177,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
                   Height = 23
                   DataField = 'ZCLOSEDATE'
                   DataSource = dsTask
-                  TabOrder = 4
+                  TabOrder = 3
                 end
                 object DBEdit9: TDBEdit
                   Left = 441
@@ -1199,7 +1188,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
                   DataField = 'ZPRO_VERSION_ID'
                   DataSource = dsTask
                   ReadOnly = True
-                  TabOrder = 5
+                  TabOrder = 4
                 end
                 object DBEdit10: TDBEdit
                   Left = 440
@@ -1208,7 +1197,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
                   Height = 23
                   DataField = 'ZSUCCESSDATE'
                   DataSource = dsTask
-                  TabOrder = 6
+                  TabOrder = 5
                 end
                 object DBEdit7: TDBEdit
                   Left = 440
@@ -1217,7 +1206,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
                   Height = 23
                   DataField = 'ZDAY'
                   DataSource = dsTask
-                  TabOrder = 7
+                  TabOrder = 6
                 end
                 object DBEdit6: TDBEdit
                   Left = 440
@@ -1228,7 +1217,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
                   DataField = 'ZDATE'
                   DataSource = dsTask
                   ReadOnly = True
-                  TabOrder = 8
+                  TabOrder = 7
                 end
                 object DBEdit13: TDBEdit
                   Left = 115
@@ -1237,7 +1226,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
                   Height = 23
                   DataField = 'ZNAME'
                   DataSource = dsTask
-                  TabOrder = 9
+                  TabOrder = 8
                 end
                 object dbchkOverWork: TDBCheckBox
                   Left = 120
@@ -1247,7 +1236,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
                   Caption = #21152#29677#20219#21153#21333
                   DataField = 'ZOVERWORK'
                   DataSource = dsTask
-                  TabOrder = 10
+                  TabOrder = 9
                   ValueChecked = 'True'
                   ValueUnchecked = 'False'
                 end
@@ -1257,7 +1246,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
                   Width = 626
                   Height = 71
                   Caption = #23457#26680
-                  TabOrder = 11
+                  TabOrder = 10
                   object Label16: TLabel
                     Left = 16
                     Top = 32
@@ -1277,6 +1266,20 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
                     ListSource = dsCheckName
                     TabOrder = 0
                   end
+                end
+                object dblkcbbZPRO_ID: TDBLookupComboBox
+                  Left = 118
+                  Top = 91
+                  Width = 201
+                  Height = 23
+                  Color = clBtnFace
+                  DataField = 'ZPRO_ID'
+                  DataSource = dsTask
+                  KeyField = 'ZID'
+                  ListField = 'ZNAME'
+                  ListSource = dsProjectItem
+                  ReadOnly = True
+                  TabOrder = 11
                 end
               end
             end

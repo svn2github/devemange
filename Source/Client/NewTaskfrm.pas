@@ -24,9 +24,7 @@ type
     Label7: TLabel;
     Label8: TLabel;
     Label9: TLabel;
-    DBText2: TDBText;
     Label10: TLabel;
-    DBText3: TDBText;
     DBEdit2: TDBEdit;
     DBEdit3: TDBEdit;
     DBEdit4: TDBEdit;
@@ -38,6 +36,10 @@ type
     dbchkAddWork: TDBCheckBox;
     chkSelf: TCheckBox;
     edtSelfSrce: TEdit;
+    dblkcbbZPRO_ID: TDBLookupComboBox;
+    cdsCloneProjectName: TClientDataSet;
+    dsCloneProjectName: TDataSource;
+    dbtxtVer: TDBText;
   private
     { Private declarations }
   public

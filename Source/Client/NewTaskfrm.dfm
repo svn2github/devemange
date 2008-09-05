@@ -1,6 +1,6 @@
 inherited NewTaskDlg: TNewTaskDlg
-  Left = 309
-  Top = 103
+  Left = 312
+  Top = 168
   BorderStyle = bsDialog
   Caption = #26032#24314#20219#21153#21333
   ClientHeight = 430
@@ -33,15 +33,15 @@ inherited NewTaskDlg: TNewTaskDlg
     TabOrder = 2
     object Label1: TLabel
       Left = 15
-      Top = 56
+      Top = 24
       Width = 90
       Height = 15
       Caption = #20219#21153#21333#32534#21495#65306
     end
     object DBText1: TDBText
-      Left = 108
-      Top = 51
-      Width = 200
+      Left = 107
+      Top = 23
+      Width = 250
       Height = 17
       Color = clSkyBlue
       DataField = 'ZCODE'
@@ -56,49 +56,39 @@ inherited NewTaskDlg: TNewTaskDlg
       Caption = #20219#21153#21517#31216#65306
     end
     object Label3: TLabel
-      Left = 333
-      Top = 53
+      Left = 372
+      Top = 25
       Width = 38
       Height = 15
       Caption = #31867#22411':'
     end
     object Label9: TLabel
       Left = 15
-      Top = 32
+      Top = 50
       Width = 75
       Height = 15
-      Caption = #39033#30446#21517#31216#65306
-    end
-    object DBText2: TDBText
-      Left = 108
-      Top = 27
-      Width = 200
-      Height = 17
-      Color = clSkyBlue
-      DataField = 'ZNAME'
-      DataSource = ProjectManageClientDlg.dsProjectItem
-      ParentColor = False
+      Caption = #31435#39033#39033#30446#65306
     end
     object Label10: TLabel
-      Left = 333
-      Top = 32
-      Width = 60
+      Left = 372
+      Top = 51
+      Width = 55
       Height = 15
       Caption = #29256#26412#21495#65306
     end
-    object DBText3: TDBText
-      Left = 427
-      Top = 27
-      Width = 200
+    object dbtxtVer: TDBText
+      Left = 431
+      Top = 50
+      Width = 199
       Height = 17
       Color = clSkyBlue
-      DataField = 'ZVER'
-      DataSource = ProjectManageClientDlg.dsProVersion
+      DataField = 'ZLASTVER'
+      DataSource = dsCloneProjectName
       ParentColor = False
     end
     object DBEdit1: TDBEdit
       Left = 107
-      Top = 76
+      Top = 77
       Width = 521
       Height = 23
       DataField = 'ZNAME'
@@ -106,8 +96,8 @@ inherited NewTaskDlg: TNewTaskDlg
       TabOrder = 0
     end
     object DBLookupComboBox1: TDBLookupComboBox
-      Left = 427
-      Top = 49
+      Left = 429
+      Top = 22
       Width = 200
       Height = 23
       DataField = 'ZTYPE'
@@ -128,6 +118,18 @@ inherited NewTaskDlg: TNewTaskDlg
       TabOrder = 2
       ValueChecked = 'True'
       ValueUnchecked = 'False'
+    end
+    object dblkcbbZPRO_ID: TDBLookupComboBox
+      Left = 106
+      Top = 46
+      Width = 254
+      Height = 23
+      DataField = 'ZPRO_ID'
+      DataSource = ProjectManageClientDlg.dsTask
+      KeyField = 'ZID'
+      ListField = 'ZNAME'
+      ListSource = dsCloneProjectName
+      TabOrder = 3
     end
   end
   object GroupBox2: TGroupBox
@@ -259,5 +261,16 @@ inherited NewTaskDlg: TNewTaskDlg
       Height = 23
       TabOrder = 2
     end
+  end
+  object cdsCloneProjectName: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 18
+    Top = 392
+  end
+  object dsCloneProjectName: TDataSource
+    DataSet = cdsCloneProjectName
+    Left = 54
+    Top = 392
   end
 end
