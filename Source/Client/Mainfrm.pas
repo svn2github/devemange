@@ -96,6 +96,8 @@ type
     procedure actMod_StatExecute(Sender: TObject);
     procedure actTool_CheckFileContextExecute(Sender: TObject);
     procedure actMod_ProductDownExecute(Sender: TObject);
+    procedure ApplicationEvents1Message(var Msg: tagMSG;
+      var Handled: Boolean);
   private
     fChildform : TList; //所有子窗口的对象
     fCurrentChildform : TBaseChildDlg;
@@ -117,6 +119,7 @@ var
 
 implementation
 uses
+  ActiveX,
   ClinetSystemUnits,
   DelTempFilefrm,          {删除临时文件}
   FileMangeClientUnits,    {文件管理}
@@ -129,7 +132,8 @@ uses
   ProductDownLoadClientfrm,{产品池}
   WriteToDaySayfrm,        {每日一句}
   ChangPasswdfrm,          {修改密码}
-  CnProgressFrm
+  CnProgressFrm ,
+  WebClientfrm
 
   , SetSysParamsfrm;
 
@@ -194,6 +198,7 @@ var
   myform : TBaseChildDlg;
 begin
   DelTempfile; //删除临时文件
+  fCurrentChildform := nil;
   for i:=0 to fChildform.Count -1 do
   begin
     myform :=fChildform.items[i];
@@ -202,6 +207,7 @@ begin
   end;
   fChildform.Free;
   ClientSystem.fGauge.Parent := nil;
+
 end;
 
 procedure TMainDlg.iniform;
@@ -513,6 +519,62 @@ end;
 procedure TMainDlg.actMod_ProductDownExecute(Sender: TObject);
 begin
   DoChangeClient(TProductDownLoadClientDlg);
+end;
+
+procedure TMainDlg.ApplicationEvents1Message(var Msg: tagMSG;
+  var Handled: Boolean);
+var
+  iOIPAO  :   IOleInPlaceActiveObject;
+  Dispatch:   IDispatch;
+  mouse   :   TPoint;
+  mywebform :  TWebClientDlg;
+const
+  DialogKeys : set of Byte =
+    [VK_LEFT,VK_RIGHT,VK_BACK,$30..$39,   $41..$5A];
+begin
+
+  if not Assigned(fCurrentChildform) then Exit;
+  if not (fCurrentChildform is TWebClientDlg) then Exit;
+  mywebform := fCurrentChildform as TWebClientDlg;
+  
+  //1.去掉右键
+  if (Msg.Message = WM_RBUTTONDOWN) or
+     (Msg.Message = WM_RBUTTONDBLCLK) then
+  begin
+    if IsChild(mywebform.wbwiki.Handle, Msg.hwnd) then
+    begin
+      getcursorpos(Mouse);
+      mywebform.pmWbCommand.popup(Mouse.x,Mouse.y);
+      Handled := True;
+      Exit;
+    end;
+  end;
+
+  //2编辑回车换行功能
+  Handled := IsDialogMessage(mywebform.wbwiki.Handle,Msg);
+  if (Handled)and (not mywebform.wbwiki.Busy)then
+  begin
+    if  mywebform.OleInPlaceActiveObject = nil then
+    begin
+      Dispatch := mywebform.wbwiki.Application;
+      if Dispatch<>nil then
+      begin
+        Dispatch.QueryInterface(IOleInPlaceActiveObject,iOIPAO);
+        if iOIPAO <> nil then
+          mywebform.OleInPlaceActiveObject := iOIPAO;
+      end;
+    end;
+
+    if mywebform.OleInPlaceActiveObject <> nil then
+    begin
+      if ((Msg.message = WM_KEYDOWN) or (Msg.message = WM_KEYUP))and
+          (Msg.wParam in DialogKeys)  then
+          //   nothing   -   do   not   pass   on   the   DialogKeys
+        else
+          mywebform.OleInPlaceActiveObject.TranslateAccelerator(Msg);
+    end;
+  end;
+  
 end;
 
 end.
