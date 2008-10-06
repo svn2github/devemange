@@ -13,6 +13,7 @@
 //     4) 采用一个数据库的共享连接这个会提高性能。ver=1.0.6 2008-4-1
 //     5) 修改回复邮件的问题 ver=1.0.7 2008-4-28
 //     6) 更新邮件回复采用存储过程 ver=1.0.8 2008-5-21
+//     7) 增加的测试的邮件处理功能 ver=1.1.0 2008-10-6
 //
 //
 ///////////////////////////////////////////////////////////////////////////////
@@ -557,6 +558,23 @@ begin
             Exit; //没有地址不发了
           mySubject := myTitle;
 
+        end;
+      2: {test}
+        begin
+          spExce.Close;
+          spExce.ProcedureName:='pt_MaintoByTest';
+          spExce.Parameters.Clear;
+          spExce.Parameters.CreateParameter('TestID',ftInteger,pdInput,1,1);
+          spExce.Parameters.CreateParameter('mailtitle',ftString,pdoutput,200,1);
+          spExce.Parameters.CreateParameter('mailtext ',ftString,pdoutput,4000,1);
+          spExce.Parameters[0].Value := AContextID;
+          spExce.ExecProc;
+          if not VarIsNull(spExce.Parameters[1].Value) then
+            myTitle   := spExce.Parameters[1].Value;
+          if not VarIsNull(spExce.Parameters[2].Value) then
+            myContext := spExce.Parameters[2].Value;
+          myMailTo :=  AMails;
+          mySubject := Format('$%d %s',[AContextID,myTitle]);
         end;
       else
         Exit;    
