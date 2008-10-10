@@ -14,7 +14,8 @@ uses
   NewTaskfrm in 'NewTaskfrm.pas' {NewTaskDlg},
   WebClientfrm in 'WebClientfrm.pas' {WebClientDlg},
   StatManageClientfrm in 'StatManageClientfrm.pas' {StatManageClientDlg},
-  ProductDownLoadClientfrm in 'ProductDownLoadClientfrm.pas' {ProductDownLoadClientDlg};
+  ProductDownLoadClientfrm in 'ProductDownLoadClientfrm.pas' {ProductDownLoadClientDlg},
+  TestManageClient in 'TestManageClient.pas' {TestManageChildfrm};
 
 {$R *.res}
 {$R resource.res}
@@ -25,6 +26,5 @@ begin
   Application.Title := 'DeveManage';
   Application.CreateForm(TMainDlg, MainDlg);
   Application.CreateForm(TDM, DM);
-  Application.CreateForm(TProductDownLoadClientDlg, ProductDownLoadClientDlg);
   Application.Run;
 end.

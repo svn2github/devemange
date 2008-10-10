@@ -16,6 +16,7 @@
 *          这样我们不可以一一对每一个文件都做权限。
 *       4.增加系统参数表 TB_SYSPARAMS 2006-5-13
 *       5.TB_USER 内增加 TCHECKTASK : bit 2008-8-2
+*       6.增加测试功能模块. 作者:龙仕云 2008-9-5
 *
 ******************************************************************************/
 
@@ -149,7 +150,8 @@ create table TB_PRO_ITEM(
 	ZLASTDATE      datetime,                                 /*项目最后更新时间*/
 	ZMANAGERID     int ,                                     /*项目的负责人*/
 	ZUNITS         varchar(200),                             /*项目的使用单位*/     
-	ZHIGHVERID     int not null default -1,                  /*最新版本号的ID值*/       
+	ZHIGHVERID     int not null default -1,                  /*最新版本号的ID值*/
+	ZTESTTEAM      varchar(100),                             /*测试小组成员 格式 名称(编号) ,用于自动生成测试任务.     
 	constraint PK_TB_PRO_ITEM primary key(ZID)   
 )
 go
@@ -405,6 +407,80 @@ create table TB_SYSPARAMS(
 	constraint PK_TB_SYSPARAMS primary key(ZNAME)  
 )
 go
+
+
+
+/*测试主表*/
+if exists (select * from dbo.sysobjects
+  where id = object_id(N'[dbo].[TB_TEST_ITEM]')
+  and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+drop table [dbo].[TB_TEST_ITEM]
+go
+
+create table TB_TEST_ITEM(
+	ZID          int not null,                                  /*编号*/
+	ZNAME        varchar(20),                                   /*名称*/
+	ZSTATUS      int not null,                                  /*状态=3*/
+	ZOPENEDBY    int not null,                                  /*创建人*/
+	ZOPENEDDATE  datetime not null,                             /*创建时间*/
+	ZLEVEL       int,                                           /*优先级=0*/
+	ZTYPE        int,                                           /*要测试的类型=1*/
+	ZASSIGNEDTO  int,                                           /*指派给*/
+	ZRESULT      int,                                           /*测试结果*/
+	ZTESTRESULTBY int not null,                                 /*测试结果人,最后执行的人*/
+	ZRESULTDATE  datetime not null,                             /*最后测试的时间*/
+	ZTESTMETHOD  int,                                           /*测试方法=2*/
+	ZCASEBUG     varchar(50),                                   /*相关bug*/
+	ZCASETASK    varchar(50),                                   /*相关任务单*/
+	ZMAILTO      varchar(100),                                  /*邮件通知*/
+	
+	--测试的项目	
+	ZPRO_ID      int,                                           /*项目ID*/
+	ZPRO_VER     int,                                           /*项目版本*/
+	ZPRO_SVN     int,                                           /*svn的版本号*/
+	ZREMORK      varchar(200),                                  /*备注*/
+
+	constraint PK_TB_TEST_ITEM primary key(ZID)  
+)
+go
+
+/*TEST的回复信息*/
+if exists (select * from dbo.sysobjects
+  where id = object_id(N'[dbo].[TB_TEST_RESULT]')
+  and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+drop table [dbo].[TB_TEST_RESULT]
+go
+
+create table TB_TEST_RESULT(
+	ZID            int IDENTITY (1, 1) not null,             /*ID*/
+	ZTEST_ID       int not null,                             /*TEST的ID*/
+	ZACTION        varchar(100),                             /*输入动作*/ 
+	ZTRUEVALUE     varchar(100),                             /*期望的输出或是真正结果*/ 
+	ZINFACE        varchar(100),                             /*实际值*/
+	ZPASS          bit not null default 0,                   /*是否通过*/ 
+	constraint PK_TB_TEST_HISTORY primary key(ZID,ZTEST_ID)   
+)
+go
+
+/*测试参数表*/
+if exists (select * from dbo.sysobjects
+  where id = object_id(N'[dbo].[TB_TEST_PARAMS]')
+  and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+drop table [dbo].[TB_TEST_PARAMS]
+go
+
+create table TB_TEST_PARAMS(
+	ZTYPE 	     int not null,                                   /*类型*/
+	ZID          int not null,                                   /*ID值*/
+	ZNAME        varchar(200)                                    /*值*/
+	constraint PK_TB_TEST_PARAMS primary key(ZTYPE,ZID)  
+)
+go
+
+
+
+
+
 
 
 

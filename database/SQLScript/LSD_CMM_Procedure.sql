@@ -554,3 +554,76 @@ select * from temp_prostat
 GO
 
 
+
+
+
+/*测试管理器的发布邮件*/
+/*
+创建: 2008-10-6  mrlong
+目的: 取出测试的邮件内容
+修改：
+编号   时间         修改人             修改内容
+*/
+
+CREATE   PROCEDURE pt_MaintoByTest
+@TestID int, --TestID号
+@mailtitle varchar(200) output, --返回的标题
+@mailtext varchar(4000) output --返回的内容
+as
+declare @Title varchar(200)
+declare @ProName varchar(200) --项目名称
+declare @Auathor varchar(20)  
+declare @TestContext varchar(2000) --内容
+declare @Status int --状态 1 完成 2 激活 3 关闭
+
+begin
+
+
+--取出标题及作者
+declare my_cursor cursor 
+for
+select a.ZNAME,b.ZNAME,a.ZSTATUS  from TB_TEST_ITEM as a, TB_USER_ITEM as b where a.ZID=@TestID and
+a.ZOPENEDBY=b.ZID
+
+open my_cursor
+fetch next from my_cursor into @Title,@Auathor,@Status
+close   my_cursor  
+deallocate my_cursor
+
+--取出项目名称与版本号
+declare my_cursor cursor 
+for
+select b.ZNAME from TB_TEST_ITEM as a, TB_PRO_ITEM as b where a.ZID=@TestID and
+a.ZPRO_ID=b.ZID
+
+open my_cursor
+fetch next from my_cursor into @ProName
+close   my_cursor  
+deallocate my_cursor
+
+--内容
+if @Status =2
+begin
+ set @TestContext  = '测试被激活'
+end
+
+if @Status =3
+begin
+ set @TestContext  = '测试关闭'
+end
+
+
+
+
+--格式
+set @mailtitle = @Title
+set @mailtext  = @ProName + char(13) +char(10)+
+'-------------------------------------------------------------------------------------------' + char(13) + char(10)+
+@TestContext + char(13) +char(10)+char(13)+char(10)+
+'创建人:' +  @Auathor 
+
+
+end
+GO
+
+

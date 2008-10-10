@@ -479,10 +479,10 @@ procedure TProjectManageClientDlg.cdsProjectItemBeforePost(
 var
   mySQL : String;
 const
-  glSQL  = 'insert into TB_PRO_ITEM(ZNAME,ZOPENDATE,ZMANAGERID,ZUNITS) ' +
-           ' values(''%s'',''%s'',%d,''%s'')';
+  glSQL  = 'insert into TB_PRO_ITEM(ZNAME,ZOPENDATE,ZMANAGERID,ZUNITS,ZTESTTEAM) ' +
+           ' values(''%s'',''%s'',%d,''%s'',''%s'')';
   glSQL2 = 'update TB_PRO_ITEM set ZNAME=''%s'',ZOPENDATE=''%s'',ZMANAGERID=%d, ' +
-           'ZUNITS=''%s'',ZHIGHVERID=%d where ZID=%d';
+           'ZUNITS=''%s'',ZHIGHVERID=%d,ZTESTTEAM=''%s'' where ZID=%d';
 begin
   if fLoading then Exit;
   //usUnmodified, usModified, usInserted, usDeleted
@@ -495,6 +495,7 @@ begin
       DataSet.FieldByName('ZMANAGERID').AsInteger,
       DataSet.FieldByName('ZUNITS').AsString,
       DataSet.FieldByName('ZHIGHVERID').AsInteger,
+      DataSet.FieldByName('ZTESTTEAM').AsString,
       DataSet.FieldByName('ZID').AsInteger]);
     ClientSystem.fDbOpr.BeginTrans;
     try
@@ -511,7 +512,8 @@ begin
       DataSet.FieldByName('ZNAME').AsString,
       DataSet.FieldByName('ZOPENDATE').AsString,
       DataSet.FieldByName('ZMANAGERID').AsInteger,
-      DataSet.FieldByName('ZUNITS').AsString]);
+      DataSet.FieldByName('ZUNITS').AsString,
+      DataSet.FieldByName('ZTESTTEAM').AsString]);
     ClientSystem.fDbOpr.BeginTrans;
     try
       ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
@@ -1660,7 +1662,7 @@ begin
 
         //加班处理
         if cdsTask.FieldByName('ZOVERWORK').AsBoolean then
-          cdsTaskUser.FieldByName('ZRATE').AsFloat := 1.5
+          cdsTaskUser.FieldByName('ZRATE').AsFloat := 2 //现在加班的系统变为2
         else
           cdsTaskUser.FieldByName('ZRATE').AsFloat := 1;
 

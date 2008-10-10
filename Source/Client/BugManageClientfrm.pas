@@ -239,6 +239,7 @@ type
     procedure LoadBugHistory(ABugID:integer); //加载bug的回复
     function  UpBugFile(APro_ID:integer;AFileName:String;var AFileID:integer):Boolean; //上传文件并返回文件的ID号
     procedure Mailto(AEmailto:String); //发送到邮箱
+    procedure WMShowBugItem(var msg:TMessage); message gcMSG_GetBugItem; //直接显示bug,用于测试用例内
   public
     { Public declarations }
     procedure initBase; override;
@@ -2142,7 +2143,8 @@ end;
 
 procedure TBugManageDlg.actBug_MovetoUpdate(Sender: TObject);
 begin
-  (Sender as TAction).Enabled := (cdsBugItem.RecordCount > 0)
+  (Sender as TAction).Enabled := cdsBugItem.Active and
+    (cdsBugItem.RecordCount > 0)
 end;
 
 procedure TBugManageDlg.pcBugChange(Sender: TObject);
@@ -2206,6 +2208,30 @@ end;
 procedure TBugManageDlg.dbtxtZFILESAVEClick(Sender: TObject);
 begin
   actBugHistory_Savetofile.Execute;
+end;
+
+procedure TBugManageDlg.WMShowBugItem(var msg: TMessage);
+var
+  myPageIndex : Integer;
+begin
+  //
+  fPageType.fType := ptMe;
+  fPageType.fWhereStr := Format('ZID=%d',[msg.WParam]);
+  fPageType.fIndex := 1;
+  fPageType.fName := '高级查询';
+  myPageIndex := 1;
+  fPageType.fIndexCount := GetBugItemPageCount(myPageindex,fPageType.fWhereStr);
+  LoadBugItem(myPageindex,fPageType.fWhereStr);
+  lbPageCount.Caption := format('%d/%d',[
+    fPageType.fIndex,
+    fPageType.fIndexCount]);
+    lbProjectName.Caption := format('%s  =>第%d共%d页',[
+  fPageType.fName,fPageType.fIndex,fPageType.fIndexCount]);
+
+
+  if pcBug.ActivePageIndex=0 then
+    pcBug.ActivePageIndex := 1;
+  LoadBugHistory(msg.WParam);
 end;
 
 end.

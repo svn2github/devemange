@@ -54,4 +54,22 @@ insert into TB_TASK_PARAMS (ZTYPE,ZID,ZNAME) values(2,1,'变更功能');
 /*系统参数*/
 insert into TB_SYSPARAMS (ZNAME,ZVALUE) values('wiki','');
 
+/*测试参数*/
+insert into TB_TEST_PARAMS (ZTYPE,ZID,ZNAME) values(0,0,'一级');
+insert into TB_TEST_PARAMS (ZTYPE,ZID,ZNAME) values(0,1,'二级');
+insert into TB_TEST_PARAMS (ZTYPE,ZID,ZNAME) values(0,2,'三级');
+insert into TB_TEST_PARAMS (ZTYPE,ZID,ZNAME) values(0,3,'四级');
+--测试的类型
+insert into TB_TEST_PARAMS (ZTYPE,ZID,ZNAME) values(1,0,'功能测试');
+insert into TB_TEST_PARAMS (ZTYPE,ZID,ZNAME) values(1,1,'整体测试');
+insert into TB_TEST_PARAMS (ZTYPE,ZID,ZNAME) values(1,2,'单元测试');
+--测试方法=2
+insert into TB_TEST_PARAMS (ZTYPE,ZID,ZNAME) values(2,0,'黑盒测试');
+insert into TB_TEST_PARAMS (ZTYPE,ZID,ZNAME) values(2,1,'脚本测试');
+--测试状态ZSTATUS
+insert into TB_TEST_PARAMS (ZTYPE,ZID,ZNAME) values(3,0,'活动');
+insert into TB_TEST_PARAMS (ZTYPE,ZID,ZNAME) values(3,1,'修改完成');
+insert into TB_TEST_PARAMS (ZTYPE,ZID,ZNAME) values(3,2,'被激活');
+insert into TB_TEST_PARAMS (ZTYPE,ZID,ZNAME) values(3,3,'关闭');
+
 GO

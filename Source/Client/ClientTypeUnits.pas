@@ -8,7 +8,8 @@ type
   //
   // 权限管理的内容
   //
-  TModuleType = (mtFile=100,mtBug=200,mtProject=300,mtUser=400,mtDoc=500);
+  TModuleType = (mtFile=100,mtBug=200,mtProject=300,mtUser=400,mtDoc=500,
+    mtTest=600);
   //文件的子模块
   TFileSubModuleStype = (fsmDir=1,fsmfile=2);
   //BUG项目管理
@@ -30,7 +31,7 @@ type
   TFileStype = (fsFile,fsBug,fsDoc);
 
   //BUG的状态
-  TBugStatus = (bgsAction,bgsDeath,bgsReAction); //活动的，已修改的,被激活
+  TBugStatus = (bgsAction,bgsDeath,bgsReAction,bgsClose); //活动的，已修改的,被激活,关闭
 
   //任务单的状态
   //待分发=0 ; 执行中=1 ; 撤消=2; 完成=3 ; 关闭=4;激活=5
@@ -117,6 +118,7 @@ const
 
 const
   gcMSG_TickCount = $0400{WM_USER} +1;  //发送到mainfrm显示
+  gcMSG_GetBugItem = $0400{WM_USER} +2; //发送到bug,显示内容
   gcLogDir = 'Log'; //日志目录
 
 

@@ -96,7 +96,7 @@ inherited TaskScoreDlg: TTaskScoreDlg
   object Label6: TLabel
     Left = 184
     Top = 210
-    Width = 7
+    Width = 8
     Height = 15
     Caption = '%'
   end
@@ -117,7 +117,7 @@ inherited TaskScoreDlg: TTaskScoreDlg
   object Label11: TLabel
     Left = 447
     Top = 207
-    Width = 9
+    Width = 8
     Height = 15
     Caption = '%'
   end
@@ -302,7 +302,7 @@ inherited TaskScoreDlg: TTaskScoreDlg
     Width = 65
     Height = 23
     TabOrder = 17
-    Text = '3'
+    Text = '8'
   end
   object edtOtherRate: TEdit
     Left = 373
@@ -310,6 +310,6 @@ inherited TaskScoreDlg: TTaskScoreDlg
     Width = 65
     Height = 23
     TabOrder = 18
-    Text = '20'
+    Text = '15'
   end
 end

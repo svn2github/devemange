@@ -180,6 +180,13 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
               FieldName = 'ZHIGHVERID'
               Title.Caption = #26368#26032#29256#26412'ID'#21495
               Visible = True
+            end
+            item
+              Expanded = False
+              FieldName = 'ZTESTTEAM'
+              Title.Caption = #27979#35797#32452'('#26684#24335#22995#21517'(2);)'#22995#21517'(3)'
+              Width = 66
+              Visible = True
             end>
         end
       end

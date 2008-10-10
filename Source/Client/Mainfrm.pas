@@ -75,6 +75,8 @@ type
     actMod_ProductDown: TAction;
     Wiki1: TMenuItem;
     N13: TMenuItem;
+    actMod_Test: TAction;
+    btnMod_Test: TToolButton;
     procedure FormCreate(Sender: TObject);
     procedure actmod_FilesExecute(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -98,6 +100,7 @@ type
     procedure actMod_ProductDownExecute(Sender: TObject);
     procedure ApplicationEvents1Message(var Msg: tagMSG;
       var Handled: Boolean);
+    procedure actMod_TestExecute(Sender: TObject);
   private
     fChildform : TList; //所有子窗口的对象
     fCurrentChildform : TBaseChildDlg;
@@ -108,6 +111,7 @@ type
     procedure ShowStatusBarText(AStr:String);
     procedure DelTempfile(); //删除临时文件
     procedure WMTickCount (var Msg: TMessage); message gcMSG_TickCount;
+    procedure WMShowBugItem(var msg:TMessage); message gcMSG_GetBugItem;
 
   public
     property CurrentChildform : TBaseChildDlg read fCurrentChildform;
@@ -133,6 +137,7 @@ uses
   WriteToDaySayfrm,        {每日一句}
   ChangPasswdfrm,          {修改密码}
   CnProgressFrm ,
+  TestManageClient,        {测试管理}
   WebClientfrm
 
   , SetSysParamsfrm;
@@ -575,6 +580,36 @@ begin
     end;
   end;
   
+end;
+
+procedure TMainDlg.actMod_TestExecute(Sender: TObject);
+begin
+  DoChangeClient(TTestManageChildfrm);
+end;
+
+procedure TMainDlg.WMShowBugItem(var msg: TMessage);
+var
+  myBaseform,myform : TBaseChildDlg;
+  i : Integer;
+begin
+  DoChangeClient(TBugManageDlg);
+
+  myBaseform := nil;
+  for i:=0 to fChildform.Count -1 do
+  begin
+    myform := fChildform.items[i];
+    if myform is TBugManageDlg then
+    begin
+      myBaseform :=fChildform.items[i];
+      break;
+    end;
+  end;
+
+  if Assigned(myBaseform) then
+  begin
+    SendMessage(myBaseform.Handle,gcMSG_GetBugItem,msg.WParam,msg.LParam);
+  end;
+
 end;
 
 end.
