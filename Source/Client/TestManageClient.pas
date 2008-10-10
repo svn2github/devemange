@@ -192,7 +192,7 @@ type
     procedure actResult_AddByBugUpdate(Sender: TObject);
     procedure actResult_AddByBugExecute(Sender: TObject);
     procedure act_GetBugItemUpdate(Sender: TObject);
-    procedure btnGetBugItemClick(Sender: TObject);
+    procedure act_GetBugItemExecute(Sender: TObject);
   private
     { Private declarations }
     fTestPageRec : TTestPageRec;
@@ -473,6 +473,8 @@ begin
   DataSet.FieldByName('ZOPENEDDATE').AsDateTime := ClientSystem.fDbOpr.GetSysDateTime;
   DataSet.FieldByName('ZISNEW').AsBoolean := True;
   DataSet.FieldByName('ZSTATUS').AsInteger := Ord(bgsAction);
+  DataSet.FieldByName('ZTESTMETHOD').AsInteger := 0;
+  DataSet.FieldByName('ZTYPE').AsInteger := 0;
 
   if cdsResult.Active and (not cdsResult.IsEmpty) then
     while cdsResult.Eof do
@@ -1110,7 +1112,8 @@ var
   myBugid : Integer;
   mycds : TClientDataSet;
   mycdsPro : TClientDataSet;
-
+  s,myname : string;
+  myuserid : Integer;
 const
   glSQL = 'select * from TB_BUG_ITEM where ZID=%d';
   glSQL2 = 'select ZTESTTEAM from TB_PRO_ITEM where ZID=%d';
@@ -1149,7 +1152,30 @@ begin
     cdsTestItem.FieldByName('ZTYPE').AsInteger := 0; //¹¦ÄÜ
     cdsTestItem.FieldByName('ZCASEBUG').AsString := IntToStr(myBugid);
     if mycdsPro.RecordCount > 0 then
-      cdsTestItem.FieldByName('ZMAILTO').AsString := mycdsPro.fieldByName('ZTESTTEAM').AsString;
+    begin
+      myuserid := -1;
+      s := mycdsPro.fieldByName('ZTESTTEAM').AsString;
+      if Pos(';',s) > 0 then
+      begin
+        myName := Copy(s,1,Pos(';',s)-1);
+      end
+      else
+        myName := s;
+
+      if (myname <> '') and (Pos('(',myname) > 0) and (Pos(')',myname)>0) and
+         (Pos(')',myname)>Pos('(',myname) ) then
+      begin
+        myuserid := StrToIntDef(Copy(myname,
+          Pos('(',myname)+1,
+          Pos(')',myname)-Pos('(',myname)-1
+          ),
+          -1);
+      end;
+
+      cdsTestItem.FieldByName('ZMAILTO').AsString := s;
+      if myuserid <> -1 then
+        cdsTestItem.FieldByName('ZASSIGNEDTO').AsInteger := myuserid;
+    end;
     cdsTestItem.FieldByName('ZPRO_ID').AsInteger := mycds.fieldByName('ZPRO_ID').AsInteger;
     cdsTestItem.FieldByName('ZPRO_VER').AsInteger := mycds.fieldByName('ZRESOLVEDVER').AsInteger;
 
@@ -1191,7 +1217,8 @@ begin
     (cdsTestItem.FieldByName('ZCASEBUG').AsString <>'')
 end;
 
-procedure TTestManageChildfrm.btnGetBugItemClick(Sender: TObject);
+
+procedure TTestManageChildfrm.act_GetBugItemExecute(Sender: TObject);
 var
   myBugId : Integer;
 begin

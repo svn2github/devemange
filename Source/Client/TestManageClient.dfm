@@ -270,7 +270,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
           object Label8: TLabel
             Left = 5
             Top = 61
-            Width = 56
+            Width = 60
             Height = 15
             Anchors = [akLeft, akBottom]
             Caption = #26399#26395#20540#65306
@@ -278,7 +278,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
           object Label16: TLabel
             Left = 218
             Top = 62
-            Width = 55
+            Width = 60
             Height = 15
             Anchors = [akLeft, akBottom]
             Caption = #23454#38469#20540#65306
@@ -591,6 +591,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
           Top = 149
           Width = 150
           Height = 23
+          DropDownRows = 50
           KeyField = 'ZID'
           ListField = 'ZNAME'
           ListSource = DM.dsUsers
@@ -767,7 +768,6 @@ inherited TestManageChildfrm: TTestManageChildfrm
           Action = act_GetBugItem
           Caption = #36339#21040#30456#20851'BUG'
           TabOrder = 22
-          OnClick = btnGetBugItemClick
         end
       end
     end
@@ -907,6 +907,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
     object act_GetBugItem: TAction
       Category = #21015#34920
       Caption = #36339#21040#30456#20851'BUG'
+      OnExecute = act_GetBugItemExecute
       OnUpdate = act_GetBugItemUpdate
     end
   end
