@@ -145,6 +145,7 @@ type
     actResult_AddByBug: TAction;
     act_GetBugItem: TAction;
     btnGetBugItem: TBitBtn;
+    dbnvgr1: TDBNavigator;
     procedure act_NewExecute(Sender: TObject);
     procedure act_CancelUpdate(Sender: TObject);
     procedure act_CancelExecute(Sender: TObject);
@@ -1179,6 +1180,7 @@ begin
     cdsTestItem.FieldByName('ZPRO_ID').AsInteger := mycds.fieldByName('ZPRO_ID').AsInteger;
     cdsTestItem.FieldByName('ZPRO_VER').AsInteger := mycds.fieldByName('ZRESOLVEDVER').AsInteger;
 
+    cdsResult.Close;
     pgcTestMain.ActivePageIndex := 1;
   finally
     mycds.Free;
@@ -1191,6 +1193,8 @@ procedure TTestManageChildfrm.actResult_AddByBugUpdate(Sender: TObject);
 begin
   (Sender as TAction).Enabled := not cdsTestItem.IsEmpty and
     (cdsTestItem.FieldByName('ZCASEBUG').AsString <>'')
+     and (not cdsTestItem.FieldByName('ZISNEW').AsBoolean) and
+    cdsResult.Active;
 end;
 
 procedure TTestManageChildfrm.actResult_AddByBugExecute(Sender: TObject);

@@ -9,6 +9,7 @@ uses
 
 type
   TProductDownLoadClientDlg = class(TWebClientDlg)
+    lbl1: TLabel;
   private
     { Private declarations }
   public

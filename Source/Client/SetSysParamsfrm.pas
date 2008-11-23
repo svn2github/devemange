@@ -4,13 +4,14 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, BaseDialogfrm, DB, DBClient, Grids, DBGrids;
+  Dialogs, BaseDialogfrm, DB, DBClient, Grids, DBGrids, StdCtrls, DBCtrls;
 
 type
   TSetParamsDlg = class(TBaseDialog)
     cdsParams: TClientDataSet;
     dsParams: TDataSource;
     dbgrdParams: TDBGrid;
+    dbmmoZVALUE: TDBMemo;
     procedure FormShow(Sender: TObject);
     procedure cdsParamsBeforePost(DataSet: TDataSet);
   private

@@ -12,7 +12,7 @@ inherited SetParamsDlg: TSetParamsDlg
     Left = 0
     Top = 0
     Width = 633
-    Height = 370
+    Height = 281
     Align = alClient
     DataSource = dsParams
     TabOrder = 0
@@ -27,14 +27,14 @@ inherited SetParamsDlg: TSetParamsDlg
         FieldName = 'ZNAME'
         ReadOnly = True
         Title.Caption = #21517#31216
-        Width = 200
+        Width = 338
         Visible = True
       end
       item
         Expanded = False
         FieldName = 'ZVALUE'
         Title.Caption = #20869#23481
-        Width = 300
+        Width = 91
         Visible = True
       end
       item
@@ -45,6 +45,16 @@ inherited SetParamsDlg: TSetParamsDlg
         Width = 80
         Visible = True
       end>
+  end
+  object dbmmoZVALUE: TDBMemo
+    Left = 0
+    Top = 281
+    Width = 633
+    Height = 89
+    Align = alBottom
+    DataField = 'ZVALUE'
+    DataSource = dsParams
+    TabOrder = 1
   end
   object cdsParams: TClientDataSet
     Aggregates = <>

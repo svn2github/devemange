@@ -1,16 +1,7 @@
-inherited ProductDownLoadClientDlg: TProductDownLoadClientDlg
-  Caption = #20135#21697#27744
+inherited CalendarChildDlg: TCalendarChildDlg
+  Caption = #35745#21010#26085#31243
   PixelsPerInch = 96
   TextHeight = 15
-  inherited pnlWebTool: TPanel
-    object lbl1: TLabel [0]
-      Left = 599
-      Top = 12
-      Width = 225
-      Height = 15
-      Caption = #21482#38480#20110#26412#22320#23616#22495#32593#20869#25165#21487#20197#19979#36733#12290
-    end
-  end
   inherited wbwiki: TWebBrowser
     ControlData = {
       4C000000175900007F3A00000000000000000000000000000000000000000000

@@ -77,6 +77,8 @@ type
     N13: TMenuItem;
     actMod_Test: TAction;
     btnMod_Test: TToolButton;
+    actCalendar: TAction;
+    btnCalendar: TToolButton;
     procedure FormCreate(Sender: TObject);
     procedure actmod_FilesExecute(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -101,6 +103,7 @@ type
     procedure ApplicationEvents1Message(var Msg: tagMSG;
       var Handled: Boolean);
     procedure actMod_TestExecute(Sender: TObject);
+    procedure actCalendarExecute(Sender: TObject);
   private
     fChildform : TList; //所有子窗口的对象
     fCurrentChildform : TBaseChildDlg;
@@ -137,6 +140,7 @@ uses
   WriteToDaySayfrm,        {每日一句}
   ChangPasswdfrm,          {修改密码}
   CnProgressFrm ,
+  CalendarChildfrm,        {开发计划表}
   TestManageClient,        {测试管理}
   WebClientfrm
 
@@ -610,6 +614,11 @@ begin
     SendMessage(myBaseform.Handle,gcMSG_GetBugItem,msg.WParam,msg.LParam);
   end;
 
+end;
+
+procedure TMainDlg.actCalendarExecute(Sender: TObject);
+begin
+  DoChangeClient(TCalendarChildDlg);
 end;
 
 end.

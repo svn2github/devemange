@@ -53,6 +53,8 @@ insert into TB_TASK_PARAMS (ZTYPE,ZID,ZNAME) values(2,0,'新增功能');
 insert into TB_TASK_PARAMS (ZTYPE,ZID,ZNAME) values(2,1,'变更功能');
 /*系统参数*/
 insert into TB_SYSPARAMS (ZNAME,ZVALUE) values('wiki','');
+insert into TB_SYSPARAMS (ZNAME,ZVALUE) values('ProductDownload','');
+insert into TB_SYSPARAMS (ZNAME,ZVALUE) values('Calendar','');
 
 /*测试参数*/
 insert into TB_TEST_PARAMS (ZTYPE,ZID,ZNAME) values(0,0,'一级');

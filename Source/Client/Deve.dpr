@@ -15,7 +15,8 @@ uses
   WebClientfrm in 'WebClientfrm.pas' {WebClientDlg},
   StatManageClientfrm in 'StatManageClientfrm.pas' {StatManageClientDlg},
   ProductDownLoadClientfrm in 'ProductDownLoadClientfrm.pas' {ProductDownLoadClientDlg},
-  TestManageClient in 'TestManageClient.pas' {TestManageChildfrm};
+  TestManageClient in 'TestManageClient.pas' {TestManageChildfrm},
+  CalendarChildfrm in 'CalendarChildfrm.pas' {CalendarChildDlg};
 
 {$R *.res}
 {$R resource.res}

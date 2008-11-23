@@ -101,7 +101,7 @@ object FileManageDlg: TFileManageDlg
         Width = 100
         Height = 25
         Action = actFile_Openfile
-        Caption = #25171#24320#25991#20214
+        Caption = #32534#36753#25991#20214
         TabOrder = 0
       end
       object BitBtn4: TBitBtn
@@ -119,7 +119,7 @@ object FileManageDlg: TFileManageDlg
         Width = 100
         Height = 25
         Action = actFile_UndoOpen
-        Caption = #25764#28040#25171#24320
+        Caption = #25764#28040#32534#36753
         TabOrder = 2
       end
       object BitBtn6: TBitBtn
@@ -128,7 +128,7 @@ object FileManageDlg: TFileManageDlg
         Width = 100
         Height = 25
         Action = actFile_Viewfile
-        Caption = #27983#35272#25991#20214
+        Caption = #26597#30475#25991#20214
         TabOrder = 3
       end
       object BitBtn7: TBitBtn
@@ -303,7 +303,7 @@ object FileManageDlg: TFileManageDlg
     end
     object actFile_Openfile: TAction
       Category = #25991#20214
-      Caption = #25171#24320#25991#20214
+      Caption = #32534#36753#25991#20214
       OnExecute = actFile_OpenfileExecute
       OnUpdate = actFile_OpenfileUpdate
     end
@@ -315,7 +315,7 @@ object FileManageDlg: TFileManageDlg
     end
     object actFile_UndoOpen: TAction
       Category = #25991#20214
-      Caption = #25764#28040#25171#24320
+      Caption = #25764#28040#32534#36753
       Hint = #25764#28040#24050#25171#24320#30340#25991#20214#12290
       OnExecute = actFile_UndoOpenExecute
       OnUpdate = actFile_UndoOpenUpdate
@@ -329,7 +329,7 @@ object FileManageDlg: TFileManageDlg
     end
     object actFile_Viewfile: TAction
       Category = #25991#20214
-      Caption = #27983#35272#25991#20214
+      Caption = #26597#30475#25991#20214
       Hint = #27983#35272#26597#25214#25991#20214#20869#23481#20294#19981#33021#20462#25913#24182#20445#23384#12290
       OnExecute = actFile_ViewfileExecute
       OnUpdate = actFile_ViewfileUpdate

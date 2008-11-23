@@ -1,6 +1,6 @@
 inherited TestManageChildfrm: TTestManageChildfrm
-  Left = 218
-  Top = 55
+  Left = 148
+  Top = 111
   Width = 958
   Height = 689
   Caption = #27979#35797#31649#29702
@@ -349,6 +349,9 @@ inherited TestManageChildfrm: TTestManageChildfrm
           BevelOuter = bvNone
           Color = clTeal
           TabOrder = 1
+          DesignSize = (
+            942
+            40)
           object bvl2: TBevel
             Left = 328
             Top = 6
@@ -409,6 +412,16 @@ inherited TestManageChildfrm: TTestManageChildfrm
             Action = actResult_AddByBug
             Caption = 'Bug'#22238#22797#29992#20363
             TabOrder = 5
+          end
+          object dbnvgr1: TDBNavigator
+            Left = 781
+            Top = 8
+            Width = 152
+            Height = 25
+            DataSource = dsResult
+            VisibleButtons = [nbFirst, nbPrior, nbNext, nbLast]
+            Anchors = [akTop, akRight]
+            TabOrder = 6
           end
         end
       end

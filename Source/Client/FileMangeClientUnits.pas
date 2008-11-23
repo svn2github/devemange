@@ -1350,6 +1350,8 @@ begin
   // 4. 更新服务器的标志
   //
 
+  if MessageBox(Handle,'确定要修改文件，修改完后要保存文件，否则点撤消编辑。',
+    '提示',MB_ICONQUESTION+MB_YESNO)=IDNO then Exit;
   myNodeData := tvFileTree.Selected.data;
   myItemData := lvFileItem.Selected.data;
 
