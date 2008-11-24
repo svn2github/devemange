@@ -1,6 +1,6 @@
 inherited TestManageChildfrm: TTestManageChildfrm
-  Left = 148
-  Top = 111
+  Left = 162
+  Top = 24
   Width = 958
   Height = 689
   Caption = #27979#35797#31649#29702
@@ -255,8 +255,8 @@ inherited TestManageChildfrm: TTestManageChildfrm
         object dbctrlgrd1: TDBCtrlGrid
           Left = 0
           Top = 40
-          Width = 942
-          Height = 256
+          Width = 941
+          Height = 255
           Align = alClient
           AllowDelete = False
           AllowInsert = False

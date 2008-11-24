@@ -80,9 +80,11 @@ begin
           3:cdsData.Fields[i].DisplayLabel := '回复问题';
           4:cdsData.Fields[i].DisplayLabel := '问题激活';
           5:cdsData.Fields[i].DisplayLabel := '问题得分';
-          6:cdsData.Fields[i].DisplayLabel := '任务完成';
+          6:cdsData.Fields[i].DisplayLabel := '完成任务';
           7:cdsData.Fields[i].DisplayLabel := '任务得分';
-          8:cdsData.Fields[i].DisplayLabel := '总分';
+          8:cdsData.Fields[i].DisplayLabel := '提交测试数';
+          9:cdsData.Fields[i].DisplayLabel := '完成测试数';
+          10:cdsData.Fields[i].DisplayLabel := '总分';
         end;
       end;
     end

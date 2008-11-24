@@ -84,12 +84,12 @@ implementation
 
 var
   ProgressForm: TProgressForm = nil;  // 进度条窗体实例
-  FormList: Pointer;   // 被禁用的窗体列表指针
+  FormList: TThreadList	;  // 被禁用的窗体列表指针
 
 // 显示窗体
 procedure ShowProgress(const Title: string;ACount:integer);
-//var
-//  i: Integer;
+var
+  i: Integer;
 begin
   if not Assigned(ProgressForm) then
   begin
@@ -113,18 +113,34 @@ begin
   end;
   ProgressForm.Show;
 
+  with FormList.LockList do
+  try
+     for i := 0 to Screen.FormCount - 1 do
+    begin
+      if (Screen.Forms[i] <> ProgressForm) and Screen.Forms[i].Enabled
+         and (IndexOf(Screen.Forms[i])<0)  then
+      begin
+        Add(Screen.Forms[i]);    // 保存当前可用的窗体列表
+        Screen.Forms[i].Enabled := False; // 禁用窗体
+      end;
+    end;
+  finally
+    FormList.UnlockList;
+  end;
+
+
   // xierenxixi 修改
-  FormList := DisableTaskWindows(ProgressForm.Handle);
+  //FormList := DisableTaskWindows(ProgressForm.Handle);
   ProgressForm.Update;
 end;
 
 // 关闭窗体
 procedure HideProgress;
-//var
-//  i: Integer;
+var
+  i: Integer;
 begin
   if not Assigned(ProgressForm) then Exit;
-{  with FormList.LockList do
+  with FormList.LockList do
   try
     for i := Count - 1 downto 0 do
     begin
@@ -137,10 +153,10 @@ begin
     end;
   finally
     FormList.UnlockList;
-  end;  }
+  end;
 
   // xierenxixi 修改
-  EnableTaskWindows(FormList);
+  //EnableTaskWindows(FormList);
   
   ProgressForm.Hide;
   Application.ProcessMessages;
@@ -169,5 +185,12 @@ begin
     Application.ProcessMessages;
   end;
 end;
+
+initialization
+  FormList:= TThreadList.Create;
+
+
+finalization
+  FormList.Free;
 
 end.

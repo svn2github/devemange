@@ -113,6 +113,8 @@ inherited StatManageClientDlg: TStatManageClientDlg
       Height = 363
       Align = alClient
       DataSource = dsData
+      Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
+      ReadOnly = True
       TabOrder = 0
       TitleFont.Charset = GB2312_CHARSET
       TitleFont.Color = clWindowText

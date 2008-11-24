@@ -530,6 +530,7 @@ end;
 procedure TProjectManageClientDlg.cdsProjectItemNewRecord(
   DataSet: TDataSet);
 begin
+  if fLoading then Exit;
   DataSet.FieldByName('ZOPENDATE').AsDateTime := ClientSystem.SysNow;
   DataSet.FieldByName('ZISNEW').AsBoolean := True;
   DataSet.FieldByName('ZISLOAD').AsBoolean := False;
@@ -1056,6 +1057,7 @@ end;
 
 procedure TProjectManageClientDlg.cdsTaskNewRecord(DataSet: TDataSet);
 begin
+  if fLoading then Exit;
   DataSet.FieldByName('ZDATE').AsDateTime := ClientSystem.SysNow;
   DataSet.FieldByName('ZCODE').AsString   := BuildCode_Task();
   DataSet.FieldByName('ZUSER_ID').AsInteger := ClientSystem.fEditer_id;
@@ -1957,7 +1959,7 @@ begin
   finally
     HideProgress;
   end;
-                                   end;
+end;
 
 procedure TProjectManageClientDlg.btnAddDesTextClick(Sender: TObject);
 begin

@@ -341,6 +341,9 @@ declare @c4 int
 declare @c5 int
 declare @c6 int
 declare @c7 int
+declare @c8 int  --创建测试用例数
+declare @c9 int --解决测试用例数
+
 
 set @c1=0
 set @c2=0
@@ -349,6 +352,8 @@ set @c4=0
 set @c5=0
 set @c6=0
 set @c7=0
+set @c8=0
+set @c9=0
 
 --建表
 if exists(select 1 from sysobjects where id=object_id('temp_stat')and type = 'u')
@@ -365,7 +370,11 @@ create table temp_stat
 
   ZTaskCount int,            --完成的任务数
   ZTaskFraction int,         --任务分数
- ZTotal int                       --总分
+
+  ZBuildTestCount  int,  --C8
+  ZAnswerTestCount int , --C9
+
+  ZTotal int                       --总分
   
   
 )
@@ -413,8 +422,6 @@ begin
              (a.ZOVERFRACTION=0) and
               (a.ZRESOLVEDDATE between  @StatbeginDate and  @StatendDate)
 
-  
-
 -------------------------------Task--------------------------------------------
   /*计算任务单个数*/
  select @c6=count(a.ZTASK_CODE) from  TB_TASK_USER as a
@@ -426,29 +433,52 @@ begin
  where (a.ZUSER_ID=@myUser_ID)  and (a.ZTASK_CODE=b.ZCODE) and (b.ZSTATUS=4) and
   ( a.ZSCOREDATE between @StatbeginDate and  @StatendDate)
 
+----------------------------Test--------------------------------------------------
+  /*创建测试用例数*/
+   select @c8= count(a.ZID)   from TB_TEST_ITEM as a 
+   where  a.ZOPENEDBY=@myUser_ID and
+              (a.ZOPENEDDATE between  @StatbeginDate and  @StatendDate)
+
+ /*解决测试用例数*/
+    select @c9= count(a.ZID)   from TB_TEST_ITEM as a 
+    where  a.ZTESTRESULTBY=@myUser_ID and
+              (a.ZSTATUS = 3) and --3=关闭
+              (a.ZRESULTDATE between  @StatbeginDate and  @StatendDate)
+
 
 	
   insert into temp_stat(
        ZUSERNAME,
        ZAnswerBugCount,
        ZSubmitBugCount,
-       ZReplyBugCount,
+        ZReplyBugCount,
        ZReActionBug,
        ZBugFraction,
-       ZTaskCount,
+
+      ZTaskCount,
        ZTaskFraction,
+
+     ZBuildTestCount  ,  
+     ZAnswerTestCount  , 
+
       ZTotal
      ) 
   values(
        @myUserName,
-       @c1,
+        @c1,
        @c2,
-       @c3,
+        @c3,
        @c4,
        @c5,
+ 
        @c6,
        @c7,
-       isnull(@c5,0)+isnull(@c7,0)); 
+
+       @c8,
+       @c9,
+
+       isnull(@c5,0)+isnull(@c7,0));
+ 
   fetch next from my_cursor into @myUserName, @myUser_ID
 end
 

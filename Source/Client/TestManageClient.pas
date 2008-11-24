@@ -395,7 +395,7 @@ begin
   cdsTestItem.DisableControls;
 
 
-  //ShowProgress('读取数据...',0);
+  ShowProgress('读取数据...',0);
   
   try
     lblPage.Caption := format('%d/%d',[fTestPageRec.fPageindex,
@@ -424,6 +424,7 @@ begin
   finally
     cdsTestItem.EnableControls;
     fLoading := myb;
+    HideProgress;
   end;
 end;
 
@@ -469,6 +470,7 @@ end;
 
 procedure TTestManageChildfrm.cdsTestItemNewRecord(DataSet: TDataSet);
 begin
+  if fLoading then Exit;
   DataSet.FieldByName('ZID').AsInteger := 0;
   DataSet.FieldByName('ZOPENEDBY').AsInteger := ClientSystem.fEditer_id;
   DataSet.FieldByName('ZOPENEDDATE').AsDateTime := ClientSystem.fDbOpr.GetSysDateTime;
