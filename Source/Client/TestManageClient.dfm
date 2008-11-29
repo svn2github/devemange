@@ -1,6 +1,6 @@
 inherited TestManageChildfrm: TTestManageChildfrm
-  Left = 162
-  Top = 24
+  Left = 192
+  Top = 58
   Width = 958
   Height = 689
   Caption = #27979#35797#31649#29702
@@ -94,6 +94,14 @@ inherited TestManageChildfrm: TTestManageChildfrm
           end
           item
             Expanded = False
+            FieldName = 'ZCLOSESTATUSNAME'
+            Title.Alignment = taCenter
+            Title.Caption = #35780#23457
+            Width = 60
+            Visible = True
+          end
+          item
+            Expanded = False
             FieldName = 'ZOPENEDDATE'
             Title.Alignment = taCenter
             Title.Caption = #21019#24314#26102#38388
@@ -171,14 +179,14 @@ inherited TestManageChildfrm: TTestManageChildfrm
         Align = alBottom
         TabOrder = 2
         object lblPage: TLabel
-          Left = 456
+          Left = 552
           Top = 13
           Width = 56
           Height = 15
           Caption = 'lblPage'
         end
         object btnFirstPage: TBitBtn
-          Left = 32
+          Left = 16
           Top = 8
           Width = 100
           Height = 25
@@ -187,7 +195,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
           TabOrder = 0
         end
         object btnProvPage: TBitBtn
-          Left = 136
+          Left = 120
           Top = 8
           Width = 100
           Height = 25
@@ -196,7 +204,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
           TabOrder = 1
         end
         object btnNextPage: TBitBtn
-          Left = 240
+          Left = 224
           Top = 8
           Width = 100
           Height = 25
@@ -205,13 +213,22 @@ inherited TestManageChildfrm: TTestManageChildfrm
           TabOrder = 2
         end
         object btnLastPage: TBitBtn
-          Left = 344
+          Left = 328
           Top = 8
           Width = 100
           Height = 25
           Action = act_LastPage
           Caption = #26368#21518#19968#39029
           TabOrder = 3
+        end
+        object btnRefreshData: TBitBtn
+          Left = 432
+          Top = 8
+          Width = 100
+          Height = 25
+          Action = act_RefreshData
+          Caption = #21047#26032#25968#25454
+          TabOrder = 4
         end
       end
     end
@@ -255,8 +272,8 @@ inherited TestManageChildfrm: TTestManageChildfrm
         object dbctrlgrd1: TDBCtrlGrid
           Left = 0
           Top = 40
-          Width = 941
-          Height = 255
+          Width = 942
+          Height = 256
           Align = alClient
           AllowDelete = False
           AllowInsert = False
@@ -489,9 +506,9 @@ inherited TestManageChildfrm: TTestManageChildfrm
           Caption = '<<<'
         end
         object Label7: TLabel
-          Left = 241
-          Top = 212
-          Width = 75
+          Left = 238
+          Top = 210
+          Width = 69
           Height = 15
           Caption = #27979#35797#26102#38388#65306
         end
@@ -538,9 +555,9 @@ inherited TestManageChildfrm: TTestManageChildfrm
           Caption = #20248#20808#32423#65306
         end
         object lbl1: TLabel
-          Left = 480
-          Top = 210
-          Width = 68
+          Left = 472
+          Top = 211
+          Width = 67
           Height = 15
           Caption = #27979#35797#32467#26524':'
         end
@@ -612,9 +629,9 @@ inherited TestManageChildfrm: TTestManageChildfrm
           OnCloseUp = dblcSelectUsermailCloseUp
         end
         object dbedtZRESULTDATE: TDBEdit
-          Left = 316
-          Top = 207
-          Width = 150
+          Left = 304
+          Top = 206
+          Width = 161
           Height = 23
           Color = clScrollBar
           DataField = 'ZRESULTDATE'
@@ -743,9 +760,9 @@ inherited TestManageChildfrm: TTestManageChildfrm
           TabOrder = 18
         end
         object dbedtZSTATUSNAME: TDBEdit
-          Left = 552
+          Left = 541
           Top = 206
-          Width = 150
+          Width = 110
           Height = 23
           Color = clScrollBar
           DataField = 'ZSTATUSNAME'
@@ -781,6 +798,16 @@ inherited TestManageChildfrm: TTestManageChildfrm
           Action = act_GetBugItem
           Caption = #36339#21040#30456#20851'BUG'
           TabOrder = 22
+        end
+        object dbedtZCLOSESTATUSNAME: TDBEdit
+          Left = 657
+          Top = 206
+          Width = 44
+          Height = 23
+          Color = clScrollBar
+          DataField = 'ZCLOSESTATUSNAME'
+          DataSource = dsTestItem
+          TabOrder = 23
         end
       end
     end
@@ -923,6 +950,11 @@ inherited TestManageChildfrm: TTestManageChildfrm
       OnExecute = act_GetBugItemExecute
       OnUpdate = act_GetBugItemUpdate
     end
+    object act_RefreshData: TAction
+      Category = #21015#34920
+      Caption = #21047#26032#25968#25454
+      OnExecute = act_RefreshDataExecute
+    end
   end
   object cdsProject: TClientDataSet
     Aggregates = <>
@@ -1003,5 +1035,16 @@ inherited TestManageChildfrm: TTestManageChildfrm
     DataSet = cdsResult
     Left = 276
     Top = 35
+  end
+  object cdsTestCoseSTATUS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 311
+    Top = 3
+  end
+  object dsTestCoseSTATUS: TDataSource
+    DataSet = cdsTestCoseSTATUS
+    Left = 313
+    Top = 34
   end
 end

@@ -84,7 +84,8 @@ begin
           7:cdsData.Fields[i].DisplayLabel := '任务得分';
           8:cdsData.Fields[i].DisplayLabel := '提交测试数';
           9:cdsData.Fields[i].DisplayLabel := '完成测试数';
-          10:cdsData.Fields[i].DisplayLabel := '总分';
+          10:cdsData.Fields[i].DisplayLabel := '测试得分' ;
+          11:cdsData.Fields[i].DisplayLabel := '总分';
         end;
       end;
     end

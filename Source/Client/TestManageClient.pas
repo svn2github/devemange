@@ -146,6 +146,11 @@ type
     act_GetBugItem: TAction;
     btnGetBugItem: TBitBtn;
     dbnvgr1: TDBNavigator;
+    act_RefreshData: TAction;
+    btnRefreshData: TBitBtn;
+    cdsTestCoseSTATUS: TClientDataSet;
+    dsTestCoseSTATUS: TDataSource;
+    dbedtZCLOSESTATUSNAME: TDBEdit;
     procedure act_NewExecute(Sender: TObject);
     procedure act_CancelUpdate(Sender: TObject);
     procedure act_CancelExecute(Sender: TObject);
@@ -194,6 +199,7 @@ type
     procedure actResult_AddByBugExecute(Sender: TObject);
     procedure act_GetBugItemUpdate(Sender: TObject);
     procedure act_GetBugItemExecute(Sender: TObject);
+    procedure act_RefreshDataExecute(Sender: TObject);
   private
     { Private declarations }
     fTestPageRec : TTestPageRec;
@@ -216,7 +222,9 @@ var
 
 implementation
 
-uses DmUints,BugHistoryfrm;
+uses
+  TestCaseSOCREfrm, {测试打分}
+  DmUints,BugHistoryfrm;
 
 {$R *.dfm}
 
@@ -278,6 +286,7 @@ begin
   cdsTesttype.Data := ClientSystem.fDbOpr.ReadDataSet(PChar(Format(glSQL3,[1])));
   cdsmethod.Data   := ClientSystem.fDbOpr.ReadDataSet(PChar(Format(glSQL3,[2])));
   cdsTestSTATUS.Data := ClientSystem.fDbOpr.ReadDataSet(PChar(Format(glSQL3,[3])));
+  cdsTestCoseSTATUS.Data := ClientSystem.fDbOpr.ReadDataSet(PChar(Format(glSQL3,[4])));
 
   mycds := TClientDataSet.Create(nil);
   try
@@ -340,8 +349,6 @@ begin
         LookupResultField := 'ZNAME';
       end;
 
-
-
       //测试结果
       myField := AddFieldDef;
       myField.Name := 'ZSTATUSNAME';
@@ -356,8 +363,24 @@ begin
         LookupResultField := 'ZNAME';
       end;
 
+      //关闭的状态
+      myField := AddFieldDef;
+      myField.Name := 'ZCLOSESTATUSNAME';
+      myField.DataType := ftString;
+      myField.Size := 30;
+      with myfield.CreateField(cdsTestItem) do
+      begin
+        FieldKind := fkLookup;
+        KeyFields := 'ZCLOSESTATUS';
+        LookupDataSet := cdsTestCoseSTATUS;
+        LookupKeyFields := 'ZID';
+        LookupResultField := 'ZNAME';
+      end;
+
+
 
      cdsTestItem.FieldByName('ZID').Alignment := taLeftJustify;
+     cdsTestItem.FieldByName('ZCLOSESTATUSNAME').Alignment :=taCenter;
 
     end;
     cdsTestItem.CreateDataSet;
@@ -381,7 +404,7 @@ const
     glSQL = 'exec pt_SplitPage ''TB_TEST_ITEM'',' +
           '''ZID,ZNAME,ZSTATUS,ZOPENEDBY,ZOPENEDDATE,ZLEVEL,ZTYPE,ZASSIGNEDTO,' +
           'ZRESULT,ZTESTRESULTBY,ZRESULTDATE,ZTESTMETHOD,ZCASEBUG,'+
-          'ZCASETASK,ZMAILTO,ZPRO_ID,ZPRO_VER,ZPRO_SVN,ZREMORK'', ' +
+          'ZCASETASK,ZMAILTO,ZPRO_ID,ZPRO_VER,ZPRO_SVN,ZREMORK,ZCLOSESTATUS,ZCLOSESOCRE'', ' +
           '''%s'',20,%d,%d,1,''%s''';
 begin
 
@@ -922,10 +945,19 @@ end;
 
 procedure TTestManageChildfrm.act_ColseExecute(Sender: TObject);
 begin
-  if not (cdsTestItem.State in [dsEdit,dsinsert]) then
-    cdsTestItem.Edit;
-  cdsTestItem.FieldByName('ZSTATUS').AsInteger := Ord(bgsClose);
-  cdsTestItem.Post;
+  with TTestCaseSOCREDlg.Create(nil) do
+  begin
+    cds1.CloneCursor(Self.cdsTestCoseSTATUS,True);
+    if ShowModal = mrOk then
+    begin
+      if not (cdsTestItem.State in [dsEdit,dsinsert]) then
+        cdsTestItem.Edit;
+      cdsTestItem.FieldByName('ZSTATUS').AsInteger := Ord(bgsClose);
+      cdsTestItem.FieldByName('ZCLOSESTATUS').AsInteger := cds1.FieldByName('ZID').AsInteger;
+      cdsTestItem.FieldByName('ZCLOSESOCRE').AsInteger := StrToIntDef(edt1.Text,0);
+      cdsTestItem.Post;
+    end;
+  end;
 end;
 
 procedure TTestManageChildfrm.dbgrdTestDrawColumnCell(Sender: TObject;
@@ -1231,6 +1263,25 @@ begin
   myBugId := StrToIntdef(cdsTestItem.FieldByName('ZCASEBUG').AsString,-1);
   if myBugId = -1 then Exit;
   SendMessage(Application.MainForm.Handle,gcMSG_GetBugItem,myBugId,0);
+end;
+
+procedure TTestManageChildfrm.act_RefreshDataExecute(Sender: TObject);
+var
+  myPageindex : integer;
+  mywhere : String;
+begin
+  ShowProgress('读取数据...',0);
+  try
+    myPageindex := fTestPageRec.fPageindex;
+    mywhere := Format(fTestPageRec.fwhere,[ClientSystem.fEditer_id]);
+    fTestPageRec.fCount := GetTestItemPageCount(myPageindex,myWhere);
+    LoadTestItem(myPageindex,myWhere);
+    lblPage.Caption := format('%d/%d',[
+      fTestPageRec.fPageindex,
+      fTestPageRec.fCount]);
+  finally
+    Self.HideProgress;
+  end;
 end;
 
 end.

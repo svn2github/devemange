@@ -17,6 +17,7 @@
 *       4.增加系统参数表 TB_SYSPARAMS 2006-5-13
 *       5.TB_USER 内增加 TCHECKTASK : bit 2008-8-2
 *       6.增加测试功能模块. 作者:龙仕云 2008-9-5
+*       7.增加测试功能模块的关闭等级 作者:龙仕云龙 2008-11-29
 *
 ******************************************************************************/
 
@@ -101,7 +102,7 @@ create table TB_USER_ITEM(
 	ZNAME      varchar(20) not null,                 /*用户名*/
 	ZPASS      varchar(20),                          /*密码*/
 	ZSTOP      bit,                                  /*是否禁用*/
-	ZTYPE      int not null,                         /*类型=0系统用户,不能删除*/
+	ZTYPE      int not null,                         /*类型=0系统用户,1=开发人员 2=测试人员,3=其他人员 不能删除*/
 	ZEMAIL     varchar(50),                          /*邮箱*/
 	ZGROUP_ID  int,                                  /*组ID*/
 	ZPRIVGROUP int,                                  /*权限组*/
@@ -439,6 +440,11 @@ create table TB_TEST_ITEM(
 	ZPRO_VER     int,                                           /*项目版本*/
 	ZPRO_SVN     int,                                           /*svn的版本号*/
 	ZREMORK      varchar(200),                                  /*备注*/
+
+	--关闭状态 作者：龙仕云 2008-11-29
+	ZCLOSESTATUS int ,                                          /*0=高 1=中 2=一般 3=无效 4=扣分*/
+	ZCLOSESOCRE  int not null default 0,                        /*分值,主要给创建人*/
+	
 
 	constraint PK_TB_TEST_ITEM primary key(ZID)  
 )

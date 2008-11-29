@@ -1,6 +1,6 @@
 inherited UserManageClientDlg: TUserManageClientDlg
-  Left = 191
-  Top = 110
+  Left = 220
+  Top = 116
   Height = 798
   Caption = #29992#25143#31649#29702
   OldCreateOrder = True
@@ -90,7 +90,7 @@ inherited UserManageClientDlg: TUserManageClientDlg
               Expanded = False
               FieldName = 'ZTYPE'
               Title.Alignment = taCenter
-              Title.Caption = #31867#22411'(0='#31995#32479#29992#25143')'
+              Title.Caption = #31867#22411'(0='#31995#32479#29992#25143'1='#24320#21457#20154#21592' 2='#27979#35797#20154#21592',3='#20854#20182#20154#21592')'
               Width = 150
               Visible = True
             end

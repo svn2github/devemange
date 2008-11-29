@@ -16,7 +16,8 @@ uses
   StatManageClientfrm in 'StatManageClientfrm.pas' {StatManageClientDlg},
   ProductDownLoadClientfrm in 'ProductDownLoadClientfrm.pas' {ProductDownLoadClientDlg},
   TestManageClient in 'TestManageClient.pas' {TestManageChildfrm},
-  CalendarChildfrm in 'CalendarChildfrm.pas' {CalendarChildDlg};
+  CalendarChildfrm in 'CalendarChildfrm.pas' {CalendarChildDlg},
+  TestCaseSOCREfrm in 'TestCaseSOCREfrm.pas' {TestCaseSOCREDlg};
 
 {$R *.res}
 {$R resource.res}

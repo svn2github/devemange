@@ -334,6 +334,8 @@ as
 
 declare @myUserName varchar(20)
 declare @myUser_ID int
+declare @myUser_Type int --人员的类型 0=Admin  1=开发人员 2=测试人员,3=其他人员
+
 declare @c1 int
 declare @c2 int
 declare @c3 int
@@ -343,6 +345,7 @@ declare @c6 int
 declare @c7 int
 declare @c8 int  --创建测试用例数
 declare @c9 int --解决测试用例数
+declare @c10 int 
 
 
 set @c1=0
@@ -354,6 +357,7 @@ set @c6=0
 set @c7=0
 set @c8=0
 set @c9=0
+set @c10=0
 
 --建表
 if exists(select 1 from sysobjects where id=object_id('temp_stat')and type = 'u')
@@ -373,6 +377,7 @@ create table temp_stat
 
   ZBuildTestCount  int,  --C8
   ZAnswerTestCount int , --C9
+  ZSOCRE int ,  --C10 
 
   ZTotal int                       --总分
   
@@ -384,14 +389,15 @@ create table temp_stat
 --先按人员表进行遍历
 declare my_cursor cursor
 for
-select a.ZNAME,a.ZID  from TB_USER_ITEM as a
+select a.ZNAME,a.ZID,a.ZTYPE  from TB_USER_ITEM as a
 where a.ZSTOP=0
 
 open my_cursor
-fetch next from my_cursor into @myUserName,@myUser_ID
+fetch next from my_cursor into @myUserName,@myUser_ID,@myUser_Type
 while( @@fetch_status = 0)
 begin
  
+-- 0=Admin  1=开发人员 2=测试人员,3=其他人员
 -----------------------------------bug----------------------------------------
 
   /*解决问题*/
@@ -445,8 +451,18 @@ begin
               (a.ZSTATUS = 3) and --3=关闭
               (a.ZRESULTDATE between  @StatbeginDate and  @StatendDate)
 
-
-	
+/*测试用例得分*/
+   if (@myUser_Type =1) or (@myUser_Type=0)
+   begin
+      select @c10= sum(a.ZCLOSESOCRE)   from TB_TEST_ITEM as a 
+       where  a.ZOPENEDBY=@myUser_ID and
+              (a.ZSTATUS = 3) and --3=关闭
+              (a.ZRESULTDATE between  @StatbeginDate and  @StatendDate)
+   end
+   else begin
+      select @c10 = @c9
+   end
+  	
   insert into temp_stat(
        ZUSERNAME,
        ZAnswerBugCount,
@@ -460,6 +476,7 @@ begin
 
      ZBuildTestCount  ,  
      ZAnswerTestCount  , 
+     ZSOCRE,
 
       ZTotal
      ) 
@@ -476,10 +493,11 @@ begin
 
        @c8,
        @c9,
+       @c10,
 
-       isnull(@c5,0)+isnull(@c7,0));
+       isnull(@c5,0)+isnull(@c7,0)+isnull(@c10,0) );
  
-  fetch next from my_cursor into @myUserName, @myUser_ID
+  fetch next from my_cursor into @myUserName, @myUser_ID,@myUser_Type
 end
 
 close   my_cursor  
@@ -487,7 +505,6 @@ deallocate my_cursor
 
 select * from temp_stat
 GO
-
 
 
 /*
@@ -581,6 +598,7 @@ close   my_cursor
 deallocate my_cursor
 
 select * from temp_prostat
+
 GO
 
 
