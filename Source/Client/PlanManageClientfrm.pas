@@ -865,6 +865,16 @@ end;
 
 procedure TPlanManageClientDlg.actItem_SuccessExecute(Sender: TObject);
 begin
+
+  if not ((cdsPlanItem.FieldByName('ZMAINDEVE').AsInteger = ClientSystem.fEditer_id) or
+     (cdsPlan.FieldByName('ZPM').AsInteger=ClientSystem.fEditer_id) or
+     (ClientSystem.fEditerType = etAdmin)) then
+  begin
+    MessageBox(Handle,'不是你的任务，不能点提交完成。','提示',MB_ICONWARNING+
+      MB_OK);
+    Exit;
+  end;
+
   if cdsPlanItem.FieldByName('ZCHILDCOUNT').AsInteger <>
      cdsPlanItem.FieldByName('ZPASSCOUNT').AsInteger then
   begin
@@ -872,6 +882,7 @@ begin
       MB_OK);
     Exit;
   end;
+
   if not (cdsPlanItem.State in [dsEdit,dsInsert]) then
     cdsPlanItem.Edit;
   cdsPlanItem.FieldByName('ZSTATUS').AsInteger := Ord(ps_success);
@@ -918,6 +929,8 @@ procedure TPlanManageClientDlg.dbgrdPlanItemDrawColumnCell(Sender: TObject;
   const Rect: TRect; DataCol: Integer; Column: TColumn;
   State: TGridDrawState);
 begin
+  if (cdsPlanItem.RecNo mod 2  = 0) and not ( gdSelected in State)  then
+    dbgrdPlanItem.Canvas.Brush.Color := clSilver;
 
   if (cdsPlanItem.FieldByName('ZSTATUS').AsInteger = Ord(ps_close)) then
   begin
@@ -1011,6 +1024,9 @@ procedure TPlanManageClientDlg.dbgrdDetailDrawColumnCell(Sender: TObject;
   const Rect: TRect; DataCol: Integer; Column: TColumn;
   State: TGridDrawState);
 begin
+
+  if (cdsPlanDetail.RecNo mod 2  = 0) and not ( gdSelected in State)  then
+    dbgrdDetail.Canvas.Brush.Color := clSilver;
 
   if (cdsPlanDetail.FieldByName('ZSTATUS').AsInteger = Ord(ps_close)) then
   begin
@@ -1151,6 +1167,15 @@ end;
 procedure TPlanManageClientDlg.actDetail_SUCCESSExecute(Sender: TObject);
 begin
   //
+  if not ((cdsPlanDetail.FieldByName('ZDEVE').AsInteger = ClientSystem.fEditer_id) or
+     (cdsPlanItem.FieldByName('ZMAINDEVE').AsInteger=ClientSystem.fEditer_id) or
+     (ClientSystem.fEditerType = etAdmin)) then
+  begin
+    MessageBox(Handle,'不是你的任务，不能点提交完成。','提示',MB_ICONWARNING+
+      MB_OK);
+    Exit;
+  end;
+
   cdsPlanDetail.Edit;
   cdsPlanDetail.FieldByName('ZSTATUS').AsInteger := Ord(ps_success);
   cdsPlanDetail.Post;

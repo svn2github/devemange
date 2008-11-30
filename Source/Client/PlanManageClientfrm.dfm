@@ -3,6 +3,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
   Top = 81
   Width = 1043
   Caption = 'PlanManageClientDlg'
+  OldCreateOrder = True
   PixelsPerInch = 96
   TextHeight = 15
   object spl1: TSplitter
@@ -242,7 +243,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
           object lbl8: TLabel
             Left = 8
             Top = 9
-            Width = 70
+            Width = 75
             Height = 15
             Caption = #20219#21153#21517#31216#65306
           end
@@ -628,7 +629,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
                 Left = 294
                 Top = 39
                 Width = 180
-                Height = 24
+                Height = 23
                 Color = clBtnFace
                 DataField = 'ZSOCRE'
                 DataSource = dsPlanDetail
@@ -1255,7 +1256,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
     Left = 408
     Top = 8
     Bitmap = {
-      494C010104000900040010001000FFFFFFFFFF00FFFFFFFFFFFFFFFF424D3600
+      494C010104000900040010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000003000000001002000000000000030
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -1655,7 +1656,8 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
       FFFFFFFFFC7FFC7FFF3FFFFFFC7FFC7FFC3FFCFFF83FFC7FF03FFC3FF83FFC7F
       C000FC0FF01FE00F00000003F01FE00FC0000000E00FF01FF03F0003E00FF01F
       FC3FFC0FFC7FF83FFF3FFC3FFC7FF83FFFFFFCFFFC7FFC7FFFFFFFFFFC7FFC7F
-      FFFFFFFFFC7FFEFFFFFFFFFFFC7FFEFF}
+      FFFFFFFFFC7FFEFFFFFFFFFFFC7FFEFF00000000000000000000000000000000
+      000000000000}
   end
   object dsPlanItem: TDataSource
     DataSet = cdsPlanItem
