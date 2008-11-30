@@ -409,7 +409,11 @@ create table TB_SYSPARAMS(
 )
 go
 
-
+/*##########################################################
+ #
+ # 测试表 
+ #
+ ###########################################################*/
 
 /*测试主表*/
 if exists (select * from dbo.sysobjects
@@ -482,6 +486,100 @@ create table TB_TEST_PARAMS(
 	constraint PK_TB_TEST_PARAMS primary key(ZTYPE,ZID)  
 )
 go
+
+/*##########################################################
+ #
+ # 项目进度管理 PLAN
+ #
+ ###########################################################*/
+
+
+/*计划主表*/
+if exists (select * from dbo.sysobjects
+  where id = object_id(N'[dbo].[TB_PLAN]')
+  and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+drop table [dbo].[TB_PLAN]
+go
+
+create table TB_PLAN(
+	ZGUID        varchar(36) not null,                          /*编号*/
+	ZID          int IDENTITY (1, 1) not null,                  /*ID值*/
+	ZNAME        varchar(20),                                   /*名称*/
+	ZSTATUS      int not null,                                  /*状态=5(关闭)*/
+	ZPRO_ID      int ,                                          /*对应的项目ID号*/
+	ZSUMTEXT     text,                                          /*项目完成总结*/
+	ZPM          int ,                                          /*项目经理*/
+	ZBUILDDATE   datetime,                                      /*创建时间*/
+	
+
+	constraint PK_TB_PLAN primary key(ZGUID)  
+)
+go
+
+/*计划内容*/
+
+if exists (select * from dbo.sysobjects
+  where id = object_id(N'[dbo].[TB_PLAN_ITEM]')
+  and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+drop table [dbo].[TB_PLAN_ITEM]
+go
+
+create table TB_PLAN_ITEM(
+	ZGUID        varchar(36) not null,                          /*编号*/
+	ZPLAN_GUID   varchar(36) not null,                          /*计划项目GUID*/
+	ZNAME        varchar(255),                                  /*名称*/
+	ZSTATUS      int not null,                                  /*状态=5(关闭)*/
+	ZPBDATE      datetime,                                      /*计划开始时间*/
+	ZPEDATE      datetime,                                      /*计划结束时间*/
+	ZFBDATE      datetime,                                      /*实际开始时间*/
+	ZFEDATE      datetime,                                      /*实际结束时间*/
+	ZCHILDCOUNT  int not null default 0,                        /*子任务数*/
+	ZPASSCOUNT   int not null default 0,                        /*完成子任务数*/
+	ZMAINDEVE    int ,                                          /*主要负责人*/
+	ZSORT        int ,                                          /*排序号*/ 
+	ZREMARK      varchar(255),                                  /*备注*/
+	
+
+	constraint PK_TB_PLAN_ITEM primary key(ZGUID,ZPLAN_GUID)  
+)
+go
+
+/*计划明细表 detail*/
+if exists (select * from dbo.sysobjects
+  where id = object_id(N'[dbo].[TB_PLAN_DETAIL]')
+  and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+drop table [dbo].[TB_PLAN_DETAIL]
+go
+
+create table TB_PLAN_DETAIL(
+	ZID          int not null,                                  /*编号*/
+	ZITEM_GUID   varchar(36) not null,                          /*计划项目GUID*/
+	ZNAME        varchar(255),                                  /*名称*/
+	ZSTATUS      int not null,                                  /*状态=5(关闭)*/
+	ZDEVE        int ,                                          /*负责人*/
+	ZCONTENT     text,                                          /*要求内容*/
+	ZSOCRE       int,                                           /*得分*/
+
+	constraint PK_TB_PLAN_DETAIL primary key(ZID)  
+)
+go
+
+/*计划参数表*/
+if exists (select * from dbo.sysobjects
+  where id = object_id(N'[dbo].[TB_PLAN_PARAMS]')
+  and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+drop table [dbo].[TB_PLAN_PARAMS]
+go
+
+create table TB_PLAN_PARAMS(
+	ZTYPE 	     int not null,                                   /*类型*/
+	ZID          int not null,                                   /*ID值*/
+	ZNAME        varchar(200)                                    /*值*/
+	constraint PK_TB_PLAN_PARAMS primary key(ZTYPE,ZID)  
+)
+go
+
+
 
 
 

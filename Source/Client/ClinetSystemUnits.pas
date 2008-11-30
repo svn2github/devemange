@@ -20,7 +20,7 @@ uses
 
 type
 
-  TEditerType = (etAdmin,etUser);  //用户类型
+  TEditerType = (etAdmin,etDeve,etTest,etUser);  //用户类型
   TVersion = record
     fV1,fV2,fV3,fV4 : integer;
     fName : String;

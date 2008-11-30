@@ -39,6 +39,8 @@ type
     procedure HideProgress;
     procedure UpdateProgress(Value: Integer);
     procedure UpdateProgressTitle(const Title: string);
+
+    function NewGuid: string;
   end;
 
 var
@@ -51,6 +53,8 @@ uses
 {$R *.dfm}
 
 { TBaseChildDlg }
+
+
 
 procedure TBaseChildDlg.Closefrm;
 begin
@@ -95,6 +99,15 @@ procedure TBaseChildDlg.initBase;
 begin
   fLoading := False;
   //згРржиди
+end;
+
+function TBaseChildDlg.NewGuid: string;
+var
+  aGuid: TGUID;
+begin
+  CreateGUID(aGuid);
+  result:=GUIDToString(aGuid);
+  result:=Copy(result, 2, 36);
 end;
 
 procedure TBaseChildDlg.Showfrm;

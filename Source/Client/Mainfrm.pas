@@ -78,7 +78,10 @@ type
     actMod_Test: TAction;
     btnMod_Test: TToolButton;
     actCalendar: TAction;
-    btnCalendar: TToolButton;
+    actMod_PLAN: TAction;
+    btnMod_PLAN: TToolButton;
+    N14: TMenuItem;
+    N15: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure actmod_FilesExecute(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -104,6 +107,7 @@ type
       var Handled: Boolean);
     procedure actMod_TestExecute(Sender: TObject);
     procedure actCalendarExecute(Sender: TObject);
+    procedure actMod_PLANExecute(Sender: TObject);
   private
     fChildform : TList; //所有子窗口的对象
     fCurrentChildform : TBaseChildDlg;
@@ -142,6 +146,7 @@ uses
   CnProgressFrm ,
   CalendarChildfrm,        {开发计划表}
   TestManageClient,        {测试管理}
+  PlanManageClientfrm,     {项目计划}
   WebClientfrm
 
   , SetSysParamsfrm;
@@ -619,6 +624,11 @@ end;
 procedure TMainDlg.actCalendarExecute(Sender: TObject);
 begin
   DoChangeClient(TCalendarChildDlg);
+end;
+
+procedure TMainDlg.actMod_PLANExecute(Sender: TObject);
+begin
+  DoChangeClient(TPlanManageClientDlg);
 end;
 
 end.

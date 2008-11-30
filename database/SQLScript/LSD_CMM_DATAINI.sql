@@ -80,5 +80,12 @@ insert into TB_TEST_PARAMS (ZTYPE,ZID,ZNAME) values(4,2,'一般');
 insert into TB_TEST_PARAMS (ZTYPE,ZID,ZNAME) values(4,3,'无效');
 insert into TB_TEST_PARAMS (ZTYPE,ZID,ZNAME) values(4,4,'扣分');
 
+/*计划参数*/
+insert into TB_PLAN_PARAMS (ZTYPE,ZID,ZNAME) values(0,0,'开始');
+insert into TB_PLAN_PARAMS (ZTYPE,ZID,ZNAME) values(0,1,'完成');
+insert into TB_PLAN_PARAMS (ZTYPE,ZID,ZNAME) values(0,2,'延期');
+insert into TB_PLAN_PARAMS (ZTYPE,ZID,ZNAME) values(0,3,'关闭');
+
+
 
 GO
