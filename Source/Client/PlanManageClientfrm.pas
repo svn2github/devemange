@@ -56,12 +56,6 @@ type
     actPan_Save: TAction;
     btnPan_Save: TBitBtn;
     pnl2: TPanel;
-    pnlpageIndex: TPanel;
-    btnPan_FirstPage: TSpeedButton;
-    btnPan_Propage: TSpeedButton;
-    btnPan_NextPage: TSpeedButton;
-    btnPan_LastPage: TSpeedButton;
-    lblPlanPage: TLabel;
     cdsPlanItem: TClientDataSet;
     cdstemp: TClientDataSet;
     actPan_FirstPage: TAction;
@@ -155,7 +149,15 @@ type
     lbl19: TLabel;
     dbtxtZSTATUSNAME1: TDBText;
     lstPlanGUID: TListBox;
+    pgc1: TPageControl;
+    ts1: TTabSheet;
     tvPlan: TTreeView;
+    pnlpageIndex: TPanel;
+    btnPan_FirstPage: TSpeedButton;
+    btnPan_Propage: TSpeedButton;
+    btnPan_NextPage: TSpeedButton;
+    btnPan_LastPage: TSpeedButton;
+    lblPlanPage: TLabel;
     procedure cdsPlanNewRecord(DataSet: TDataSet);
     procedure actPan_SaveUpdate(Sender: TObject);
     procedure actPan_SaveExecute(Sender: TObject);
@@ -216,6 +218,8 @@ type
     procedure actPan_ActionExecute(Sender: TObject);
     procedure cdsPlanAfterScroll(DataSet: TDataSet);
     procedure tvPlanChange(Sender: TObject; Node: TTreeNode);
+    procedure tvPlanChanging(Sender: TObject; Node: TTreeNode;
+      var AllowChange: Boolean);
   private
     { Private declarations }
     fPlanPageRec : TPlanPageRec;
@@ -462,10 +466,6 @@ begin
   finally
     mycds2.Free;
   end;
-
-
-
-
 end;
 
 procedure TPlanManageClientDlg.Showfrm;
@@ -582,6 +582,7 @@ var
   mySQL  : string;
   i : integer;
   myb : Boolean;
+  myNode : TTreeNode;
 const
     glSQL = 'exec pt_SplitPage ''TB_PLAN'',' +
           '''ZGUID,ZID,ZNAME,ZSTATUS,ZPRO_ID,ZSUMTEXT,ZPM,ZBUILDDATE'', ' +
@@ -618,7 +619,9 @@ begin
     while not cdsTemp.Eof do
     begin
       lstPlanGUID.Items.Add(cdstemp.FieldByName('ZGUID').AsString);
-      tvPlan.Items.AddChild(nil,cdstemp.FieldByName('ZNAME').AsString);
+      myNode := tvPlan.Items.AddChild(nil,cdstemp.FieldByName('ZNAME').AsString);
+      myNode.ImageIndex := 0;
+      myNode.SelectedIndex := 7;
       cdsPlan.Append;
       cdsPlan.FieldByName('ZISNEW').AsBoolean := False;
       for i:=0 to cdsTemp.FieldDefs.Count -1 do
@@ -996,6 +999,7 @@ end;
 
 procedure TPlanManageClientDlg.cdsPlanDetailNewRecord(DataSet: TDataSet);
 begin
+  if fLoading then Exit;
   DataSet.FieldByName('ZITEM_GUID').AsString := cdsPlanItem.FieldByName('ZGUID').AsString;
   DataSet.FieldByName('ZSTATUS').AsInteger := Ord(ps_doing);
   DataSet.FieldByName('ZSOCRE').AsInteger := 0;
@@ -1284,12 +1288,23 @@ var
   myGUID : string;
 begin
   //
-  if pgcplan.ActivePageIndex = 1 then Exit;
   if Node.Index >=0 then
   begin
     myGUID := lstPlanGUID.Items[Node.Index];
     cdsPlan.Locate('ZGUID',myGUID,[loPartialKey]);
   end;
+end;
+
+procedure TPlanManageClientDlg.tvPlanChanging(Sender: TObject;
+  Node: TTreeNode; var AllowChange: Boolean);
+begin
+  if pgcplan.ActivePageIndex = 1 then
+  begin
+    AllowChange:= False;
+    MessageBox(Handle,'任务内容不能选择。','提示',MB_ICONWARNING+MB_OK);
+  end
+  else
+    AllowChange := True;
 end;
 
 end.
