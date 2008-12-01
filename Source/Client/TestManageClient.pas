@@ -557,7 +557,9 @@ const
             'ZPRO_ID=%d, ' +
             'ZPRO_VER=%d, ' +
             'ZPRO_SVN=%d, ' +
-            'ZREMORK=''%s'' '+
+            'ZREMORK=''%s'', '+
+            'ZCLOSESTATUS=%d,'+
+            'ZCLOSESOCRE=%d ' +
             'where ZID=%d';
 begin
   if fLoading then Exit;
@@ -582,6 +584,8 @@ begin
       DataSet.FieldByName('ZPRO_VER').AsInteger,
       DataSet.FieldByName('ZPRO_SVN').AsInteger,
       DataSet.FieldByName('ZREMORK').AsString,
+      DataSet.FieldByName('ZCLOSESTATUS').AsInteger,
+      DataSet.FieldByName('ZCLOSESOCRE').AsInteger,
       DataSet.FieldByName('ZID').AsInteger
       ]);
     ClientSystem.fDbOpr.BeginTrans;

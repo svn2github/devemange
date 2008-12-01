@@ -508,7 +508,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
         object Label7: TLabel
           Left = 238
           Top = 210
-          Width = 69
+          Width = 75
           Height = 15
           Caption = #27979#35797#26102#38388#65306
         end
@@ -557,7 +557,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
         object lbl1: TLabel
           Left = 472
           Top = 211
-          Width = 67
+          Width = 68
           Height = 15
           Caption = #27979#35797#32467#26524':'
         end
