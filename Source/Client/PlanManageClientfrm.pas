@@ -1090,19 +1090,22 @@ begin
       ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
       myb := fLoading;
       fLoading := True;
-      if not (cdsPlanItem.State in [dsEdit,dsInsert]) then
-        cdsPlanitem.Edit;
-      cdsPlanItem.FieldByName('ZCHILDCOUNT').AsInteger :=
-        cdsPlanItem.FieldByName('ZCHILDCOUNT').AsInteger + 1;
-      cdsPlanitem.Post;
-      fLoading := myb;
+      try
+        if not (cdsPlanItem.State in [dsEdit,dsInsert]) then
+          cdsPlanitem.Edit;
+        cdsPlanItem.FieldByName('ZCHILDCOUNT').AsInteger :=
+          cdsPlanItem.FieldByName('ZCHILDCOUNT').AsInteger + 1;
+        cdsPlanitem.Post;
+      finally
+        fLoading := myb;
+      end;
       ClientSystem.fDbOpr.CommitTrans;
 
     except
       ClientSystem.fDbOpr.RollbackTrans;
     end;
 
-
+    DataSet.FieldByName('ZISNEW').AsBoolean  := False;
   end
   else begin
     mySQL := Format(gl_SQLTXT2,[
@@ -1124,14 +1127,18 @@ begin
 
         myb := fLoading;
         fLoading := True;
-        if not (cdsPlanItem.State in [dsEdit,dsInsert]) then
-          cdsPlanitem.Edit;
-        cdsPlanItem.FieldByName('ZPASSCOUNT').AsInteger :=
-          cdsPlanItem.FieldByName('ZPASSCOUNT').AsInteger + 1;
-        cdsPlanitem.Post;
-        fLoading := myb;
+        try
+          if not (cdsPlanItem.State in [dsEdit,dsInsert]) then
+            cdsPlanitem.Edit;
+          cdsPlanItem.FieldByName('ZPASSCOUNT').AsInteger :=
+            cdsPlanItem.FieldByName('ZPASSCOUNT').AsInteger + 1;
+          cdsPlanitem.Post;
+        finally
+          fLoading := myb;
+        end;
       end;
       ClientSystem.fDbOpr.CommitTrans;
+      
     except
       ClientSystem.fDbOpr.RollbackTrans;
     end;
@@ -1218,14 +1225,18 @@ begin
     ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
     myb := fLoading;
     fLoading := True;
-    if not( cdsPlanItem.State in [dsEdit,dsInsert]) then
-      cdsPlanItem.Edit;
-    cdsPlanItem.FieldByName('ZPASSCOUNT').AsInteger :=
-      cdsPlanItem.FieldByName('ZPASSCOUNT').AsInteger - 1;
-    cdsPlanItem.FieldByName('ZSTATUS').AsInteger := Ord(ps_doing);  
-    cdsPlanItem.Post;
-    fLoading := myb;
+    try
+      if not( cdsPlanItem.State in [dsEdit,dsInsert]) then
+        cdsPlanItem.Edit;
+      cdsPlanItem.FieldByName('ZPASSCOUNT').AsInteger :=
+        cdsPlanItem.FieldByName('ZPASSCOUNT').AsInteger - 1;
+      cdsPlanItem.FieldByName('ZSTATUS').AsInteger := Ord(ps_doing);
+      cdsPlanItem.Post;
+    finally
+      fLoading := myb;
+    end;
   end;
+
   cdsPlanDetail.Edit;
   cdsPlanDetail.FieldByName('ZSTATUS').AsInteger := Ord(ps_doing);
   cdsPlanDetail.Post;
