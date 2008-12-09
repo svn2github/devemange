@@ -9,7 +9,7 @@ type
   // 权限管理的内容
   //
   TModuleType = (mtFile=100,mtBug=200,mtProject=300,mtUser=400,mtDoc=500,
-    mtTest=600);
+    mtTest=600,mtPlan=700,mtAnt=800);
   //文件的子模块
   TFileSubModuleStype = (fsmDir=1,fsmfile=2);
   //BUG项目管理

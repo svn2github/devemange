@@ -18,7 +18,8 @@ uses
   TestManageClient in 'TestManageClient.pas' {TestManageChildfrm},
   CalendarChildfrm in 'CalendarChildfrm.pas' {CalendarChildDlg},
   TestCaseSOCREfrm in 'TestCaseSOCREfrm.pas' {TestCaseSOCREDlg},
-  PlanManageClientfrm in 'PlanManageClientfrm.pas' {PlanManageClientDlg};
+  PlanManageClientfrm in 'PlanManageClientfrm.pas' {PlanManageClientDlg},
+  AntManageClientfrm in 'AntManageClientfrm.pas' {AntManageClientDlg};
 
 {$R *.res}
 {$R resource.res}

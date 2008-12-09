@@ -65,7 +65,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
             FieldName = 'ZOPENEDBYNAME'
             Title.Alignment = taCenter
             Title.Caption = #21019#24314#20154
-            Width = 100
+            Width = 80
             Visible = True
           end
           item
@@ -73,7 +73,16 @@ inherited TestManageChildfrm: TTestManageChildfrm
             FieldName = 'ZASSIGNEDTONAME'
             Title.Alignment = taCenter
             Title.Caption = #25351#27966#32473
-            Width = 100
+            Width = 80
+            Visible = True
+          end
+          item
+            Alignment = taCenter
+            Expanded = False
+            FieldName = 'ZLEVELNAME'
+            Title.Alignment = taCenter
+            Title.Caption = #31561#32423
+            Width = 60
             Visible = True
           end
           item
@@ -81,7 +90,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
             FieldName = 'ZTESTRESULTBYNAME'
             Title.Alignment = taCenter
             Title.Caption = #27979#35797#20154
-            Width = 100
+            Width = 80
             Visible = True
           end
           item
@@ -448,6 +457,8 @@ inherited TestManageChildfrm: TTestManageChildfrm
         Width = 942
         Height = 236
         Align = alTop
+        ParentShowHint = False
+        ShowHint = True
         TabOrder = 1
         object Label2: TLabel
           Left = 8
@@ -596,6 +607,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
           Height = 23
           DataField = 'ZASSIGNEDTONAME'
           DataSource = dsTestItem
+          DropDownRows = 30
           TabOrder = 2
         end
         object dbedtZCASEBUG: TDBEdit
@@ -692,6 +704,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
           Top = 36
           Width = 150
           Height = 23
+          Hint = #19968#32423#20026#39532#19978#35201#27979#23436#30340#65292#24182#24456#37325#35201#12290#21521#19979#31867#25512#12290
           DataField = 'ZLEVEL'
           DataSource = dsTestItem
           KeyField = 'ZID'
@@ -724,6 +737,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
           Height = 23
           DataField = 'ZPRO_ID'
           DataSource = dsTestItem
+          DropDownRows = 30
           KeyField = 'ZID'
           ListField = 'ZNAME'
           ListSource = dsProject
@@ -734,6 +748,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
           Top = 121
           Width = 127
           Height = 23
+          Hint = #22914#27809#26377#20869#23481#65292#21017#28857'[G]'#12290
           DataField = 'ZPRO_VER'
           DataSource = dsTestItem
           KeyField = 'ZID'

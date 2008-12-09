@@ -580,6 +580,32 @@ create table TB_PLAN_PARAMS(
 go
 
 
+/*自动构建项目*/
+if exists (select * from dbo.sysobjects
+  where id = object_id(N'[dbo].[TB_ANT]')
+  and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+drop table [dbo].[TB_ANT]
+go
+
+create table TB_ANT(
+	ZGUID varchar(36) not null,       --GUID 
+	ZID  int IDENTITY (1, 1) not null,
+	ZNAME varchar(200),
+	ZPRO_ID  int ,                   --对应的项目
+	ZIP varchar(20) not null,        --IP
+	ZPYFILE varchar(200) not null,   --python文件
+	ZREMARK text ,                   --编译说明
+	ZDATE datetime,                  --编译时间
+	ZSVN int,                        --SVN版本号 
+	ZVERSION varchar(20),            --版本号
+	
+	constraint PK_TB_ANT primary key(ZGUID)  
+)
+go
+
+
+
+
 
 
 

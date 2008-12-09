@@ -377,6 +377,21 @@ begin
         LookupResultField := 'ZNAME';
       end;
 
+      //µÈ¼¶
+      myField := AddFieldDef;
+      myField.Name := 'ZLEVELNAME';
+      myField.DataType := ftString;
+      myField.Size := 30;
+      with myfield.CreateField(cdsTestItem) do
+      begin
+        FieldKind := fkLookup;
+        KeyFields := 'ZLEVEL';
+        LookupDataSet := cdsLevel;
+        LookupKeyFields := 'ZID';
+        LookupResultField := 'ZNAME';
+      end;
+
+
 
 
      cdsTestItem.FieldByName('ZID').Alignment := taLeftJustify;
@@ -990,7 +1005,7 @@ begin
       begin
         dbgrdTest.Canvas.Brush.Color := clYellow;
       end;
-    4  :
+    5  :
       if cdsTestItem.FieldByName('ZTESTRESULTBY').AsInteger =
          ClientSystem.fEditer_id then
       begin

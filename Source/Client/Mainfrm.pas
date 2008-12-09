@@ -82,6 +82,9 @@ type
     btnMod_PLAN: TToolButton;
     N14: TMenuItem;
     N15: TMenuItem;
+    actMod_Ant: TAction;
+    N16: TMenuItem;
+    btnMod_Ant: TToolButton;
     procedure FormCreate(Sender: TObject);
     procedure actmod_FilesExecute(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -108,6 +111,7 @@ type
     procedure actMod_TestExecute(Sender: TObject);
     procedure actCalendarExecute(Sender: TObject);
     procedure actMod_PLANExecute(Sender: TObject);
+    procedure actMod_AntExecute(Sender: TObject);
   private
     fChildform : TList; //所有子窗口的对象
     fCurrentChildform : TBaseChildDlg;
@@ -147,6 +151,7 @@ uses
   CalendarChildfrm,        {开发计划表}
   TestManageClient,        {测试管理}
   PlanManageClientfrm,     {项目计划}
+  AntManageClientfrm,      {自动构建}
   WebClientfrm
 
   , SetSysParamsfrm;
@@ -628,7 +633,18 @@ end;
 
 procedure TMainDlg.actMod_PLANExecute(Sender: TObject);
 begin
-  DoChangeClient(TPlanManageClientDlg);
+  if ClientSystem.fEditerType in [etAdmin,etDeve,etTest] then
+    DoChangeClient(TPlanManageClientDlg)
+  else
+    MessageBox(Handle,'你没有权限','提示',MB_ICONWARNING+MB_OK);
+end;
+
+procedure TMainDlg.actMod_AntExecute(Sender: TObject);
+begin
+  if ClientSystem.fEditerType in [etAdmin,etDeve,etTest] then
+    DoChangeClient(TAntManageClientDlg)
+  else
+    MessageBox(Handle,'你没有权限','提示',MB_ICONWARNING+MB_OK);
 end;
 
 end.

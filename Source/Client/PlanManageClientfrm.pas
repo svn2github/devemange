@@ -243,6 +243,7 @@ type
 
 implementation
 uses
+  ClientTypeUnits,
   ClinetSystemUnits, DmUints;
 
 {$R *.dfm}
@@ -263,7 +264,7 @@ end;
 
 class function TPlanManageClientDlg.GetModuleID: integer;
 begin
-  Result := 500;
+  Result := Ord(mtPlan);
 end;
 
 procedure TPlanManageClientDlg.initBase;
