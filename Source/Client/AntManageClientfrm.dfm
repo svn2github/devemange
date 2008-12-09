@@ -3,7 +3,7 @@ inherited AntManageClientDlg: TAntManageClientDlg
   Top = 144
   Width = 964
   Height = 496
-  Caption = #33258#21160#26500#24314
+  Caption = #32534#35793#37096#32626
   OldCreateOrder = True
   PixelsPerInch = 96
   TextHeight = 15

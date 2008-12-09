@@ -37,6 +37,8 @@ type
   //待分发=0 ; 执行中=1 ; 撤消=2; 完成=3 ; 关闭=4;激活=5
   TTaskStatus = (tsRelass,tsing,tsUndo,tsSccuess,tsClose,tsAction);
 
+  TStatusBarPanel=(sbpHint,sbpPart,spbObjID,spbComplier);
+
   PFileTreeNode = ^TFileTreeNode;
   TFileTreeNode = record
     fParent : PFileTreeNode;   //父对象

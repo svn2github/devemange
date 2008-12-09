@@ -22,6 +22,7 @@ uses
   ClientTypeUnits, Mask;
 
 type
+
   TAntManageClientDlg = class(TBaseChildDlg)
     actlst1: TActionList;
     act_BuildProject: TAction;
@@ -91,6 +92,8 @@ type
     procedure LoadAnt();
   public
     { Public declarations }
+
+
     procedure initBase; override;
     procedure freeBase; override;
     procedure Showfrm ; override;  //显示后发生的事件
@@ -98,10 +101,32 @@ type
     class function GetModuleID : integer;override;
   end;
 
+  TPySvnThread = class(TThread)
+  private
+    fResultStr : string;
+    fcds : TClientDataSet;
+    fani : TAnimate;
+    fMemo: TMemo;
+    fIdTCP : TIdTCPClient;
+    PyFileName : string;
+    fAction : TAction;
+
+    procedure BeginAnimate();
+    procedure EndAnimate();
+  public
+    constructor Create(Acds:TClientDataSet;Aani: TAnimate;
+      AMemo:TMemo;AIdTCP: TIdTCPClient;AAction:TAction);
+  protected
+    procedure Execute;override;
+  end;
+
+
+var
+  fPySvning : Boolean;
 
 implementation
 uses
-  ClinetSystemUnits;
+  ClinetSystemUnits, Mainfrm;
 
 {$R *.dfm}
 
@@ -110,8 +135,7 @@ uses
 procedure TAntManageClientDlg.Closefrm;
 begin
   inherited;
-  if idtcpclnt1.Connected then
-    idtcpclnt1.Disconnect;
+
 end;
 
 procedure TAntManageClientDlg.freeBase;
@@ -133,6 +157,7 @@ const
   glSQL1 = 'select * from TB_ANT where 1=0 ';
 begin
   inherited;
+  fPySvning := False;
   ani1.ResName := 'MOV';
   mycds := TClientDataSet.Create(nil);
   try
@@ -405,36 +430,17 @@ end;
 
 procedure TAntManageClientDlg.act_BuildProjectExecute(Sender: TObject);
 var
-  mystr : string;
+  MyThread : TPySvnThread;
 begin
-  Screen.Cursor := crHourGlass;
-  ani1.Visible := True;
-  ani1.Active := True;
-  try
-    lblError.Visible := False;
-    mmo1.Lines.Clear;
-    mmo1.Lines.Add(#13#10);
-    mmo1.Lines.Add('         正在编译中...');
-    Application.ProcessMessages;
-    mystr := Format('C%s',[cdsAntList.FieldByName('ZPYFILE').AsString]);
-    idtcpclnt1.WriteLn(mystr);
-    mmo1.Lines.Clear;
-    mmo1.Lines.Add(idtcpclnt1.ReadLn());
-    if not (cdsAntList.State in [dsEdit,dsInsert]) then
-      cdsAntList.Edit;
-    cdsAntList.FieldByName('ZDATE').AsDateTime := ClientSystem.fDbOpr.GetSysDateTime;
-    cdsAntList.Post;
-
-  finally
-    ani1.Active  := False;
-    ani1.Visible := False;
-    Screen.Cursor := crDefault;
-  end;
+  MyThread := TPySvnThread.Create(cdsAntList,ani1,mmo1,idtcpclnt1,
+    MainDlg.actMod_Ant);
+  MyThread.Resume;
 end;
 
 procedure TAntManageClientDlg.act1_BuildInfoUpdate(Sender: TObject);
 begin
-  (Sender as TAction).Enabled := idtcpclnt1.Connected;
+  (Sender as TAction).Enabled := idtcpclnt1.Connected and
+  not fPySvning;
 end;
 
 procedure TAntManageClientDlg.dbgrd1DrawColumnCell(Sender: TObject;
@@ -456,6 +462,69 @@ begin
     MessageBox(Handle,'内容已修改，请点保存或取消。','提示',MB_ICONWARNING+MB_OK);
     Exit;
   end;
+
+  if fPySvning then
+  begin
+    AllowChange := False;
+    MessageBox(Handle,'编译中，不能切换页面。','提示',MB_ICONWARNING+MB_OK);
+    Exit;
+  end;
 end;
+
+{ TPySvnThread }
+
+procedure TPySvnThread.BeginAnimate;
+begin
+  fani.Visible := True;
+  fani.Active := True;
+  fPySvning := True;
+  fMemo.Lines.Clear;
+  fMemo.Lines.Add(#13#10);
+  fMemo.Lines.Add('         正在编译中...');
+  PyFileName := Format('C%s',[fcds.FieldByName('ZPYFILE').AsString]);
+  fAction.ImageIndex := 12;
+  Application.ProcessMessages;
+end;
+
+constructor TPySvnThread.Create(Acds:TClientDataSet;Aani: TAnimate;
+  AMemo:TMemo;AIdTCP: TIdTCPClient;AAction:TAction);
+begin
+  inherited Create(false);
+  fcds := Acds;
+  fani := Aani;
+  fMemo := AMemo;
+  fIdTCP := AIdTCP;
+  fAction := AAction;
+  Self.Priority := tpNormal;
+  Self.FreeOnTerminate := True;
+end;
+
+procedure TPySvnThread.EndAnimate;
+begin
+  fMemo.Lines.Clear;
+  fMemo.Lines.Add(fResultStr);
+  if not (fcds.State in [dsEdit,dsInsert]) then
+    fcds.Edit;
+  fcds.FieldByName('ZDATE').AsDateTime := ClientSystem.fDbOpr.GetSysDateTime;
+  fcds.Post;
+  fani.Active  := False;
+  fani.Visible := False;
+  fPySvning    := False;
+  fAction.ImageIndex := 11;
+end;
+
+procedure TPySvnThread.Execute;
+begin
+  if Terminated then Exit;
+  try
+    fResultStr := '';
+    Synchronize(BeginAnimate);
+    fIdTCP.WriteLn(PyFileName);
+    fResultStr := fIdTCP.ReadLn();
+  finally
+    Synchronize(EndAnimate);
+  end;
+end;
+
 
 end.
