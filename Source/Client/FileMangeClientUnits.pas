@@ -412,9 +412,10 @@ begin
     begin
 
       //
-      // 没有权限不加载
+      // 没有权限不加载并如不是当前用户创建的
       //
-      if not HasModuleAction(Ord(fsmfile),
+      if (cdsQuery.FieldByName('ZOWNER').AsInteger<>ClientSystem.fEditer_id) and
+        not HasModuleAction(Ord(fsmfile),
         cdsQuery.FieldByName('ZID').AsInteger,atView) then
       begin
         //继承目录的权限
