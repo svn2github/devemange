@@ -19,7 +19,8 @@ uses
   CalendarChildfrm in 'CalendarChildfrm.pas' {CalendarChildDlg},
   TestCaseSOCREfrm in 'TestCaseSOCREfrm.pas' {TestCaseSOCREDlg},
   PlanManageClientfrm in 'PlanManageClientfrm.pas' {PlanManageClientDlg},
-  AntManageClientfrm in 'AntManageClientfrm.pas' {AntManageClientDlg};
+  AntManageClientfrm in 'AntManageClientfrm.pas' {AntManageClientDlg},
+  TestHighQueryfrm in 'TestHighQueryfrm.pas' {TestHighQueryDlg};
 
 {$R *.res}
 {$R resource.res}

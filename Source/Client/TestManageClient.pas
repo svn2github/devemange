@@ -19,7 +19,8 @@ uses
 
   ClinetSystemUnits,
   ClientTypeUnits, StdCtrls, ComCtrls, Buttons, ActnList, Mask, DBCtrls,
-  dbcgrids;
+  dbcgrids,
+  TestHighQueryfrm {高级查询};
 
 type
 
@@ -151,6 +152,8 @@ type
     cdsTestCoseSTATUS: TClientDataSet;
     dsTestCoseSTATUS: TDataSource;
     dbedtZCLOSESTATUSNAME: TDBEdit;
+    actHighQuery: TAction;
+    btnResult_Add1: TBitBtn;
     procedure act_NewExecute(Sender: TObject);
     procedure act_CancelUpdate(Sender: TObject);
     procedure act_CancelExecute(Sender: TObject);
@@ -200,9 +203,11 @@ type
     procedure act_GetBugItemUpdate(Sender: TObject);
     procedure act_GetBugItemExecute(Sender: TObject);
     procedure act_RefreshDataExecute(Sender: TObject);
+    procedure actHighQueryExecute(Sender: TObject);
   private
     { Private declarations }
     fTestPageRec : TTestPageRec;
+    fHighQueryDlg : TTestHighQueryDlg;
     procedure Mailto(AEmailto:String); //发送到邮箱
   public
     { Public declarations }
@@ -238,6 +243,8 @@ end;
 
 procedure TTestManageChildfrm.freeBase;
 begin
+  if Assigned(fHighQueryDlg) then
+    fHighQueryDlg.Free;
   inherited;
 end;
 
@@ -280,7 +287,7 @@ const
   glSQL3 = 'select ZID,ZNAME from TB_TEST_PARAMS where ZTYPE=%d';
 begin
   inherited;
-
+  fHighQueryDlg := nil;
   cdsProject.Data  := ClientSystem.fDbOpr.ReadDataSet(PChar(glSQL2));
   cdsLevel.Data    := ClientSystem.fDbOpr.ReadDataSet(PChar(Format(glSQL3,[0])));
   cdsTesttype.Data := ClientSystem.fDbOpr.ReadDataSet(PChar(Format(glSQL3,[1])));
@@ -1300,6 +1307,43 @@ begin
       fTestPageRec.fCount]);
   finally
     Self.HideProgress;
+  end;
+end;
+
+procedure TTestManageChildfrm.actHighQueryExecute(Sender: TObject);
+var
+  mywhere : string;
+begin
+  if not Assigned(fHighQueryDlg) then
+  begin
+    fHighQueryDlg := TTestHighQueryDlg.Create(nil);
+    fHighQueryDlg.cdsPros.CloneCursor(cdsProject,True);
+    fHighQueryDlg.cdsCreateor.CloneCursor(DM.cdsUser,True);
+    fHighQueryDlg.cdsCoser.CloneCursor(DM.cdsUser,True);
+  end;
+
+  if fHighQueryDlg.ShowModal = mrOK then
+  begin
+    mywhere := fHighQueryDlg.GetwhereStr();
+    if mywhere = '' then Exit;
+    fHighQueryDlg.Hide;
+    Application.ProcessMessages;
+    ShowProgress('读取数据...',0);
+    try
+
+
+      fTestPageRec.fPageindex := 1;
+      fTestPageRec.fwhere := mywhere;
+      fTestPageRec.fCount := GetTestItemPageCount(fTestPageRec.fPageindex,
+        fTestPageRec.fwhere);
+      
+      LoadTestItem(fTestPageRec.fPageindex,fTestPageRec.fwhere);
+      lblPage.Caption := format('%d/%d',[
+        fTestPageRec.fPageindex,
+        fTestPageRec.fCount]);
+    finally
+      HideProgress;
+    end;
   end;
 end;
 

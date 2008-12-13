@@ -211,6 +211,7 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
     Caption = #20840#37096#38382#39064
     TabOrder = 22
     OnClick = btnAllClick
+    Kind = bkAll
   end
   object cbbTreeID: TComboBox
     Left = 511

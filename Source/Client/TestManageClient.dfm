@@ -179,6 +179,15 @@ inherited TestManageChildfrm: TTestManageChildfrm
           Caption = #29992'Bug'#24314#29992#20363
           TabOrder = 4
         end
+        object btnResult_Add1: TBitBtn
+          Left = 523
+          Top = 8
+          Width = 100
+          Height = 25
+          Action = actHighQuery
+          Caption = #39640#32423#26597#35810'...'
+          TabOrder = 5
+        end
       end
       object pnlTestBottom: TPanel
         Left = 0
@@ -969,6 +978,11 @@ inherited TestManageChildfrm: TTestManageChildfrm
       Category = #21015#34920
       Caption = #21047#26032#25968#25454
       OnExecute = act_RefreshDataExecute
+    end
+    object actHighQuery: TAction
+      Category = #21015#34920
+      Caption = #39640#32423#26597#35810'...'
+      OnExecute = actHighQueryExecute
     end
   end
   object cdsProject: TClientDataSet
