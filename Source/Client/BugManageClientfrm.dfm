@@ -1,6 +1,6 @@
 inherited BugManageDlg: TBugManageDlg
-  Left = 158
-  Top = 243
+  Left = 43
+  Top = 40
   Width = 1171
   Height = 692
   Caption = #38169#35823#31649#29702
@@ -15,6 +15,12 @@ inherited BugManageDlg: TBugManageDlg
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
+    object dbtxt1: TDBText
+      Left = 832
+      Top = 24
+      Width = 65
+      Height = 17
+    end
     object pcBug: TPageControl
       Left = 0
       Top = 0
@@ -290,9 +296,9 @@ inherited BugManageDlg: TBugManageDlg
                 FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00}
             end
             object cbSort: TComboBox
-              Left = 564
+              Left = 560
               Top = 9
-              Width = 102
+              Width = 81
               Height = 23
               Hint = #25353#20160#20040#25490#24207
               Style = csDropDownList
@@ -313,6 +319,24 @@ inherited BugManageDlg: TBugManageDlg
               Action = actBug_HighQuery
               Caption = #39640#32423#26597#35810'...'
               TabOrder = 5
+            end
+            object cbbTag: TComboBox
+              Left = 646
+              Top = 8
+              Width = 80
+              Height = 23
+              Hint = #36873#25321#26631#31614#25110#21024#38500#26631#31614
+              Style = csDropDownList
+              Color = clNavy
+              Font.Charset = GB2312_CHARSET
+              Font.Color = clSilver
+              Font.Height = -15
+              Font.Name = #23435#20307
+              Font.Style = []
+              ItemHeight = 15
+              ParentFont = False
+              TabOrder = 6
+              OnChange = cbbTagChange
             end
           end
           object plBugItemBottom: TPanel
@@ -397,306 +421,6 @@ inherited BugManageDlg: TBugManageDlg
           Beveled = True
           ResizeStyle = rsLine
         end
-        object ScrollBox1: TScrollBox
-          Left = 0
-          Top = 18
-          Width = 1155
-          Height = 200
-          Align = alTop
-          Color = clBtnFace
-          ParentColor = False
-          TabOrder = 0
-          object Label1: TLabel
-            Left = 16
-            Top = 82
-            Width = 68
-            Height = 15
-            Caption = #25805#20316#31995#32479':'
-          end
-          object Label3: TLabel
-            Left = 16
-            Top = 51
-            Width = 75
-            Height = 15
-            Caption = #38382#39064#26631#39064#65306
-          end
-          object Label4: TLabel
-            Left = 18
-            Top = 15
-            Width = 77
-            Height = 15
-            Caption = #39033'    '#30446#65306
-          end
-          object Label5: TLabel
-            Left = 447
-            Top = 15
-            Width = 105
-            Height = 15
-            Caption = #20986#38382#39064#30340#29256#26412#65306
-          end
-          object Label2: TLabel
-            Left = 249
-            Top = 80
-            Width = 75
-            Height = 15
-            Caption = #38382#39064#31561#32423#65306
-          end
-          object Label6: TLabel
-            Left = 480
-            Top = 80
-            Width = 75
-            Height = 15
-            Caption = #38382#39064#31867#22411#65306
-          end
-          object Label7: TLabel
-            Left = 27
-            Top = 111
-            Width = 60
-            Height = 15
-            Caption = #25351#27966#32473#65306
-          end
-          object Label8: TLabel
-            Left = 18
-            Top = 140
-            Width = 75
-            Height = 15
-            Caption = #37038#20214#36890#30693#65306
-          end
-          object Label14: TLabel
-            Left = 248
-            Top = 111
-            Width = 75
-            Height = 15
-            Caption = #25351#27966#26102#38388#65306
-          end
-          object Label16: TLabel
-            Left = 27
-            Top = 172
-            Width = 60
-            Height = 15
-            Caption = #35299#20915#20154#65306
-          end
-          object Label17: TLabel
-            Left = 252
-            Top = 172
-            Width = 75
-            Height = 15
-            Caption = #35299#20915#26041#26696#65306
-          end
-          object Label18: TLabel
-            Left = 483
-            Top = 172
-            Width = 75
-            Height = 15
-            Caption = #35299#20915#29256#26412#65306
-          end
-          object Label15: TLabel
-            Left = 479
-            Top = 111
-            Width = 75
-            Height = 15
-            Caption = #35299#20915#26102#38388#65306
-          end
-          object Label19: TLabel
-            Left = 523
-            Top = 143
-            Width = 24
-            Height = 15
-            Caption = '<<<'
-          end
-          object DBLookupComboBox1: TDBLookupComboBox
-            Left = 88
-            Top = 77
-            Width = 153
-            Height = 23
-            DataField = 'ZOS'
-            DataSource = dsBugItem
-            KeyField = 'ZID'
-            ListField = 'ZNAME'
-            ListSource = DM.dsOS
-            TabOrder = 0
-          end
-          object DBEdit2: TDBEdit
-            Left = 88
-            Top = 12
-            Width = 345
-            Height = 23
-            Color = clMenuBar
-            DataField = 'ZTREEPATH'
-            DataSource = dsBugItem
-            ReadOnly = True
-            TabOrder = 1
-          end
-          object DBLookupComboBox3: TDBLookupComboBox
-            Left = 547
-            Top = 12
-            Width = 145
-            Height = 23
-            DataField = 'ZOPENVER'
-            DataSource = dsBugItem
-            KeyField = 'ZID'
-            ListField = 'ZVER'
-            ListSource = dsProject
-            TabOrder = 2
-          end
-          object DBEdit1: TDBEdit
-            Left = 88
-            Top = 47
-            Width = 603
-            Height = 23
-            DataField = 'ZTITLE'
-            DataSource = dsBugItem
-            TabOrder = 3
-          end
-          object DBLookupComboBox2: TDBLookupComboBox
-            Left = 318
-            Top = 77
-            Width = 146
-            Height = 23
-            DataField = 'ZLEVEL'
-            DataSource = dsBugItem
-            KeyField = 'ZID'
-            ListField = 'ZNAME'
-            ListSource = dsBugLevel
-            TabOrder = 4
-          end
-          object DBLookupComboBox4: TDBLookupComboBox
-            Left = 549
-            Top = 77
-            Width = 144
-            Height = 23
-            DataField = 'ZTYPE'
-            DataSource = dsBugItem
-            KeyField = 'ZID'
-            ListField = 'ZNAME'
-            ListSource = dsBugType
-            TabOrder = 5
-          end
-          object BitBtn4: TBitBtn
-            Left = 728
-            Top = 10
-            Width = 100
-            Height = 25
-            Action = actBugItem_Save
-            Caption = #20445#23384
-            TabOrder = 6
-          end
-          object BitBtn5: TBitBtn
-            Left = 728
-            Top = 43
-            Width = 100
-            Height = 25
-            Action = actBugItem_Cancel
-            Caption = #21462#28040
-            TabOrder = 7
-          end
-          object DBLookupComboBox5: TDBLookupComboBox
-            Left = 88
-            Top = 108
-            Width = 153
-            Height = 23
-            DataField = 'ZASSIGNEDTO'
-            DataSource = dsBugItem
-            KeyField = 'ZID'
-            ListField = 'ZNAME'
-            ListSource = DM.dsUsers
-            TabOrder = 8
-            OnCloseUp = dblcSelectUsermailCloseUp
-          end
-          object DBEdit3: TDBEdit
-            Left = 88
-            Top = 138
-            Width = 433
-            Height = 23
-            Hint = #22810#20010#20197#20998#21495#20998#24320
-            DataField = 'ZMAILTO'
-            DataSource = dsBugItem
-            TabOrder = 9
-          end
-          object DBEdit4: TDBEdit
-            Left = 318
-            Top = 108
-            Width = 146
-            Height = 23
-            DataField = 'ZASSIGNEDDATE'
-            DataSource = dsBugItem
-            TabOrder = 10
-          end
-          object DBEdit5: TDBEdit
-            Left = 88
-            Top = 170
-            Width = 154
-            Height = 23
-            Color = clScrollBar
-            DataField = 'ZRESOLVEDNAME'
-            DataSource = dsBugItem
-            ReadOnly = True
-            TabOrder = 11
-          end
-          object DBEdit6: TDBEdit
-            Left = 322
-            Top = 170
-            Width = 142
-            Height = 23
-            Color = clScrollBar
-            DataField = 'ZRESOLUTIONNAME'
-            DataSource = dsBugItem
-            ReadOnly = True
-            TabOrder = 12
-          end
-          object DBLookupComboBox6: TDBLookupComboBox
-            Left = 549
-            Top = 169
-            Width = 144
-            Height = 23
-            Color = clScrollBar
-            DataField = 'ZRESOLVEDVER'
-            DataSource = dsBugItem
-            KeyField = 'ZID'
-            ListField = 'ZVER'
-            ListSource = dsProject
-            ReadOnly = True
-            TabOrder = 13
-          end
-          object BitBtn13: TBitBtn
-            Left = 728
-            Top = 75
-            Width = 100
-            Height = 25
-            Action = actBugHistory_PrivBug
-            Caption = #19978#19968#20010#38382#39064
-            TabOrder = 14
-          end
-          object BitBtn14: TBitBtn
-            Left = 728
-            Top = 106
-            Width = 100
-            Height = 25
-            Action = actBugHistory_NextBug
-            Caption = #19979#19968#20010#38382#39064
-            TabOrder = 15
-          end
-          object DBEdit7: TDBEdit
-            Left = 549
-            Top = 108
-            Width = 144
-            Height = 23
-            DataField = 'ZRESOLVEDDATE'
-            DataSource = dsBugItem
-            TabOrder = 16
-          end
-          object dblcSelectUsermail: TDBLookupComboBox
-            Left = 549
-            Top = 138
-            Width = 144
-            Height = 23
-            KeyField = 'ZID'
-            ListField = 'ZNAME'
-            ListSource = DM.dsUsers
-            TabOrder = 17
-            OnCloseUp = dblcSelectUsermailCloseUp
-          end
-        end
         object plBugHistory: TPanel
           Left = 0
           Top = 228
@@ -704,7 +428,7 @@ inherited BugManageDlg: TBugManageDlg
           Height = 305
           Align = alClient
           BevelOuter = bvNone
-          TabOrder = 1
+          TabOrder = 0
           object plBugHistoryTop: TPanel
             Left = 0
             Top = 0
@@ -731,7 +455,7 @@ inherited BugManageDlg: TBugManageDlg
               ParentFont = False
             end
             object Bevel1: TBevel
-              Left = 397
+              Left = 380
               Top = 5
               Width = 9
               Height = 31
@@ -747,7 +471,7 @@ inherited BugManageDlg: TBugManageDlg
               TabOrder = 0
             end
             object BitBtn10: TBitBtn
-              Left = 285
+              Left = 268
               Top = 8
               Width = 100
               Height = 25
@@ -756,7 +480,7 @@ inherited BugManageDlg: TBugManageDlg
               TabOrder = 1
             end
             object BitBtn8: TBitBtn
-              Left = 419
+              Left = 392
               Top = 8
               Width = 100
               Height = 25
@@ -765,7 +489,7 @@ inherited BugManageDlg: TBugManageDlg
               TabOrder = 2
             end
             object BitBtn9: TBitBtn
-              Left = 171
+              Left = 164
               Top = 8
               Width = 100
               Height = 25
@@ -774,7 +498,7 @@ inherited BugManageDlg: TBugManageDlg
               TabOrder = 3
             end
             object BitBtn12: TBitBtn
-              Left = 531
+              Left = 496
               Top = 7
               Width = 100
               Height = 25
@@ -975,11 +699,11 @@ inherited BugManageDlg: TBugManageDlg
           Height = 18
           Align = alTop
           BevelOuter = bvNone
-          TabOrder = 2
+          TabOrder = 1
           object lbBugCaption: TLabel
             Left = 0
             Top = 0
-            Width = 1040
+            Width = 880
             Height = 18
             Align = alClient
             Caption = 'lbBugCaption'
@@ -993,11 +717,12 @@ inherited BugManageDlg: TBugManageDlg
             ParentFont = False
           end
           object DBText6: TDBText
-            Left = 1040
+            Left = 1003
             Top = 0
-            Width = 115
+            Width = 152
             Height = 18
             Align = alRight
+            Alignment = taCenter
             Color = clGray
             DataField = 'ZOPENEDNAME'
             DataSource = dsBugItem
@@ -1008,6 +733,324 @@ inherited BugManageDlg: TBugManageDlg
             Font.Style = []
             ParentColor = False
             ParentFont = False
+          end
+          object dbtxtZTAGNAME: TDBText
+            Left = 880
+            Top = 0
+            Width = 123
+            Height = 18
+            Align = alRight
+            Alignment = taCenter
+            Color = clNavy
+            DataField = 'ZTAGNAME'
+            DataSource = dsBugItem
+            Font.Charset = GB2312_CHARSET
+            Font.Color = clSilver
+            Font.Height = -15
+            Font.Name = #23435#20307
+            Font.Style = []
+            ParentColor = False
+            ParentFont = False
+          end
+        end
+        object scrlbx1: TScrollBox
+          Left = 0
+          Top = 18
+          Width = 1155
+          Height = 200
+          Align = alTop
+          Color = clBtnFace
+          ParentColor = False
+          TabOrder = 2
+          object lbl1: TLabel
+            Left = 16
+            Top = 82
+            Width = 68
+            Height = 15
+            Caption = #25805#20316#31995#32479':'
+          end
+          object lbl2: TLabel
+            Left = 16
+            Top = 51
+            Width = 75
+            Height = 15
+            Caption = #38382#39064#26631#39064#65306
+          end
+          object lbl3: TLabel
+            Left = 18
+            Top = 15
+            Width = 77
+            Height = 15
+            Caption = #39033'    '#30446#65306
+          end
+          object lbl4: TLabel
+            Left = 447
+            Top = 15
+            Width = 105
+            Height = 15
+            Caption = #20986#38382#39064#30340#29256#26412#65306
+          end
+          object lbl5: TLabel
+            Left = 249
+            Top = 80
+            Width = 75
+            Height = 15
+            Caption = #38382#39064#31561#32423#65306
+          end
+          object lbl6: TLabel
+            Left = 480
+            Top = 80
+            Width = 75
+            Height = 15
+            Caption = #38382#39064#31867#22411#65306
+          end
+          object lbl7: TLabel
+            Left = 27
+            Top = 111
+            Width = 60
+            Height = 15
+            Caption = #25351#27966#32473#65306
+          end
+          object lbl8: TLabel
+            Left = 18
+            Top = 140
+            Width = 75
+            Height = 15
+            Caption = #37038#20214#36890#30693#65306
+          end
+          object lbl9: TLabel
+            Left = 248
+            Top = 111
+            Width = 75
+            Height = 15
+            Caption = #25351#27966#26102#38388#65306
+          end
+          object lbl10: TLabel
+            Left = 27
+            Top = 172
+            Width = 60
+            Height = 15
+            Caption = #35299#20915#20154#65306
+          end
+          object lbl11: TLabel
+            Left = 252
+            Top = 172
+            Width = 75
+            Height = 15
+            Caption = #35299#20915#26041#26696#65306
+          end
+          object lbl12: TLabel
+            Left = 483
+            Top = 172
+            Width = 75
+            Height = 15
+            Caption = #35299#20915#29256#26412#65306
+          end
+          object lbl13: TLabel
+            Left = 479
+            Top = 111
+            Width = 75
+            Height = 15
+            Caption = #35299#20915#26102#38388#65306
+          end
+          object lbl14: TLabel
+            Left = 523
+            Top = 143
+            Width = 24
+            Height = 15
+            Caption = '<<<'
+          end
+          object dblkcbbZOS: TDBLookupComboBox
+            Left = 88
+            Top = 77
+            Width = 153
+            Height = 23
+            DataField = 'ZOS'
+            DataSource = dsBugItem
+            KeyField = 'ZID'
+            ListField = 'ZNAME'
+            ListSource = DM.dsOS
+            TabOrder = 0
+          end
+          object dbedtZTREEPATH: TDBEdit
+            Left = 88
+            Top = 12
+            Width = 345
+            Height = 23
+            Color = clMenuBar
+            DataField = 'ZTREEPATH'
+            DataSource = dsBugItem
+            ReadOnly = True
+            TabOrder = 1
+          end
+          object dblkcbbZOPENVER: TDBLookupComboBox
+            Left = 547
+            Top = 12
+            Width = 145
+            Height = 23
+            DataField = 'ZOPENVER'
+            DataSource = dsBugItem
+            KeyField = 'ZID'
+            ListField = 'ZVER'
+            ListSource = dsProject
+            TabOrder = 2
+          end
+          object dbedtZTITLE: TDBEdit
+            Left = 88
+            Top = 47
+            Width = 603
+            Height = 23
+            DataField = 'ZTITLE'
+            DataSource = dsBugItem
+            TabOrder = 3
+          end
+          object dblkcbbZLEVEL: TDBLookupComboBox
+            Left = 318
+            Top = 77
+            Width = 146
+            Height = 23
+            DataField = 'ZLEVEL'
+            DataSource = dsBugItem
+            KeyField = 'ZID'
+            ListField = 'ZNAME'
+            ListSource = dsBugLevel
+            TabOrder = 4
+          end
+          object dblkcbbZTYPE: TDBLookupComboBox
+            Left = 549
+            Top = 77
+            Width = 144
+            Height = 23
+            DataField = 'ZTYPE'
+            DataSource = dsBugItem
+            KeyField = 'ZID'
+            ListField = 'ZNAME'
+            ListSource = dsBugType
+            TabOrder = 5
+          end
+          object btnBugItem_Save: TBitBtn
+            Left = 728
+            Top = 10
+            Width = 100
+            Height = 25
+            Action = actBugItem_Save
+            Caption = #20445#23384
+            TabOrder = 6
+          end
+          object btnBugItem_Cancel: TBitBtn
+            Left = 728
+            Top = 43
+            Width = 100
+            Height = 25
+            Action = actBugItem_Cancel
+            Caption = #21462#28040
+            TabOrder = 7
+          end
+          object dblkcbbZASSIGNEDTO: TDBLookupComboBox
+            Left = 88
+            Top = 108
+            Width = 153
+            Height = 23
+            DataField = 'ZASSIGNEDTO'
+            DataSource = dsBugItem
+            KeyField = 'ZID'
+            ListField = 'ZNAME'
+            ListSource = DM.dsUsers
+            TabOrder = 8
+            OnCloseUp = dblkcbbSelectUsermailCloseUp
+          end
+          object dbedtZMAILTO: TDBEdit
+            Left = 88
+            Top = 138
+            Width = 433
+            Height = 23
+            Hint = #22810#20010#20197#20998#21495#20998#24320
+            DataField = 'ZMAILTO'
+            DataSource = dsBugItem
+            TabOrder = 9
+          end
+          object dbedtZASSIGNEDDATE: TDBEdit
+            Left = 318
+            Top = 108
+            Width = 146
+            Height = 23
+            DataField = 'ZASSIGNEDDATE'
+            DataSource = dsBugItem
+            TabOrder = 10
+          end
+          object dbedtZRESOLVEDNAME: TDBEdit
+            Left = 88
+            Top = 170
+            Width = 154
+            Height = 23
+            Color = clScrollBar
+            DataField = 'ZRESOLVEDNAME'
+            DataSource = dsBugItem
+            ReadOnly = True
+            TabOrder = 11
+          end
+          object dbedtZRESOLUTIONNAME: TDBEdit
+            Left = 322
+            Top = 170
+            Width = 142
+            Height = 23
+            Color = clScrollBar
+            DataField = 'ZRESOLUTIONNAME'
+            DataSource = dsBugItem
+            ReadOnly = True
+            TabOrder = 12
+          end
+          object dblkcbbZRESOLVEDVER: TDBLookupComboBox
+            Left = 549
+            Top = 169
+            Width = 144
+            Height = 23
+            Color = clScrollBar
+            DataField = 'ZRESOLVEDVER'
+            DataSource = dsBugItem
+            KeyField = 'ZID'
+            ListField = 'ZVER'
+            ListSource = dsProject
+            ReadOnly = True
+            TabOrder = 13
+          end
+          object btnBugHistory_PrivBug: TBitBtn
+            Left = 728
+            Top = 75
+            Width = 100
+            Height = 25
+            Action = actBugHistory_PrivBug
+            Caption = #19978#19968#20010#38382#39064
+            TabOrder = 14
+          end
+          object btnBugHistory_NextBug: TBitBtn
+            Left = 728
+            Top = 106
+            Width = 100
+            Height = 25
+            Action = actBugHistory_NextBug
+            Caption = #19979#19968#20010#38382#39064
+            TabOrder = 15
+          end
+          object dbedtZRESOLVEDDATE: TDBEdit
+            Left = 549
+            Top = 108
+            Width = 144
+            Height = 23
+            DataField = 'ZRESOLVEDDATE'
+            DataSource = dsBugItem
+            TabOrder = 16
+          end
+          object dblkcbbSelectUsermail: TDBLookupComboBox
+            Left = 549
+            Top = 138
+            Width = 144
+            Height = 23
+            KeyField = 'ZID'
+            ListField = 'ZNAME'
+            ListSource = DM.dsUsers
+            TabOrder = 17
+            OnCloseUp = dblkcbbSelectUsermailCloseUp
           end
         end
       end

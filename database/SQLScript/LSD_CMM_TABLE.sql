@@ -334,6 +334,7 @@ create table TB_BUG_ITEM(
 	ZLASTEDITEDBY  int not null,                              /*最后修改的人*/
 	ZLASTEDITEDDATE datetime not null,                        /*最后修改的时间*/ 
 	ZOVERFRACTION  bit not null default 0                     /*=True表示已记过分了*/ 
+	ZTAGNAME       varchar(100),                              /*标签 多个标签采用;号分开 */ 
 	
 	constraint PK_TB_BUG_ITEM primary key(ZID desc,ZTREE_ID)   
 )
@@ -448,6 +449,7 @@ create table TB_TEST_ITEM(
 	--关闭状态 作者：龙仕云 2008-11-29
 	ZCLOSESTATUS int ,                                          /*0=高 1=中 2=一般 3=无效 4=扣分*/
 	ZCLOSESOCRE  int not null default 0,                        /*分值,主要给创建人*/
+	ZTAGNAME       varchar(100),                                /*标签 多个标签采用;号分开 */
 	
 
 	constraint PK_TB_TEST_ITEM primary key(ZID)  
@@ -602,6 +604,22 @@ create table TB_ANT(
 	constraint PK_TB_ANT primary key(ZGUID)  
 )
 go
+
+/*标签*/
+if exists (select * from dbo.sysobjects
+  where id = object_id(N'[dbo].[TB_TAG]')
+  and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+drop table [dbo].[TB_TAG]
+go
+
+create table TB_TAG(
+	ZID            int IDENTITY (1, 1) not null,  
+	ZNAME varchar(20),                    --名称
+	ZCOLOR int ,                          --颜色
+	constraint PK_TB_TAG primary key(ZNAME)  
+)
+go
+
 
 
 

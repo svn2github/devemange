@@ -53,6 +53,8 @@ type
     dsBugCreaeter: TDataSource;
     cdsBugAdmder: TClientDataSet;
     dsAmder: TDataSource;
+    chkTag: TCheckBox;
+    cbbTag: TComboBox;
     procedure chkmoduleClick(Sender: TObject);
     procedure btntodayClick(Sender: TObject);
     procedure btntodayBugClick(Sender: TObject);
@@ -246,6 +248,13 @@ begin
   end;
   if mystr <> '' then mywhere := mywhere + ' and ' + mystr;
 
+  mystr := '';
+  if (chkTag.Checked) and (cbbTag.ItemIndex>=0) then
+  begin
+    mystr := Format('(ZTAGNAME  like ''''%s'''')',['%'+cbbTag.Text+'%']);
+  end;
+  if mystr <> '' then mywhere := mywhere + ' and ' + mystr;
+
   Result := mywhere;
 
 end;
@@ -267,6 +276,7 @@ begin
   chkStatus.Checked      := False;
   chkBugCreateor.Checked := False;
   cbBugAmdorer.Checked   := False;
+  chkTag.Checked         := False;
   ModalResult := mrOK;
 end;
 

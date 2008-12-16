@@ -66,25 +66,6 @@ type
     dsBugType: TDataSource;
     cdsBugHistory: TClientDataSet;
     dsBugBugHistory: TDataSource;
-    ScrollBox1: TScrollBox;
-    Label1: TLabel;
-    Label3: TLabel;
-    Label4: TLabel;
-    Label5: TLabel;
-    Label2: TLabel;
-    Label6: TLabel;
-    Label7: TLabel;
-    Label8: TLabel;
-    DBLookupComboBox1: TDBLookupComboBox;
-    DBEdit2: TDBEdit;
-    DBLookupComboBox3: TDBLookupComboBox;
-    DBEdit1: TDBEdit;
-    DBLookupComboBox2: TDBLookupComboBox;
-    DBLookupComboBox4: TDBLookupComboBox;
-    BitBtn4: TBitBtn;
-    BitBtn5: TBitBtn;
-    DBLookupComboBox5: TDBLookupComboBox;
-    DBEdit3: TDBEdit;
     actBugItem_Save: TAction;
     actBugItem_Cancel: TAction;
     actBugHistory_Add: TAction;
@@ -100,14 +81,6 @@ type
     actBugHistory_Resolu: TAction;
     actBugHistory_ReSet: TAction;
     actBugHistory_Cancel: TAction;
-    Label14: TLabel;
-    DBEdit4: TDBEdit;
-    Label16: TLabel;
-    Label17: TLabel;
-    DBEdit5: TDBEdit;
-    DBEdit6: TDBEdit;
-    Label18: TLabel;
-    DBLookupComboBox6: TDBLookupComboBox;
     Splitter2: TSplitter;
     plBugHistory: TPanel;
     plBugHistoryTop: TPanel;
@@ -134,10 +107,6 @@ type
     lbProjectName: TLabel;
     actBugHistory_PrivBug: TAction;
     actBugHistory_NextBug: TAction;
-    BitBtn13: TBitBtn;
-    BitBtn14: TBitBtn;
-    Label15: TLabel;
-    DBEdit7: TDBEdit;
     cdsBugStatus: TClientDataSet;
     dsBugStatus: TDataSource;
     actBug_MeBuild: TAction;
@@ -149,8 +118,6 @@ type
     actBugHistory_OpenFile: TAction;
     actBug_RefreshData: TAction;
     N10: TMenuItem;
-    dblcSelectUsermail: TDBLookupComboBox;
-    Label19: TLabel;
     cbSort: TComboBox;
     DBNavigator1: TDBNavigator;
     N11: TMenuItem;
@@ -168,6 +135,42 @@ type
     actBugHistory_Savetofile: TAction;
     dlgSave1: TSaveDialog;
     dbtxtZFILESAVE: TDBText;
+    cbbTag: TComboBox;
+    scrlbx1: TScrollBox;
+    lbl1: TLabel;
+    lbl2: TLabel;
+    lbl3: TLabel;
+    lbl4: TLabel;
+    lbl5: TLabel;
+    lbl6: TLabel;
+    lbl7: TLabel;
+    lbl8: TLabel;
+    lbl9: TLabel;
+    lbl10: TLabel;
+    lbl11: TLabel;
+    lbl12: TLabel;
+    lbl13: TLabel;
+    lbl14: TLabel;
+    dblkcbbZOS: TDBLookupComboBox;
+    dbedtZTREEPATH: TDBEdit;
+    dblkcbbZOPENVER: TDBLookupComboBox;
+    dbedtZTITLE: TDBEdit;
+    dblkcbbZLEVEL: TDBLookupComboBox;
+    dblkcbbZTYPE: TDBLookupComboBox;
+    btnBugItem_Save: TBitBtn;
+    btnBugItem_Cancel: TBitBtn;
+    dblkcbbZASSIGNEDTO: TDBLookupComboBox;
+    dbedtZMAILTO: TDBEdit;
+    dbedtZASSIGNEDDATE: TDBEdit;
+    dbedtZRESOLVEDNAME: TDBEdit;
+    dbedtZRESOLUTIONNAME: TDBEdit;
+    dblkcbbZRESOLVEDVER: TDBLookupComboBox;
+    btnBugHistory_PrivBug: TBitBtn;
+    btnBugHistory_NextBug: TBitBtn;
+    dbedtZRESOLVEDDATE: TDBEdit;
+    dblkcbbSelectUsermail: TDBLookupComboBox;
+    dbtxt1: TDBText;
+    dbtxtZTAGNAME: TDBText;
     procedure actBug_AddDirExecute(Sender: TObject);
     procedure tvProjectExpanding(Sender: TObject; Node: TTreeNode;
       var AllowExpansion: Boolean);
@@ -221,7 +224,7 @@ type
     procedure actBugHistory_OpenFileUpdate(Sender: TObject);
     procedure actBug_RefreshDataUpdate(Sender: TObject);
     procedure actBug_RefreshDataExecute(Sender: TObject);
-    procedure dblcSelectUsermailCloseUp(Sender: TObject);
+    procedure dblkcbbSelectUsermailCloseUp(Sender: TObject);
     procedure actBug_HighQueryExecute(Sender: TObject);
     procedure actBug_MovetoExecute(Sender: TObject);
     procedure actBug_MovetoUpdate(Sender: TObject);
@@ -229,6 +232,7 @@ type
     procedure lblSavetofileClick(Sender: TObject);
     procedure actBugHistory_SavetofileExecute(Sender: TObject);
     procedure dbtxtZFILESAVEClick(Sender: TObject);
+    procedure cbbTagChange(Sender: TObject);
   private
     fPageType : TPageTypeRec; //分页处理
     fHighQuery : TBugHighQueryDlg;
@@ -240,6 +244,8 @@ type
     function  UpBugFile(APro_ID:integer;AFileName:String;var AFileID:integer):Boolean; //上传文件并返回文件的ID号
     procedure Mailto(AEmailto:String); //发送到邮箱
     procedure WMShowBugItem(var msg:TMessage); message gcMSG_GetBugItem; //直接显示bug,用于测试用例内
+    procedure LoadTag(AItems:TStrings);
+    procedure SetTag(ATagName:string); //设置标签
   public
     { Public declarations }
     procedure initBase; override;
@@ -329,7 +335,7 @@ begin
     cdsBugPlan.Data := ReadDataSet(PChar(format(glSQL,[2])));
     cdsBugLEVEL.Data := ReadDataSet(PChar(format(glSQL,[5])));
   end;
-
+  LoadTag(cbbTag.Items);
   LoadBugTree(-1,nil);
   fHighQuery := nil;
 end;
@@ -619,7 +625,7 @@ const
   glSQL = 'exec pt_SplitPage ''TB_BUG_ITEM'',' +
           '''ZPRO_ID,ZID,ZTYPE,ZTITLE,ZOPENEDBY,ZOPENEDDATE,ZASSIGNEDTO,ZRESOLVEDBY,' +
           'ZRESOLUTION,ZRESOLVEDDATE,ZOS,ZLEVEL,ZSTATUS,ZMAILTO,ZOPENVER, ' +
-          'ZRESOLVEDVER,ZTREEPATH,ZTREE_ID,ZASSIGNEDTO,ZASSIGNEDDATE'',' +
+          'ZRESOLVEDVER,ZTREEPATH,ZTREE_ID,ZASSIGNEDTO,ZASSIGNEDDATE,ZTAGNAME'',' +
           '''%s'',20,%d,%d,1,''%s''';
   //                                             页码,以总数=1, 条件where
 begin
@@ -1115,9 +1121,9 @@ const
   glSQL2  = 'insert TB_BUG_ITEM (ZID,ZTREE_ID,ZPRO_ID,ZTREEPATH,ZTITLE,' +
              ' ZOS,ZTYPE,ZLEVEL,ZSTATUS,ZMAILTO,ZOPENEDBY, ' +
              ' ZOPENEDDATE,ZOPENVER,ZASSIGNEDTO,ZASSIGNEDDATE,ZRESOLUTION,' +
-             ' ZLASTEDITEDBY,ZLASTEDITEDDATE) ' +
+             ' ZLASTEDITEDBY,ZLASTEDITEDDATE,ZTAGNAME) ' +
              'values(%d,%d,%d,''%s'',''%s'',%d,%d,%d,%d,''%s'',%d,' +
-             ' %s,%d,%d,%s,%d,%d,%s)' ;
+             ' %s,%d,%d,%s,%d,%d,%s,''%s'')' ;
              
   glSQL3  = 'update TB_BUG_ITEM set ' +
             'ZTITLE=''%s'', ' +
@@ -1129,7 +1135,8 @@ const
             'ZASSIGNEDTO=%d, '+
             'ZASSIGNEDDATE=%s, '+
             'ZLASTEDITEDBY=%d , ' +
-            'ZLASTEDITEDDATE=getdate()' +
+            'ZLASTEDITEDDATE=getdate(),' +
+            'ZTAGNAME=''%s'' ' +
             'where ZID=%d';
 begin
   //
@@ -1152,6 +1159,7 @@ begin
       DataSet.FieldByName('ZASSIGNEDTO').AsInteger,
       myAssingdate,
       ClientSystem.fEditer_id,
+      DataSet.FieldByName('ZTAGNAME').AsString,
       DataSet.FieldByName('ZID').AsInteger]);
 
     ClientSystem.fDbOpr.BeginTrans;
@@ -1186,7 +1194,8 @@ begin
       myAssingdate, //指派时间
       DataSet.FieldByName('ZRESOLUTION').AsInteger,
       DataSet.FieldByName('ZOPENEDBY').AsInteger,
-      'getdate()']);
+      'getdate()',
+      DataSet.FieldByName('ZTAGNAME').AsString]);
     ClientSystem.fDbOpr.BeginTrans;
     try
       ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
@@ -1730,6 +1739,11 @@ end;
 procedure TBugManageDlg.dgBugItemDrawColumnCell(Sender: TObject;
   const Rect: TRect; DataCol: Integer; Column: TColumn;
   State: TGridDrawState);
+var
+  mystr : string;
+  myfontsize : Integer;
+  myfontcolor,mybrushcolor : TColor;
+  mywidth,myh : integer;
 begin
 
   if (cdsBugItem.RecNo mod 2  = 0) and not ( gdSelected in State)  then
@@ -1760,7 +1774,37 @@ begin
         dgBugItem.Canvas.Brush.Color := clLime;
       end;
   end;
+
   dgBugItem.DefaultDrawColumnCell(Rect,DataCol,Column,State);
+  
+  if (Column.Index = Ord(bcTitle)) and
+     (cdsBugItem.FieldByName('ZTAGNAME').AsString <> '') then
+  begin
+    dgBugItem.Canvas.FillRect(Rect);
+    mystr := cdsBugItem.FieldByName('ZTAGNAME').AsString;
+    myfontsize := dgBugItem.Canvas.Font.Size;
+    myfontcolor := dgBugItem.Canvas.Font.Color;
+    mybrushcolor := dgBugItem.Canvas.Brush.Color;
+    dgBugItem.Canvas.Font.Size  := 8;
+    dgBugItem.Canvas.Font.Color := clBtnFace;
+    dgBugItem.Canvas.Brush.Color := clNavy;
+    myh := dgBugItem.Canvas.TextHeight(mystr);
+    mywidth := dgBugItem.Canvas.TextWidth(mystr);
+    dgBugItem.Canvas.TextOut(Rect.Left+1,
+      rect.Top + (rect.Bottom-rect.Top-myh) div 2,mystr);
+
+    dgBugItem.Canvas.Font.Size := myfontsize;
+    dgBugItem.Canvas.Font.Color := myfontcolor;
+    dgBugItem.Canvas.Brush.Color := mybrushcolor;
+    myh := dgBugItem.Canvas.TextHeight('测');
+    dgBugItem.Canvas.TextOut(Rect.Left+mywidth+5,
+      Rect.Top + (Rect.Bottom-Rect.Top-myh) div 2,
+      cdsBugItem.FieldByName('ZTITLE').AsString);
+
+    dgBugItem.Canvas.FrameRect(Rect);
+   
+  end;
+
 end;
 
 procedure TBugManageDlg.actBug_MeBuildExecute(Sender: TObject);
@@ -1921,7 +1965,7 @@ begin
   end;
 end;
 
-procedure TBugManageDlg.dblcSelectUsermailCloseUp(Sender: TObject);
+procedure TBugManageDlg.dblkcbbSelectUsermailCloseUp(Sender: TObject);
 var
   mystr : String;
   myaddstr : string;
@@ -2054,6 +2098,13 @@ begin
         dtpBugday.DateTime := now();
         cdsBugCreater.CloneCursor(DM.cdsUser,True);
         cdsBugAdmder.CloneCursor(DM.cdsUser,True);
+        cbbTag.Items.Clear;
+        DM.cdsTag.First;
+        while not DM.cdsTag.Eof do
+        begin
+          cbbTag.Items.Add(DM.cdsTag.FieldByName('ZNAME').AsString);
+          DM.cdsTag.Next;
+        end;
         GetBugType();
       end;
     finally
@@ -2232,6 +2283,110 @@ begin
   if pcBug.ActivePageIndex=0 then
     pcBug.ActivePageIndex := 1;
   LoadBugHistory(msg.WParam);
+end;
+
+
+procedure TBugManageDlg.LoadTag(AItems: TStrings);
+begin
+  with Dm do
+  begin
+    AItems.Clear;
+    cdsTag.First;
+    while not cdsTag.Eof do
+    begin
+      AItems.Add(cdsTag.FieldByName('ZNAME').AsString);
+      cdsTag.Next;
+    end;
+    AItems.Add(gcTagNewName);
+  end;
+end;
+{
+
+ }
+
+procedure TBugManageDlg.cbbTagChange(Sender: TObject);
+var
+  mystr : string;
+begin
+  if fLoading then Exit;
+  if not (ClientSystem.fEditerType in [etAdmin,etDeve,etTest,etServer]) then
+  begin
+    MessageBox(Handle,'你没有权限','提示',MB_ICONWARNING+MB_OK);
+    Exit;
+  end;
+  
+  if cbbTag.Text = gcTagNewName then
+  begin
+    if ClientSystem.fEditerType <>  etAdmin then
+    begin
+      MessageBox(Handle,'你没有权限','提示',MB_ICONWARNING+MB_OK);
+      Exit;
+    end;
+    mystr := InputBox('新标签','名称(20字符)','');
+    if mystr = '' then Exit;
+
+    //确定是否有效
+    DM.cdsTag.DisableControls;
+    try
+      DM.cdsTag.First;
+      while not DM.cdsTag.Eof do
+      begin
+        if CompareText(mystr,dm.cdsTag.FieldByName('ZNAME').AsString)=0 then
+        begin
+          MessageBox(Handle,'标签已存在','提示',MB_ICONWARNING+MB_OK);
+          Exit;
+        end;
+        DM.cdsTag.Next;
+      end;
+
+      DM.cdsTag.Append;
+      DM.cdsTag.FieldByName('ZNAME').AsString := mystr;
+      DM.cdsTag.Post;
+      cbbTag.Items.Insert(0,mystr);
+      cbbTag.ItemIndex := 0;
+    finally
+      DM.cdsTag.EnableControls;
+    end;
+
+  end
+  else
+    mystr := cbbTag.Text;
+
+  SetTag(mystr);
+
+end;
+
+procedure TBugManageDlg.SetTag(ATagName: string);
+var
+  mys : string;
+  mystr : string;
+begin
+  //
+  if cdsBugItem.IsEmpty then Exit;
+  mystr := cdsBugItem.FieldByName('ZTAGNAME').AsString;
+
+  if not (cdsBugItem.State in [dsEdit,dsInsert]) then
+    cdsBugItem.Edit;
+
+  if Pos(ATagName,mystr) > 0 then
+  begin
+    //aaa;bbbb
+    mys := stringreplace(mystr,ATagName,'',[rfReplaceAll]);
+    if (Length(mys) > 0) and (mys[1]=';') then
+      mys := Copy(mys,2,MaxInt);
+    if (Length(mys)>0) and (mys[Length(mys)]=';') then
+      mys := Copy(mys,1,Length(mys)-1);  
+    cdsBugItem.FieldByName('ZTAGNAME').AsString := mys;
+  end
+  else begin
+    if mystr <> '' then
+      cdsBugItem.FieldByName('ZTAGNAME').AsString :=
+        Format('%s;%s',[ATagName,mystr])
+    else
+      cdsBugItem.FieldByName('ZTAGNAME').AsString := ATagName;
+  end;
+
+  cdsBugItem.Post;
 end;
 
 end.

@@ -122,6 +122,7 @@ const
   gcMSG_TickCount = $0400{WM_USER} +1;  //发送到mainfrm显示
   gcMSG_GetBugItem = $0400{WM_USER} +2; //发送到bug,显示内容
   gcLogDir = 'Log'; //日志目录
+  gcTagNewName = '新标签...';
 
 
 implementation

@@ -90,7 +90,7 @@ inherited UserManageClientDlg: TUserManageClientDlg
               Expanded = False
               FieldName = 'ZTYPE'
               Title.Alignment = taCenter
-              Title.Caption = #31867#22411'(0='#31995#32479#29992#25143'1='#24320#21457#20154#21592' 2='#27979#35797#20154#21592',3='#20854#20182#20154#21592')'
+              Title.Caption = #31867#22411'(0='#31995#32479#29992#25143'1='#24320#21457#20154#21592' 2='#27979#35797#20154#21592',3='#20854#20182#20154#21592',4='#23458#26381#20154#21592')'
               Width = 150
               Visible = True
             end

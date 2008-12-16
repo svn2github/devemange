@@ -1,9 +1,9 @@
 inherited BugHighQueryDlg: TBugHighQueryDlg
-  Left = 416
-  Top = 129
+  Left = 369
+  Top = 123
   BorderStyle = bsDialog
   Caption = #39640#32423#26597#35810
-  ClientHeight = 452
+  ClientHeight = 472
   ClientWidth = 620
   OldCreateOrder = True
   Position = poMainFormCenter
@@ -11,7 +11,7 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
   TextHeight = 15
   object btn1: TBitBtn
     Left = 496
-    Top = 408
+    Top = 428
     Width = 100
     Height = 25
     TabOrder = 1
@@ -19,7 +19,7 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
   end
   object btn2: TBitBtn
     Left = 376
-    Top = 408
+    Top = 428
     Width = 100
     Height = 25
     TabOrder = 2
@@ -205,7 +205,7 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
   end
   object btnAll: TBitBtn
     Left = 253
-    Top = 408
+    Top = 428
     Width = 100
     Height = 25
     Caption = #20840#37096#38382#39064
@@ -295,6 +295,23 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
     ListField = 'ZNAME'
     ListSource = dsAmder
     TabOrder = 31
+  end
+  object chkTag: TCheckBox
+    Left = 36
+    Top = 390
+    Width = 97
+    Height = 17
+    Caption = #26631#31614
+    TabOrder = 32
+  end
+  object cbbTag: TComboBox
+    Left = 202
+    Top = 383
+    Width = 199
+    Height = 23
+    Style = csDropDownList
+    ItemHeight = 15
+    TabOrder = 33
   end
   object cdsProject: TClientDataSet
     Tag = -1
