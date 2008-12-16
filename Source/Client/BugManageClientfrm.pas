@@ -14,7 +14,7 @@ type
   TBugColumns = (bcCode,bcTitle,bcWhoBuild,bcAssingeto,bcwhoReso,bcType,bcBuildDate
     ,bcResoDate);
 
-  TPageType = (ptDir,ptMe); //按项目分页,按由我创建分页或指给我分页
+  TPageType = (ptDir,ptMe,ptQuery); //按项目分页,按由我创建分页或指给我分页
 
   TPageTypeRec = record
     fName : string;
@@ -793,6 +793,18 @@ begin
     lbProjectName.Caption := format('%s  =>第%d共%d页',[
       fPageType.fName,fPageType.fIndex,fPageType.fIndexCount]);
   end
+  else if fPageType.fType = ptQuery then
+  begin
+    fPageType.fIndex := fPageType.fIndex + 1;
+    myPageIndex := fPageType.fIndex;
+    mywhere := fPageType.fWhereStr;
+    LoadBugItem(myPageindex,myWhere);
+    lbPageCount.Caption := format('%d/%d',[
+      fPageType.fIndex,
+      fPageType.fIndexCount]);
+    lbProjectName.Caption := format('%s  =>第%d共%d页',[
+      fPageType.fName,fPageType.fIndex,fPageType.fIndexCount]);
+  end
   else begin
     mydata := tvProject.Selected.data;
     mydata^.fPageIndex := mydata^.fPageIndex + 1;
@@ -809,7 +821,7 @@ end;
 
 procedure TBugManageDlg.actBug_NewPageUpdate(Sender: TObject);
 begin
-  if fPageType.fType = ptme then
+  if fPageType.fType in [ptme,ptQuery] then
   begin
     (sender as TAction).Enabled := not fLoading
     and (fPageType.fIndex<fPageType.fIndexCount);
@@ -825,7 +837,7 @@ end;
 
 procedure TBugManageDlg.actBug_PrivPageUpdate(Sender: TObject);
 begin
-  if fPageType.fType = ptme then
+  if fPageType.fType in [ptme,ptQuery] then
   begin
     (sender as TAction).Enabled := not fLoading
     and (fPageType.fIndex>1);
@@ -850,6 +862,18 @@ begin
     fPageType.fIndex := fPageType.fIndex -1;
     myPageIndex := fPageType.fIndex;
     mywhere := Format(fPageType.fWhereStr,[ClientSystem.fEditer_id]);
+    LoadBugItem(myPageindex,myWhere);
+    lbPageCount.Caption := format('%d/%d',[
+      fPageType.fIndex,
+      fPageType.fIndexCount]);
+    lbProjectName.Caption := format('%s  =>第%d共%d页',[
+      fPageType.fName,fPageType.fIndex,fPageType.fIndexCount]);
+  end
+  else if fPageType.fType = ptQuery then
+  begin
+    fPageType.fIndex := fPageType.fIndex -1;
+    myPageIndex := fPageType.fIndex;
+    mywhere := fPageType.fWhereStr;
     LoadBugItem(myPageindex,myWhere);
     lbPageCount.Caption := format('%d/%d',[
       fPageType.fIndex,
@@ -908,7 +932,7 @@ end;
 
 procedure TBugManageDlg.actBug_FirstPageUpdate(Sender: TObject);
 begin
-  if fPageType.fType = ptMe then
+  if fPageType.fType in [ptMe,ptQuery] then
   begin
     (sender as TAction).Enabled := not fLoading
     and (fPageType.fIndex<>1);
@@ -940,6 +964,18 @@ begin
     lbProjectName.Caption := format('%s  =>第%d共%d页',[
       fPageType.fName,fPageType.fIndex,fPageType.fIndexCount]);
   end
+  else if fPageType.fType = ptQuery then
+  begin
+    fPageType.fIndex := 1;
+    myPageIndex := 1;
+    mywhere := fPageType.fWhereStr;
+    LoadBugItem(myPageindex,myWhere);
+    lbPageCount.Caption := format('%d/%d',[
+      1,
+      fPageType.fIndexCount]);
+    lbProjectName.Caption := format('%s  =>第%d共%d页',[
+      fPageType.fName,fPageType.fIndex,fPageType.fIndexCount]);
+  end
   else begin
     mydata := tvProject.Selected.data;
     mydata^.fPageIndex := 1;
@@ -956,7 +992,7 @@ end;
 
 procedure TBugManageDlg.actBug_LastPageUpdate(Sender: TObject);
 begin
-  if fPageType.fType = ptMe then
+  if fPageType.fType in [ptMe,ptQuery] then
   begin
     (sender as TAction).Enabled := not fLoading
     and (fPageType.fIndex<>fPageType.fIndexCount);
@@ -982,6 +1018,18 @@ begin
     fPageType.fIndex := fPageType.fIndexCount;
     myPageIndex := fPageType.fIndex;
     mywhere := Format(fPageType.fWhereStr,[ClientSystem.fEditer_id]);
+    LoadBugItem(myPageindex,myWhere);
+    lbPageCount.Caption := format('%d/%d',[
+      fPageType.fIndex,
+      fPageType.fIndexCount]);
+    lbProjectName.Caption := format('%s  =>第%d共%d页',[
+      fPageType.fName,fPageType.fIndex,fPageType.fIndexCount]);
+  end
+  else if fPageType.fType = ptQuery then
+  begin
+    fPageType.fIndex := fPageType.fIndexCount;
+    myPageIndex := fPageType.fIndex;
+    mywhere := fPageType.fWhereStr;
     LoadBugItem(myPageindex,myWhere);
     lbPageCount.Caption := format('%d/%d',[
       fPageType.fIndex,
@@ -1948,6 +1996,18 @@ begin
       lbProjectName.Caption := format('%s  =>第%d共%d页',[
         fPageType.fName,fPageType.fIndex,fPageType.fIndexCount]);
     end
+    else if fPageType.fType = ptQuery then
+    begin
+      myPageindex := fPageType.fIndex;
+      mywhere := fPageType.fWhereStr;
+      fPageType.fIndexCount := GetBugItemPageCount(myPageindex,myWhere);
+      LoadBugItem(myPageindex,myWhere);
+      lbPageCount.Caption := format('%d/%d',[
+        fPageType.fIndex,
+        fPageType.fIndexCount]);
+      lbProjectName.Caption := format('%s  =>第%d共%d页',[
+        fPageType.fName,fPageType.fIndex,fPageType.fIndexCount]);
+    end
     else begin
       myBugData := tvProject.Selected.data;
       myPageIndex := myBugData^.fPageIndex;
@@ -2120,14 +2180,13 @@ begin
       Application.ProcessMessages;
       ShowProgress('读取数据...',0);
       try
-
         mywhere := GetwhereStr();
-        fPageType.fType := ptMe;
+        fPageType.fType := ptQuery;
         fPageType.fWhereStr := mywhere;
         fPageType.fIndex := 1;
         fPageType.fName := '高级查询';
         myPageIndex := 1;
-        fPageType.fIndexCount := GetBugItemPageCount(myPageindex,myWhere);
+        fPageType.fIndexCount := GetBugItemPageCount(1,myWhere);
         LoadBugItem(myPageindex,myWhere);
         lbPageCount.Caption := format('%d/%d',[
           fPageType.fIndex,
