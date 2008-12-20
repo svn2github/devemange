@@ -147,15 +147,6 @@ inherited AntManageClientDlg: TAntManageClientDlg
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 0
-        object mmo1: TMemo
-          Left = 0
-          Top = 40
-          Width = 948
-          Height = 156
-          Align = alClient
-          ScrollBars = ssVertical
-          TabOrder = 0
-        end
         object pnl3: TPanel
           Left = 0
           Top = 0
@@ -164,7 +155,7 @@ inherited AntManageClientDlg: TAntManageClientDlg
           Align = alTop
           BevelOuter = bvNone
           Color = clGreen
-          TabOrder = 1
+          TabOrder = 0
           object lblError: TLabel
             Left = 349
             Top = 12
@@ -209,9 +200,20 @@ inherited AntManageClientDlg: TAntManageClientDlg
             TabOrder = 2
           end
         end
+        object lstResult: TListBox
+          Left = 0
+          Top = 40
+          Width = 948
+          Height = 156
+          Style = lbOwnerDrawFixed
+          Align = alClient
+          ItemHeight = 16
+          TabOrder = 1
+          OnDrawItem = lstResultDrawItem
+        end
         object ani1: TAnimate
-          Left = 7
-          Top = 46
+          Left = 3
+          Top = 42
           Width = 100
           Height = 80
           Color = clWhite

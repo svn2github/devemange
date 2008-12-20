@@ -35,7 +35,6 @@ type
     dbgrd1: TDBGrid;
     scrlbx1: TScrollBox;
     spl1: TSplitter;
-    mmo1: TMemo;
     pnl3: TPanel;
     btnBuildProject: TBitBtn;
     act_ProAdd: TAction;
@@ -69,6 +68,7 @@ type
     lbl8: TLabel;
     dbedtZSVN: TDBEdit;
     lblError: TLabel;
+    lstResult: TListBox;
     ani1: TAnimate;
     procedure act_ProAddExecute(Sender: TObject);
     procedure cdsAntListNewRecord(DataSet: TDataSet);
@@ -86,6 +86,8 @@ type
     procedure dbgrd1DrawColumnCell(Sender: TObject; const Rect: TRect;
       DataCol: Integer; Column: TColumn; State: TGridDrawState);
     procedure pgcAntChanging(Sender: TObject; var AllowChange: Boolean);
+    procedure lstResultDrawItem(Control: TWinControl; Index: Integer;
+      Rect: TRect; State: TOwnerDrawState);
   private
     { Private declarations }
     function initconnection():Boolean; //连接服务器
@@ -106,7 +108,7 @@ type
     fResultStr : string;
     fcds : TClientDataSet;
     fani : TAnimate;
-    fMemo: TMemo;
+    fMemo: TListBox;
     fIdTCP : TIdTCPClient;
     PyFileName : string;
     fAction : TAction;
@@ -115,7 +117,7 @@ type
     procedure EndAnimate();
   public
     constructor Create(Acds:TClientDataSet;Aani: TAnimate;
-      AMemo:TMemo;AIdTCP: TIdTCPClient;AAction:TAction);
+      AMemo:TListBox;AIdTCP: TIdTCPClient;AAction:TAction);
   protected
     procedure Execute;override;
   end;
@@ -383,9 +385,11 @@ begin
   count := idtcpclnt1.ReadInteger;
   if count = -1 then
   begin
-    mmo1.Lines.Add('还没有编译完成，请稍候...');
+    lstResult.Items.Add('还没有编译完成，请稍候...');
     Exit;
   end;
+
+  lstResult.Items.Clear;
 
   linenum := 0;
   for i:=0 to count -1 do
@@ -422,17 +426,19 @@ begin
         cdsAntList.Post;
       end;
     end;
-    mmo1.Lines.Add(mystr);
+    lstResult.Items.Add(mystr);
 
   end;
-  SendMessage(mmo1.Handle,WM_VSCROLL,MakeWParam(SB_THUMBPOSITION,linenum),0);
+  lstResult.ItemIndex := linenum;
+  lstResult.Tag := linenum;
+
 end;
 
 procedure TAntManageClientDlg.act_BuildProjectExecute(Sender: TObject);
 var
   MyThread : TPySvnThread;
 begin
-  MyThread := TPySvnThread.Create(cdsAntList,ani1,mmo1,idtcpclnt1,
+  MyThread := TPySvnThread.Create(cdsAntList,ani1,lstResult,idtcpclnt1,
     MainDlg.actMod_Ant);
   MyThread.Resume;
 end;
@@ -478,16 +484,16 @@ begin
   fani.Visible := True;
   fani.Active := True;
   fPySvning := True;
-  fMemo.Lines.Clear;
-  fMemo.Lines.Add(#13#10);
-  fMemo.Lines.Add('         正在编译中...');
+  fMemo.Items.Clear;
+  fMemo.Items.Add(#13#10);
+  fMemo.Items.Add('  正在编译中...');
   PyFileName := Format('C%s',[fcds.FieldByName('ZPYFILE').AsString]);
   fAction.ImageIndex := 12;
   Application.ProcessMessages;
 end;
 
 constructor TPySvnThread.Create(Acds:TClientDataSet;Aani: TAnimate;
-  AMemo:TMemo;AIdTCP: TIdTCPClient;AAction:TAction);
+  AMemo:TListBox;AIdTCP: TIdTCPClient;AAction:TAction);
 begin
   inherited Create(false);
   fcds := Acds;
@@ -501,8 +507,8 @@ end;
 
 procedure TPySvnThread.EndAnimate;
 begin
-  fMemo.Lines.Clear;
-  fMemo.Lines.Add(fResultStr);
+  fMemo.Items.Clear;
+  fMemo.Items.Add(fResultStr);
   if not (fcds.State in [dsEdit,dsInsert]) then
     fcds.Edit;
   fcds.FieldByName('ZDATE').AsDateTime := ClientSystem.fDbOpr.GetSysDateTime;
@@ -526,5 +532,15 @@ begin
   end;
 end;
 
+procedure TAntManageClientDlg.lstResultDrawItem(Control: TWinControl;
+  Index: Integer; Rect: TRect; State: TOwnerDrawState);
+begin
+  lstResult.Canvas.FillRect(Rect);
+  lstResult.Canvas.TextOut(Rect.Left,Rect.Top ,IntToStr(index+1));
+  lstResult.Canvas.Font.Color := clBlack;
+  if (lstResult.Tag > 0) and (lstResult.ItemIndex = index) then
+    lstResult.Canvas.Font.Color := clRed;
+  lstResult.Canvas.TextOut(rect.Left+50,Rect.Top,lstResult.Items[index]);
+end;
 
 end.
