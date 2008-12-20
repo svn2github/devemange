@@ -18,6 +18,7 @@
 *       5.TB_USER 内增加 TCHECKTASK : bit 2008-8-2
 *       6.增加测试功能模块. 作者:龙仕云 2008-9-5
 *       7.增加测试功能模块的关闭等级 作者:龙仕云龙 2008-11-29
+*       8.增加问题管理内的期限 作者:龙仕云 2008-12-20
 *
 ******************************************************************************/
 
@@ -335,6 +336,7 @@ create table TB_BUG_ITEM(
 	ZLASTEDITEDDATE datetime not null,                        /*最后修改的时间*/ 
 	ZOVERFRACTION  bit not null default 0                     /*=True表示已记过分了*/ 
 	ZTAGNAME       varchar(100),                              /*标签 多个标签采用;号分开 */ 
+	ZTERM          int ,                                      /*要求期限(6)*/
 	
 	constraint PK_TB_BUG_ITEM primary key(ZID desc,ZTREE_ID)   
 )

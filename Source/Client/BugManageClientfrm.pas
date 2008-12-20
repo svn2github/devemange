@@ -171,6 +171,10 @@ type
     dblkcbbSelectUsermail: TDBLookupComboBox;
     dbtxt1: TDBText;
     dbtxtZTAGNAME: TDBText;
+    cdsTerm: TClientDataSet;
+    dsTerm: TDataSource;
+    lbl15: TLabel;
+    dblkcbbZTERMNAME: TDBLookupComboBox;
     procedure actBug_AddDirExecute(Sender: TObject);
     procedure tvProjectExpanding(Sender: TObject; Node: TTreeNode;
       var AllowExpansion: Boolean);
@@ -334,6 +338,7 @@ begin
     cdsBugType.Data := ReadDataSet(PChar(format(glSQL,[4])));
     cdsBugPlan.Data := ReadDataSet(PChar(format(glSQL,[2])));
     cdsBugLEVEL.Data := ReadDataSet(PChar(format(glSQL,[5])));
+    cdsTerm.Data     := ReadDataSet(PChar(format(glSQL,[6])));
   end;
   LoadTag(cbbTag.Items);
   LoadBugTree(-1,nil);
@@ -625,7 +630,7 @@ const
   glSQL = 'exec pt_SplitPage ''TB_BUG_ITEM'',' +
           '''ZPRO_ID,ZID,ZTYPE,ZTITLE,ZOPENEDBY,ZOPENEDDATE,ZASSIGNEDTO,ZRESOLVEDBY,' +
           'ZRESOLUTION,ZRESOLVEDDATE,ZOS,ZLEVEL,ZSTATUS,ZMAILTO,ZOPENVER, ' +
-          'ZRESOLVEDVER,ZTREEPATH,ZTREE_ID,ZASSIGNEDTO,ZASSIGNEDDATE,ZTAGNAME'',' +
+          'ZRESOLVEDVER,ZTREEPATH,ZTREE_ID,ZASSIGNEDTO,ZASSIGNEDDATE,ZTAGNAME,ZTERM'',' +
           '''%s'',20,%d,%d,1,''%s''';
   //                                             页码,以总数=1, 条件where
 begin
@@ -731,6 +736,20 @@ begin
           FieldKind := fkLookup;
           KeyFields := 'ZRESOLUTION';
           LookupDataSet := cdsBugPlan;
+          LookupKeyFields := 'ZID';
+          LookupResultField := 'ZNAME';
+        end;
+
+        //要求期限
+        myfield := FieldDefs.AddFieldDef;
+        myfield.Name :='ZTERMNAME';
+        myfield.DataType := ftString;
+        myfield.Size := 50;
+        with myfield.CreateField(cdsBugItem) do
+        begin
+          FieldKind := fkLookup;
+          KeyFields := 'ZTERM';
+          LookupDataSet := cdsTerm;
           LookupKeyFields := 'ZID';
           LookupResultField := 'ZNAME';
         end;

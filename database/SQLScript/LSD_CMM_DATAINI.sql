@@ -40,6 +40,12 @@ insert into TB_BUG_PARAMS (ZTYPE,ZID,ZNAME) values(4,6,'测试案例');
 insert into TB_BUG_PARAMS (ZTYPE,ZID,ZNAME) values(5,0,'严重错误');
 insert into TB_BUG_PARAMS (ZTYPE,ZID,ZNAME) values(5,1,'一般错误');
 insert into TB_BUG_PARAMS (ZTYPE,ZID,ZNAME) values(5,2,'可不改错误');
+/*BUG要求期限*/
+insert into TB_BUG_PARAMS (ZTYPE,ZID,ZNAME) values(6,1,'一天内');
+insert into TB_BUG_PARAMS (ZTYPE,ZID,ZNAME) values(6,7,'一周内');
+insert into TB_BUG_PARAMS (ZTYPE,ZID,ZNAME) values(6,14,'二周内');
+insert into TB_BUG_PARAMS (ZTYPE,ZID,ZNAME) values(6,30,'下一个版本');
+
 
 /*任务单状态*/
 insert into TB_TASK_PARAMS (ZTYPE,ZID,ZNAME) values(1,0,'待分发');
