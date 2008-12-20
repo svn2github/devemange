@@ -85,6 +85,9 @@ type
     actMod_Ant: TAction;
     N16: TMenuItem;
     btnMod_Ant: TToolButton;
+    actMod_Dayworktable: TAction;
+    btnMod_Dayworktable: TToolButton;
+    N17: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure actmod_FilesExecute(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -112,6 +115,7 @@ type
     procedure actCalendarExecute(Sender: TObject);
     procedure actMod_PLANExecute(Sender: TObject);
     procedure actMod_AntExecute(Sender: TObject);
+    procedure actMod_DayworktableExecute(Sender: TObject);
   private
     fChildform : TList; //所有子窗口的对象
     fCurrentChildform : TBaseChildDlg;
@@ -123,6 +127,7 @@ type
     procedure DelTempfile(); //删除临时文件
     procedure WMTickCount (var Msg: TMessage); message gcMSG_TickCount;
     procedure WMShowBugItem(var msg:TMessage); message gcMSG_GetBugItem;
+    procedure WMShowTestItem(var msg:TMessage); message gcMSG_GetTestItem;
 
   public
     property CurrentChildform : TBaseChildDlg read fCurrentChildform;
@@ -152,6 +157,7 @@ uses
   TestManageClient,        {测试管理}
   PlanManageClientfrm,     {项目计划}
   AntManageClientfrm,      {自动构建}
+  DayWorktableManageClientfrm, {我的工作台}
   WebClientfrm
 
   , SetSysParamsfrm;
@@ -645,6 +651,36 @@ begin
     DoChangeClient(TAntManageClientDlg)
   else
     MessageBox(Handle,'你没有权限','提示',MB_ICONWARNING+MB_OK);
+end;
+
+procedure TMainDlg.actMod_DayworktableExecute(Sender: TObject);
+begin
+  DoChangeClient(TDayWorktableManageClientDlg);
+end;
+
+procedure TMainDlg.WMShowTestItem(var msg: TMessage);
+var
+  myBaseform,myform : TBaseChildDlg;
+  i : Integer;
+begin
+  DoChangeClient(TTestManageChildfrm);
+
+  myBaseform := nil;
+  for i:=0 to fChildform.Count -1 do
+  begin
+    myform := fChildform.items[i];
+    if myform is TTestManageChildfrm then
+    begin
+      myBaseform :=fChildform.items[i];
+      break;
+    end;
+  end;
+
+  if Assigned(myBaseform) then
+  begin
+    SendMessage(myBaseform.Handle,gcMSG_GetTestItem,msg.WParam,msg.LParam);
+  end;
+
 end;
 
 end.

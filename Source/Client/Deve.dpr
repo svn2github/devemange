@@ -20,7 +20,8 @@ uses
   TestCaseSOCREfrm in 'TestCaseSOCREfrm.pas' {TestCaseSOCREDlg},
   PlanManageClientfrm in 'PlanManageClientfrm.pas' {PlanManageClientDlg},
   AntManageClientfrm in 'AntManageClientfrm.pas' {AntManageClientDlg},
-  TestHighQueryfrm in 'TestHighQueryfrm.pas' {TestHighQueryDlg};
+  TestHighQueryfrm in 'TestHighQueryfrm.pas' {TestHighQueryDlg},
+  DayWorktableManageClientfrm in 'DayWorktableManageClientfrm.pas' {DayWorktableManageClientDlg};
 
 {$R *.res}
 {$R resource.res}

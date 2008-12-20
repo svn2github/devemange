@@ -675,3 +675,232 @@ end
 GO
 
 
+/******************************************************************************
+创建: 2008-12-20  作者:龙仕云
+目的: 工作台, 统计人员目前的工作任务内容
+修改：
+编号   时间         修改人             修改内容
+
+参数:
+   USERID ,USERTYPE , 
+
+返回: 表
+
+********************************************************************************/
+
+CREATE    PROCEDURE pt_UserDayWork
+@USERID int,
+@USERTYPE int
+
+as
+
+declare @RowName varchar(255)
+declare @RowType int
+declare @RowContentID int --内容id 用于关联
+declare @RowState int --是否已关闭了
+declare @RowTagName varchar(100)
+declare @RowClose int 
+declare @myc int
+declare @myid int
+
+set @RowState = 0
+
+
+--建表
+if exists(select 1 from sysobjects where id=object_id('temp_usr_daywork')and type = 'u')
+  drop table temp_usr_daywork
+  
+create table temp_usr_daywork
+  (
+  ZROWID int,      --序号
+  ZROWPART bit , --=True 为分部行
+  ZROWNAME varchar(255), --名称,可能是bug，测试用例的名称
+  ZROWTYPE int , --行类型 0 bug 1 cbug  2 test   3 ctest   4 plan 5 other
+  ZROWLEVE int , --等级  	
+  ZCONTENTID int,  --内容ID,如是bug则是bug的id    
+  ZCLOSE bit , --是否已关闭的了
+  ZTAGNAME varchar(100), --标签
+)
+
+set @myc = 1
+
+-------------------------------------指派给我的bug(0)-----------------------------------------------------------------------------------------------------------------------------
+set @RowType = 0
+ insert into   temp_usr_daywork
+  (ZROWPART,  ZROWNAME,  ZROWTYPE)
+  values  ( 1,  '指派给我的BUG',  @RowType)
+set @myc = @myc+1
+set @myid = 0
+declare my_cursor cursor
+for 
+select top 10  ZTITLE,ZID,ZTAGNAME  from TB_BUG_ITEM 
+where ( ZSTATUS<>1) and ZASSIGNEDTO=@USERID order by ZOPENEDDATE desc , ZTERM
+
+open my_cursor
+fetch next from my_cursor into  @RowName,@RowContentID,@RowTagName
+
+while( @@fetch_status = 0)
+begin
+  set @myid = @myid+1
+   insert into   temp_usr_daywork
+  (ZROWID,ZROWPART,  ZROWNAME,  ZROWTYPE,   ZROWLEVE, ZCONTENTID,ZCLOSE,ZTAGNAME)
+  values  ( @myid,  0,   @RowName,  @RowType,@myc,@RowContentID,0,ltrim(rtrim(@RowTagName)))
+  set @myc =  @myc+1
+
+  fetch next from my_cursor into @RowName,@RowContentID,@RowTagName
+end
+
+
+if @myid = 0 
+  delete  from temp_usr_daywork where  ZROWTYPE=@RowType
+
+close   my_cursor  
+deallocate my_cursor
+
+---------------------------------由我创建的bug(1)----------------------------------------------------------------
+set @RowType = 1
+ insert into   temp_usr_daywork
+  (ZROWPART,  ZROWNAME,  ZROWTYPE)
+  values  ( 1,  '由我创建的BUG',  @RowType)
+set @myc = @myc+1
+set @myid = 0
+
+declare my_cursor cursor
+for 
+select top 10  ZTITLE,ZID,ZSTATUS,ZTAGNAME  from TB_BUG_ITEM 
+where  ZOPENEDBY=@USERID order by ZOPENEDDATE desc , ZTERM
+
+open my_cursor
+fetch next from my_cursor into  @RowName,@RowContentID,@RowState,@RowTagName
+
+while( @@fetch_status = 0)
+begin
+  set @myid = @myid+1
+  print @RowState 
+  if @RowState = 1 
+     set @RowClose = 1
+  else
+    set  @RowClose = 0
+  insert into   temp_usr_daywork
+  (ZROWID,ZROWPART,  ZROWNAME,  ZROWTYPE,   ZROWLEVE, ZCONTENTID,ZCLOSE,ZTAGNAME)
+  values  ( @myid,  0,   @RowName,  @RowType,@myc,@RowContentID,@RowClose,ltrim(rtrim(@RowTagName)))
+  set @myc =  @myc+1
+
+  fetch next from my_cursor into @RowName,@RowContentID,@RowState,@RowTagName
+end
+
+if @myid = 0 
+  delete  from temp_usr_daywork where  ZROWTYPE=@RowType
+
+close   my_cursor  
+deallocate my_cursor
+
+
+--------------------------------------------我要测试的用例test(2)-------------------------------------------------------------------------------------------------------------------------------------
+set @RowType = 2
+ insert into   temp_usr_daywork
+  (ZROWPART,  ZROWNAME,  ZROWTYPE)
+  values  ( 1,  '要我测试的用例',  @RowType)
+set @myc = @myc+1
+set @myid = 0
+declare my_cursor cursor
+for 
+select top 10  ZNAME,ZID,ZTAGNAME  from TB_TEST_ITEM 
+where ( ZSTATUS<>3) and ZASSIGNEDTO=@USERID order by ZOPENEDDATE desc
+
+open my_cursor
+fetch next from my_cursor into  @RowName,@RowContentID,@RowTagName
+
+while( @@fetch_status = 0)
+begin
+ set @myid = @myid + 1
+  insert into   temp_usr_daywork
+  (ZROWID,ZROWPART,  ZROWNAME,  ZROWTYPE,   ZROWLEVE, ZCONTENTID,ZTAGNAME)
+  values  ( @myid,  0,   @RowName,  @RowType,@myc,@RowContentID,ltrim(rtrim(@RowTagName)))
+  set @myc = @myc+1
+  
+  fetch next from my_cursor into @RowName,@RowContentID,@RowTagName
+end
+
+if @myid = 0 
+  delete  from temp_usr_daywork where  ZROWTYPE=@RowType
+
+close   my_cursor  
+deallocate my_cursor
+
+
+--------------------------------------------我创建测试的用例(3)------------------------------------------------------------------------------------------------------------------------------------
+set @RowType = 3
+ insert into   temp_usr_daywork
+  (ZROWPART,  ZROWNAME,  ZROWTYPE)
+  values  ( 1,  '由我创建测试用例',  @RowType)
+set @myc = @myc+1
+set @myid = 0
+declare my_cursor cursor
+for 
+select top 10  ZNAME,ZID,ZSTATUS,ZTAGNAME  from TB_TEST_ITEM 
+where ( ZSTATUS<>3) and ZOPENEDBY=@USERID order by ZOPENEDDATE desc
+
+open my_cursor
+fetch next from my_cursor into  @RowName,@RowContentID,@RowState,@RowTagName
+
+while( @@fetch_status = 0)
+begin
+  set @myid = @myid + 1
+  if @RowState = 3 --3为关闭
+    set @RowClose = 1
+  else
+    set @RowClose = 0
+	
+  insert into   temp_usr_daywork
+  (ZROWID,ZROWPART,  ZROWNAME,  ZROWTYPE,   ZROWLEVE, ZCONTENTID,ZCLOSE,ZTAGNAME)
+  values  ( @myid,  0,   @RowName,  @RowType,@myc,@RowContentID,@RowClose,ltrim(rtrim(@RowTagName)))
+  set @myc = @myc+1
+  
+  fetch next from my_cursor into @RowName,@RowContentID,@RowState,@RowTagName
+end
+
+if @myid = 0 
+  delete  from temp_usr_daywork where  ZROWTYPE=@RowType
+
+close   my_cursor  
+deallocate my_cursor
+
+
+--------------------------plan------------------------------------------------------------------------------------------------------------------------------------------------
+set @RowType = 4
+ insert into   temp_usr_daywork
+  (ZROWPART,  ZROWNAME,  ZROWTYPE)
+  values  ( 1,  '要我完成的任务',  @RowType)
+set @myc = @myc+1
+set @myid = 0
+declare my_cursor cursor
+for 
+select top 10 a.ZNAME + '(' + b.ZNAME + ')'  as subName ,a.ZID  from TB_PLAN_DETAIL as a , TB_PLAN_ITEM as b 
+where ( a.ZSTATUS=0) and ZDEVE=@USERID and a.ZITEM_GUID=b.ZGUID
+
+open my_cursor
+fetch next from my_cursor into  @RowName,@RowContentID
+
+while( @@fetch_status = 0)
+begin
+  set @myid = @myid + 1  
+  insert into   temp_usr_daywork
+  (ZROWID,ZROWPART,  ZROWNAME,  ZROWTYPE,   ZROWLEVE, ZCONTENTID)
+  values  ( @myid,  0,   @RowName,  @RowType,@myc,@RowContentID)
+  set @myc = @myc+1
+  
+
+  fetch next from my_cursor into @RowName,@RowContentID
+end
+
+if @myid = 0 
+  delete  from temp_usr_daywork where  ZROWTYPE=@RowType
+
+close   my_cursor  
+deallocate my_cursor
+
+-----------------------------other-------------------------------------------------------------
+
+select * from temp_usr_daywork
+GO

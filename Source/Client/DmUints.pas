@@ -40,7 +40,7 @@ var
   mycds : TClientDataSet;
   myField : TFieldDef;
 const
-  glSQL  ='select ZID,ZNAME,ZEMAIL,ZCHECKTASK from TB_USER_ITEM where ZSTOP=0 ';
+  glSQL  ='select ZID,ZNAME,ZEMAIL,ZCHECKTASK,ZTYPE from TB_USER_ITEM where ZSTOP=0 ';
   glSQL2 = 'select ZID,ZNAME from TB_BUG_PARAMS where ZTYPE=%d';
   glSQL3 = 'select ZNAME,ZCOLOR,ZID from TB_TAG order by ZID desc ';
 

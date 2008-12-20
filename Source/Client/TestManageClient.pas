@@ -209,6 +209,7 @@ type
     fTestPageRec : TTestPageRec;
     fHighQueryDlg : TTestHighQueryDlg;
     procedure Mailto(AEmailto:String); //发送到邮箱
+    procedure WMShowTestItem(var msg:TMessage); message gcMSG_GetTestItem; //直接显示测试用
   public
     { Public declarations }
     procedure LoadTestItem(APageIndex: integer; Awhere: String);
@@ -1345,6 +1346,23 @@ begin
       HideProgress;
     end;
   end;
+end;
+
+procedure TTestManageChildfrm.WMShowTestItem(var msg: TMessage);
+var
+  myPageIndex : Integer;
+begin
+  fTestPageRec.fwhere := Format('ZID=%d',[msg.WParam]);
+  fTestPageRec.fPageindex := 1;
+  myPageIndex := 1;
+  fTestPageRec.fCount := 1;
+  LoadTestItem(myPageindex,fTestPageRec.fwhere);
+  lblPage.Caption := format('%d/%d',[
+    1,1]);
+
+  if pgcTestMain.ActivePageIndex=0 then
+    pgcTestMain.ActivePageIndex := 1;
+  LoadTestResult(msg.WParam);
 end;
 
 end.
