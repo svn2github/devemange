@@ -677,7 +677,7 @@ GO
 
 /******************************************************************************
 创建: 2008-12-20  作者:龙仕云
-目的: 工作台, 统计人员目前的工作任务内容
+目的: 工作台, 
 修改：
 编号   时间         修改人             修改内容
 
@@ -715,7 +715,7 @@ create table temp_usr_daywork
   ZROWID int,      --序号
   ZROWPART bit , --=True 为分部行
   ZROWNAME varchar(255), --名称,可能是bug，测试用例的名称
-  ZROWTYPE int , --行类型 0 bug 1 cbug  2 test   3 ctest   4 plan 5 other
+  ZROWTYPE int , --行类型 0 bug 1 cbug  2 test   3 ctest   4 plan  5 Release 6 CRelease 7 other
   ZROWLEVE int , --等级  	
   ZCONTENTID int,  --内容ID,如是bug则是bug的id    
   ZCLOSE bit , --是否已关闭的了
@@ -839,7 +839,7 @@ set @myid = 0
 declare my_cursor cursor
 for 
 select top 10  ZNAME,ZID,ZSTATUS,ZTAGNAME  from TB_TEST_ITEM 
-where ( ZSTATUS<>3) and ZOPENEDBY=@USERID order by ZOPENEDDATE desc
+where  ZOPENEDBY=@USERID order by ZOPENEDDATE desc
 
 open my_cursor
 fetch next from my_cursor into  @RowName,@RowContentID,@RowState,@RowTagName
@@ -867,7 +867,7 @@ close   my_cursor
 deallocate my_cursor
 
 
---------------------------plan------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------plan(4)------------------------------------------------------------------------------------------------------------------------------------------------
 set @RowType = 4
  insert into   temp_usr_daywork
   (ZROWPART,  ZROWNAME,  ZROWTYPE)
@@ -900,7 +900,169 @@ if @myid = 0
 close   my_cursor  
 deallocate my_cursor
 
+
+---------------------------------Release(5)-------------------------------------------------
+set @RowType = 5
+ insert into   temp_usr_daywork
+  (ZROWPART,  ZROWNAME,  ZROWTYPE)
+  values  ( 1,  '要我上传的项目',  @RowType)
+set @myc = @myc+1
+set @myid = 0
+declare my_cursor cursor
+for 
+select top 5  ZNAME,ZID  from TB_RELEASE_ITEM 
+where ( ZSTATUS<>1) and ZASSIGNEDTO=@USERID order by ZOPENDATE desc
+
+open my_cursor
+fetch next from my_cursor into  @RowName,@RowContentID
+
+while( @@fetch_status = 0)
+begin
+ set @myid = @myid + 1
+  insert into   temp_usr_daywork
+  (ZROWID,ZROWPART,  ZROWNAME,  ZROWTYPE,   ZROWLEVE, ZCONTENTID)
+  values  ( @myid,  0,   @RowName,  @RowType,@myc,@RowContentID)
+  set @myc = @myc+1
+  
+  fetch next from my_cursor into @RowName,@RowContentID
+end
+
+if @myid = 0 
+  delete  from temp_usr_daywork where  ZROWTYPE=@RowType
+
+close   my_cursor  
+deallocate my_cursor
+
+-------------------------------Creaet Release (6)---------------------------------------------------------------
+set @RowType = 6
+ insert into   temp_usr_daywork
+  (ZROWPART,  ZROWNAME,  ZROWTYPE)
+  values  ( 1,  '由我发布项目',  @RowType)
+set @myc = @myc+1
+set @myid = 0
+declare my_cursor cursor
+for 
+select top 5  ZNAME,ZID,ZSTATUS  from TB_RELEASE_ITEM 
+where  ZOPENEDBY=@USERID order by ZOPENDATE desc
+
+open my_cursor
+fetch next from my_cursor into  @RowName,@RowContentID,@RowState
+
+while( @@fetch_status = 0)
+begin
+  set @myid = @myid + 1
+  if @RowState = 1 --1为关闭
+    set @RowClose = 1
+  else
+    set @RowClose = 0
+	
+  insert into   temp_usr_daywork
+  (ZROWID,ZROWPART,  ZROWNAME,  ZROWTYPE,   ZROWLEVE, ZCONTENTID,ZCLOSE)
+  values  ( @myid,  0,   @RowName,  @RowType,@myc,@RowContentID,@RowClose)
+  set @myc = @myc+1
+  
+  fetch next from my_cursor into @RowName,@RowContentID,@RowState
+end
+
+if @myid = 0 
+  delete  from temp_usr_daywork where  ZROWTYPE=@RowType
+
+close   my_cursor  
+deallocate my_cursor
+
+
 -----------------------------other-------------------------------------------------------------
 
 select * from temp_usr_daywork
+GO
+
+
+
+/*发布管理器的发布邮件*/
+/*
+创建: 2008-12-20  mrlong
+目的: 取出发布管理的邮件内容
+修改：
+编号   时间         修改人             修改内容
+*/
+
+CREATE   PROCEDURE pt_MaintoByRelease
+@ReleaseID int, --TestID号
+@mailtitle varchar(200) output, --返回的标题
+@mailtext varchar(4000) output --返回的内容
+as
+declare @Title varchar(200)
+declare @ProName varchar(200) --项目名称
+declare @Auathor varchar(20)  
+declare @ReleaseContext varchar(2000) --内容
+declare @Status int --状态 0 创建  1 关闭
+declare @UrlType int --发布方式 0 网站 , 1 FTP 2 传给他人
+declare @Url varchar(200) --发布到哪了
+declare @UrlTypeName varchar(30)
+
+begin
+
+
+--取出标题及作者
+declare my_cursor cursor 
+for
+select a.ZNAME,b.ZNAME,a.ZSTATUS,a.ZPROCONTENT,a.ZURLTYPE,a.ZURL
+ from TB_RELEASE_ITEM as a, TB_USER_ITEM as b where a.ZID=@ReleaseID and
+a.ZOPENEDBY=b.ZID
+
+open my_cursor
+fetch next from my_cursor into @Title,@Auathor,@Status,@ReleaseContext,@UrlType,@Url
+close   my_cursor  
+deallocate my_cursor
+
+--取出项目名称
+declare my_cursor cursor 
+for
+select b.ZNAME from TB_RELEASE_ITEM as a, TB_PRO_ITEM as b where a.ZID=@ReleaseID and
+a.ZPRO_ID=b.ZID
+
+open my_cursor
+fetch next from my_cursor into @ProName
+close   my_cursor  
+deallocate my_cursor
+
+--发布方向
+if @UrlType = 0
+   set @UrlTypeName = '公司网站'
+if @UrlType = 1 
+   set @UrlTypeName = '公司FTP'
+if @UrlType = 2 
+   set @UrlTypeName = '传给他人' 
+
+--内容
+if @Status =0
+begin
+ set @ReleaseContext  = '内容已修改完毕，已提交到发布管理，等待发布。'  + char(13)+char(10)  +
+   '发布方向：' +  @UrlTypeName + char(13) + char(10) + 
+   '发布路径：' +  @Url + char(13) + char(10) + 
+   '-------------------------------------------------------------------------------------------------' + char(13) + char(10) 
+   +@ReleaseContext
+end
+
+if @Status =1
+begin
+ set @ReleaseContext  = '项目已布' +  char(13)+char(10)+
+   '发布方向：' +  @UrlTypeName + char(13) + char(10) + 
+   '发布路径：' +  @Url + char(13) + char(10) + 
+    '-------------------------------------------------------------------------------------------------' + char(13) + char(10) 
+  + @ReleaseContext
+end
+
+
+
+--格式
+set @mailtitle = '(发布管理) ' + @Title
+set @mailtext  = @ProName + char(13) +char(10)+
+'-------------------------------------------------------------------------------------------' + char(13) + char(10)+
+@ReleaseContext + char(13) +char(10)+char(13)+char(10) +
+'此邮件由开发管理系统发出，请勿直接回复！' +
+'创建人:' +  @Auathor 
+
+
+end
 GO

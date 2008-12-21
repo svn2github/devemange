@@ -88,6 +88,9 @@ type
     actMod_Dayworktable: TAction;
     btnMod_Dayworktable: TToolButton;
     N17: TMenuItem;
+    actMod_Release: TAction;
+    btnMod_Release: TToolButton;
+    N18: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure actmod_FilesExecute(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -116,6 +119,7 @@ type
     procedure actMod_PLANExecute(Sender: TObject);
     procedure actMod_AntExecute(Sender: TObject);
     procedure actMod_DayworktableExecute(Sender: TObject);
+    procedure actMod_ReleaseExecute(Sender: TObject);
   private
     fChildform : TList; //所有子窗口的对象
     fCurrentChildform : TBaseChildDlg;
@@ -128,6 +132,7 @@ type
     procedure WMTickCount (var Msg: TMessage); message gcMSG_TickCount;
     procedure WMShowBugItem(var msg:TMessage); message gcMSG_GetBugItem;
     procedure WMShowTestItem(var msg:TMessage); message gcMSG_GetTestItem;
+    procedure WMShowReleaseItem(var msg:TMessage);message gcMSG_GetReleaseItem;
 
   public
     property CurrentChildform : TBaseChildDlg read fCurrentChildform;
@@ -158,6 +163,7 @@ uses
   PlanManageClientfrm,     {项目计划}
   AntManageClientfrm,      {自动构建}
   DayWorktableManageClientfrm, {我的工作台}
+  ReleaseManageClientfrm,  {发布管理}
   WebClientfrm
 
   , SetSysParamsfrm;
@@ -679,6 +685,36 @@ begin
   if Assigned(myBaseform) then
   begin
     SendMessage(myBaseform.Handle,gcMSG_GetTestItem,msg.WParam,msg.LParam);
+  end;
+
+end;
+
+procedure TMainDlg.actMod_ReleaseExecute(Sender: TObject);
+begin
+  DoChangeClient(TReleaseManageClientDlg);
+end;
+
+procedure TMainDlg.WMShowReleaseItem(var msg: TMessage);
+var
+  myBaseform,myform : TBaseChildDlg;
+  i : Integer;
+begin
+  DoChangeClient(TReleaseManageClientDlg);
+
+  myBaseform := nil;
+  for i:=0 to fChildform.Count -1 do
+  begin
+    myform := fChildform.items[i];
+    if myform is TReleaseManageClientDlg then
+    begin
+      myBaseform :=fChildform.items[i];
+      break;
+    end;
+  end;
+
+  if Assigned(myBaseform) then
+  begin
+    SendMessage(myBaseform.Handle,gcMSG_GetReleaseItem,msg.WParam,msg.LParam);
   end;
 
 end;

@@ -2342,25 +2342,42 @@ end;
 procedure TBugManageDlg.WMShowBugItem(var msg: TMessage);
 var
   myPageIndex : Integer;
+  mywherestr : string;
+  myindex : integer;
+  mycount : integer;
+  myType : TPageType;
 begin
   //
-  fPageType.fType := ptMe;
-  fPageType.fWhereStr := Format('ZID=%d',[msg.WParam]);
-  fPageType.fIndex := 1;
-  fPageType.fName := '高级查询';
-  myPageIndex := 1;
-  fPageType.fIndexCount := GetBugItemPageCount(myPageindex,fPageType.fWhereStr);
-  LoadBugItem(myPageindex,fPageType.fWhereStr);
-  lbPageCount.Caption := format('%d/%d',[
-    fPageType.fIndex,
-    fPageType.fIndexCount]);
-    lbProjectName.Caption := format('%s  =>第%d共%d页',[
-  fPageType.fName,fPageType.fIndex,fPageType.fIndexCount]);
+  mywherestr := fPageType.fWhereStr;
+  myType := fPageType.fType;
+  myindex := fpageType.fIndex;
+  mycount := fpageType.fIndexCount;
+  try
+
+    fPageType.fType := ptQuery;
+    fPageType.fWhereStr := Format('ZID=%d',[msg.WParam]);
+    fPageType.fIndex := 1;
+    fPageType.fName := '高级查询';
+    myPageIndex := 1;
+    fPageType.fIndexCount := GetBugItemPageCount(myPageindex,fPageType.fWhereStr);
+    LoadBugItem(myPageindex,fPageType.fWhereStr);
+    lbPageCount.Caption := format('%d/%d',[
+      fPageType.fIndex,
+      fPageType.fIndexCount]);
+      lbProjectName.Caption := format('%s  =>第%d共%d页',[
+    fPageType.fName,fPageType.fIndex,fPageType.fIndexCount]);
 
 
-  if pcBug.ActivePageIndex=0 then
-    pcBug.ActivePageIndex := 1;
-  LoadBugHistory(msg.WParam);
+    if pcBug.ActivePageIndex=0 then
+      pcBug.ActivePageIndex := 1;
+    LoadBugHistory(msg.WParam);
+
+  finally
+    fPageType.fWhereStr := mywherestr;
+    fPageType.fType := myType;
+    fpageType.fIndex := myindex;
+    fpageType.fIndexCount := mycount;
+  end;
 end;
 
 

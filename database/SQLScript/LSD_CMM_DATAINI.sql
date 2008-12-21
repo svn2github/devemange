@@ -92,6 +92,19 @@ insert into TB_PLAN_PARAMS (ZTYPE,ZID,ZNAME) values(0,1,'完成');
 insert into TB_PLAN_PARAMS (ZTYPE,ZID,ZNAME) values(0,2,'延期');
 insert into TB_PLAN_PARAMS (ZTYPE,ZID,ZNAME) values(0,3,'关闭');
 
+/*发布管理参数*/
+insert into TB_RELEASE_PARAMS (ZTYPE,ZID,ZNAME) values(0,0,'马上');
+insert into TB_RELEASE_PARAMS (ZTYPE,ZID,ZNAME) values(0,1,'今天');
+insert into TB_RELEASE_PARAMS (ZTYPE,ZID,ZNAME) values(0,2,'明天');
+insert into TB_RELEASE_PARAMS (ZTYPE,ZID,ZNAME) values(0,3,'后天');
+insert into TB_RELEASE_PARAMS (ZTYPE,ZID,ZNAME) values(0,4,'有空就上传');
+insert into TB_RELEASE_PARAMS (ZTYPE,ZID,ZNAME) values(1,0,'公司网站');
+insert into TB_RELEASE_PARAMS (ZTYPE,ZID,ZNAME) values(1,1,'公司FTP');
+insert into TB_RELEASE_PARAMS (ZTYPE,ZID,ZNAME) values(1,2,'传给他人');
+insert into TB_RELEASE_PARAMS (ZTYPE,ZID,ZNAME) values(2,0,'新建');
+insert into TB_RELEASE_PARAMS (ZTYPE,ZID,ZNAME) values(2,1,'已上传');
+
+
 
 
 GO

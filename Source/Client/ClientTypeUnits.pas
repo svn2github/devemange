@@ -9,7 +9,7 @@ type
   // 权限管理的内容
   //
   TModuleType = (mtFile=100,mtBug=200,mtProject=300,mtUser=400,mtDoc=500,
-    mtTest=600,mtPlan=700,mtAnt=800,mtdayworktable=900);
+    mtTest=600,mtPlan=700,mtAnt=800,mtdayworktable=900,mtRelease=1000);
   //文件的子模块
   TFileSubModuleStype = (fsmDir=1,fsmfile=2);
   //BUG项目管理
@@ -36,6 +36,9 @@ type
   //任务单的状态
   //待分发=0 ; 执行中=1 ; 撤消=2; 完成=3 ; 关闭=4;激活=5
   TTaskStatus = (tsRelass,tsing,tsUndo,tsSccuess,tsClose,tsAction);
+
+  //发布管理状态
+  TReleaseStatus = (rsCreate,rsClose);
 
   TStatusBarPanel=(sbpHint,sbpPart,spbObjID,spbComplier);
 
@@ -122,6 +125,7 @@ const
   gcMSG_TickCount = $0400{WM_USER} +1;  //发送到mainfrm显示
   gcMSG_GetBugItem = $0400{WM_USER} +2; //发送到bug,显示内容
   gcMSG_GetTestItem = $0400 + 3;        //发送到test ,显示内容
+  gcMSG_GetReleaseItem = $0400+4;       //同上  
   gcLogDir = 'Log'; //日志目录
   gcTagNewName = '新标签...';
 

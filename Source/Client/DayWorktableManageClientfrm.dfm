@@ -32,8 +32,8 @@ inherited DayWorktableManageClientDlg: TDayWorktableManageClientDlg
     BevelOuter = bvNone
     TabOrder = 1
     object lblName: TLabel
-      Left = 547
-      Top = 11
+      Left = 732
+      Top = 12
       Width = 56
       Height = 15
       Caption = 'lblName'
@@ -81,6 +81,15 @@ inherited DayWorktableManageClientDlg: TDayWorktableManageClientDlg
       Action = act_hiswork
       Caption = #20182#20154#24037#20316#21488
       TabOrder = 3
+    end
+    object dbnvgr1: TDBNavigator
+      Left = 489
+      Top = 8
+      Width = 224
+      Height = 25
+      DataSource = dswork
+      VisibleButtons = [nbFirst, nbPrior, nbNext, nbLast]
+      TabOrder = 4
     end
   end
   object dbgrdwork: TDBGrid

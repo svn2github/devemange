@@ -1,3 +1,15 @@
+////////////////////////////////////////////////////////////////////////////////
+//
+// 项目:
+// 模块: 工作台
+// 作者: 龙仕云 创建时间: 2008-12-20
+//
+//
+// 修改:       
+//
+//
+//
+////////////////////////////////////////////////////////////////////////////////
 unit DayWorktableManageClientfrm;
 
 interface
@@ -9,7 +21,9 @@ uses
 
 type
 
-  TRowType = (rtBug,rtCreateBug,rtTest,rtCreateTest,rtPlan,rtOther);
+  TRowType = (rtBug,rtCreateBug,rtTest,rtCreateTest,rtPlan,
+    rtRelease,rtCreateRelease,
+    rtOther);
   TWorkColumn=(wcNo,wcTitle,wcLeve,wcID);
 
   TDayWorktableManageClientDlg = class(TBaseChildDlg)
@@ -30,6 +44,7 @@ type
     btnmework1: TBitBtn;
     act_hiswork: TAction;
     lblName: TLabel;
+    dbnvgr1: TDBNavigator;
     procedure act_meworkExecute(Sender: TObject);
     procedure dbgrdworkDrawColumnCell(Sender: TObject; const Rect: TRect;
       DataCol: Integer; Column: TColumn; State: TGridDrawState);
@@ -97,6 +112,11 @@ begin
       begin
         myBrushColor := clNavy;
         myFontColor := clwhite;
+      end;
+    Ord(rtRelease),Ord(rtCreateRelease):
+      begin
+        myBrushColor := clOlive;
+        myFontColor  := clBlack;
       end;
     Ord(rtOther):
       begin
@@ -182,7 +202,7 @@ procedure TDayWorktableManageClientDlg.act_gotoUpdate(Sender: TObject);
 begin
   (Sender as TAction).Enabled := cdswork.Active
   and (cdswork.FieldByName('ZROWTYPE').AsInteger in [Ord(rtBug),Ord(rtCreateBug),
-    Ord(rtTest),Ord(rtCreateTest)])
+    Ord(rtTest),Ord(rtCreateTest),Ord(rtRelease),Ord(rtCreateRelease)])
   and (not cdswork.FieldByName('ZROWPART').AsBoolean);
 end;
 
@@ -195,6 +215,10 @@ begin
   else if cdswork.FieldByName('ZROWTYPE').AsInteger in [Ord(rtTest),
     Ord(rtCreatetest)] then
     SendMessage(Application.MainForm.Handle,gcMSG_GetTestItem,
+      cdswork.FieldByName('ZCONTENTID').AsInteger,0)
+  else if cdswork.FieldByName('ZROWTYPE').AsInteger in [Ord(rtRelease),
+    Ord(rtCreateRelease)] then
+    SendMessage(Application.MainForm.Handle,gcMSG_GetReleaseItem,
       cdswork.FieldByName('ZCONTENTID').AsInteger,0)
 
 end;

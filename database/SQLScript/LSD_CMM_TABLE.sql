@@ -19,6 +19,7 @@
 *       6.增加测试功能模块. 作者:龙仕云 2008-9-5
 *       7.增加测试功能模块的关闭等级 作者:龙仕云龙 2008-11-29
 *       8.增加问题管理内的期限 作者:龙仕云 2008-12-20
+*       9.增加发布管理功能 作者：龙仕云 20080-12-20
 *
 ******************************************************************************/
 
@@ -622,6 +623,49 @@ create table TB_TAG(
 )
 go
 
+
+/*发布管理*/
+if exists (select * from dbo.sysobjects
+  where id = object_id(N'[dbo].[TB_RELEASE_ITEM]')
+  and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+drop table [dbo].[TB_RELEASE_ITEM]
+go
+
+create table TB_RELEASE_ITEM(
+	ZID          int not null,            --ID做为主键
+	ZNAME        varchar(200),            --名称
+	ZVERSION     varchar(30),             --版本号  
+	ZPRO_ID      int ,                    --对应于哪个项目
+	ZASSIGNEDTO  int ,                    --指派给谁发布
+	ZRELEASEDATE datetime not null,       --发布时间
+	ZOPENEDBY    int ,                    --创建人
+	ZOPENDATE    datetime not null,       --创建时间
+	ZNEEDTERM    int,                     --要求发布的期限(0), 马上0 今天1, 明天2，后天3,有空就上传4。
+	ZURLTYPE     int not null,            --发布路径(1), 0 网站 , 1 FTP 2 传给他人    
+	ZURL         varchar(200),            --发布的保存路径
+	ZPRODUCTURL  varchar(200),            --产品池路径
+	ZPROCONTENT  text,                    --产品内容。
+	ZMAILTO      varchar(200),            --邮件通知
+	ZSTATUS      int not null,            --状态(2) , 0 创建 1 发布并上传。  
+	constraint PK_TB_RELEASE_ITEM primary key(ZID)  
+)
+go
+
+
+/*发布管理参数表*/
+if exists (select * from dbo.sysobjects
+  where id = object_id(N'[dbo].[TB_RELEASE_PARAMS]')
+  and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+drop table [dbo].[TB_RELEASE_PARAMS]
+go
+
+create table TB_RELEASE_PARAMS(
+	ZTYPE 	     int not null,                                   /*类型*/
+	ZID          int not null,                                   /*ID值*/
+	ZNAME        varchar(200)                                    /*值*/
+	constraint PK_TB_RELEASE_PARAMS primary key(ZTYPE,ZID)  
+)
+go
 
 
 

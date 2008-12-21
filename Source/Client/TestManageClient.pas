@@ -1351,18 +1351,33 @@ end;
 procedure TTestManageChildfrm.WMShowTestItem(var msg: TMessage);
 var
   myPageIndex : Integer;
+  myindex : integer;
+  mywherestr : string;
+  mycount : integer;
 begin
-  fTestPageRec.fwhere := Format('ZID=%d',[msg.WParam]);
-  fTestPageRec.fPageindex := 1;
-  myPageIndex := 1;
-  fTestPageRec.fCount := 1;
-  LoadTestItem(myPageindex,fTestPageRec.fwhere);
-  lblPage.Caption := format('%d/%d',[
-    1,1]);
 
-  if pgcTestMain.ActivePageIndex=0 then
-    pgcTestMain.ActivePageIndex := 1;
-  LoadTestResult(msg.WParam);
+  myindex := fTestpageRec.fPageindex;
+  mycount := fTestpageRec.fCount;
+  mywherestr := fTestpageRec.fwhere;
+
+  try
+    fTestPageRec.fwhere := Format('ZID=%d',[msg.WParam]);
+    fTestPageRec.fPageindex := 1;
+    myPageIndex := 1;
+    fTestPageRec.fCount := 1;
+    LoadTestItem(myPageindex,fTestPageRec.fwhere);
+    lblPage.Caption := format('%d/%d',[
+      1,1]);
+
+    if pgcTestMain.ActivePageIndex=0 then
+      pgcTestMain.ActivePageIndex := 1;
+    LoadTestResult(msg.WParam);
+
+  finally
+    fTestpageRec.fPageindex := myindex;
+    fTestpageRec.fCount := mycount;
+    fTestpageRec.fwhere := mywherestr;
+  end;
 end;
 
 end.

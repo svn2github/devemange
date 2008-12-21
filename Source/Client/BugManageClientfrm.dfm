@@ -711,8 +711,8 @@ inherited BugManageDlg: TBugManageDlg
           object lbBugCaption: TLabel
             Left = 0
             Top = 0
-            Width = 880
-            Height = 18
+            Width = 96
+            Height = 15
             Align = alClient
             Caption = 'lbBugCaption'
             Color = clGray
@@ -780,14 +780,14 @@ inherited BugManageDlg: TBugManageDlg
           object lbl2: TLabel
             Left = 15
             Top = 45
-            Width = 72
+            Width = 75
             Height = 15
             Caption = #38382#39064#26631#39064#65306
           end
           object lbl3: TLabel
             Left = 18
             Top = 15
-            Width = 69
+            Width = 77
             Height = 15
             Caption = #39033'    '#30446#65306
           end
@@ -801,14 +801,14 @@ inherited BugManageDlg: TBugManageDlg
           object lbl5: TLabel
             Left = 248
             Top = 73
-            Width = 70
+            Width = 75
             Height = 15
             Caption = #38382#39064#31561#32423#65306
           end
           object lbl6: TLabel
             Left = 473
             Top = 73
-            Width = 73
+            Width = 75
             Height = 15
             Caption = #38382#39064#31867#22411#65306
           end
@@ -829,7 +829,7 @@ inherited BugManageDlg: TBugManageDlg
           object lbl9: TLabel
             Left = 247
             Top = 101
-            Width = 72
+            Width = 75
             Height = 15
             Caption = #25351#27966#26102#38388#65306
           end
@@ -843,7 +843,7 @@ inherited BugManageDlg: TBugManageDlg
           object lbl11: TLabel
             Left = 210
             Top = 156
-            Width = 40
+            Width = 45
             Height = 15
             Caption = #26041#26696#65306
           end
@@ -871,7 +871,7 @@ inherited BugManageDlg: TBugManageDlg
           object lbl15: TLabel
             Left = 475
             Top = 101
-            Width = 69
+            Width = 75
             Height = 15
             Caption = #35201#27714#26399#38480#65306
           end

@@ -21,7 +21,8 @@ uses
   PlanManageClientfrm in 'PlanManageClientfrm.pas' {PlanManageClientDlg},
   AntManageClientfrm in 'AntManageClientfrm.pas' {AntManageClientDlg},
   TestHighQueryfrm in 'TestHighQueryfrm.pas' {TestHighQueryDlg},
-  DayWorktableManageClientfrm in 'DayWorktableManageClientfrm.pas' {DayWorktableManageClientDlg};
+  DayWorktableManageClientfrm in 'DayWorktableManageClientfrm.pas' {DayWorktableManageClientDlg},
+  ReleaseManageClientfrm in 'ReleaseManageClientfrm.pas' {ReleaseManageClientDlg};
 
 {$R *.res}
 {$R resource.res}
