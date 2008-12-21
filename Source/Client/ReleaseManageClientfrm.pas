@@ -106,6 +106,11 @@ type
     dbedtZVERSION: TDBEdit;
     act_PageRefresh: TAction;
     btnPageRefresh: TBitBtn;
+    lbl15: TLabel;
+    dbedtZRELEASERNAME: TDBEdit;
+    lbl16: TLabel;
+    dblkcbbZBACKUPNAME: TDBLookupComboBox;
+    cdsBoolean: TClientDataSet;
     procedure cdsReleaseNewRecord(DataSet: TDataSet);
     procedure cdsReleaseBeforePost(DataSet: TDataSet);
     procedure act_AddReleaseExecute(Sender: TObject);
@@ -217,6 +222,7 @@ begin
   cdsUrlType.Data := ClientSystem.fDbOpr.ReadDataSet(PChar(Format(gl_SQLTXT,[1])));
   cdsProject.Data := ClientSystem.fDbOpr.ReadDataSet(PChar(gl_SQLTXT3));
   cdsUser.CloneCursor(DM.cdsUser,True);
+  cdsBoolean.Data :=  ClientSystem.fDbOpr.ReadDataSet(PChar(Format(gl_SQLTXT,[3])));
 
   //创建表结构
   mycds := TClientDataSet.Create(nil);
@@ -245,7 +251,7 @@ begin
       begin
         FieldKind := fkLookup;
         KeyFields := 'ZOPENEDBY';
-        LookupDataSet := DM.cdsUser;
+        LookupDataSet := cdsUser;
         LookupKeyFields := 'ZID';
         LookupResultField := 'ZNAME';
       end;
@@ -259,7 +265,21 @@ begin
       begin
         FieldKind := fkLookup;
         KeyFields := 'ZASSIGNEDTO';
-        LookupDataSet := DM.cdsUser;
+        LookupDataSet := cdsUser;
+        LookupKeyFields := 'ZID';
+        LookupResultField := 'ZNAME';
+      end;
+
+      //上传人
+      myField := AddFieldDef;
+      myField.Name := 'ZRELEASERNAME';
+      myField.DataType := ftString;
+      myField.Size := 30;
+      with myfield.CreateField(cdsRelease) do
+      begin
+        FieldKind := fkLookup;
+        KeyFields := 'ZRELEASER';
+        LookupDataSet := cdsUser;
         LookupKeyFields := 'ZID';
         LookupResultField := 'ZNAME';
       end;
@@ -306,6 +326,20 @@ begin
         LookupResultField := 'ZNAME';
       end;
 
+      //是否备份
+      myField := AddFieldDef;
+      myField.Name := 'ZBACKUPNAME';
+      myField.DataType := ftString;
+      myField.Size := 5;
+      with myfield.CreateField(cdsRelease) do
+      begin
+        FieldKind := fkLookup;
+        KeyFields := 'ZBACKUP';
+        LookupDataSet := cdsBoolean;
+        LookupKeyFields := 'ZID';
+        LookupResultField := 'ZNAME';
+      end;
+
     end;
     cdsRelease.CreateDataSet;
 
@@ -332,7 +366,7 @@ const
     glSQL = 'exec pt_SplitPage ''TB_RELEASE_ITEM'',' +
           '''ZID,ZNAME,ZVERSION,ZPRO_ID,ZASSIGNEDTO,ZOPENEDBY,ZOPENDATE,ZRELEASEDATE,ZNEEDTERM,' +
           'ZURLTYPE,ZURL,ZPRODUCTURL,ZPROCONTENT,ZMAILTO,'+
-          'ZSTATUS'', ' +
+          'ZSTATUS,ZRELEASER,ZBACKUP'', ' +
           '''%s'',20,%d,%d,1,''%s''';
 begin
 
@@ -394,6 +428,7 @@ begin
   DataSet.FieldByName('ZMAILTO').AsString := Format('%s(%d)',[
     ClientSystem.fEditer,ClientSystem.fEditer_id]);
   DataSet.FieldByName('ZSTATUS').AsInteger := Ord(rsCreate);
+  DataSet.FieldByName('ZBACKUP').AsBoolean := False;
 end;
 
 procedure TReleaseManageClientDlg.cdsReleaseBeforePost(DataSet: TDataSet);
@@ -403,12 +438,12 @@ var
 const
   gl_SQLTXT = 'insert into TB_RELEASE_ITEM (ZID,ZNAME,ZVERSION,ZPRO_ID,ZASSIGNEDTO, ' +
     'ZRELEASEDATE,ZOPENEDBY,ZOPENDATE,ZNEEDTERM,ZURLTYPE,ZURL,ZPRODUCTURL,' +
-    'ZPROCONTENT,ZMAILTO,ZSTATUS) values(%d,''%s'',''%s'',%d,%d,'+
+    'ZPROCONTENT,ZMAILTO,ZSTATUS,ZRELEASER,ZBACKUP) values(%d,''%s'',''%s'',%d,%d,'+
     '''%s'',%d,''%s'',%d,%d,''%s'',''%s'','+
-    '''%s'',''%s'',%d )';
+    '''%s'',''%s'',%d,%d,%d )';
   gl_SQLTXT2 = 'update TB_RELEASE_ITEM set ZNAME=''%s'',ZVERSION=''%s'',ZPRO_ID=%d,ZASSIGNEDTO=%d,' +
     'ZRELEASEDATE=''%s'',ZOPENEDBY=%d,ZOPENDATE=''%s'',ZNEEDTERM=%d,ZURLTYPE=%d,ZURL=''%s'',ZPRODUCTURL=''%s'','+
-    'ZPROCONTENT=''%s'',ZMAILTO=''%s'',ZSTATUS=%d where ZID=%d';
+    'ZPROCONTENT=''%s'',ZMAILTO=''%s'',ZSTATUS=%d,ZRELEASER=%d,ZBACKUP=%d where ZID=%d';
   gl_SQLTXT3 = 'select isNull(max(ZID),0)+1 from TB_RELEASE_ITEM';
 begin
   if fLoading then Exit;
@@ -431,7 +466,9 @@ begin
       DataSet.FieldByName('ZPRODUCTURL').AsString,
       DataSet.FieldByName('ZPROCONTENT').AsString,
       DataSet.FieldByName('ZMAILTO').AsString,
-      DataSet.FieldByName('ZSTATUS').AsInteger]);
+      DataSet.FieldByName('ZSTATUS').AsInteger,
+      DataSet.FieldByName('ZRELEASER').AsInteger,
+      Ord(DataSet.FieldByName('ZBACKUP').AsBoolean)]);
     ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
     DataSet.FieldByName('ZISNEW').AsBoolean := False;
     DataSet.FieldByName('ZID').AsInteger := myMaxid;
@@ -454,6 +491,8 @@ begin
       DataSet.FieldByName('ZPROCONTENT').AsString,
       DataSet.FieldByName('ZMAILTO').AsString,
       DataSet.FieldByName('ZSTATUS').AsInteger,
+      DataSet.FieldByName('ZRELEASER').AsInteger,
+      Ord(DataSet.FieldByName('ZBACKUP').AsBoolean),
       DataSet.FieldByName('ZID').AsInteger]);
     ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
   end;
@@ -540,6 +579,7 @@ begin
     cdsRelease.Edit;
   cdsRelease.FieldByName('ZSTATUS').AsInteger := Ord(rsClose);
   cdsRelease.FieldByName('ZRELEASEDATE').AsDateTime := ClientSystem.fDbOpr.GetSysDateTime;
+  cdsRelease.FieldByName('ZRELEASER').AsInteger := ClientSystem.fEditer_id;
   cdsRelease.Post;
   Mailto(cdsRelease.FieldByName('ZMAILTO').AsString);
 end;

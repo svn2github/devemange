@@ -1,6 +1,6 @@
 inherited ReleaseManageClientDlg: TReleaseManageClientDlg
-  Left = 274
-  Top = 104
+  Left = 162
+  Top = 127
   Caption = #21457#24067#31649#29702
   OldCreateOrder = True
   PixelsPerInch = 96
@@ -212,7 +212,7 @@ inherited ReleaseManageClientDlg: TReleaseManageClientDlg
       end
       object spl1: TSplitter
         Left = 0
-        Top = 223
+        Top = 254
         Width = 854
         Height = 9
         Cursor = crVSplit
@@ -223,7 +223,7 @@ inherited ReleaseManageClientDlg: TReleaseManageClientDlg
         Left = 0
         Top = 17
         Width = 854
-        Height = 206
+        Height = 237
         Align = alTop
         TabOrder = 0
         object lbl1: TLabel
@@ -234,9 +234,9 @@ inherited ReleaseManageClientDlg: TReleaseManageClientDlg
           Caption = #31435#39033#39033#30446#65306
         end
         object lbl2: TLabel
-          Left = 541
-          Top = 65
-          Width = 75
+          Left = 543
+          Top = 63
+          Width = 70
           Height = 15
           Caption = #35201#27714#26399#38480#65306
         end
@@ -324,6 +324,20 @@ inherited ReleaseManageClientDlg: TReleaseManageClientDlg
           Height = 15
           Caption = #29256#26412#21495':'
         end
+        object lbl15: TLabel
+          Left = 25
+          Top = 208
+          Width = 55
+          Height = 15
+          Caption = #19978#20256#20154#65306
+        end
+        object lbl16: TLabel
+          Left = 283
+          Top = 208
+          Width = 68
+          Height = 15
+          Caption = #26159#21542#22791#20221#65306
+        end
         object btnSave: TBitBtn
           Left = 738
           Top = 7
@@ -362,7 +376,7 @@ inherited ReleaseManageClientDlg: TReleaseManageClientDlg
         end
         object dblkcbbZNEEDTERMNAME: TDBLookupComboBox
           Left = 613
-          Top = 62
+          Top = 60
           Width = 112
           Height = 23
           DataField = 'ZNEEDTERMNAME'
@@ -496,10 +510,30 @@ inherited ReleaseManageClientDlg: TReleaseManageClientDlg
           DataSource = dsRelease
           TabOrder = 17
         end
+        object dbedtZRELEASERNAME: TDBEdit
+          Left = 84
+          Top = 204
+          Width = 180
+          Height = 23
+          Color = clSilver
+          DataField = 'ZRELEASERNAME'
+          DataSource = dsRelease
+          ReadOnly = True
+          TabOrder = 18
+        end
+        object dblkcbbZBACKUPNAME: TDBLookupComboBox
+          Left = 354
+          Top = 203
+          Width = 180
+          Height = 23
+          DataField = 'ZBACKUPNAME'
+          DataSource = dsRelease
+          TabOrder = 19
+        end
       end
       object pnlContent: TPanel
         Left = 0
-        Top = 232
+        Top = 263
         Width = 854
         Height = 41
         Align = alTop
@@ -526,9 +560,9 @@ inherited ReleaseManageClientDlg: TReleaseManageClientDlg
       end
       object dbmmoZPROCONTENT: TDBMemo
         Left = 0
-        Top = 273
+        Top = 304
         Width = 854
-        Height = 238
+        Height = 207
         Align = alClient
         DataField = 'ZPROCONTENT'
         DataSource = dsRelease
@@ -675,5 +709,11 @@ inherited ReleaseManageClientDlg: TReleaseManageClientDlg
     DataSet = cdsUser
     Left = 231
     Top = 35
+  end
+  object cdsBoolean: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 266
+    Top = 4
   end
 end

@@ -646,7 +646,9 @@ create table TB_RELEASE_ITEM(
 	ZPRODUCTURL  varchar(200),            --产品池路径
 	ZPROCONTENT  text,                    --产品内容。
 	ZMAILTO      varchar(200),            --邮件通知
-	ZSTATUS      int not null,            --状态(2) , 0 创建 1 发布并上传。  
+	ZSTATUS      int not null,            --状态(2) , 0 创建 1 发布并上传。
+	ZRELEASER    int ,                    --上传人
+	ZBACKUP      bit ,                    --是否要备份文件  
 	constraint PK_TB_RELEASE_ITEM primary key(ZID)  
 )
 go

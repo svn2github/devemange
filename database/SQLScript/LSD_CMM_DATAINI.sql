@@ -103,7 +103,8 @@ insert into TB_RELEASE_PARAMS (ZTYPE,ZID,ZNAME) values(1,1,'公司FTP');
 insert into TB_RELEASE_PARAMS (ZTYPE,ZID,ZNAME) values(1,2,'传给他人');
 insert into TB_RELEASE_PARAMS (ZTYPE,ZID,ZNAME) values(2,0,'新建');
 insert into TB_RELEASE_PARAMS (ZTYPE,ZID,ZNAME) values(2,1,'已上传');
-
+insert into TB_RELEASE_PARAMS (ZTYPE,ZID,ZNAME) values(3,0,'否');
+insert into TB_RELEASE_PARAMS (ZTYPE,ZID,ZNAME) values(3,1,'是');
 
 
 
