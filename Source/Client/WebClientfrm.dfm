@@ -23,7 +23,7 @@ inherited WebClientDlg: TWebClientDlg
       OnClick = btnHomeClick
     end
     object btnBack: TBitBtn
-      Left = 136
+      Left = 123
       Top = 8
       Width = 100
       Height = 25
@@ -33,7 +33,7 @@ inherited WebClientDlg: TWebClientDlg
       OnClick = btnBackClick
     end
     object btnForward: TBitBtn
-      Left = 252
+      Left = 227
       Top = 7
       Width = 100
       Height = 25
@@ -54,7 +54,7 @@ inherited WebClientDlg: TWebClientDlg
       StopFrame = 29
     end
     object btnStop: TBitBtn
-      Left = 364
+      Left = 331
       Top = 7
       Width = 100
       Height = 25
@@ -64,7 +64,7 @@ inherited WebClientDlg: TWebClientDlg
       OnClick = btnStopClick
     end
     object btnRefresh: TBitBtn
-      Left = 480
+      Left = 435
       Top = 7
       Width = 100
       Height = 25

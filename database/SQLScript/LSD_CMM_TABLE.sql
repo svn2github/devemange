@@ -473,6 +473,7 @@ create table TB_TEST_RESULT(
 	ZTRUEVALUE     varchar(100),                             /*期望的输出或是真正结果*/ 
 	ZINFACE        varchar(100),                             /*实际值*/
 	ZPASS          bit not null default 0,                   /*是否通过*/ 
+	ZUSER_ID       int ,                                     /*创建人*/
 	constraint PK_TB_TEST_HISTORY primary key(ZID,ZTEST_ID)   
 )
 go

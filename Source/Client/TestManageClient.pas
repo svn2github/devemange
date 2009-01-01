@@ -5,6 +5,7 @@
 //  创建时间:2008-10-5  作者:龙仕云
 //
 //  修改:
+//    1.增加回复人 2009-1-1 元旦快乐
 //
 //
 //
@@ -93,7 +94,6 @@ type
     btnSave: TBitBtn;
     dblkcbbZPRO_ID: TDBLookupComboBox;
     dblkcbbZPRO_VER: TDBLookupComboBox;
-    lblTitle: TLabel;
     spl1: TSplitter;
     dbctrlgrd1: TDBCtrlGrid;
     Label8: TLabel;
@@ -114,7 +114,6 @@ type
     actResult_Add: TAction;
     actResult_Save: TAction;
     btnResult_Save: TBitBtn;
-    bvl1: TBevel;
     dbtxtZNO: TDBText;
     bvl2: TBevel;
     act_Success: TAction;
@@ -154,6 +153,12 @@ type
     dbedtZCLOSESTATUSNAME: TDBEdit;
     actHighQuery: TAction;
     btnResult_Add1: TBitBtn;
+    dbtxtZUSERNAME: TDBText;
+    cdsUser: TClientDataSet;
+    pnlTitle: TPanel;
+    lblTitle: TLabel;
+    dbtxtZOPENEDBYNAME: TDBText;
+    bvl1: TBevel;
     procedure act_NewExecute(Sender: TObject);
     procedure act_CancelUpdate(Sender: TObject);
     procedure act_CancelExecute(Sender: TObject);
@@ -204,6 +209,8 @@ type
     procedure act_GetBugItemExecute(Sender: TObject);
     procedure act_RefreshDataExecute(Sender: TObject);
     procedure actHighQueryExecute(Sender: TObject);
+    procedure dbctrlgrd1PaintPanel(DBCtrlGrid: TDBCtrlGrid;
+      Index: Integer);
   private
     { Private declarations }
     fTestPageRec : TTestPageRec;
@@ -295,6 +302,7 @@ begin
   cdsmethod.Data   := ClientSystem.fDbOpr.ReadDataSet(PChar(Format(glSQL3,[2])));
   cdsTestSTATUS.Data := ClientSystem.fDbOpr.ReadDataSet(PChar(Format(glSQL3,[3])));
   cdsTestCoseSTATUS.Data := ClientSystem.fDbOpr.ReadDataSet(PChar(Format(glSQL3,[4])));
+  cdsUser.CloneCursor(DM.cdsUser,True);
 
   mycds := TClientDataSet.Create(nil);
   try
@@ -822,6 +830,12 @@ begin
         myField.Name := 'ZNO';   //序号
         myField.DataType := ftInteger;
 
+        //创建人
+        myField := AddFieldDef;
+        myField.Name := 'ZUSERNAME';
+        myField.DataType := ftString;
+        myField.Size := 30;
+
         with cdsResult do
         begin
           for i:=0 to FieldDefs.Count -1 do
@@ -852,15 +866,28 @@ begin
       cdsResult.Append;
       cdsResult.FieldByName('ZISNEW').AsBoolean := False;
       for i:=0 to mycds2.FieldDefs.Count -1 do
-      if mycds2.FieldDefs[i].Name = 'ZID' then
       begin
-        cdsResult.FieldByName('ZMYID').AsInteger :=
-          mycds2.FieldByName(mycds2.FieldDefs[i].Name).AsVariant;
-      end
-      else
-        cdsResult.FieldByName(mycds2.FieldDefs[i].Name).AsVariant :=
-          mycds2.FieldByName(mycds2.FieldDefs[i].Name).AsVariant;
+        if mycds2.FieldDefs[i].Name = 'ZID' then
+        begin
+          cdsResult.FieldByName('ZMYID').AsInteger :=
+            mycds2.FieldByName(mycds2.FieldDefs[i].Name).AsVariant;
+        end
+        else
+          cdsResult.FieldByName(mycds2.FieldDefs[i].Name).AsVariant :=
+            mycds2.FieldByName(mycds2.FieldDefs[i].Name).AsVariant;
+      end;
       cdsResult.FieldByName('ZNO').AsInteger := c ; Inc(c);
+
+      //
+      // 显示提交的人，如没有则是创建人自己的
+      //
+      if (cdsResult.FieldByName('ZUSER_ID').AsInteger <>
+         cdsTestItem.FieldByName('ZOPENEDBY').AsInteger) and
+        cdsUser.Locate('ZID',cdsResult.FieldByName('ZUSER_ID').AsInteger,
+          [loPartialKey]) then
+        cdsResult.FieldByName('ZUSERNAME').AsString := cdsUser.FieldByName('ZNAME').AsString;
+
+
       cdsResult.Post;
       mycds2.Next;
     end;
@@ -878,12 +905,13 @@ procedure TTestManageChildfrm.cdsResultBeforePost(DataSet: TDataSet);
 var
   mySQL : string;
 const
-  glSQL = 'insert TB_TEST_RESULT(ZTEST_ID,ZACTION,ZTRUEVALUE,ZINFACE) values '+
-          '(%d,''%s'',''%s'',''%s'')';
+  glSQL = 'insert TB_TEST_RESULT(ZTEST_ID,ZACTION,ZTRUEVALUE,ZINFACE,ZUSER_ID) values '+
+          '(%d,''%s'',''%s'',''%s'',%d)';
   glSQL2 = 'update TB_TEST_RESULT set ' +
            'ZACTION=''%s'', ' +
            'ZTRUEVALUE=''%s'', ' +
-           'ZINFACE=''%s'' ' +
+           'ZINFACE=''%s'', ' +
+           'ZUSER_ID=%d' +
            'where ZID=%d';
 begin
   //
@@ -894,6 +922,7 @@ begin
       DataSet.FieldByName('ZACTION').AsString,
       DataSet.FieldByName('ZTRUEVALUE').AsString,
       DataSet.FieldByName('ZINFACE').AsString,
+      DataSet.FieldByName('ZUSER_ID').AsInteger,
       DataSet.FieldByName('ZMYID').AsInteger
 
       ]);
@@ -910,7 +939,8 @@ begin
       cdsTestItem.FieldByName('ZID').AsInteger,
       DataSet.FieldByName('ZACTION').AsString,
       DataSet.FieldByName('ZTRUEVALUE').AsString,
-      DataSet.FieldByName('ZINFACE').AsString
+      DataSet.FieldByName('ZINFACE').AsString,
+      DataSet.FieldByName('ZUSER_ID').AsInteger
 
       ]);
 
@@ -927,9 +957,14 @@ begin
 end;
 procedure TTestManageChildfrm.cdsResultNewRecord(DataSet: TDataSet);
 begin
+  if fLoading then Exit;
+
   DataSet.FieldByName('ZISNEW').AsBoolean := True;
   DataSet.FieldByName('ZMYID').AsInteger := -1;
   DataSet.FieldByName('ZNO').AsInteger := -1;
+  DataSet.FieldByName('ZUSER_ID').AsInteger := ClientSystem.fEditer_id;
+  if ClientSystem.fEditer_id <> cdstestItem.FieldByName('ZOPENEDBY').AsInteger then
+    DataSet.FieldByName('ZUSERNAME').AsString := ClientSystem.fEditer;
 end;
 
 procedure TTestManageChildfrm.act_SuccessExecute(Sender: TObject);
@@ -1378,6 +1413,19 @@ begin
     fTestpageRec.fCount := mycount;
     fTestpageRec.fwhere := mywherestr;
   end;
+end;
+
+procedure TTestManageChildfrm.dbctrlgrd1PaintPanel(DBCtrlGrid: TDBCtrlGrid;
+  Index: Integer);
+begin
+  dbtxtZUSERNAME.Visible := cdsResult.FieldByName('ZUSERNAME').AsString <> '';
+  if not dbtxtZUSERNAME.Visible and (Index = DBCtrlGrid.PanelIndex) then
+  begin
+    DBCtrlGrid.Canvas.Brush.Color := DBCtrlGrid.SelectedColor;
+    DBCtrlGrid.Canvas.FillRect(DBCtrlGrid.ClientRect);
+    DBCtrlGrid.Canvas.FrameRect(DBCtrlGrid.ClientRect);
+  end;
+
 end;
 
 end.

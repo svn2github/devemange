@@ -1,8 +1,8 @@
 inherited TestManageChildfrm: TTestManageChildfrm
-  Left = 192
-  Top = 58
-  Width = 958
-  Height = 689
+  Left = 79
+  Top = 128
+  Width = 1139
+  Height = 713
   Caption = #27979#35797#31649#29702
   OldCreateOrder = True
   PixelsPerInch = 96
@@ -10,7 +10,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
   object pnlOnVisible: TPanel
     Left = 0
     Top = 0
-    Width = 950
+    Width = 1131
     Height = 68
     Align = alTop
     TabOrder = 0
@@ -19,8 +19,8 @@ inherited TestManageChildfrm: TTestManageChildfrm
   object pgcTestMain: TPageControl
     Left = 0
     Top = 68
-    Width = 950
-    Height = 587
+    Width = 1131
+    Height = 611
     ActivePage = tsList
     Align = alClient
     TabOrder = 1
@@ -31,8 +31,8 @@ inherited TestManageChildfrm: TTestManageChildfrm
       object dbgrdTest: TDBGrid
         Left = 0
         Top = 40
-        Width = 942
-        Height = 477
+        Width = 1123
+        Height = 501
         Align = alClient
         DataSource = dsTestItem
         Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
@@ -129,7 +129,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
       object pnlTestTool: TPanel
         Left = 0
         Top = 0
-        Width = 942
+        Width = 1123
         Height = 40
         Align = alTop
         BevelOuter = bvNone
@@ -191,8 +191,8 @@ inherited TestManageChildfrm: TTestManageChildfrm
       end
       object pnlTestBottom: TPanel
         Left = 0
-        Top = 517
-        Width = 942
+        Top = 541
+        Width = 1123
         Height = 40
         Align = alBottom
         TabOrder = 2
@@ -253,26 +253,10 @@ inherited TestManageChildfrm: TTestManageChildfrm
     object tsConTent: TTabSheet
       Caption = #27979#35797#20869#23481
       ImageIndex = 1
-      object lblTitle: TLabel
-        Left = 0
-        Top = 0
-        Width = 942
-        Height = 15
-        Align = alTop
-        Caption = 'lblTitle'
-        Color = clTeal
-        Font.Charset = GB2312_CHARSET
-        Font.Color = clWhite
-        Font.Height = -15
-        Font.Name = #23435#20307
-        Font.Style = []
-        ParentColor = False
-        ParentFont = False
-      end
       object spl1: TSplitter
         Left = 0
         Top = 251
-        Width = 942
+        Width = 1123
         Height = 10
         Cursor = crVSplit
         Align = alTop
@@ -282,29 +266,30 @@ inherited TestManageChildfrm: TTestManageChildfrm
       object pnlTestClient: TPanel
         Left = 0
         Top = 261
-        Width = 942
-        Height = 296
+        Width = 1123
+        Height = 320
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 0
         object dbctrlgrd1: TDBCtrlGrid
           Left = 0
           Top = 40
-          Width = 942
-          Height = 256
+          Width = 1123
+          Height = 280
           Align = alClient
           AllowDelete = False
           AllowInsert = False
           ColCount = 2
           DataSource = dsResult
           PanelBorder = gbNone
-          PanelHeight = 85
-          PanelWidth = 462
+          PanelHeight = 93
+          PanelWidth = 553
           TabOrder = 0
           SelectedColor = clMoneyGreen
+          OnPaintPanel = dbctrlgrd1PaintPanel
           object Label8: TLabel
             Left = 5
-            Top = 61
+            Top = 69
             Width = 60
             Height = 15
             Anchors = [akLeft, akBottom]
@@ -312,23 +297,15 @@ inherited TestManageChildfrm: TTestManageChildfrm
           end
           object Label16: TLabel
             Left = 218
-            Top = 62
+            Top = 70
             Width = 60
             Height = 15
             Anchors = [akLeft, akBottom]
             Caption = #23454#38469#20540#65306
           end
-          object bvl1: TBevel
-            Left = 0
-            Top = 0
-            Width = 462
-            Height = 85
-            Align = alClient
-            Shape = bsFrame
-          end
           object dbtxtZNO: TDBText
-            Left = 436
-            Top = 61
+            Left = 527
+            Top = 69
             Width = 18
             Height = 17
             Alignment = taCenter
@@ -344,11 +321,39 @@ inherited TestManageChildfrm: TTestManageChildfrm
             ParentColor = False
             ParentFont = False
           end
+          object dbtxtZUSERNAME: TDBText
+            Left = 477
+            Top = 69
+            Width = 50
+            Height = 17
+            Alignment = taCenter
+            Anchors = [akRight, akBottom]
+            Color = clYellow
+            DataField = 'ZUSERNAME'
+            DataSource = dsResult
+            Font.Charset = GB2312_CHARSET
+            Font.Color = clTeal
+            Font.Height = -15
+            Font.Name = #23435#20307
+            Font.Style = []
+            ParentColor = False
+            ParentFont = False
+            Transparent = False
+            Visible = False
+          end
+          object bvl1: TBevel
+            Left = 0
+            Top = 0
+            Width = 553
+            Height = 93
+            Align = alClient
+            Shape = bsFrame
+          end
           object dbmmoZACTION: TDBMemo
             Left = 5
-            Top = 5
-            Width = 450
-            Height = 48
+            Top = 6
+            Width = 541
+            Height = 56
             Anchors = [akLeft, akTop, akRight, akBottom]
             DataField = 'ZACTION'
             DataSource = dsResult
@@ -356,7 +361,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
           end
           object dbedtZTRUEVALUE: TDBEdit
             Left = 61
-            Top = 57
+            Top = 65
             Width = 150
             Height = 23
             Anchors = [akLeft, akBottom]
@@ -366,7 +371,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
           end
           object dbedtZINFACE: TDBEdit
             Left = 273
-            Top = 58
+            Top = 66
             Width = 150
             Height = 23
             Anchors = [akLeft, akBottom]
@@ -378,14 +383,14 @@ inherited TestManageChildfrm: TTestManageChildfrm
         object pnl1: TPanel
           Left = 0
           Top = 0
-          Width = 942
+          Width = 1123
           Height = 40
           Align = alTop
           BevelOuter = bvNone
           Color = clTeal
           TabOrder = 1
           DesignSize = (
-            942
+            1123
             40)
           object bvl2: TBevel
             Left = 328
@@ -449,7 +454,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
             TabOrder = 5
           end
           object dbnvgr1: TDBNavigator
-            Left = 781
+            Left = 962
             Top = 8
             Width = 152
             Height = 25
@@ -463,7 +468,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
       object scrlbx1: TScrollBox
         Left = 0
         Top = 15
-        Width = 942
+        Width = 1123
         Height = 236
         Align = alTop
         ParentShowHint = False
@@ -834,6 +839,50 @@ inherited TestManageChildfrm: TTestManageChildfrm
           TabOrder = 23
         end
       end
+      object pnlTitle: TPanel
+        Left = 0
+        Top = 0
+        Width = 1123
+        Height = 15
+        Align = alTop
+        BevelOuter = bvNone
+        Caption = 'pnlTitle'
+        TabOrder = 2
+        object lblTitle: TLabel
+          Left = 0
+          Top = 0
+          Width = 992
+          Height = 15
+          Align = alClient
+          Caption = 'lblTitle'
+          Color = clTeal
+          Font.Charset = GB2312_CHARSET
+          Font.Color = clWhite
+          Font.Height = -15
+          Font.Name = #23435#20307
+          Font.Style = []
+          ParentColor = False
+          ParentFont = False
+        end
+        object dbtxtZOPENEDBYNAME: TDBText
+          Left = 992
+          Top = 0
+          Width = 131
+          Height = 15
+          Align = alRight
+          Alignment = taCenter
+          Color = clTeal
+          DataField = 'ZOPENEDBYNAME'
+          DataSource = dsTestItem
+          Font.Charset = GB2312_CHARSET
+          Font.Color = clWhite
+          Font.Height = -15
+          Font.Name = #23435#20307
+          Font.Style = []
+          ParentColor = False
+          ParentFont = False
+        end
+      end
     end
   end
   object cdsTestItem: TClientDataSet
@@ -1075,5 +1124,11 @@ inherited TestManageChildfrm: TTestManageChildfrm
     DataSet = cdsTestCoseSTATUS
     Left = 313
     Top = 34
+  end
+  object cdsUser: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 431
+    Top = 2
   end
 end
