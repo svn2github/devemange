@@ -603,7 +603,10 @@ create table TB_ANT(
 	ZREMARK text ,                   --编译说明
 	ZDATE datetime,                  --编译时间
 	ZSVN int,                        --SVN版本号 
-	ZVERSION varchar(20),            --版本号
+	ZVERSION varchar(20),            --版本号(编译版本号)
+	ZSVN_URL varchar(200),           --显示SVN日志的脚本 URL
+	ZSVN_LATEST_VERSION int,         --SVN服务器上的版本号
+
 	
 	constraint PK_TB_ANT primary key(ZGUID)  
 )
@@ -667,6 +670,46 @@ create table TB_RELEASE_PARAMS(
 	ZID          int not null,                                   /*ID值*/
 	ZNAME        varchar(200)                                    /*值*/
 	constraint PK_TB_RELEASE_PARAMS primary key(ZTYPE,ZID)  
+)
+go
+
+
+
+/*SVN接交的内容*/
+if exists (select * from dbo.sysobjects
+  where id = object_id(N'[dbo].[TB_SVN_COMMITS]')
+  and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+drop table [dbo].[TB_SVN_COMMITS]
+go
+
+create table TB_SVN_COMMITS(
+	ZSVN_GUID    varchar(36) not null,                           
+	ZVERSION     int not null,                                   
+	ZID          int IDENTITY (1, 1) not null,                   /*用于排序先后*/
+	ZAUTHOR      varchar(50),                                    /*作者*/
+	ZDATE        datetime,
+	ZMESSAGE     text
+	constraint PK_TB_SVN_COMMITS primary key(ZSVN_GUID,ZVERSION)  
+)
+go
+
+/*SVN接交的明细*/
+if exists (select * from dbo.sysobjects
+  where id = object_id(N'[dbo].[TB_SVN_CHANGES]')
+  and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+drop table [dbo].[TB_SVN_CHANGES]
+go
+
+create table TB_SVN_CHANGES(
+	ZSVN_GUID    varchar(36) not null,                           
+	ZVERSION     int not null,                                   /*版本号*/
+	ZID          int IDENTITY (1, 1) not null,
+	ZACTION      varchar(10),                                    /*动作*/
+	ZPATH        varchar(200),
+	ZCOPY_PATH   varchar(200),
+	ZCOPY_VERSION int,
+
+	constraint PK_TB_SVN_CHANGES primary key(ZSVN_GUID,ZVERSION,ZID)  
 )
 go
 

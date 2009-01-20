@@ -674,13 +674,12 @@ set @mailtext  = @ProName + char(13) +char(10)+
 end
 GO
 
-
 /******************************************************************************
 创建: 2008-12-20  作者:龙仕云
 目的: 工作台, 
 修改：
 编号   时间         修改人             修改内容
-
+  1    2009-1-15   龙仕云   增加创建时间
 参数:
    USERID ,USERTYPE , 
 
@@ -699,7 +698,8 @@ declare @RowType int
 declare @RowContentID int --内容id 用于关联
 declare @RowState int --是否已关闭了
 declare @RowTagName varchar(100)
-declare @RowClose int 
+declare @RowClose int
+declare @RowDate datetime --创建时间 
 declare @myc int
 declare @myid int
 
@@ -720,6 +720,7 @@ create table temp_usr_daywork
   ZCONTENTID int,  --内容ID,如是bug则是bug的id    
   ZCLOSE bit , --是否已关闭的了
   ZTAGNAME varchar(100), --标签
+ ZBUILDDATE datetime,  --创建时间
 )
 
 set @myc = 1
@@ -733,21 +734,21 @@ set @myc = @myc+1
 set @myid = 0
 declare my_cursor cursor
 for 
-select top 10  ZTITLE,ZID,ZTAGNAME  from TB_BUG_ITEM 
+select top 10  ZTITLE,ZID,ZTAGNAME,ZOPENEDDATE  from TB_BUG_ITEM 
 where ( ZSTATUS<>1) and ZASSIGNEDTO=@USERID order by ZOPENEDDATE desc , ZTERM
 
 open my_cursor
-fetch next from my_cursor into  @RowName,@RowContentID,@RowTagName
+fetch next from my_cursor into  @RowName,@RowContentID,@RowTagName,@RowDate
 
 while( @@fetch_status = 0)
 begin
   set @myid = @myid+1
    insert into   temp_usr_daywork
-  (ZROWID,ZROWPART,  ZROWNAME,  ZROWTYPE,   ZROWLEVE, ZCONTENTID,ZCLOSE,ZTAGNAME)
-  values  ( @myid,  0,   @RowName,  @RowType,@myc,@RowContentID,0,ltrim(rtrim(@RowTagName)))
+  (ZROWID,ZROWPART,  ZROWNAME,  ZROWTYPE,   ZROWLEVE, ZCONTENTID,ZCLOSE,ZTAGNAME,ZBUILDDATE)
+  values  ( @myid,  0,   @RowName,  @RowType,@myc,@RowContentID,0,ltrim(rtrim(@RowTagName)),@RowDate)
   set @myc =  @myc+1
 
-  fetch next from my_cursor into @RowName,@RowContentID,@RowTagName
+  fetch next from my_cursor into @RowName,@RowContentID,@RowTagName,@RowDate
 end
 
 
@@ -767,11 +768,11 @@ set @myid = 0
 
 declare my_cursor cursor
 for 
-select top 10  ZTITLE,ZID,ZSTATUS,ZTAGNAME  from TB_BUG_ITEM 
+select top 10  ZTITLE,ZID,ZSTATUS,ZTAGNAME,ZOPENEDDATE  from TB_BUG_ITEM 
 where  ZOPENEDBY=@USERID order by ZOPENEDDATE desc , ZTERM
 
 open my_cursor
-fetch next from my_cursor into  @RowName,@RowContentID,@RowState,@RowTagName
+fetch next from my_cursor into  @RowName,@RowContentID,@RowState,@RowTagName,@RowDate
 
 while( @@fetch_status = 0)
 begin
@@ -782,11 +783,11 @@ begin
   else
     set  @RowClose = 0
   insert into   temp_usr_daywork
-  (ZROWID,ZROWPART,  ZROWNAME,  ZROWTYPE,   ZROWLEVE, ZCONTENTID,ZCLOSE,ZTAGNAME)
-  values  ( @myid,  0,   @RowName,  @RowType,@myc,@RowContentID,@RowClose,ltrim(rtrim(@RowTagName)))
+  (ZROWID,ZROWPART,  ZROWNAME,  ZROWTYPE,   ZROWLEVE, ZCONTENTID,ZCLOSE,ZTAGNAME,ZBUILDDATE)
+  values  ( @myid,  0,   @RowName,  @RowType,@myc,@RowContentID,@RowClose,ltrim(rtrim(@RowTagName)),@RowDate)
   set @myc =  @myc+1
 
-  fetch next from my_cursor into @RowName,@RowContentID,@RowState,@RowTagName
+  fetch next from my_cursor into @RowName,@RowContentID,@RowState,@RowTagName,@RowDate
 end
 
 if @myid = 0 
@@ -805,21 +806,21 @@ set @myc = @myc+1
 set @myid = 0
 declare my_cursor cursor
 for 
-select top 10  ZNAME,ZID,ZTAGNAME  from TB_TEST_ITEM 
+select top 10  ZNAME,ZID,ZTAGNAME,ZOPENEDDATE  from TB_TEST_ITEM 
 where ( ZSTATUS<>3) and ZASSIGNEDTO=@USERID order by ZOPENEDDATE desc
 
 open my_cursor
-fetch next from my_cursor into  @RowName,@RowContentID,@RowTagName
+fetch next from my_cursor into  @RowName,@RowContentID,@RowTagName,@Rowdate
 
 while( @@fetch_status = 0)
 begin
  set @myid = @myid + 1
   insert into   temp_usr_daywork
-  (ZROWID,ZROWPART,  ZROWNAME,  ZROWTYPE,   ZROWLEVE, ZCONTENTID,ZTAGNAME)
-  values  ( @myid,  0,   @RowName,  @RowType,@myc,@RowContentID,ltrim(rtrim(@RowTagName)))
+  (ZROWID,ZROWPART,  ZROWNAME,  ZROWTYPE,   ZROWLEVE, ZCONTENTID,ZTAGNAME,ZBUILDDATE)
+  values  ( @myid,  0,   @RowName,  @RowType,@myc,@RowContentID,ltrim(rtrim(@RowTagName)),@RowDate)
   set @myc = @myc+1
   
-  fetch next from my_cursor into @RowName,@RowContentID,@RowTagName
+  fetch next from my_cursor into @RowName,@RowContentID,@RowTagName,@Rowdate
 end
 
 if @myid = 0 
@@ -838,11 +839,11 @@ set @myc = @myc+1
 set @myid = 0
 declare my_cursor cursor
 for 
-select top 10  ZNAME,ZID,ZSTATUS,ZTAGNAME  from TB_TEST_ITEM 
+select top 10  ZNAME,ZID,ZSTATUS,ZTAGNAME,ZOPENEDDATE  from TB_TEST_ITEM 
 where  ZOPENEDBY=@USERID order by ZOPENEDDATE desc
 
 open my_cursor
-fetch next from my_cursor into  @RowName,@RowContentID,@RowState,@RowTagName
+fetch next from my_cursor into  @RowName,@RowContentID,@RowState,@RowTagName,@RowDate
 
 while( @@fetch_status = 0)
 begin
@@ -853,11 +854,11 @@ begin
     set @RowClose = 0
 	
   insert into   temp_usr_daywork
-  (ZROWID,ZROWPART,  ZROWNAME,  ZROWTYPE,   ZROWLEVE, ZCONTENTID,ZCLOSE,ZTAGNAME)
-  values  ( @myid,  0,   @RowName,  @RowType,@myc,@RowContentID,@RowClose,ltrim(rtrim(@RowTagName)))
+  (ZROWID,ZROWPART,  ZROWNAME,  ZROWTYPE,   ZROWLEVE, ZCONTENTID,ZCLOSE,ZTAGNAME,ZBUILDDATE)
+  values  ( @myid,  0,   @RowName,  @RowType,@myc,@RowContentID,@RowClose,ltrim(rtrim(@RowTagName)),@RowDate)
   set @myc = @myc+1
   
-  fetch next from my_cursor into @RowName,@RowContentID,@RowState,@RowTagName
+  fetch next from my_cursor into @RowName,@RowContentID,@RowState,@RowTagName,@RowDate
 end
 
 if @myid = 0 
@@ -877,7 +878,7 @@ set @myid = 0
 declare my_cursor cursor
 for 
 select top 10 a.ZNAME + '(' + b.ZNAME + ')'  as subName ,a.ZID  from TB_PLAN_DETAIL as a , TB_PLAN_ITEM as b 
-where ( a.ZSTATUS=0) and ZDEVE=@USERID and a.ZITEM_GUID=b.ZGUID
+where ( a.ZSTATUS=0) and ZDEVE=@USERID and a.ZITEM_GUID=b.ZGUID order by ZID desc
 
 open my_cursor
 fetch next from my_cursor into  @RowName,@RowContentID
@@ -910,21 +911,21 @@ set @myc = @myc+1
 set @myid = 0
 declare my_cursor cursor
 for 
-select top 5  ZNAME,ZID  from TB_RELEASE_ITEM 
+select top 5  ZNAME,ZID,ZOPENDATE  from TB_RELEASE_ITEM 
 where ( ZSTATUS<>1) and ZASSIGNEDTO=@USERID order by ZOPENDATE desc
 
 open my_cursor
-fetch next from my_cursor into  @RowName,@RowContentID
+fetch next from my_cursor into  @RowName,@RowContentID,@RowDate
 
 while( @@fetch_status = 0)
 begin
  set @myid = @myid + 1
   insert into   temp_usr_daywork
-  (ZROWID,ZROWPART,  ZROWNAME,  ZROWTYPE,   ZROWLEVE, ZCONTENTID)
-  values  ( @myid,  0,   @RowName,  @RowType,@myc,@RowContentID)
+  (ZROWID,ZROWPART,  ZROWNAME,  ZROWTYPE,   ZROWLEVE, ZCONTENTID,ZBUILDDATE)
+  values  ( @myid,  0,   @RowName,  @RowType,@myc,@RowContentID,@RowDate)
   set @myc = @myc+1
   
-  fetch next from my_cursor into @RowName,@RowContentID
+  fetch next from my_cursor into @RowName,@RowContentID,@RowDate
 end
 
 if @myid = 0 
@@ -942,11 +943,11 @@ set @myc = @myc+1
 set @myid = 0
 declare my_cursor cursor
 for 
-select top 5  ZNAME,ZID,ZSTATUS  from TB_RELEASE_ITEM 
+select top 5  ZNAME,ZID,ZSTATUS,ZOPENDATE  from TB_RELEASE_ITEM 
 where  ZOPENEDBY=@USERID order by ZOPENDATE desc
 
 open my_cursor
-fetch next from my_cursor into  @RowName,@RowContentID,@RowState
+fetch next from my_cursor into  @RowName,@RowContentID,@RowState,@RowDate
 
 while( @@fetch_status = 0)
 begin
@@ -957,11 +958,11 @@ begin
     set @RowClose = 0
 	
   insert into   temp_usr_daywork
-  (ZROWID,ZROWPART,  ZROWNAME,  ZROWTYPE,   ZROWLEVE, ZCONTENTID,ZCLOSE)
-  values  ( @myid,  0,   @RowName,  @RowType,@myc,@RowContentID,@RowClose)
+  (ZROWID,ZROWPART,  ZROWNAME,  ZROWTYPE,   ZROWLEVE, ZCONTENTID,ZCLOSE,ZBUILDDATE)
+  values  ( @myid,  0,   @RowName,  @RowType,@myc,@RowContentID,@RowClose,@RowDate)
   set @myc = @myc+1
   
-  fetch next from my_cursor into @RowName,@RowContentID,@RowState
+  fetch next from my_cursor into @RowName,@RowContentID,@RowState,@RowDate
 end
 
 if @myid = 0 

@@ -5,7 +5,8 @@
 // 作者: 龙仕云 创建时间: 2008-12-7
 //
 //
-// 修改:       
+// 修改:
+//   增加svn  的日志显示功能 作者:龙仕云 2009-1-18
 //
 //
 //
@@ -22,6 +23,11 @@ uses
   ClientTypeUnits, Mask;
 
 type
+
+  TSVNCommitPageRec = record
+    findex,fcount : integer;
+    fWhere : string;
+  end;
 
   TAntManageClientDlg = class(TBaseChildDlg)
     actlst1: TActionList;
@@ -70,6 +76,43 @@ type
     lblError: TLabel;
     lstResult: TListBox;
     ani1: TAnimate;
+    act_Svnlog: TAction;
+    lbl9: TLabel;
+    dbedtZSVN_LATEST_VERSION: TDBEdit;
+    lbl10: TLabel;
+    dbedtZSVN_URL: TDBEdit;
+    tsLog: TTabSheet;
+    pnl4: TPanel;
+    dbgrdSvnChanges: TDBGrid;
+    pnl5: TPanel;
+    spl2: TSplitter;
+    dbgrdSvnCommits: TDBGrid;
+    dbmmoZMESSAGE: TDBMemo;
+    spl3: TSplitter;
+    cdsSvnCommits: TClientDataSet;
+    dsSvnCommits: TDataSource;
+    btnSvnLog_FirstPage: TBitBtn;
+    btnSvnLog_ProPage: TBitBtn;
+    btnSvnLog_NextPage: TBitBtn;
+    btnSvnLog_ProPage1: TBitBtn;
+    lblSvnPage: TLabel;
+    cdsSvnChanges: TClientDataSet;
+    dsSvnChanges: TDataSource;
+    dbtxtZNAME1: TDBText;
+    actSvnLog_FirstPage: TAction;
+    actSvnLog_ProPage: TAction;
+    actSvnLog_NextPage: TAction;
+    actSvnLog_LastPage: TAction;
+    btnSvnLog_PiroProject: TBitBtn;
+    btnSvnLog_NetProject: TBitBtn;
+    actSvnLog_PiroProject: TAction;
+    actSvnLog_NetProject: TAction;
+    actSvnLog_AllProject: TAction;
+    btnSvnLog_AllProject: TBitBtn;
+    btnEditSVNRUL: TBitBtn;
+    btnReLoadAnt: TBitBtn;
+    act_ReLoadAnt: TAction;
+    cdsCloneAntList: TClientDataSet;
     procedure act_ProAddExecute(Sender: TObject);
     procedure cdsAntListNewRecord(DataSet: TDataSet);
     procedure act_ProSaveUpdate(Sender: TObject);
@@ -88,10 +131,36 @@ type
     procedure pgcAntChanging(Sender: TObject; var AllowChange: Boolean);
     procedure lstResultDrawItem(Control: TWinControl; Index: Integer;
       Rect: TRect; State: TOwnerDrawState);
+    procedure pgcAntChange(Sender: TObject);
+    procedure dbgrdSvnCommitsDrawColumnCell(Sender: TObject; const Rect: TRect;
+      DataCol: Integer; Column: TColumn; State: TGridDrawState);
+    procedure cdsSvnCommitsAfterScroll(DataSet: TDataSet);
+    procedure dbgrdSvnChangesDrawColumnCell(Sender: TObject; const Rect: TRect;
+      DataCol: Integer; Column: TColumn; State: TGridDrawState);
+    procedure cdsSvnCommitsCalcFields(DataSet: TDataSet);
+    procedure actSvnLog_FirstPageUpdate(Sender: TObject);
+    procedure actSvnLog_FirstPageExecute(Sender: TObject);
+    procedure actSvnLog_ProPageExecute(Sender: TObject);
+    procedure actSvnLog_ProPageUpdate(Sender: TObject);
+    procedure actSvnLog_NextPageUpdate(Sender: TObject);
+    procedure actSvnLog_NextPageExecute(Sender: TObject);
+    procedure actSvnLog_LastPageUpdate(Sender: TObject);
+    procedure actSvnLog_LastPageExecute(Sender: TObject);
+    procedure actSvnLog_PiroProjectUpdate(Sender: TObject);
+    procedure actSvnLog_PiroProjectExecute(Sender: TObject);
+    procedure actSvnLog_NetProjectExecute(Sender: TObject);
+    procedure actSvnLog_NetProjectUpdate(Sender: TObject);
+    procedure actSvnLog_AllProjectExecute(Sender: TObject);
+    procedure btnEditSVNRULClick(Sender: TObject);
+    procedure act_ReLoadAntExecute(Sender: TObject);
   private
     { Private declarations }
+    fSVNCommitPageRec :TSVNCommitPageRec;
     function initconnection():Boolean; //连接服务器
     procedure LoadAnt();
+    procedure LoadSvnCommit(Awhere:string;APageIndex:integer);
+    function  GetSvnCommitPageCount(Awhere:string):integer;
+    procedure LoadSvnChanges(AAntGUID:string;Aversion:integer);
   public
     { Public declarations }
 
@@ -303,6 +372,7 @@ begin
     end;
 
     cdsAntList.First;
+    cdsCloneAntList.CloneCursor(cdsAntList,True);
   finally
     cdsAntList.EnableControls;
     fLoading := myb;
@@ -314,10 +384,10 @@ procedure TAntManageClientDlg.cdsAntListBeforePost(DataSet: TDataSet);
 var
   mySQL : string;
 const
-  gl_SQL1 = 'insert TB_ANT(ZGUID,ZNAME,ZPRO_ID,ZIP,ZPYFILE,ZREMARK,ZDATE,ZSVN,ZVERSION)' +
-       ' values(''%s'',''%s'',%d,''%s'',''%s'',''%s'',''%s'',%d,''%s'')';
+  gl_SQL1 = 'insert TB_ANT(ZGUID,ZNAME,ZPRO_ID,ZIP,ZPYFILE,ZREMARK,ZDATE,ZSVN,ZVERSION,ZSVN_URL,ZSVN_LATEST_VERSION)' +
+       ' values(''%s'',''%s'',%d,''%s'',''%s'',''%s'',''%s'',%d,''%s'',''%s'',%d)';
   gl_SQL2 = 'update TB_ANT set ZNAME=''%s'',ZPRO_ID=%d,ZIP=''%s'',ZPYFILE=''%s'', ' +
-      'ZREMARK=''%s'',ZDATE=''%s'',ZSVN=%d,ZVERSION=''%s'' where ZGUID=''%s''';
+      'ZREMARK=''%s'',ZDATE=''%s'',ZSVN=%d,ZVERSION=''%s'',ZSVN_URL=''%s'',ZSVN_LATEST_VERSION=%d where ZGUID=''%s''';
 begin
   if fLoading then Exit;
   
@@ -332,7 +402,10 @@ begin
       DataSet.FieldByName('ZREMARK').AsString,
       DataSet.FieldByName('ZDATE').AsString,
       DataSet.FieldByName('ZSVN').AsInteger,
-      DataSet.FieldByName('ZVERSION').AsString]);
+      DataSet.FieldByName('ZVERSION').AsString,
+      DataSet.FieldByName('ZSVN_URL').AsString,
+      DataSet.FieldByName('ZSVN_LATEST_VERSION').AsInteger
+      ]);
     ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
 
     DataSet.FieldByName('ZISNEW').AsBoolean := False;
@@ -347,6 +420,8 @@ begin
       DataSet.FieldByName('ZDATE').AsString,
       DataSet.FieldByName('ZSVN').AsInteger,
       DataSet.FieldByName('ZVERSION').AsString,
+      DataSet.FieldByName('ZSVN_URL').AsString,
+      DataSet.FieldByName('ZSVN_LATEST_VERSION').AsInteger,
       DataSet.FieldByName('ZGUID').AsString]);
     ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
   end;
@@ -477,6 +552,207 @@ begin
   end;
 end;
 
+procedure TAntManageClientDlg.LoadSvnCommit(Awhere: string;APageIndex:integer);
+var
+  mySQL  : string;
+  i : integer;
+  myb : Boolean;
+  mywhere : string;
+  myField : TFieldDef;
+const
+    glSQL = 'exec pt_SplitPage ''TB_SVN_COMMITS'',' +
+          '''ZID,ZSVN_GUID,ZVERSION,ZAUTHOR,ZDATE,ZMESSAGE'',' +
+          '''%s'',20,%d,%d,1,''%s''';
+begin
+
+  mywhere := Awhere;
+  mySQL := format(glSQL,[
+      'ZID',
+      APageIndex,
+      0,mywhere]);
+
+  myb := fLoading;
+  fLoading := True;
+  cdsSvnCommits.DisableControls;
+
+
+  ShowProgress('读取数据...',0);
+
+  try
+    lblSvnPage.Caption := format('%d/%d',[fSVNCommitPageRec.findex,
+      fSVNCommitPageRec.fCount]);
+    if cdsTemp.Active then  cdsTemp.Close;
+    cdsTemp.Data := ClientSystem.fDbOpr.ReadDataSet(PChar(mySQL));
+
+    if cdsSvnCommits.FieldDefs.Count = 0 then
+    begin
+      cdsSvnCommits.FieldDefs.Assign(cdsTemp.FieldDefs);
+      with cdsSvnCommits.FieldDefs do
+      begin
+        myField := AddFieldDef;
+        myField.Name := 'ZVERSTR';
+        myField.DataType := ftString;
+
+        myField := AddFieldDef;
+        myField.Name := 'ZAUTOID';
+        myField.DataType := ftString;
+      end;
+
+      with cdsSvnCommits do
+      begin
+        for i:=0 to FieldDefs.Count -1 do
+           FieldDefs[i].CreateField(cdsSvnCommits);
+      end;
+
+      //信息
+      myField := cdsSvnCommits.FieldDefs.AddFieldDef ;
+      myField.Name := 'ZMESSAGETEXT';
+      myField.DataType := ftString;
+      myField.Size := 4000;
+      with myfield.CreateField(cdsSvnCommits) do
+      begin
+        FieldKind := fkCalculated;
+      end;
+
+      //项目名称
+      myField := cdsSvnCommits.FieldDefs.AddFieldDef ;
+      myField.Name := 'ZPRONAME';
+      myField.DataType := ftString;
+      myField.Size := 200;
+      with myfield.CreateField(cdsSvnCommits) do
+      begin
+        FieldKind := fkCalculated;
+      end;
+
+      cdsSvnCommits.CreateDataSet;
+    end;
+
+    while not cdsSvnCommits.IsEmpty do
+      cdsSvnCommits.Delete;
+
+
+    //生成数据
+    cdsTemp.First;
+    while not cdsTemp.Eof do
+    begin
+      cdsSvnCommits.Append;                                   
+      for i:=0 to cdsTemp.FieldDefs.Count -1 do
+      begin
+        if  cdsTemp.FieldDefs[i].Name = 'ZID' then
+          cdsSvnCommits.FieldByName('ZAUTOID').AsString :=
+            cdsTemp.FieldByName('ZID').AsString
+        else
+          cdsSvnCommits.FieldByName(cdsTemp.FieldDefs[i].Name).AsVariant :=
+            cdsTemp.FieldByName(cdsTemp.FieldDefs[i].Name).AsVariant;
+      end;
+
+      cdsSvnCommits.FieldByName('ZVERSTR').AsString :=
+        cdsTemp.FieldByName('ZVERSION').AsString;
+      cdsSvnCommits.Post;
+      cdsTemp.Next;
+    end;
+    cdsSvnCommits.First;
+
+    if cdsSvnCommits.RecordCount > 0 then
+      LoadSvnChanges(cdsSvnCommits.FieldByName('ZSVN_GUID').AsString,
+        cdsSvnCommits.FieldByName('ZVERSION').AsInteger)
+    else begin
+      while not cdsSvnChanges.Eof do
+        cdsSvnChanges.Delete;
+    end;
+
+  finally
+    cdsSvnCommits.EnableControls;
+    fLoading := myb;
+    HideProgress;
+  end;
+end;
+
+
+function TAntManageClientDlg.GetSvnCommitPageCount(
+  Awhere: string): integer;
+var
+  mySQL  : string;
+  myRowCount : integer;
+  mywhere : string;
+const
+  glSQL = 'exec pt_SplitPage ''TB_SVN_COMMITS'',' +
+          '''ZID'', ''%s'',20,%d,%d,1,''%s''';
+  //               页码,以总数=1, 条件where
+begin
+  mywhere := Awhere;
+  mySQL := format(glSQL,[
+      '',
+      1{APageIndex},
+      1, //不是取总数
+      mywhere]);
+  myRowCount := ClientSystem.fDbOpr.ReadInt(PChar(mySQL));
+  Result := myRowCount div 20;
+  if (myRowCount mod 20) > 0 then
+    Result := Result + 1;
+end;
+
+procedure TAntManageClientDlg.LoadSvnChanges(AAntGUID: string;
+  Aversion: integer);
+var
+  i : integer;
+  mySQL : string;
+  myb : Boolean;
+  myField : TFieldDef;
+const
+  gl_SQLTXT = 'select * from TB_SVN_CHANGES where ZSVN_GUID=''%s'' and ' +
+     ' ZVERSION=%d';
+begin
+  //
+  mySQL := format(gl_SQLTXT,[AAntGUID,Aversion]);
+  cdstemp.Data := ClientSystem.fDbOpr.ReadDataSet(PChar(mySQL));
+
+  myb := fLoading;
+  fLoading := True;
+  cdsSvnChanges.DisableControls;
+  try
+
+    if cdsSvnChanges.FieldDefs.Count = 0 then
+    begin
+      cdsSvnChanges.FieldDefs.Assign(cdstemp.FieldDefs);
+      with cdsSvnChanges.FieldDefs do
+      begin
+        myField := AddFieldDef;
+        myField.Name := 'ZAUTOID';
+        myField.DataType := ftInteger;
+      end;
+      cdsSvnChanges.CreateDataSet;
+    end;
+    while not cdsSvnChanges.Eof do
+      cdsSvnChanges.Delete;
+
+    //生成数据
+    cdsTemp.First;
+    while not cdsTemp.Eof do
+    begin
+      cdsSvnChanges.Append;
+      for i:=0 to cdsTemp.FieldDefs.Count -1 do
+      begin
+        if  cdsTemp.FieldDefs[i].Name='ZID' then
+          cdsSvnChanges.FieldByName('ZAUTOID').AsInteger :=
+            cdsTemp.FieldByName('ZID').AsInteger
+        else
+          cdsSvnChanges.FieldByName(cdsTemp.FieldDefs[i].Name).AsVariant :=
+            cdsTemp.FieldByName(cdsTemp.FieldDefs[i].Name).AsVariant;
+      end;
+      cdsSvnChanges.Post;
+      cdsTemp.Next;
+    end;
+    cdsSvnChanges.First;
+
+  finally
+    fLoading := myb;
+    cdsSvnChanges.EnableControls;
+  end;
+  
+  
+end;
+
 { TPySvnThread }
 
 procedure TPySvnThread.BeginAnimate;
@@ -541,6 +817,173 @@ begin
   if (lstResult.Tag > 0) and (lstResult.ItemIndex = index) then
     lstResult.Canvas.Font.Color := clRed;
   lstResult.Canvas.TextOut(rect.Left+50,Rect.Top,lstResult.Items[index]);
+end;
+
+procedure TAntManageClientDlg.pgcAntChange(Sender: TObject);
+var
+  myAGUID : string;
+begin
+  //是日志
+  if pgcAnt.ActivePageIndex = 2 then
+  begin
+    if cdsAntList.IsEmpty then Exit;
+    myAGUID := cdsAntList.FieldByName('ZGUID').AsString;
+    fSVNCommitPagerec.findex := 1;
+    fSVNCommitPageRec.fWhere := format('ZSVN_GUID=''''%s''''',[myAGUID]);
+    fSVNCommitPagerec.fcount := GetSvnCommitPageCount(fSVNCommitPageRec.fWhere);
+    LoadSvnCommit(fSVNCommitPageRec.fWhere,1);
+   
+  end;
+end;
+
+procedure TAntManageClientDlg.dbgrdSvnCommitsDrawColumnCell(Sender: TObject;
+  const Rect: TRect; DataCol: Integer; Column: TColumn;
+  State: TGridDrawState);
+begin
+ if (cdsSvnCommits.RecNo mod 2  = 0) and not ( gdSelected in State)  then
+    dbgrdSvnCommits.Canvas.Brush.Color := clSilver;
+
+  dbgrdSvnCommits.DefaultDrawColumnCell(Rect,DataCol,Column,State);
+end;
+
+procedure TAntManageClientDlg.cdsSvnCommitsAfterScroll(DataSet: TDataSet);
+begin
+  if fLoading then Exit;
+  LoadSvnChanges(DataSet.FieldByName('ZSVN_GUID').AsString,
+    DataSet.FieldByName('ZVERSION').AsInteger);
+end;
+
+procedure TAntManageClientDlg.dbgrdSvnChangesDrawColumnCell(Sender: TObject;
+  const Rect: TRect; DataCol: Integer; Column: TColumn;
+  State: TGridDrawState);
+begin
+ if (cdsSvnChanges.RecNo mod 2  = 0) and not ( gdSelected in State)  then
+    dbgrdSvnChanges.Canvas.Brush.Color := clSilver;
+
+  dbgrdSvnChanges.DefaultDrawColumnCell(Rect,DataCol,Column,State);
+end;
+
+procedure TAntManageClientDlg.cdsSvnCommitsCalcFields(DataSet: TDataSet);
+begin
+  DataSet.FieldByName('ZMESSAGETEXT').AsString :=
+  DataSet.FieldByName('ZMESSAGE').AsString;
+
+  //增加这个是为了提高速度
+  if cdsCloneAntList.FieldByName('ZGUID').AsString =
+     DataSet.FieldByName('ZSVN_GUID').AsString then
+    DataSet.FieldByName('ZPRONAME').AsString :=
+      cdsCloneAntList.FieldByName('ZNAME').AsString
+
+  else if cdsCloneAntList.Locate('ZGUID',DataSet.FieldByName('ZSVN_GUID').AsString,
+    [loPartialKey]) then
+    DataSet.FieldByName('ZPRONAME').AsString :=
+      cdsCloneAntList.FieldByName('ZNAME').AsString;
+
+end;
+
+procedure TAntManageClientDlg.actSvnLog_FirstPageUpdate(Sender: TObject);
+begin
+  (Sender as TAction).Enabled := fSVNCommitPageRec.findex<>1;
+end;
+
+procedure TAntManageClientDlg.actSvnLog_FirstPageExecute(Sender: TObject);
+begin
+  fSVNCommitPageRec.findex := 1;
+  LoadSvnCommit(fSVNCommitPageRec.fWhere,
+   fSVNCommitPageRec.findex);
+end;
+
+procedure TAntManageClientDlg.actSvnLog_ProPageExecute(Sender: TObject);
+begin
+  fSVNCommitPageRec.findex := fSVNCommitPageRec.findex -1;
+  LoadSvnCommit(fSVNCommitPageRec.fWhere,
+   fSVNCommitPageRec.findex);
+end;
+
+procedure TAntManageClientDlg.actSvnLog_ProPageUpdate(Sender: TObject);
+begin
+  (Sender as TAction).Enabled := (fSVNCommitPageRec.findex>1) ;
+end;
+
+procedure TAntManageClientDlg.actSvnLog_NextPageUpdate(Sender: TObject);
+begin
+  (Sender as TAction).Enabled := fSvnCommitPageRec.findex <
+    fSvnCommitPageRec.fcount;
+end;
+
+procedure TAntManageClientDlg.actSvnLog_NextPageExecute(Sender: TObject);
+begin
+  fSVNCommitPageRec.findex := fSVNCommitPageRec.findex +1;
+  LoadSvnCommit(fSVNCommitPageRec.fWhere,
+   fSVNCommitPageRec.findex);
+end;
+
+procedure TAntManageClientDlg.actSvnLog_LastPageUpdate(Sender: TObject);
+begin
+  (Sender as TAction).Enabled := fSvnCommitPageRec.findex <>
+    fSvnCommitPageRec.fcount;
+end;
+
+procedure TAntManageClientDlg.actSvnLog_LastPageExecute(Sender: TObject);
+begin
+  fSVNCommitPageRec.findex := fSVNCommitPageRec.fcount;
+  LoadSvnCommit(fSVNCommitPageRec.fWhere,
+   fSVNCommitPageRec.findex);
+end;
+
+procedure TAntManageClientDlg.actSvnLog_PiroProjectUpdate(Sender: TObject);
+begin
+  (Sender as TAction).Enabled := not cdsAntList.Bof;
+end;
+
+procedure TAntManageClientDlg.actSvnLog_PiroProjectExecute(
+  Sender: TObject);
+begin
+  cdsAntList.Prior;
+  fSVNCommitPagerec.findex := 1;
+  fSVNCommitPagerec.fWhere := format('ZSVN_GUID=''''%s''''',
+    [cdsAntList.FieldByName('ZGUID').AsString]);
+  fSVNCommitPagerec.fcount := GetSvnCommitPageCount(fSVNCommitPagerec.fWhere);
+  LoadSvnCommit(fSVNCommitPagerec.fWhere,1);
+end;
+
+procedure TAntManageClientDlg.actSvnLog_NetProjectExecute(Sender: TObject);
+begin
+  cdsAntList.Next;
+  fSVNCommitPagerec.findex := 1;
+    fSVNCommitPagerec.fWhere := format('ZSVN_GUID=''''%s''''',
+    [cdsAntList.FieldByName('ZGUID').AsString]);
+  fSVNCommitPagerec.fcount := GetSvnCommitPageCount(fSVNCommitPagerec.fWhere);
+  LoadSvnCommit(fSVNCommitPagerec.fWhere,1);
+end;
+
+procedure TAntManageClientDlg.actSvnLog_NetProjectUpdate(Sender: TObject);
+begin
+  (Sender as TAction).Enabled := not cdsAntList.Eof;
+end;
+
+procedure TAntManageClientDlg.actSvnLog_AllProjectExecute(Sender: TObject);
+begin
+  fSVNCommitPagerec.findex := 1;
+  fSVNCommitPagerec.fWhere := '1=1';
+  fSVNCommitPagerec.fcount := GetSvnCommitPageCount(fSVNCommitPagerec.fWhere);
+  LoadSvnCommit(fSVNCommitPagerec.fWhere,1);
+end;
+
+procedure TAntManageClientDlg.btnEditSVNRULClick(Sender: TObject);
+begin
+  if ClientSystem.fEditerType <> etAdmin then
+  begin
+    MessageBox(Handle,'你没有权限','提示',MB_ICONWARNING+MB_OK);
+    Exit;
+  end;
+  dbedtZSVN_URL.Visible := True;
+  btnEditSVNRUL.Visible := False;
+end;
+
+procedure TAntManageClientDlg.act_ReLoadAntExecute(Sender: TObject);
+begin
+  LoadAnt();
 end;
 
 end.

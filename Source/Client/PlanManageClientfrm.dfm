@@ -1,6 +1,6 @@
 inherited PlanManageClientDlg: TPlanManageClientDlg
-  Left = 179
-  Top = 61
+  Left = 132
+  Top = 68
   Width = 1043
   Caption = #39033#30446#35745#21010
   OldCreateOrder = True
@@ -613,6 +613,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
                 Height = 23
                 DataField = 'ZDEVENAME'
                 DataSource = dsPlanDetail
+                DropDownRows = 30
                 TabOrder = 0
               end
               object dbedtZNAME2: TDBEdit
@@ -896,6 +897,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
           ToolTips = False
           OnChange = tvPlanChange
           OnChanging = tvPlanChanging
+          OnCustomDrawItem = tvPlanCustomDrawItem
         end
         object pnlpageIndex: TPanel
           Left = 0

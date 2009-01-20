@@ -1,6 +1,5 @@
 inherited DayWorktableManageClientDlg: TDayWorktableManageClientDlg
   Left = 170
-  Top = 141
   Caption = #25105#30340#24037#20316#21488
   OldCreateOrder = True
   PixelsPerInch = 96
@@ -128,10 +127,18 @@ inherited DayWorktableManageClientDlg: TDayWorktableManageClientDlg
       end
       item
         Expanded = False
+        FieldName = 'ZBUILDDATE'
+        Title.Alignment = taCenter
+        Title.Caption = #21019#24314#26102#38388
+        Width = 150
+        Visible = True
+      end
+      item
+        Expanded = False
         FieldName = 'ZCONTENTID'
         Title.Alignment = taCenter
         Title.Caption = #20869#23481#32534#21495
-        Width = 80
+        Width = 70
         Visible = True
       end>
   end

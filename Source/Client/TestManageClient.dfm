@@ -357,6 +357,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
             Anchors = [akLeft, akTop, akRight, akBottom]
             DataField = 'ZACTION'
             DataSource = dsResult
+            ScrollBars = ssVertical
             TabOrder = 0
           end
           object dbedtZTRUEVALUE: TDBEdit

@@ -94,7 +94,7 @@ object LoginDlg: TLoginDlg
     Text = '123456'
   end
   object btOK: TBitBtn
-    Left = 217
+    Left = 230
     Top = 198
     Width = 100
     Height = 25
@@ -122,7 +122,7 @@ object LoginDlg: TLoginDlg
     NumGlyphs = 2
   end
   object btCancel: TBitBtn
-    Left = 337
+    Left = 334
     Top = 198
     Width = 100
     Height = 25
@@ -131,8 +131,8 @@ object LoginDlg: TLoginDlg
     Kind = bkCancel
   end
   object rbLocal: TRadioButton
-    Left = 64
-    Top = 28
+    Left = 74
+    Top = 31
     Width = 113
     Height = 17
     Caption = #26412#22320#36830#25509
@@ -142,8 +142,8 @@ object LoginDlg: TLoginDlg
     OnClick = rbLocalClick
   end
   object rbRemoate: TRadioButton
-    Left = 255
-    Top = 28
+    Left = 265
+    Top = 31
     Width = 113
     Height = 17
     Caption = #36828#31243#36830#25509

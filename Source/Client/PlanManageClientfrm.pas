@@ -220,6 +220,8 @@ type
     procedure tvPlanChange(Sender: TObject; Node: TTreeNode);
     procedure tvPlanChanging(Sender: TObject; Node: TTreeNode;
       var AllowChange: Boolean);
+    procedure tvPlanCustomDrawItem(Sender: TCustomTreeView;
+      Node: TTreeNode; State: TCustomDrawState; var DefaultDraw: Boolean);
   private
     { Private declarations }
     fPlanPageRec : TPlanPageRec;
@@ -623,6 +625,8 @@ begin
       myNode := tvPlan.Items.AddChild(nil,cdstemp.FieldByName('ZNAME').AsString);
       myNode.ImageIndex := 0;
       myNode.SelectedIndex := 7;
+      myNode.Data := PInteger(cdstemp.FieldByName('ZSTATUS').AsInteger);
+
       cdsPlan.Append;
       cdsPlan.FieldByName('ZISNEW').AsBoolean := False;
       for i:=0 to cdsTemp.FieldDefs.Count -1 do
@@ -1273,6 +1277,8 @@ begin
   cdsPlan.Edit;
   cdsPlan.FieldByName('ZSTATUS').AsInteger := Ord(ps_close);
   cdsPlan.Post;
+  if Assigned(tvPlan.Selected) then
+    tvPlan.Selected.Data := PInteger(ord(ps_close));
 end;
 
 procedure TPlanManageClientDlg.actPan_ActionUpdate(Sender: TObject);
@@ -1286,6 +1292,8 @@ begin
   cdsPlan.Edit;
   cdsPlan.FieldByName('ZSTATUS').AsInteger := Ord(ps_doing);
   cdsPlan.Post;
+  if Assigned(tvPlan.Selected) then
+    tvPlan.Selected.Data := PInteger(ord(ps_doing));
 end;
 
 procedure TPlanManageClientDlg.cdsPlanAfterScroll(DataSet: TDataSet);
@@ -1300,6 +1308,8 @@ var
   myGUID : string;
 begin
   //
+  if fLoading then Exit;
+
   if Node.Index >=0 then
   begin
     myGUID := lstPlanGUID.Items[Node.Index];
@@ -1317,6 +1327,32 @@ begin
   end
   else
     AllowChange := True;
+end;
+
+procedure TPlanManageClientDlg.tvPlanCustomDrawItem(
+  Sender: TCustomTreeView; Node: TTreeNode; State: TCustomDrawState;
+  var DefaultDraw: Boolean);
+var
+  BoundRect : TRect;
+  mySTATUS : integer;
+  mybmp : TBitmap;
+begin
+  inherited;
+  BoundRect := Node.DisplayRect(False);
+  mySTATUS := integer(Node.data);
+  if mySTATUS=Ord(ps_close) then
+    Sender.Canvas.Font.Color := clblue;
+
+  mybmp := TBitmap.Create;
+  if Node.Selected then
+    DM.ImageListTree.GetBitmap(Node.SelectedIndex,mybmp)
+  else
+    DM.ImageListTree.GetBitmap(Node.ImageIndex,mybmp);
+    
+  Sender.Canvas.Draw(BoundRect.Left,BoundRect.Top,mybmp);
+  Sender.Canvas.TextOut(BoundRect.Left+mybmp.Width,BoundRect.Top,Node.Text);
+  DefaultDraw := False;
+  mybmp.Free;
 end;
 
 end.
