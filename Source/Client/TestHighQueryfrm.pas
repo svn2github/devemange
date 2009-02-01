@@ -28,6 +28,8 @@ type
     rbOpen: TRadioButton;
     btnAll: TBitBtn;
     chkStats: TCheckBox;
+    rbSubmit: TRadioButton;
+    rbAction: TRadioButton;
     procedure edtCodeChange(Sender: TObject);
     procedure btnAllClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -112,6 +114,22 @@ begin
     else
       mystr := 'ZSTATUS<>3'
 
+  end;
+
+  if chkStats.Checked and rbSubmit.Checked then
+  begin
+    if mystr <> '' then
+      mystr := Format('%s and ZSTATUS<>3',[mystr])
+    else
+      mystr := 'ZSTATUS=4'
+  end;
+
+  if chkStats.Checked and rbAction.Checked then
+  begin
+    if mystr <> '' then
+      mystr := Format('%s and ((ZSTATUS=0) or (ZSTATUS=2))',[mystr])
+    else
+      mystr := '(ZSTATUS=0) or (ZSTATUS=2)'
   end;
 
   Result := mystr;

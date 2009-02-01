@@ -159,6 +159,8 @@ type
     lblTitle: TLabel;
     dbtxtZOPENEDBYNAME: TDBText;
     bvl1: TBevel;
+    btnReQuery: TBitBtn;
+    act_Subbim: TAction;
     procedure act_NewExecute(Sender: TObject);
     procedure act_CancelUpdate(Sender: TObject);
     procedure act_CancelExecute(Sender: TObject);
@@ -211,6 +213,8 @@ type
     procedure actHighQueryExecute(Sender: TObject);
     procedure dbctrlgrd1PaintPanel(DBCtrlGrid: TDBCtrlGrid;
       Index: Integer);
+    procedure act_SubbimExecute(Sender: TObject);
+    procedure act_SubbimUpdate(Sender: TObject);
   private
     { Private declarations }
     fTestPageRec : TTestPageRec;
@@ -624,7 +628,7 @@ begin
       ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
       ClientSystem.fDbOpr.CommitTrans;
       if DataSet.FieldByName('ZSTATUS').AsInteger in [Ord(bgsReAction),
-        Ord(bgsClose)] then
+        Ord(bgsClose),Ord(bgsSubmi)] then
         //邮件通知
         Mailto(DataSet.FieldByName('ZMAILTO').AsString);
     except
@@ -662,8 +666,8 @@ begin
       DataSet.FieldByName('ZISNEW').AsBoolean := False;
       ClientSystem.fDbOpr.CommitTrans;
       LoadTestResult(myID);
-      //邮件通知
-      Mailto(DataSet.FieldByName('ZMAILTO').AsString);
+      //邮件通知,新建时不处理，只有提交测试用例时才处理
+      //Mailto(DataSet.FieldByName('ZMAILTO').AsString);
     except
       ClientSystem.fDbOpr.RollbackTrans;
     end;
@@ -980,14 +984,13 @@ end;
 procedure TTestManageChildfrm.act_SuccessUpdate(Sender: TObject);
 begin
   (Sender as TAction).Enabled := cdsTestItem.FieldByName('ZSTATUS').AsInteger
-    in [Ord(bgsAction),Ord(bgsReAction)];
+    in [Ord(bgsSubmi)];
 end;
 
 procedure TTestManageChildfrm.act_ActionUpdate(Sender: TObject);
 begin
   (Sender as TAction).Enabled := cdsTestItem.FieldByName('ZSTATUS').AsInteger
-    in [Ord(bgsDeath),Ord(bgsClose)];
-
+    in [Ord(bgsSubmi),Ord(bgsDeath),Ord(bgsClose)];
 end;
 
 procedure TTestManageChildfrm.act_ActionExecute(Sender: TObject);
@@ -996,7 +999,6 @@ begin
     cdsTestItem.Edit;
   cdsTestItem.FieldByName('ZSTATUS').AsInteger := Ord(bgsReAction);
   cdsTestItem.Post;
-
 end;
 
 procedure TTestManageChildfrm.act_ColseUpdate(Sender: TObject);
@@ -1033,6 +1035,12 @@ begin
   if (cdsTestItem.FieldByName('ZSTATUS').AsInteger = Ord(bgsClose)) then
   begin
     dbgrdTest.Canvas.Font.Color := clblue;
+  end;
+
+  if (cdsTestItem.FieldByName('ZSTATUS').AsInteger in
+    [Ord(bgsAction),Ord(bgsReAction)]) then
+  begin
+    dbgrdTest.Canvas.Font.Style := [fsBold];
   end;
 
   case Column.Index of
@@ -1112,7 +1120,8 @@ end;
 procedure TTestManageChildfrm.act_toMeExecute(Sender: TObject);
 begin
   fTestPageRec.fPageindex := 1;
-  fTestPageRec.fwhere := Format('ZASSIGNEDTO=%d',[ClientSystem.fEditer_id]);
+  fTestPageRec.fwhere := Format('ZASSIGNEDTO=%d and ZSTATUS=%d ',
+    [ClientSystem.fEditer_id,Ord(bgsSubmi)]);
   fTestPageRec.fCount := GetTestItemPageCount(1,fTestPageRec.fwhere);
   LoadTestItem(fTestPageRec.fPageindex,fTestPageRec.fwhere);
 end;
@@ -1426,6 +1435,29 @@ begin
     DBCtrlGrid.Canvas.FrameRect(DBCtrlGrid.ClientRect);
   end;
 
+end;
+
+procedure TTestManageChildfrm.act_SubbimExecute(Sender: TObject);
+begin
+
+  if (cdsTestitem.FieldByName('ZOPENEDBY').AsInteger <>ClientSystem.fEditer_id) or
+     (ClientSystem.fEditerType<>etAdmin) then
+  begin
+    MessageBox(Handle,'不是你创建的测试用例,不能提交','测试',MB_ICONERROR+MB_OK);
+    Exit;
+  end;
+
+  if not (cdsTestItem.State in [dsEdit,dsinsert]) then
+    cdsTestItem.Edit;
+  cdsTestItem.FieldByName('ZSTATUS').AsInteger := Ord(bgsSubmi);
+  cdsTestItem.Post;
+end;
+
+procedure TTestManageChildfrm.act_SubbimUpdate(Sender: TObject);
+begin
+  //只有活动的测试用例才能提交
+  (Sender as TAction).Enabled := not cdsTestitem.IsEmpty and
+  (cdsTestitem.FieldByName('ZSTATUS').AsInteger in [Ord(bgsAction),Ord(bgsReAction)]);
 end;
 
 end.

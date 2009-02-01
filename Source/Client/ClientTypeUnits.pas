@@ -31,7 +31,7 @@ type
   TFileStype = (fsFile,fsBug,fsDoc);
 
   //BUG的状态
-  TBugStatus = (bgsAction,bgsDeath,bgsReAction,bgsClose); //活动的，已修改的,被激活,关闭
+  TBugStatus = (bgsAction,bgsDeath,bgsReAction,bgsClose,bgsSubmi); //活动的，已修改的,被激活,关闭,提交测试
 
   //任务单的状态
   //待分发=0 ; 执行中=1 ; 撤消=2; 完成=3 ; 关闭=4;激活=5

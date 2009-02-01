@@ -106,7 +106,7 @@ begin
     Ord(rtTest),Ord(rtCreateTest) :
       begin
         myBrushColor := clTeal;
-        myFontColor := clwhite;
+        myFontColor  := clwhite;
       end;
     Ord(rtPlan) :
       begin
@@ -123,6 +123,13 @@ begin
         //myBrushColor := clGray;
         //myFontColor := clwhite;
       end;
+  end;
+
+  //如测试用例,没有提交时
+  if (cdswork.FieldByName('ZROWTYPE').AsInteger in [Ord(rtTest),Ord(rtCreateTest)])
+    and (cdswork.FieldByName('ZSTATUS').AsInteger in [Ord(bgsAction),Ord(bgsReAction)]) then
+  begin
+    dbgrdwork.Canvas.Font.Style := [fsBold];
   end;
 
   //是分部

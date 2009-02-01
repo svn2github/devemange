@@ -1,6 +1,6 @@
 inherited TestManageChildfrm: TTestManageChildfrm
-  Left = 79
-  Top = 128
+  Left = 76
+  Top = 57
   Width = 1139
   Height = 713
   Caption = #27979#35797#31649#29702
@@ -394,14 +394,14 @@ inherited TestManageChildfrm: TTestManageChildfrm
             1123
             40)
           object bvl2: TBevel
-            Left = 328
+            Left = 426
             Top = 6
             Width = 8
             Height = 32
             Shape = bsLeftLine
           end
           object btnResult_Add: TBitBtn
-            Left = 11
+            Left = 6
             Top = 8
             Width = 100
             Height = 25
@@ -410,7 +410,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
             TabOrder = 0
           end
           object btnResult_Save: TBitBtn
-            Left = 219
+            Left = 214
             Top = 8
             Width = 100
             Height = 25
@@ -419,16 +419,16 @@ inherited TestManageChildfrm: TTestManageChildfrm
             TabOrder = 1
           end
           object btnSuccess: TBitBtn
-            Left = 342
+            Left = 435
             Top = 8
             Width = 100
             Height = 25
             Action = act_Success
-            Caption = #25105#23436#25104#20102
+            Caption = #23436#25104#27979#35797
             TabOrder = 2
           end
           object btnAction: TBitBtn
-            Left = 446
+            Left = 539
             Top = 8
             Width = 100
             Height = 25
@@ -437,7 +437,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
             TabOrder = 3
           end
           object btnColse: TBitBtn
-            Left = 550
+            Left = 643
             Top = 8
             Width = 100
             Height = 25
@@ -446,7 +446,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
             TabOrder = 4
           end
           object btnResult_AddByBug: TBitBtn
-            Left = 115
+            Left = 110
             Top = 8
             Width = 100
             Height = 25
@@ -463,6 +463,15 @@ inherited TestManageChildfrm: TTestManageChildfrm
             VisibleButtons = [nbFirst, nbPrior, nbNext, nbLast]
             Anchors = [akTop, akRight]
             TabOrder = 6
+          end
+          object btnReQuery: TBitBtn
+            Left = 318
+            Top = 8
+            Width = 100
+            Height = 25
+            Action = act_Subbim
+            Caption = #25552#20132#27979#35797
+            TabOrder = 7
           end
         end
       end
@@ -952,7 +961,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
     end
     object act_Success: TAction
       Category = #21015#34920
-      Caption = #25105#23436#25104#20102
+      Caption = #23436#25104#27979#35797
       OnExecute = act_SuccessExecute
       OnUpdate = act_SuccessUpdate
     end
@@ -1033,6 +1042,12 @@ inherited TestManageChildfrm: TTestManageChildfrm
       Category = #21015#34920
       Caption = #39640#32423#26597#35810'...'
       OnExecute = actHighQueryExecute
+    end
+    object act_Subbim: TAction
+      Category = #21015#34920
+      Caption = #25552#20132#27979#35797
+      OnExecute = act_SubbimExecute
+      OnUpdate = act_SubbimUpdate
     end
   end
   object cdsProject: TClientDataSet

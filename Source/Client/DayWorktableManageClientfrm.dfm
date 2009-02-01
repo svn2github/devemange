@@ -1,5 +1,6 @@
 inherited DayWorktableManageClientDlg: TDayWorktableManageClientDlg
-  Left = 170
+  Left = 172
+  Top = 108
   Caption = #25105#30340#24037#20316#21488
   OldCreateOrder = True
   PixelsPerInch = 96

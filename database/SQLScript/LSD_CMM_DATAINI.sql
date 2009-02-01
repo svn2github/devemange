@@ -79,6 +79,8 @@ insert into TB_TEST_PARAMS (ZTYPE,ZID,ZNAME) values(3,0,'活动');
 insert into TB_TEST_PARAMS (ZTYPE,ZID,ZNAME) values(3,1,'修改完成');
 insert into TB_TEST_PARAMS (ZTYPE,ZID,ZNAME) values(3,2,'被激活');
 insert into TB_TEST_PARAMS (ZTYPE,ZID,ZNAME) values(3,3,'关闭');
+insert into TB_TEST_PARAMS (ZTYPE,ZID,ZNAME) values(3,4,'提交测试');  
+
 --测试关闭的状态
 insert into TB_TEST_PARAMS (ZTYPE,ZID,ZNAME) values(4,0,'高');
 insert into TB_TEST_PARAMS (ZTYPE,ZID,ZNAME) values(4,1,'中');

@@ -16,7 +16,8 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, BaseDialogfrm, StdCtrls, Buttons, DBCtrls, DB, DBClient, Mask;
+  Dialogs, BaseDialogfrm, StdCtrls, Buttons, DBCtrls, DB, DBClient, Mask,
+  ExtCtrls;
 
 type
   TTestCaseSOCREDlg = class(TBaseDialog)
@@ -27,10 +28,14 @@ type
     btnOk: TBitBtn;
     cds1: TClientDataSet;
     ds1: TDataSource;
-    lbl3: TLabel;
     edt1: TEdit;
     lbl4: TLabel;
     dbedtZREMORK: TDBEdit;
+    lbl5: TLabel;
+    lbl6: TLabel;
+    lbl7: TLabel;
+    lbl8: TLabel;
+    lbl3: TLabel;
     procedure cds1AfterScroll(DataSet: TDataSet);
   private
     { Private declarations }

@@ -660,6 +660,11 @@ begin
  set @TestContext  = '≤‚ ‘πÿ±’'
 end
 
+if @Status = 4 
+begin
+  set @TestContext  = 'Ã·Ωª≤‚ ‘'
+end;
+
 
 
 

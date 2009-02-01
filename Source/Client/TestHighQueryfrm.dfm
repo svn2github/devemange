@@ -3,8 +3,9 @@ inherited TestHighQueryDlg: TTestHighQueryDlg
   Top = 232
   BorderStyle = bsDialog
   Caption = #39640#32423#26597#35810
-  ClientHeight = 234
+  ClientHeight = 255
   ClientWidth = 486
+  OldCreateOrder = True
   Position = poMainFormCenter
   OnShow = FormShow
   PixelsPerInch = 96
@@ -65,7 +66,7 @@ inherited TestHighQueryDlg: TTestHighQueryDlg
   end
   object btn1: TBitBtn
     Left = 351
-    Top = 180
+    Top = 207
     Width = 100
     Height = 25
     TabOrder = 6
@@ -73,7 +74,7 @@ inherited TestHighQueryDlg: TTestHighQueryDlg
   end
   object btn2: TBitBtn
     Left = 247
-    Top = 180
+    Top = 207
     Width = 100
     Height = 25
     TabOrder = 7
@@ -99,16 +100,16 @@ inherited TestHighQueryDlg: TTestHighQueryDlg
     TabOrder = 9
   end
   object rbClosed: TRadioButton
-    Left = 125
-    Top = 154
+    Left = 122
+    Top = 176
     Width = 113
     Height = 17
     Caption = #20851#38381#30340#29992#20363
     TabOrder = 10
   end
   object rbOpen: TRadioButton
-    Left = 269
-    Top = 154
+    Left = 242
+    Top = 176
     Width = 151
     Height = 17
     Caption = #27809#26377#20851#38381#30340#29992#20363
@@ -116,7 +117,7 @@ inherited TestHighQueryDlg: TTestHighQueryDlg
   end
   object btnAll: TBitBtn
     Left = 143
-    Top = 180
+    Top = 206
     Width = 100
     Height = 25
     Caption = #20840#37096
@@ -127,42 +128,58 @@ inherited TestHighQueryDlg: TTestHighQueryDlg
   object chkStats: TCheckBox
     Left = 30
     Top = 152
-    Width = 97
+    Width = 78
     Height = 17
     Caption = #29366#24577
     TabOrder = 13
+  end
+  object rbSubmit: TRadioButton
+    Left = 122
+    Top = 153
+    Width = 98
+    Height = 17
+    Caption = #24050#25552#20132#27979#35797
+    TabOrder = 14
+  end
+  object rbAction: TRadioButton
+    Left = 242
+    Top = 152
+    Width = 165
+    Height = 17
+    Caption = #27963#21160'('#27809#26377#25552#20132')'
+    TabOrder = 15
   end
   object cdsPros: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 8
-    Top = 179
+    Top = 221
   end
   object dsPros: TDataSource
     DataSet = cdsPros
     Left = 48
-    Top = 179
+    Top = 221
   end
   object cdsCreateor: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 161
-    Top = 179
+    Top = 221
   end
   object dsCreateor: TDataSource
     DataSet = cdsCreateor
     Left = 200
-    Top = 178
+    Top = 220
   end
   object cdsCoser: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 88
-    Top = 181
+    Top = 223
   end
   object dsCloser: TDataSource
     DataSet = cdsCoser
     Left = 124
-    Top = 181
+    Top = 223
   end
 end
