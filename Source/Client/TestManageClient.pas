@@ -1440,7 +1440,7 @@ end;
 procedure TTestManageChildfrm.act_SubbimExecute(Sender: TObject);
 begin
 
-  if (cdsTestitem.FieldByName('ZOPENEDBY').AsInteger <>ClientSystem.fEditer_id) or
+  if (cdsTestitem.FieldByName('ZOPENEDBY').AsInteger <>ClientSystem.fEditer_id) and
      (ClientSystem.fEditerType<>etAdmin) then
   begin
     MessageBox(Handle,'不是你创建的测试用例,不能提交','测试',MB_ICONERROR+MB_OK);
