@@ -1,6 +1,6 @@
 inherited TestManageChildfrm: TTestManageChildfrm
-  Left = 76
-  Top = 57
+  Left = 164
+  Top = 93
   Width = 1139
   Height = 713
   Caption = #27979#35797#31649#29702
@@ -603,6 +603,14 @@ inherited TestManageChildfrm: TTestManageChildfrm
           Height = 15
           Caption = #22791#27880#65306
         end
+        object btnResult_AddSVNVer: TSpeedButton
+          Left = 675
+          Top = 121
+          Width = 23
+          Height = 23
+          Action = actResult_AddSVNVer
+          Caption = 'G'
+        end
         object dbedtZNAME: TDBEdit
           Left = 84
           Top = 6
@@ -717,7 +725,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
         object dbedtZPRO_SVN: TDBEdit
           Left = 551
           Top = 121
-          Width = 150
+          Width = 125
           Height = 23
           DataField = 'ZPRO_SVN'
           DataSource = dsTestItem
@@ -1048,6 +1056,11 @@ inherited TestManageChildfrm: TTestManageChildfrm
       Caption = #25552#20132#27979#35797
       OnExecute = act_SubbimExecute
       OnUpdate = act_SubbimUpdate
+    end
+    object actResult_AddSVNVer: TAction
+      Category = #29992#20363
+      Caption = #21462'SVN'#29256#26412#21495
+      OnExecute = actResult_AddSVNVerExecute
     end
   end
   object cdsProject: TClientDataSet

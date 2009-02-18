@@ -1270,7 +1270,13 @@ begin
       DataSet.FieldByName('ZISNEW').AsBoolean := False;
       ClientSystem.fDbOpr.CommitTrans;
       //邮件通知
-      Mailto(DataSet.FieldByName('ZMAILTO').AsString);
+      ShowProgress('邮件通知...',0);
+      try
+        Application.ProcessMessages;
+        Mailto(DataSet.FieldByName('ZMAILTO').AsString);
+      finally
+        HideProgress();
+      end;
     except
       ClientSystem.fDbOpr.RollbackTrans;
     end;

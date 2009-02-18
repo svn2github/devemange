@@ -161,6 +161,8 @@ type
     bvl1: TBevel;
     btnReQuery: TBitBtn;
     act_Subbim: TAction;
+    btnResult_AddSVNVer: TSpeedButton;
+    actResult_AddSVNVer: TAction;
     procedure act_NewExecute(Sender: TObject);
     procedure act_CancelUpdate(Sender: TObject);
     procedure act_CancelExecute(Sender: TObject);
@@ -215,6 +217,7 @@ type
       Index: Integer);
     procedure act_SubbimExecute(Sender: TObject);
     procedure act_SubbimUpdate(Sender: TObject);
+    procedure actResult_AddSVNVerExecute(Sender: TObject);
   private
     { Private declarations }
     fTestPageRec : TTestPageRec;
@@ -241,6 +244,7 @@ implementation
 
 uses
   TestCaseSOCREfrm, {测试打分}
+  GetSVNVerfrm,     {选择SVN的版本号}
   DmUints,BugHistoryfrm;
 
 {$R *.dfm}
@@ -1438,6 +1442,8 @@ begin
 end;
 
 procedure TTestManageChildfrm.act_SubbimExecute(Sender: TObject);
+var
+  myver : string;
 begin
 
   if (cdsTestitem.FieldByName('ZOPENEDBY').AsInteger <>ClientSystem.fEditer_id) and
@@ -1447,8 +1453,19 @@ begin
     Exit;
   end;
 
+  
   if not (cdsTestItem.State in [dsEdit,dsinsert]) then
     cdsTestItem.Edit;
+
+  if cdsTestItem.FieldByName('ZPRO_SVN').AsInteger = 0 then
+  begin
+    myver := '0';
+    if ShowGetSVNVer(myver) then
+      cdsTestItem.FieldByName('ZPRO_SVN').AsInteger :=
+        strtointdef(myver,0);
+    Application.ProcessMessages;
+  end;
+
   cdsTestItem.FieldByName('ZSTATUS').AsInteger := Ord(bgsSubmi);
   cdsTestItem.Post;
 end;
@@ -1458,6 +1475,21 @@ begin
   //只有活动的测试用例才能提交
   (Sender as TAction).Enabled := not cdsTestitem.IsEmpty and
   (cdsTestitem.FieldByName('ZSTATUS').AsInteger in [Ord(bgsAction),Ord(bgsReAction)]);
+end;
+
+procedure TTestManageChildfrm.actResult_AddSVNVerExecute(Sender: TObject);
+var
+  mystr : string;
+begin
+  //
+  mystr :=  cdsTestItem.FieldByName('ZPRO_SVN').AsString;
+  if ShowGetSVNVer(mystr) then
+  begin
+    if not (cdsTestItem.State in [dsEdit,dsInsert]) then
+      cdsTestItem.Edit;
+    cdsTestItem.FieldByName('ZPRO_SVN').AsInteger :=
+      strtointdef(mystr,0);
+  end;
 end;
 
 end.

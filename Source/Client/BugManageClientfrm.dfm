@@ -1,6 +1,6 @@
 inherited BugManageDlg: TBugManageDlg
-  Left = 55
-  Top = 91
+  Left = 52
+  Top = 87
   Width = 1171
   Height = 692
   Caption = #38169#35823#31649#29702
@@ -711,8 +711,8 @@ inherited BugManageDlg: TBugManageDlg
           object lbBugCaption: TLabel
             Left = 0
             Top = 0
-            Width = 96
-            Height = 15
+            Width = 880
+            Height = 18
             Align = alClient
             Caption = 'lbBugCaption'
             Color = clGray

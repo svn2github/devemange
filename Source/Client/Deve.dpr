@@ -22,7 +22,8 @@ uses
   AntManageClientfrm in 'AntManageClientfrm.pas' {AntManageClientDlg},
   TestHighQueryfrm in 'TestHighQueryfrm.pas' {TestHighQueryDlg},
   DayWorktableManageClientfrm in 'DayWorktableManageClientfrm.pas' {DayWorktableManageClientDlg},
-  ReleaseManageClientfrm in 'ReleaseManageClientfrm.pas' {ReleaseManageClientDlg};
+  ReleaseManageClientfrm in 'ReleaseManageClientfrm.pas' {ReleaseManageClientDlg},
+  GetSVNVerfrm in 'GetSVNVerfrm.pas' {GetSVNVerDlg};
 
 {$R *.res}
 {$R resource.res}
