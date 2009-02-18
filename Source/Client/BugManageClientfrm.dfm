@@ -1065,6 +1065,7 @@ inherited BugManageDlg: TBugManageDlg
             Top = 124
             Width = 144
             Height = 23
+            DropDownRows = 50
             KeyField = 'ZID'
             ListField = 'ZNAME'
             ListSource = DM.dsUsers
