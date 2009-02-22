@@ -442,6 +442,7 @@ create table TB_TEST_ITEM(
 	ZCASEBUG     varchar(50),                                   /*相关bug*/
 	ZCASETASK    varchar(50),                                   /*相关任务单*/
 	ZMAILTO      varchar(100),                                  /*邮件通知*/
+	ZSUBMISBY    int,                                           /*提交人*/
 	
 	--测试的项目	
 	ZPRO_ID      int,                                           /*项目ID*/
@@ -516,6 +517,7 @@ create table TB_PLAN(
 	ZSUMTEXT     text,                                          /*项目完成总结*/
 	ZPM          int ,                                          /*项目经理*/
 	ZBUILDDATE   datetime,                                      /*创建时间*/
+	ZMEMBER      varchar(200),                                  /*项目成员,可用于做为邮件通知*/ 
 	
 
 	constraint PK_TB_PLAN primary key(ZGUID)  
@@ -565,6 +567,7 @@ create table TB_PLAN_DETAIL(
 	ZDEVE        int ,                                          /*负责人*/
 	ZCONTENT     text,                                          /*要求内容*/
 	ZSOCRE       int,                                           /*得分*/
+	ZTESTCASE    varchar(100),                                  /*测试用例 多个采用;号分开*/
 
 	constraint PK_TB_PLAN_DETAIL primary key(ZID)  
 )
