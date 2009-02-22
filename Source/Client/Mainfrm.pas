@@ -132,7 +132,9 @@ type
     procedure WMTickCount (var Msg: TMessage); message gcMSG_TickCount;
     procedure WMShowBugItem(var msg:TMessage); message gcMSG_GetBugItem;
     procedure WMShowTestItem(var msg:TMessage); message gcMSG_GetTestItem;
+    procedure WMShowTestItemCode(var msg:TMessage); message gcMSG_GetTestItemByCode;
     procedure WMShowReleaseItem(var msg:TMessage);message gcMSG_GetReleaseItem;
+    procedure WMShowPlanItem(var msg:TMessage); message gcMSG_GetPlanItem;
 
   public
     property CurrentChildform : TBaseChildDlg read fCurrentChildform;
@@ -715,6 +717,57 @@ begin
   if Assigned(myBaseform) then
   begin
     SendMessage(myBaseform.Handle,gcMSG_GetReleaseItem,msg.WParam,msg.LParam);
+  end;
+
+end;
+
+procedure TMainDlg.WMShowTestItemCode(var msg: TMessage);
+var
+  myBaseform,myform : TBaseChildDlg;
+  i : Integer;
+begin
+  DoChangeClient(TTestManageChildfrm);
+
+  myBaseform := nil;
+  for i:=0 to fChildform.Count -1 do
+  begin
+    myform := fChildform.items[i];
+    if myform is TTestManageChildfrm then
+    begin
+      myBaseform :=fChildform.items[i];
+      break;
+    end;
+  end;
+
+  if Assigned(myBaseform) then
+  begin
+    SendMessage(myBaseform.Handle,gcMSG_GetTestItemByCode,
+      msg.WParam,msg.LParam);
+  end;
+
+end;
+
+procedure TMainDlg.WMShowPlanItem(var msg: TMessage);
+var
+  myBaseform,myform : TBaseChildDlg;
+  i : Integer;
+begin
+  DoChangeClient(TPlanManageClientDlg);
+
+  myBaseform := nil;
+  for i:=0 to fChildform.Count -1 do
+  begin
+    myform := fChildform.items[i];
+    if myform is TPlanManageClientDlg then
+    begin
+      myBaseform :=fChildform.items[i];
+      break;
+    end;
+  end;
+
+  if Assigned(myBaseform) then
+  begin
+    SendMessage(myBaseform.Handle,gcMSG_GetPlanItem,msg.WParam,msg.LParam);
   end;
 
 end;

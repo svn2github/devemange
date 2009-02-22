@@ -1,6 +1,6 @@
 inherited TestManageChildfrm: TTestManageChildfrm
-  Left = 164
-  Top = 93
+  Left = 84
+  Top = 49
   Width = 1139
   Height = 713
   Caption = #27979#35797#31649#29702
@@ -62,9 +62,9 @@ inherited TestManageChildfrm: TTestManageChildfrm
           end
           item
             Expanded = False
-            FieldName = 'ZOPENEDBYNAME'
+            FieldName = 'ZSUBMISBYNAME'
             Title.Alignment = taCenter
-            Title.Caption = #21019#24314#20154
+            Title.Caption = #25552#20132#20154
             Width = 80
             Visible = True
           end
@@ -136,7 +136,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
         TabOrder = 1
         object btnNewTest: TBitBtn
           Left = 3
-          Top = 9
+          Top = 8
           Width = 100
           Height = 25
           Action = act_New
@@ -144,8 +144,8 @@ inherited TestManageChildfrm: TTestManageChildfrm
           TabOrder = 0
         end
         object btntoMe: TBitBtn
-          Left = 315
-          Top = 9
+          Left = 419
+          Top = 8
           Width = 100
           Height = 25
           Action = act_toMe
@@ -153,8 +153,8 @@ inherited TestManageChildfrm: TTestManageChildfrm
           TabOrder = 1
         end
         object btnmetest: TBitBtn
-          Left = 419
-          Top = 9
+          Left = 523
+          Top = 8
           Width = 100
           Height = 25
           Action = act_metest
@@ -162,17 +162,17 @@ inherited TestManageChildfrm: TTestManageChildfrm
           TabOrder = 2
         end
         object btnmebuild: TBitBtn
-          Left = 211
-          Top = 9
+          Left = 315
+          Top = 8
           Width = 100
           Height = 25
           Action = act_mebuild
-          Caption = #25105#21019#24314#30340
+          Caption = #25105#25552#20132#30340
           TabOrder = 3
         end
         object btnNewByBugCode: TBitBtn
           Left = 107
-          Top = 9
+          Top = 8
           Width = 100
           Height = 25
           Action = act_NewByBugCode
@@ -180,13 +180,22 @@ inherited TestManageChildfrm: TTestManageChildfrm
           TabOrder = 4
         end
         object btnResult_Add1: TBitBtn
-          Left = 523
+          Left = 627
           Top = 8
           Width = 100
           Height = 25
           Action = actHighQuery
           Caption = #39640#32423#26597#35810'...'
           TabOrder = 5
+        end
+        object btnnewByPlanCode: TBitBtn
+          Left = 211
+          Top = 8
+          Width = 100
+          Height = 25
+          Action = act_newByPlanCode
+          Caption = #29992#20219#21153#24314#29992#20363
+          TabOrder = 6
         end
       end
       object pnlTestBottom: TPanel
@@ -562,8 +571,8 @@ inherited TestManageChildfrm: TTestManageChildfrm
           Caption = #30456#20851'TASK:'
         end
         object Label15: TLabel
-          Left = 240
-          Top = 70
+          Left = 478
+          Top = 68
           Width = 75
           Height = 15
           Caption = #21019#24314#26102#38388#65306
@@ -583,7 +592,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
           Caption = 'SVN'#29256#26412':'
         end
         object Label3: TLabel
-          Left = 479
+          Left = 478
           Top = 41
           Width = 60
           Height = 15
@@ -610,6 +619,13 @@ inherited TestManageChildfrm: TTestManageChildfrm
           Height = 23
           Action = actResult_AddSVNVer
           Caption = 'G'
+        end
+        object lbl3: TLabel
+          Left = 240
+          Top = 68
+          Width = 60
+          Height = 15
+          Caption = #25552#20132#20154#65306
         end
         object dbedtZNAME: TDBEdit
           Left = 84
@@ -696,7 +712,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
           TabOrder = 7
         end
         object dbedtZOPENEDDATE: TDBEdit
-          Left = 315
+          Left = 551
           Top = 65
           Width = 150
           Height = 23
@@ -838,7 +854,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
           TabOrder = 21
         end
         object btnGetBugItem: TBitBtn
-          Left = 716
+          Left = 717
           Top = 136
           Width = 100
           Height = 25
@@ -855,6 +871,24 @@ inherited TestManageChildfrm: TTestManageChildfrm
           DataField = 'ZCLOSESTATUSNAME'
           DataSource = dsTestItem
           TabOrder = 23
+        end
+        object dbedtZSUBMISBYNAME: TDBEdit
+          Left = 314
+          Top = 64
+          Width = 150
+          Height = 23
+          DataField = 'ZSUBMISBYNAME'
+          DataSource = dsTestItem
+          TabOrder = 24
+        end
+        object btnGetBugItem1: TBitBtn
+          Left = 717
+          Top = 165
+          Width = 100
+          Height = 25
+          Action = act_GetPlanItem
+          Caption = #36339#21040#30456#20851#20219#21153
+          TabOrder = 25
         end
       end
       object pnlTitle: TPanel
@@ -1061,6 +1095,17 @@ inherited TestManageChildfrm: TTestManageChildfrm
       Category = #29992#20363
       Caption = #21462'SVN'#29256#26412#21495
       OnExecute = actResult_AddSVNVerExecute
+    end
+    object act_newByPlanCode: TAction
+      Category = #21015#34920
+      Caption = #29992#20219#21153#24314#29992#20363
+      OnExecute = act_newByPlanCodeExecute
+    end
+    object act_GetPlanItem: TAction
+      Category = #21015#34920
+      Caption = #36339#21040#30456#20851#20219#21153
+      OnExecute = act_GetPlanItemExecute
+      OnUpdate = act_GetPlanItemUpdate
     end
   end
   object cdsProject: TClientDataSet

@@ -209,7 +209,7 @@ procedure TDayWorktableManageClientDlg.act_gotoUpdate(Sender: TObject);
 begin
   (Sender as TAction).Enabled := cdswork.Active
   and (cdswork.FieldByName('ZROWTYPE').AsInteger in [Ord(rtBug),Ord(rtCreateBug),
-    Ord(rtTest),Ord(rtCreateTest),Ord(rtRelease),Ord(rtCreateRelease)])
+    Ord(rtTest),Ord(rtCreateTest),Ord(rtRelease),Ord(rtCreateRelease),Ord(rtPlan)])
   and (not cdswork.FieldByName('ZROWPART').AsBoolean);
 end;
 
@@ -227,7 +227,9 @@ begin
     Ord(rtCreateRelease)] then
     SendMessage(Application.MainForm.Handle,gcMSG_GetReleaseItem,
       cdswork.FieldByName('ZCONTENTID').AsInteger,0)
-
+  else if cdswork.FieldByName('ZROWTYPE').AsInteger in [Ord(rtPlan)] then
+    SendMessage(Application.MainForm.Handle,gcMSG_GetPlanItem,
+      cdswork.FieldByName('ZCONTENTID').AsInteger,0)
 end;
 
 procedure TDayWorktableManageClientDlg.LoadWork(AUseID, AUseType: Integer);

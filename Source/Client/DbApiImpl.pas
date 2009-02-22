@@ -76,6 +76,7 @@ type
     function DeleteFile(AFile_ID: Integer): Integer; safecall;
     function UpFileChunk(AFile_ID: Integer; AVer: Integer; AGroupID: Integer; AStream: OleVariant): Integer; safecall;
     procedure MailTo(AStyle: Integer; const AMails: WideString; AContextID: Integer); safecall;
+    procedure MailToEx(const AMails: WideString; ATitle : WideString; AContent: WideString); safecall;
     function GetSysDateTime: OleVariant; stdcall;
 
     //5. Ù–‘
@@ -295,6 +296,12 @@ procedure TBfssDBOpr.MailTo(AStyle: Integer; const AMails: WideString;
   AContextID: Integer);
 begin
   RemoteServer.AppServer.MailTo(AStyle,AMails,AContextID);
+end;
+
+procedure TBfssDBOpr.MailToEx(const AMails: WideString; ATitle,
+  AContent: WideString);
+begin
+  RemoteServer.AppServer.MailToEx(AMails,ATitle,AContent);
 end;
 
 function TBfssDBOpr.ReadBlob(const SqlStr: PChar; var Buf;

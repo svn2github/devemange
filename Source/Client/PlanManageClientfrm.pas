@@ -17,12 +17,19 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, BaseChildfrm, ExtCtrls, Grids, DBGrids, ComCtrls, DB, DBClient,
-  ActnList, StdCtrls, Buttons, DBCtrls, Mask, dbcgrids, ImgList;
+  ActnList, StdCtrls, Buttons, DBCtrls, Mask, dbcgrids, ImgList,
+  ClientTypeUnits;
 
 type
   TPlanStatus = (ps_doing,ps_success,ps_over,ps_close);
 
   TPlanPageRec = record
+    fCount : integer;
+    fPageindex : integer;
+    fwhere : string;
+  end;
+
+  TPlanItemPageRec = record
     fCount : integer;
     fPageindex : integer;
     fwhere : string;
@@ -101,7 +108,7 @@ type
     actItem_Close: TAction;
     actItem_Save: TAction;
     actItem_Cancel: TAction;
-    actItem_Piro: TAction;
+    actItem_PiroPage: TAction;
     actItem_Next: TAction;
     actItem_Action: TAction;
     btnDetail_Add: TBitBtn;
@@ -158,6 +165,26 @@ type
     btnPan_NextPage: TSpeedButton;
     btnPan_LastPage: TSpeedButton;
     lblPlanPage: TLabel;
+    lbl21: TLabel;
+    dbedtZMEMBER: TDBEdit;
+    lbl22: TLabel;
+    dblkcbb1: TDBLookupComboBox;
+    pnlTestCase: TPanel;
+    lbl23: TLabel;
+    dbedtZTESTCASE: TDBEdit;
+    btnGotoTest: TBitBtn;
+    pnlPlanPage: TPanel;
+    actItem_firstPage: TAction;
+    actItme_ProvPage: TAction;
+    actItem_NextPage: TAction;
+    actItem_LastPage: TAction;
+    btnItem_firstPage: TBitBtn;
+    btnItem_PiroPage: TBitBtn;
+    btnItem_NextPage: TBitBtn;
+    btnItem_LastPage: TBitBtn;
+    lblItemPage: TLabel;
+    actItem_RefreshData: TAction;
+    btnItem_RefreshData: TBitBtn;
     procedure cdsPlanNewRecord(DataSet: TDataSet);
     procedure actPan_SaveUpdate(Sender: TObject);
     procedure actPan_SaveExecute(Sender: TObject);
@@ -200,8 +227,8 @@ type
     procedure actDetail_AddExecute(Sender: TObject);
     procedure cdsPlanDetailBeforePost(DataSet: TDataSet);
     procedure pgcplanChange(Sender: TObject);
-    procedure actItem_PiroExecute(Sender: TObject);
-    procedure actItem_PiroUpdate(Sender: TObject);
+    procedure actItem_PiroPageExecute(Sender: TObject);
+    procedure actItem_PiroPageUpdate(Sender: TObject);
     procedure actItem_NextUpdate(Sender: TObject);
     procedure actItem_NextExecute(Sender: TObject);
     procedure actDetail_SUCCESSExecute(Sender: TObject);
@@ -222,16 +249,33 @@ type
       var AllowChange: Boolean);
     procedure tvPlanCustomDrawItem(Sender: TCustomTreeView;
       Node: TTreeNode; State: TCustomDrawState; var DefaultDraw: Boolean);
+    procedure dblkcbb1CloseUp(Sender: TObject);
+    procedure actItem_firstPageExecute(Sender: TObject);
+    procedure actItem_firstPageUpdate(Sender: TObject);
+    procedure actItme_ProvPageUpdate(Sender: TObject);
+    procedure actItme_ProvPageExecute(Sender: TObject);
+    procedure actItem_NextPageUpdate(Sender: TObject);
+    procedure actItem_NextPageExecute(Sender: TObject);
+    procedure actItem_LastPageUpdate(Sender: TObject);
+    procedure actItem_LastPageExecute(Sender: TObject);
+    procedure actItem_RefreshDataExecute(Sender: TObject);
+    procedure btnGotoTestClick(Sender: TObject);
   private
     { Private declarations }
     fPlanPageRec : TPlanPageRec;
+    fPlanItemPageRec : TPlanItemPageRec;
 
     //加载项目
     procedure LoadPlan(APageIndex: integer; Awhere: String);
     function  GetPlanPageCount(APageIndex:integer;AWhereStr:String):integer;
 
-    procedure LoadPlanItem(AGUID:string);
+    procedure LoadPlanItem(APageIndex: integer; Awhere: String);
+    function  GetPlanItemPageCount(APageIndex:integer;AWhereStr:String):integer;
     procedure LoadPlanDetail(AGUID:string);
+
+    //直接显示子任务用
+    procedure WMShowPlanItem(var msg:TMessage); message gcMSG_GetPlanItem;
+   
 
   public
     { Public declarations }
@@ -245,7 +289,6 @@ type
 
 implementation
 uses
-  ClientTypeUnits,
   ClinetSystemUnits, DmUints;
 
 {$R *.dfm}
@@ -349,6 +392,7 @@ begin
   //
   // 项目任务
   //
+  fPlanItemPageRec.fwhere := '1=1';
   mycds2 := TClientDataSet.Create(nil);
   try
     mycds2.data := ClientSystem.fDbOpr.ReadDataSet(PChar(glSQL3));
@@ -408,7 +452,16 @@ begin
     cdsPlanItem.CreateDataSet;
 
     if cdsPlan.RecordCount > 0 then
-      LoadPlanItem(cdsPlan.FieldByName('ZGUID').AsString);
+    begin
+      fPlanItemPageRec.fPageindex := 1;
+      fPlanItemPageRec.fwhere  := format('ZPLAN_GUID=''''%s''''',[
+        cdsPlan.FieldByName('ZGUID').AsString]);
+      fPlanItemPageRec.fCount := GetPlanItemPageCount(fPlanItemPageRec.fPageindex,
+        fPlanItemPageRec.fwhere);
+      lblItemPage.Caption := format('%d/%d',[1,fPlanItemPageRec.fCount]);
+      LoadPlanItem(fPlanItemPageRec.fPageindex,
+        fPlanItemPageRec.fwhere);
+    end;
     
   finally
     mycds2.Free;
@@ -519,9 +572,9 @@ var
   mySQL : string;
 const
   gl_SQLTXT1 = 'insert TB_PLAN (ZGUID,ZNAME,ZSTATUS,ZPRO_ID,ZSUMTEXT,'
-     +'ZPM,ZBUILDDATE) values(''%s'',''%s'',%d,%d,''%s'',%d,''%s'')';
+     +'ZPM,ZBUILDDATE,ZMEMBER) values(''%s'',''%s'',%d,%d,''%s'',%d,''%s'',''%s'')';
   gl_SQLTXT2  = 'update TB_PLAN set ZNAME=''%s'',ZSTATUS=%d,ZPRO_ID=%d, '
-     + 'ZSUMTEXT=''%s'',ZPM=%d where ZGUID=''%s''';
+     + 'ZSUMTEXT=''%s'',ZPM=%d,ZMEMBER=''%s'' where ZGUID=''%s''';
 begin
   if fLoading then Exit;
   //保存
@@ -534,7 +587,8 @@ begin
       DataSet.FieldByName('ZPRO_ID').AsInteger,
       DataSet.FieldByName('ZSUMTEXT').AsString,
       DataSet.FieldByName('ZPM').AsInteger,
-      DataSet.FieldByName('ZBUILDDATE').AsString
+      DataSet.FieldByName('ZBUILDDATE').AsString,
+      DataSet.FieldByName('ZMEMBER').AsString
       ]);
     ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
     DataSet.FieldByName('ZISNEW').AsBoolean := False;
@@ -548,6 +602,7 @@ begin
       DataSet.FieldByName('ZPRO_ID').AsInteger,
       DataSet.FieldByName('ZSUMTEXT').AsString,
       DataSet.FieldByName('ZPM').AsInteger,
+      DataSet.FieldByName('ZMEMBER').AsString,
       DataSet.FieldByName('ZGUID').AsString]);
     ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
 
@@ -588,7 +643,7 @@ var
   myNode : TTreeNode;
 const
     glSQL = 'exec pt_SplitPage ''TB_PLAN'',' +
-          '''ZGUID,ZID,ZNAME,ZSTATUS,ZPRO_ID,ZSUMTEXT,ZPM,ZBUILDDATE'', ' +
+          '''ZGUID,ZID,ZNAME,ZSTATUS,ZPRO_ID,ZSUMTEXT,ZPM,ZBUILDDATE,ZMEMBER'', ' +
           '''%s'',20,%d,%d,1,''%s''';
 begin
 
@@ -699,16 +754,22 @@ begin
   and (fPlanPageRec.fCount>0);
 end;
 
-procedure TPlanManageClientDlg.LoadPlanItem(AGUID:string);
+procedure TPlanManageClientDlg.LoadPlanItem(APageIndex: integer; Awhere: String);
 var
   mySQL  : string;
   i : integer;
   myb : Boolean;
 const
-    glSQL ='Select * from TB_PLAN_ITEM where ZPLAN_GUID=''%s'' order by ZSORT ';
+  glSQL = 'exec pt_SplitPage ''TB_PLAN_ITEM'',' +
+          '''ZGUID,ZPLAN_GUID,ZNAME,ZSTATUS,ZPBDATE,ZPEDATE,ZFBDATE,ZFEDATE,'+
+          'ZCHILDCOUNT,ZPASSCOUNT,ZMAINDEVE,ZSORT,ZREMARK'', ' +
+          '''%s'',20,%d,%d,0,''%s''';
 begin
 
-  mySQL := format(glSQL,[AGUID]);
+  mySQL := format(glSQL,[
+      'ZSORT',
+      APageIndex,
+      0,Awhere]);
 
   myb := fLoading;
   fLoading := True;
@@ -788,7 +849,8 @@ end;
 procedure TPlanManageClientDlg.pgcplanChanging(Sender: TObject;
   var AllowChange: Boolean);
 begin
-  if cdsPlanItem.State in [dsEdit,dsInsert] then
+  if (cdsPlanItem.State in [dsEdit,dsInsert]) or
+     (cdsPlanDetail.State in [dsEdit,dsInsert]) then
   begin
     AllowChange := False;
     MessageBox(Handle,'内容已修改，请点保存或取消。','提示',MB_ICONWARNING+MB_OK);
@@ -798,7 +860,8 @@ end;
 
 procedure TPlanManageClientDlg.actItem_CancelUpdate(Sender: TObject);
 begin
-  (Sender as TAction).Enabled := cdsPlanItem.State in [dsEdit,dsInsert];
+  (Sender as TAction).Enabled := (cdsPlanItem.State in [dsEdit,dsInsert]) or
+  (cdsPlanDetail.State in [dsEdit,dsInsert]);
   
 end;
 
@@ -811,7 +874,11 @@ procedure TPlanManageClientDlg.actItem_CancelExecute(Sender: TObject);
 begin
   if MessageBox(Handle,'是否取消','提示',MB_ICONQUESTION+MB_YESNO)=IDNO then
     Exit;
-  cdsPlanItem.Cancel;
+
+  if cdsPlanItem.State in [dsEdit,dsInsert] then
+    cdsPlanItem.Cancel;
+  if cdsPlanDetail.State in [dsEdit,dsInsert] then
+    cdsPlanDetail.Cancel;
 end;
 
 procedure TPlanManageClientDlg.actItem_SaveExecute(Sender: TObject);
@@ -1062,11 +1129,13 @@ var
   mySQL : string;
   myID : Integer;
   myb : Boolean;
+  mymailto : string;
+  mytitle : string;
 const
   gl_SQLTXT = 'insert TB_PLAN_DETAIL(ZID,ZITEM_GUID,ZNAME,ZSTATUS,ZDEVE,' +
-   ' ZCONTENT,ZSOCRE) values(%d,''%s'',''%s'',%d,%d,''%s'',%d)';
+   ' ZCONTENT,ZSOCRE,ZTESTCASE) values(%d,''%s'',''%s'',%d,%d,''%s'',%d,''%s'')';
   gl_SQLTXT2 = 'update TB_PLAN_DETAIL set ZITEM_GUID=''%s'',ZNAME=''%s'',' +
-   ' ZSTATUS=%d,ZDEVE=%d,ZCONTENT=''%s'',ZSOCRE=%d where ZID=%d';
+   ' ZSTATUS=%d,ZDEVE=%d,ZCONTENT=''%s'',ZSOCRE=%d ,ZTESTCASE=''%s'' where ZID=%d';
 
   gl_SQLTXT3 = 'select isNull(max(ZID),0)+1 from TB_PLAN_DETAIL';
   gl_SQLTXT4 = 'update TB_PLAN_ITEM set ZCHILDCOUNT=ZCHILDCOUNT+1 where ZGUID=''%s''';
@@ -1086,7 +1155,8 @@ begin
       DataSet.FieldByName('ZSTATUS').AsInteger,
       DataSet.FieldByName('ZDEVE').AsInteger,
       DataSet.FieldByName('ZCONTENT').AsString,
-      DataSet.FieldByName('ZSOCRE').AsInteger]);
+      DataSet.FieldByName('ZSOCRE').AsInteger,
+      DataSet.FieldByName('ZTESTCASE').AsString]);
 
     ClientSystem.fDbOpr.BeginTrans;
     try
@@ -1120,6 +1190,7 @@ begin
       DataSet.FieldByName('ZDEVE').AsInteger,
       DataSet.FieldByName('ZCONTENT').AsString,
       DataSet.FieldByName('ZSOCRE').AsInteger,
+      DataSet.FieldByName('ZTESTCASE').AsString,
       DataSet.FieldByName('ZID').AsInteger ]);
 
     ClientSystem.fDbOpr.BeginTrans;
@@ -1138,11 +1209,34 @@ begin
           cdsPlanItem.FieldByName('ZPASSCOUNT').AsInteger :=
             cdsPlanItem.FieldByName('ZPASSCOUNT').AsInteger + 1;
           cdsPlanitem.Post;
+
         finally
           fLoading := myb;
         end;
       end;
       ClientSystem.fDbOpr.CommitTrans;
+
+      //发邮件
+      if DataSet.FieldByName('ZSTATUS').AsInteger in [Ord(ps_close),Ord(ps_doing)] then
+      begin
+        ShowProgress('发送邮件...',0);
+        try
+          mymailto := GetMailAdder(cdsPlan.fieldByName('ZMEMBER').AsString);
+          if mymailto <> '' then
+          begin
+            if DataSet.FieldByName('ZSTATUS').AsInteger=Ord(ps_close) then
+              myTitle := '关闭任务 ' + DataSet.FieldByName('ZNAME').AsString
+            else
+              myTitle := '激活任务 ' + DataSet.FieldByName('ZNAME').AsString;
+
+            ClientSystem.fDbOpr.MailToEx(mymailto,myTitle,'');
+          end;
+        finally
+          HideProgress();
+        end;
+      end;
+
+
       
     except
       ClientSystem.fDbOpr.RollbackTrans;
@@ -1157,13 +1251,13 @@ begin
     LoadPlanDetail(cdsPlanItem.FieldByName('ZGUID').AsString);
 end;
 
-procedure TPlanManageClientDlg.actItem_PiroExecute(Sender: TObject);
+procedure TPlanManageClientDlg.actItem_PiroPageExecute(Sender: TObject);
 begin
   cdsPlanItem.Prior;
   LoadPlanDetail(cdsPlanItem.FieldByName('ZGUID').AsString);
 end;
 
-procedure TPlanManageClientDlg.actItem_PiroUpdate(Sender: TObject);
+procedure TPlanManageClientDlg.actItem_PiroPageUpdate(Sender: TObject);
 begin
   (Sender as TAction).Enabled := not cdsPlanItem.Bof;
 end;
@@ -1299,7 +1393,16 @@ end;
 procedure TPlanManageClientDlg.cdsPlanAfterScroll(DataSet: TDataSet);
 begin
   if fLoading then Exit;
-  LoadPlanItem(DataSet.FieldByName('ZGUID').AsString);
+  //先取出总数
+  fPlanItemPageRec.fwhere := format('ZPLAN_GUID=''''%s''''',[
+    DataSet.FieldByName('ZGUID').AsString]);
+  fPlanItemPageRec.fPageindex := 1;
+  fPlanItemPageRec.fCount := GetPlanItemPageCount(
+    fPlanItemPageRec.fPageindex,
+    fPlanItemPageRec.fwhere);
+  lblItemPage.Caption := format('%d/%d',[1,fPlanItemPageRec.fCount]);
+  LoadPlanItem(fPlanItemPageRec.fPageindex,
+    fPlanItemPageRec.fwhere);
 end;
 
 procedure TPlanManageClientDlg.tvPlanChange(Sender: TObject;
@@ -1353,6 +1456,170 @@ begin
   Sender.Canvas.TextOut(BoundRect.Left+mybmp.Width,BoundRect.Top,Node.Text);
   DefaultDraw := False;
   mybmp.Free;
+end;
+
+procedure TPlanManageClientDlg.dblkcbb1CloseUp(Sender: TObject);
+var
+  mystr : String;
+  myaddstr : string;
+begin
+  if (Sender as TDBLookupComboBox).Text = '' then Exit;
+
+  if cdsPlan.State in [dsBrowse] then
+    cdsPlan.Edit;
+
+  myaddstr := format('%s(%d)',[
+      DM.cdsUser.FieldByName('ZNAME').AsString,
+      DM.cdsUser.FieldByName('ZID').AsInteger]);
+
+  myStr := cdsPlan.FieldByName('ZMEMBER').AsString;
+  if mystr <> '' then
+  begin
+    if Pos(myaddstr,mystr) <= 0 then
+      myStr := myStr + ';' + myaddstr;
+  end
+  else
+    myStr := myStr + myaddstr;
+
+  cdsPlan.FieldByName('ZMEMBER').AsString := myStr;
+end;
+
+function TPlanManageClientDlg.GetPlanItemPageCount(APageIndex: integer;
+  AWhereStr: String): integer;
+var
+  mySQL  : string;
+  myRowCount : integer;
+  mywhere : string;
+const
+  glSQL = 'exec pt_SplitPage ''TB_PLAN_ITEM'',' +
+          '''ZSORT'', ''%s'',20,%d,%d,1,''%s''';
+  //               页码,以总数=1, 条件where
+begin
+  mywhere := AWhereStr;
+  mySQL := format(glSQL,[
+      '',
+      APageIndex,
+      1, //不是取总数
+      mywhere]);
+  myRowCount := ClientSystem.fDbOpr.ReadInt(PChar(mySQL));
+  Result := myRowCount div 20;
+  if (myRowCount mod 20) > 0 then
+    Result := Result + 1;
+end;
+
+procedure TPlanManageClientDlg.actItem_firstPageExecute(Sender: TObject);
+begin
+  fPlanItemPageRec.fPageindex :=  1;
+  LoadPlanItem(fPlanItemPageRec.fPageindex,fPlanItemPageRec.fwhere);
+  lblItemPage.Caption := format('%d/%d',[1,
+    fPlanItemPageRec.fCount]);
+end;
+
+procedure TPlanManageClientDlg.actItem_firstPageUpdate(Sender: TObject);
+begin
+  (Sender as TAction).Enabled := (fPlanItemPageRec.fPageindex>0) and
+  (fPlanItemPageRec.fPageindex<>1);
+end;
+
+procedure TPlanManageClientDlg.actItme_ProvPageUpdate(Sender: TObject);
+begin
+  (Sender as TAction).Enabled := (fPlanItemPageRec.fPageindex>0) and
+  (fPlanItemPageRec.fPageindex<>1);
+end;
+
+procedure TPlanManageClientDlg.actItme_ProvPageExecute(Sender: TObject);
+begin
+  fPlanItemPageRec.fPageindex := fPlanItemPageRec.fPageindex - 1;
+  LoadPlanItem(fPlanItemPageRec.fPageindex,fPlanItemPageRec.fwhere);
+  lblItemPage.Caption := format('%d/%d',[fPlanItemPageRec.fPageindex,
+    fPlanItemPageRec.fCount]);
+end;
+
+procedure TPlanManageClientDlg.actItem_NextPageUpdate(Sender: TObject);
+begin
+  (Sender as TAction).Enabled := (fPlanItemPageRec.fPageindex<
+    fPlanItemPageRec.fCount);
+end;
+
+procedure TPlanManageClientDlg.actItem_NextPageExecute(Sender: TObject);
+begin
+  fPlanItemPageRec.fPageindex := fPlanItemPageRec.fPageindex + 1;
+  LoadPlanItem(fPlanItemPageRec.fPageindex,fPlanItemPageRec.fwhere);
+  lblItemPage.Caption := format('%d/%d',[fPlanItemPageRec.fPageindex,
+    fPlanItemPageRec.fCount]);
+end;
+
+procedure TPlanManageClientDlg.actItem_LastPageUpdate(Sender: TObject);
+begin
+  (Sender as TAction).Enabled := (fPlanItemPageRec.fPageindex<>
+    fPlanItemPageRec.fCount);
+end;
+
+procedure TPlanManageClientDlg.actItem_LastPageExecute(Sender: TObject);
+begin
+  fPlanItemPageRec.fPageindex := fPlanItemPageRec.fCount;
+  LoadPlanItem(fPlanItemPageRec.fPageindex,fPlanItemPageRec.fwhere);
+  lblItemPage.Caption := format('%d/%d',[fPlanItemPageRec.fPageindex,
+    fPlanItemPageRec.fCount]);
+end;
+
+procedure TPlanManageClientDlg.actItem_RefreshDataExecute(Sender: TObject);
+begin
+  LoadPlanItem(fPlanItemPageRec.fPageindex,fPlanItemPageRec.fwhere);
+end;
+
+procedure TPlanManageClientDlg.btnGotoTestClick(Sender: TObject);
+var
+  mystr : string;
+begin
+  if cdsPlanDetail.FieldByName('ZTESTCASE').AsString <> '' then
+  begin
+    mystr := cdsPlanDetail.FieldByName('ZTESTCASE').AsString;
+
+   SendMessage(Application.MainForm.Handle,gcMSG_GetTestItemByCode,
+      0,Integer(PChar(mystr)));
+  end;
+end;
+
+procedure TPlanManageClientDlg.WMShowPlanItem(var msg: TMessage);
+var
+  i : integer;
+  myPlanID : integer;
+  myGUID   : string;
+  mySQL    : string;
+  myPGUID  : string;
+const
+  gl_SQLTXT =  'select ZITEM_GUID from TB_PLAN_DETAIL where ZID=%d';
+  gl_SQLTXT2 = 'select b.ZGUID from TB_PLAN_ITEM as a,TB_PLAN as b' +
+               ' where a.ZPLAN_GUID=b.ZGUID and a.ZGUID=''%s''';
+begin
+  myPlanID := msg.WParam;
+  mySQL := format(gl_SQLTXT,[myPlanID]);
+  myGUID := ClientSystem.fDbOpr.ReadVariant(PChar(mySQL));
+  if myGUID = '' then Exit;
+
+  mySQL := format(gl_SQLTXT2,[myGUID]);
+  myPGUID := ClientSystem.fDbOpr.ReadVariant(PChar(mySQL));
+  if myPGUID = '' then Exit;
+
+  //定位了.
+  for i:=0 to  lstPlanGUID.Count -1 do
+  begin
+    if lstPlanGUID.Items[i] = myPGUID then
+    begin
+      pgcplan.ActivePageIndex := 0;
+      tvPlan.Items[i].Selected := True;
+
+      //子项目
+      if cdsPlanItem.Locate('ZGUID',myGUID,[loPartialKey]) then
+      begin
+        pgcplan.ActivePageIndex := 1;
+        LoadPlanDetail(myGUID);
+        cdsPlanDetail.Locate('ZID',myPlanID,[loPartialKey]);
+      end;
+      break;
+    end;
+  end;
 end;
 
 end.

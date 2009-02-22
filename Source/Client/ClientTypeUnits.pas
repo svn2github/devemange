@@ -125,7 +125,9 @@ const
   gcMSG_TickCount = $0400{WM_USER} +1;  //发送到mainfrm显示
   gcMSG_GetBugItem = $0400{WM_USER} +2; //发送到bug,显示内容
   gcMSG_GetTestItem = $0400 + 3;        //发送到test ,显示内容
-  gcMSG_GetReleaseItem = $0400+4;       //同上  
+  gcMSG_GetReleaseItem = $0400+4;       //同上
+  gcMSG_GetTestItemByCode=$0400+5;      //发送到test ，条件是多个 $123;$234
+  gcMSG_GetPlanItem = $0400+6;          //发送到子任务，显示内容
   gcLogDir = 'Log'; //日志目录
   gcTagNewName = '新标签...';
 

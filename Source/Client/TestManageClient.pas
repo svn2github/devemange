@@ -163,6 +163,12 @@ type
     act_Subbim: TAction;
     btnResult_AddSVNVer: TSpeedButton;
     actResult_AddSVNVer: TAction;
+    lbl3: TLabel;
+    dbedtZSUBMISBYNAME: TDBEdit;
+    act_newByPlanCode: TAction;
+    btnnewByPlanCode: TBitBtn;
+    act_GetPlanItem: TAction;
+    btnGetBugItem1: TBitBtn;
     procedure act_NewExecute(Sender: TObject);
     procedure act_CancelUpdate(Sender: TObject);
     procedure act_CancelExecute(Sender: TObject);
@@ -218,12 +224,16 @@ type
     procedure act_SubbimExecute(Sender: TObject);
     procedure act_SubbimUpdate(Sender: TObject);
     procedure actResult_AddSVNVerExecute(Sender: TObject);
+    procedure act_newByPlanCodeExecute(Sender: TObject);
+    procedure act_GetPlanItemExecute(Sender: TObject);
+    procedure act_GetPlanItemUpdate(Sender: TObject);
   private
     { Private declarations }
     fTestPageRec : TTestPageRec;
     fHighQueryDlg : TTestHighQueryDlg;
     procedure Mailto(AEmailto:String); //发送到邮箱
     procedure WMShowTestItem(var msg:TMessage); message gcMSG_GetTestItem; //直接显示测试用
+    procedure WMShowTestItemCode(var msg:TMessage);message gcMSG_GetTestItemByCode;
   public
     { Public declarations }
     procedure LoadTestItem(APageIndex: integer; Awhere: String);
@@ -373,6 +383,21 @@ begin
         LookupResultField := 'ZNAME';
       end;
 
+      //提交,ZSUBMISBY
+      myField := AddFieldDef;
+      myField.Name := 'ZSUBMISBYNAME';
+      myField.DataType := ftString;
+      myField.Size := 30;
+      with myfield.CreateField(cdsTestItem) do
+      begin
+        FieldKind := fkLookup;
+        KeyFields := 'ZSUBMISBY';
+        LookupDataSet := DM.cdsUser;
+        LookupKeyFields := 'ZID';
+        LookupResultField := 'ZNAME';
+      end;
+
+
       //测试结果
       myField := AddFieldDef;
       myField.Name := 'ZSTATUSNAME';
@@ -443,7 +468,7 @@ const
     glSQL = 'exec pt_SplitPage ''TB_TEST_ITEM'',' +
           '''ZID,ZNAME,ZSTATUS,ZOPENEDBY,ZOPENEDDATE,ZLEVEL,ZTYPE,ZASSIGNEDTO,' +
           'ZRESULT,ZTESTRESULTBY,ZRESULTDATE,ZTESTMETHOD,ZCASEBUG,'+
-          'ZCASETASK,ZMAILTO,ZPRO_ID,ZPRO_VER,ZPRO_SVN,ZREMORK,ZCLOSESTATUS,ZCLOSESOCRE'', ' +
+          'ZCASETASK,ZMAILTO,ZPRO_ID,ZPRO_VER,ZPRO_SVN,ZREMORK,ZCLOSESTATUS,ZCLOSESOCRE,ZSUBMISBY'', ' +
           '''%s'',20,%d,%d,1,''%s''';
 begin
 
@@ -574,9 +599,9 @@ const
   glSQL2  = 'insert TB_TEST_ITEM (ZID,ZNAME,ZSTATUS,ZOPENEDBY,ZOPENEDDATE,'+
             'ZLEVEL,ZTYPE,ZASSIGNEDTO,ZRESULT,ZTESTRESULTBY,ZRESULTDATE,' +
             'ZTESTMETHOD,ZCASEBUG,ZCASETASK,ZMAILTO,ZPRO_ID,'+
-            'ZPRO_VER,ZPRO_SVN,ZREMORK) ' +
+            'ZPRO_VER,ZPRO_SVN,ZREMORK,ZSUBMISBY) ' +
              'values(%d,''%s'',%d,%d,getdate(),%d,%d,%d,%d,%d,''%s'',' +
-             '%d,''%s'',''%s'',''%s'',%d,%d,%d,''%s'')' ;
+             '%d,''%s'',''%s'',''%s'',%d,%d,%d,''%s'',''%s'')' ;
 
   glSQL3  = 'update TB_TEST_ITEM set ' +
             'ZNAME=''%s'', ' +
@@ -598,7 +623,8 @@ const
             'ZPRO_SVN=%d, ' +
             'ZREMORK=''%s'', '+
             'ZCLOSESTATUS=%d,'+
-            'ZCLOSESOCRE=%d ' +
+            'ZCLOSESOCRE=%d,' +
+            'ZSUBMISBY=''%s''' +
             'where ZID=%d';
 begin
   if fLoading then Exit;
@@ -625,6 +651,7 @@ begin
       DataSet.FieldByName('ZREMORK').AsString,
       DataSet.FieldByName('ZCLOSESTATUS').AsInteger,
       DataSet.FieldByName('ZCLOSESOCRE').AsInteger,
+      DataSet.FieldByName('ZSUBMISBY').AsString,
       DataSet.FieldByName('ZID').AsInteger
       ]);
     ClientSystem.fDbOpr.BeginTrans;
@@ -661,7 +688,8 @@ begin
       DataSet.FieldByName('ZPRO_ID').AsInteger,
       DataSet.FieldByName('ZPRO_VER').AsInteger,
       DataSet.FieldByName('ZPRO_SVN').AsInteger,
-      DataSet.FieldByName('ZREMORK').AsString
+      DataSet.FieldByName('ZREMORK').AsString,
+      DataSet.FieldByName('ZSUBMISBY').AsString
       ]);
 
     ClientSystem.fDbOpr.BeginTrans;
@@ -1048,8 +1076,8 @@ begin
   end;
 
   case Column.Index of
-    2 :
-      if cdsTestItem.FieldByName('ZOPENEDBY').AsInteger =
+    2 : //提交人
+      if cdsTestItem.FieldByName('ZSUBMISBY').AsInteger =
          ClientSystem.fEditer_id then
       begin
         dbgrdTest.Canvas.Brush.Color := clAqua;
@@ -1141,7 +1169,7 @@ end;
 procedure TTestManageChildfrm.act_mebuildExecute(Sender: TObject);
 begin
   fTestPageRec.fPageindex := 1;
-  fTestPageRec.fwhere := Format('ZOPENEDBY=%d',[ClientSystem.fEditer_id]);
+  fTestPageRec.fwhere := Format('ZSUBMISBY=%d',[ClientSystem.fEditer_id]);
   fTestPageRec.fCount := GetTestItemPageCount(1,fTestPageRec.fwhere);
   LoadTestItem(fTestPageRec.fPageindex,fTestPageRec.fwhere);
 end;
@@ -1369,6 +1397,7 @@ begin
     fHighQueryDlg.cdsPros.CloneCursor(cdsProject,True);
     fHighQueryDlg.cdsCreateor.CloneCursor(DM.cdsUser,True);
     fHighQueryDlg.cdsCoser.CloneCursor(DM.cdsUser,True);
+    fHighQueryDlg.cdssubmis.CloneCursor(DM.cdsUser,True);
   end;
 
   if fHighQueryDlg.ShowModal = mrOK then
@@ -1466,6 +1495,7 @@ begin
     Application.ProcessMessages;
   end;
 
+  cdsTestItem.FieldByName('ZSUBMISBY').AsInteger := ClientSystem.fEditer_id;
   cdsTestItem.FieldByName('ZSTATUS').AsInteger := Ord(bgsSubmi);
   cdsTestItem.Post;
 end;
@@ -1490,6 +1520,145 @@ begin
     cdsTestItem.FieldByName('ZPRO_SVN').AsInteger :=
       strtointdef(mystr,0);
   end;
+end;
+
+procedure TTestManageChildfrm.WMShowTestItemCode(var msg: TMessage);
+var
+  mycodes : string;
+  mysl : TStringList;
+  i : integer;
+  mystr : string;
+
+  myPageIndex : Integer;
+  myindex : integer;
+  mywherestr : string;
+  mycount : integer;
+begin
+  //
+  // 转过来的是 $123;$4555
+  //
+  mysl := TStringList.Create;
+  try
+    mycodes := String(msg.LParam);
+    mysl.Delimiter := ';';
+    mysl.DelimitedText := mycodes;
+
+    mystr := '';
+    for i:=0 to mysl.Count -1 do
+    begin
+      if (Length(mysl[i])>0) and (mysl[i][1] = '$') then
+      begin
+        if mystr = '' then
+          mystr := format('(ZID=%d)',[strtointdef(Copy(mysl.Strings[i],2,maxint),0)])
+        else
+          mystr := mystr + ' or ' + format('(ZID=%d)',[strtointdef(Copy(mysl.Strings[i],2,maxint),0)]);
+      end;
+    end;
+
+    myindex := fTestpageRec.fPageindex;
+    mycount := fTestpageRec.fCount;
+    mywherestr := fTestpageRec.fwhere;
+
+    try
+      fTestPageRec.fwhere := mystr;
+      fTestPageRec.fPageindex := 1;
+      myPageIndex := 1;
+      fTestPageRec.fCount := 1;
+      LoadTestItem(myPageindex,fTestPageRec.fwhere);
+      lblPage.Caption := format('%d/%d',[
+        1,1]);
+
+        
+      if cdsTestItem.RecordCount > 0 then
+      begin
+        if pgcTestMain.ActivePageIndex=0 then
+          pgcTestMain.ActivePageIndex := 1;
+        LoadTestResult(msg.WParam);
+      end;
+
+    finally
+      fTestpageRec.fPageindex := myindex;
+      fTestpageRec.fCount := mycount;
+      fTestpageRec.fwhere := mywherestr;
+    end;
+
+  finally
+    mysl.Free;
+  end;
+end;
+
+procedure TTestManageChildfrm.act_newByPlanCodeExecute(Sender: TObject);
+var
+  mystr : string;
+  myPlanid : Integer;
+  mycds : TClientDataSet;
+  mycdsPro : TClientDataSet;
+const
+  glSQL  = 'select ZITEM_GUID,ZNAME from TB_PLAN_DETAIL where ZID=%d';
+  glSQL2 = 'select b.ZPRO_ID,b.ZMEMBER from TB_PLAN_ITEM as a, TB_PLAN as b ' +
+           ' where a.ZPLAN_GUID=b.ZGUID and a.ZGUID=''%s''';
+begin
+  //
+  if not InputQuery('输入子任务编号','子任务号',mystr) then Exit;
+
+  myPlanid := StrToIntdef(mystr,0);
+  if myPlanid = 0 then
+  begin
+    MessageBox(Handle,'无效的子任务号','提示',MB_ICONWARNING+MB_OK);
+    Exit;
+  end;
+
+  mycds    := TClientDataSet.Create(nil);
+  mycdsPro := TClientDataSet.Create(nil);
+  try
+    mycds.Data := ClientSystem.fDbOpr.ReadDataSet(PChar(format(glSQL,[myPlanid])));
+    if mycds.RecordCount = 0 then
+    begin
+      MessageBox(Handle,pChar('查找无子任务号 &'+inttostr(myPlanid)),'提示',
+        MB_ICONWARNING+MB_OK);
+      Exit;
+    end;
+
+    mycdsPro.Data := ClientSystem.fDbOpr.ReadDataSet(PChar(
+      Format(glSQL2,[mycds.FieldByName('ZITEM_GUID').AsString])));
+
+    if cdsTestItem.State in [dsEdit,dsInsert] then
+      cdsTestItem.Post;
+
+    cdsTestItem.First;
+    cdsTestItem.Insert;
+    cdsTestItem.FieldByName('ZNAME').AsString := mycds.fieldByName('ZNAME').AsString;
+    cdsTestItem.FieldByName('ZTYPE').AsInteger := 0; //功能
+    cdsTestItem.FieldByName('ZCASETASK').AsString := IntToStr(myPlanid);
+    if mycdsPro.RecordCount > 0 then
+    begin
+      cdsTestItem.FieldByName('ZMAILTO').AsString :=
+        mycdsPro.fieldByName('ZMEMBER').AsString;;
+    end;
+    cdsTestItem.FieldByName('ZPRO_ID').AsInteger  := mycdsPro.fieldByName('ZPRO_ID').AsInteger;
+
+    cdsResult.Close;
+    pgcTestMain.ActivePageIndex := 1;
+  finally
+    mycds.Free;
+    mycdsPro.Free;
+  end;
+end;
+
+
+procedure TTestManageChildfrm.act_GetPlanItemExecute(Sender: TObject);
+var
+  myPlanId : Integer;
+begin
+  myPlanId := StrToIntdef(cdsTestItem.FieldByName('ZCASETASK').AsString,-1);
+  if myPlanId = -1 then Exit;
+  SendMessage(Application.MainForm.Handle,gcMSG_GetPlanItem,myPlanId,0);
+end;
+
+procedure TTestManageChildfrm.act_GetPlanItemUpdate(Sender: TObject);
+begin
+  (Sender as TAction).Enabled := not cdsTestItem.IsEmpty and
+    (cdsTestItem.FieldByName('ZCASETASK').AsString <>'')
 end;
 
 end.

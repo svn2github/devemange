@@ -7,7 +7,7 @@
 //
 //  修改时间: 2007-11-28 作者: 龙仕云
 //  修改内容: 增加mailto接口
-//  最后修改: 2007-11-29
+//  最后修改: 2009-2-21
 //
 //  还处理AppServer接口的问题
 //
@@ -19,12 +19,13 @@
 //   function CreateBfssDBOpr(AConnectStype:Word): IDbOperator; stdcall;
 //    参数: AConnectStype = 0 表示采用DCOM连接
 //                        = 1 表示采用Socke连接
-//   function CreateDbOperator; stdcall; external 'DBapi.Dll';
+//   function CreateDbOperator; stdcall; external 'DBapi.api';
 //
 //
 ////////////////////////////////////////////////////////////////////////////////
 // 修改:
 //   1.增加测试的邮件通知功能 Test = 3 作者:龙仕云 2008-10-6
+//   2.增加邮件直接发送功能 作者：龙仕云 2009-2-20
 //
 //
 ///////////////////////////////////////////////////////////////////////////////
@@ -85,6 +86,14 @@ type
     //
     //
     procedure MailTo(AStyle: Integer; const AMails: WideString; AContextID: Integer); safecall;
+    //
+    // 直接发送邮件
+    //  AMails 为发送的地址 格式为 mrlong.com@gmail.com;mrlong_xp@163.com 多个以;号分开
+    //  ATitle 为邮件的标题
+    //  AContent  为邮件的内容
+    //
+    //
+    procedure MailToEx(const AMails: WideString; ATitle : WideString; AContent: WideString); safecall;
 
     //取出系统时间
     function GetSysDateTime: OleVariant; stdcall;

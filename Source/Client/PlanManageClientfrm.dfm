@@ -1,6 +1,6 @@
 inherited PlanManageClientDlg: TPlanManageClientDlg
-  Left = 132
-  Top = 68
+  Left = 119
+  Top = 140
   Width = 1043
   Caption = #39033#30446#35745#21010
   OldCreateOrder = True
@@ -124,7 +124,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
           Left = 0
           Top = 57
           Width = 830
-          Height = 444
+          Height = 404
           Align = alClient
           DataSource = dsPlanItem
           Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
@@ -203,6 +203,67 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
               Visible = True
             end>
         end
+        object pnlPlanPage: TPanel
+          Left = 0
+          Top = 461
+          Width = 830
+          Height = 40
+          Align = alBottom
+          BevelOuter = bvNone
+          TabOrder = 2
+          object lblItemPage: TLabel
+            Left = 529
+            Top = 12
+            Width = 88
+            Height = 15
+            Caption = 'lblItemPage'
+          end
+          object btnItem_firstPage: TBitBtn
+            Left = 9
+            Top = 8
+            Width = 100
+            Height = 25
+            Action = actItem_firstPage
+            Caption = #31532#19968#39029
+            TabOrder = 0
+          end
+          object btnItem_PiroPage: TBitBtn
+            Left = 113
+            Top = 8
+            Width = 100
+            Height = 25
+            Action = actItme_ProvPage
+            Caption = #19978#19968#39029
+            TabOrder = 1
+          end
+          object btnItem_NextPage: TBitBtn
+            Left = 217
+            Top = 8
+            Width = 100
+            Height = 25
+            Action = actItem_NextPage
+            Caption = #19979#19968#39029
+            TabOrder = 2
+          end
+          object btnItem_LastPage: TBitBtn
+            Left = 321
+            Top = 8
+            Width = 100
+            Height = 25
+            Action = actItem_LastPage
+            Caption = #26368#21518#19968#39029
+            TabOrder = 3
+          end
+          object btnItem_RefreshData: TBitBtn
+            Left = 425
+            Top = 8
+            Width = 100
+            Height = 25
+            Action = actItem_RefreshData
+            Caption = #21047#26032#25968#25454
+            TabOrder = 4
+          end
+        end
       end
       object tsPlanDetial: TTabSheet
         Caption = #20219#21153#20869#23481
@@ -226,7 +287,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
         end
         object spl2: TSplitter
           Left = 0
-          Top = 176
+          Top = 171
           Width = 830
           Height = 10
           Cursor = crVSplit
@@ -237,7 +298,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
           Left = 0
           Top = 17
           Width = 830
-          Height = 159
+          Height = 154
           Align = alTop
           TabOrder = 0
           object lbl8: TLabel
@@ -398,7 +459,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
             Top = 66
             Width = 100
             Height = 25
-            Action = actItem_Piro
+            Action = actItem_PiroPage
             Caption = #19978#19968#20010
             TabOrder = 10
           end
@@ -414,9 +475,9 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
         end
         object pnlPlanDetail: TPanel
           Left = 0
-          Top = 186
+          Top = 181
           Width = 830
-          Height = 315
+          Height = 320
           Align = alClient
           BevelOuter = bvNone
           Caption = 'pnlPlanDetail'
@@ -425,7 +486,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
             Left = 247
             Top = 40
             Width = 10
-            Height = 275
+            Height = 280
             Beveled = True
           end
           object pnlPlanDetailTop: TPanel
@@ -500,7 +561,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
             Left = 0
             Top = 40
             Width = 247
-            Height = 275
+            Height = 280
             Align = alLeft
             DataSource = dsPlanDetail
             Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
@@ -514,6 +575,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
             OnDrawColumnCell = dbgrdDetailDrawColumnCell
             Columns = <
               item
+                Alignment = taCenter
                 Expanded = False
                 FieldName = 'ZID'
                 Title.Alignment = taCenter
@@ -534,16 +596,16 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
             Left = 257
             Top = 40
             Width = 573
-            Height = 275
+            Height = 280
             Align = alClient
             BevelOuter = bvNone
             Caption = 'pnl3'
             TabOrder = 2
             object dbmmoZCONTENT: TDBMemo
               Left = 0
-              Top = 70
+              Top = 65
               Width = 573
-              Height = 205
+              Height = 175
               Align = alClient
               DataField = 'ZCONTENT'
               DataSource = dsPlanDetail
@@ -554,44 +616,44 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
               Left = 0
               Top = 0
               Width = 573
-              Height = 70
+              Height = 65
               Align = alTop
               BevelOuter = bvNone
               TabOrder = 1
               DesignSize = (
                 573
-                70)
+                65)
               object lbl18: TLabel
                 Left = 8
-                Top = 46
+                Top = 38
                 Width = 60
                 Height = 15
                 Caption = #36127#36131#20154#65306
               end
               object lbl16: TLabel
                 Left = 8
-                Top = 14
+                Top = 9
                 Width = 45
                 Height = 15
                 Caption = #21517#31216#65306
               end
               object lbl20: TLabel
                 Left = 253
-                Top = 44
+                Top = 36
                 Width = 45
                 Height = 15
                 Caption = #24471#20998#65306
               end
               object lbl19: TLabel
                 Left = 483
-                Top = 43
+                Top = 35
                 Width = 45
                 Height = 15
                 Caption = #29366#24577#65306
               end
               object dbtxtZSTATUSNAME1: TDBText
                 Left = 529
-                Top = 41
+                Top = 33
                 Width = 32
                 Height = 17
                 Anchors = [akLeft, akTop, akRight]
@@ -608,7 +670,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
               end
               object dblkcbbZSTATUSNAME: TDBLookupComboBox
                 Left = 64
-                Top = 41
+                Top = 33
                 Width = 180
                 Height = 23
                 DataField = 'ZDEVENAME'
@@ -618,7 +680,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
               end
               object dbedtZNAME2: TDBEdit
                 Left = 64
-                Top = 10
+                Top = 5
                 Width = 498
                 Height = 23
                 Anchors = [akLeft, akTop, akRight]
@@ -628,7 +690,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
               end
               object dbedtZSOCRE: TDBEdit
                 Left = 294
-                Top = 39
+                Top = 31
                 Width = 180
                 Height = 23
                 Color = clBtnFace
@@ -636,6 +698,48 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
                 DataSource = dsPlanDetail
                 ReadOnly = True
                 TabOrder = 2
+              end
+            end
+            object pnlTestCase: TPanel
+              Left = 0
+              Top = 240
+              Width = 573
+              Height = 40
+              Align = alBottom
+              BevelOuter = bvNone
+              ParentShowHint = False
+              ShowHint = True
+              TabOrder = 2
+              DesignSize = (
+                573
+                40)
+              object lbl23: TLabel
+                Left = 8
+                Top = 14
+                Width = 68
+                Height = 15
+                Caption = #27979#35797#29992#20363':'
+              end
+              object dbedtZTESTCASE: TDBEdit
+                Left = 81
+                Top = 8
+                Width = 380
+                Height = 23
+                Hint = #22810#20010#29992#20998#21495'(;)'#20998#24320' '#20363#22914' $234;$123;$567'
+                Anchors = [akLeft, akTop, akRight]
+                DataField = 'ZTESTCASE'
+                DataSource = dsPlanDetail
+                TabOrder = 0
+              end
+              object btnGotoTest: TBitBtn
+                Left = 468
+                Top = 8
+                Width = 100
+                Height = 25
+                Anchors = [akTop, akRight]
+                Caption = #36339#21040#27979#35797#29992#20363
+                TabOrder = 1
+                OnClick = btnGotoTestClick
               end
             end
           end
@@ -733,7 +837,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
             Caption = #39033#30446#32534#21495':'
           end
           object lbl1: TLabel
-            Left = 12
+            Left = 14
             Top = 39
             Width = 68
             Height = 15
@@ -801,10 +905,24 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
           end
           object lbl5: TLabel
             Left = 14
-            Top = 137
+            Top = 165
             Width = 98
             Height = 15
             Caption = #39033#30446#23436#25104#24635#32467':'
+          end
+          object lbl21: TLabel
+            Left = 14
+            Top = 136
+            Width = 68
+            Height = 15
+            Caption = #39033#30446#25104#21592':'
+          end
+          object lbl22: TLabel
+            Left = 617
+            Top = 133
+            Width = 24
+            Height = 15
+            Caption = '<<<'
           end
           object dbedtZNAME: TDBEdit
             Left = 87
@@ -839,9 +957,9 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
           end
           object dbmmoZSUMTEXT: TDBMemo
             Left = 14
-            Top = 157
+            Top = 188
             Width = 785
-            Height = 288
+            Height = 264
             Anchors = [akLeft, akTop, akRight, akBottom]
             DataField = 'ZSUMTEXT'
             DataSource = dsPlan
@@ -856,6 +974,27 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
             ItemHeight = 15
             TabOrder = 4
             Visible = False
+          end
+          object dbedtZMEMBER: TDBEdit
+            Left = 89
+            Top = 130
+            Width = 520
+            Height = 23
+            DataField = 'ZMEMBER'
+            DataSource = dsPlan
+            TabOrder = 5
+          end
+          object dblkcbb1: TDBLookupComboBox
+            Left = 647
+            Top = 130
+            Width = 145
+            Height = 23
+            DropDownRows = 50
+            KeyField = 'ZID'
+            ListField = 'ZNAME'
+            ListSource = DM.dsUsers
+            TabOrder = 6
+            OnCloseUp = dblkcbb1CloseUp
           end
         end
       end
@@ -1194,11 +1333,11 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
       OnExecute = actItem_CancelExecute
       OnUpdate = actItem_CancelUpdate
     end
-    object actItem_Piro: TAction
+    object actItem_PiroPage: TAction
       Category = #39033#30446#20219#21153
       Caption = #19978#19968#20010
-      OnExecute = actItem_PiroExecute
-      OnUpdate = actItem_PiroUpdate
+      OnExecute = actItem_PiroPageExecute
+      OnUpdate = actItem_PiroPageUpdate
     end
     object actItem_Next: TAction
       Category = #39033#30446#20219#21153
@@ -1248,11 +1387,40 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
       OnExecute = actPan_ActionExecute
       OnUpdate = actPan_ActionUpdate
     end
+    object actItem_firstPage: TAction
+      Category = #39033#30446#20219#21153
+      Caption = #31532#19968#39029
+      OnExecute = actItem_firstPageExecute
+      OnUpdate = actItem_firstPageUpdate
+    end
+    object actItme_ProvPage: TAction
+      Category = #39033#30446#20219#21153
+      Caption = #19978#19968#39029
+      OnExecute = actItme_ProvPageExecute
+      OnUpdate = actItme_ProvPageUpdate
+    end
+    object actItem_NextPage: TAction
+      Category = #39033#30446#20219#21153
+      Caption = #19979#19968#39029
+      OnExecute = actItem_NextPageExecute
+      OnUpdate = actItem_NextPageUpdate
+    end
+    object actItem_LastPage: TAction
+      Category = #39033#30446#20219#21153
+      Caption = #26368#21518#19968#39029
+      OnExecute = actItem_LastPageExecute
+      OnUpdate = actItem_LastPageUpdate
+    end
+    object actItem_RefreshData: TAction
+      Category = #39033#30446#20219#21153
+      Caption = #21047#26032#25968#25454
+      OnExecute = actItem_RefreshDataExecute
+    end
   end
   object cdsPlanStauts: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 376
+    Left = 368
     Top = 8
   end
   object cdsPlanItem: TClientDataSet
@@ -1271,7 +1439,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
     Top = 8
   end
   object il1: TImageList
-    Left = 408
+    Left = 400
     Top = 8
     Bitmap = {
       494C010104000900040010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
@@ -1680,7 +1848,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
   object dsPlanItem: TDataSource
     DataSet = cdsPlanItem
     Left = 104
-    Top = 42
+    Top = 39
   end
   object cdsPlanDetail: TClientDataSet
     Aggregates = <>

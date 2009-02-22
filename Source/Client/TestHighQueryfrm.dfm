@@ -1,10 +1,10 @@
 inherited TestHighQueryDlg: TTestHighQueryDlg
-  Left = 407
-  Top = 232
+  Left = 412
+  Top = 224
   BorderStyle = bsDialog
   Caption = #39640#32423#26597#35810
-  ClientHeight = 255
-  ClientWidth = 486
+  ClientHeight = 274
+  ClientWidth = 478
   OldCreateOrder = True
   Position = poMainFormCenter
   OnShow = FormShow
@@ -66,7 +66,7 @@ inherited TestHighQueryDlg: TTestHighQueryDlg
   end
   object btn1: TBitBtn
     Left = 351
-    Top = 207
+    Top = 237
     Width = 100
     Height = 25
     TabOrder = 6
@@ -74,14 +74,14 @@ inherited TestHighQueryDlg: TTestHighQueryDlg
   end
   object btn2: TBitBtn
     Left = 247
-    Top = 207
+    Top = 237
     Width = 100
     Height = 25
     TabOrder = 7
     Kind = bkOK
   end
   object chkTestUser: TCheckBox
-    Left = 28
+    Left = 26
     Top = 123
     Width = 89
     Height = 17
@@ -117,7 +117,7 @@ inherited TestHighQueryDlg: TTestHighQueryDlg
   end
   object btnAll: TBitBtn
     Left = 143
-    Top = 206
+    Top = 236
     Width = 100
     Height = 25
     Caption = #20840#37096
@@ -126,7 +126,7 @@ inherited TestHighQueryDlg: TTestHighQueryDlg
     Kind = bkAll
   end
   object chkStats: TCheckBox
-    Left = 30
+    Left = 26
     Top = 152
     Width = 78
     Height = 17
@@ -149,37 +149,67 @@ inherited TestHighQueryDlg: TTestHighQueryDlg
     Caption = #27963#21160'('#27809#26377#25552#20132')'
     TabOrder = 15
   end
+  object chkSubmis: TCheckBox
+    Left = 26
+    Top = 208
+    Width = 97
+    Height = 17
+    Caption = #25353#25552#20132#20154
+    TabOrder = 16
+  end
+  object dblkcbb4: TDBLookupComboBox
+    Left = 124
+    Top = 201
+    Width = 320
+    Height = 23
+    DropDownRows = 50
+    KeyField = 'ZID'
+    ListField = 'ZNAME'
+    ListSource = dssubmis
+    TabOrder = 17
+  end
   object cdsPros: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 8
-    Top = 221
+    Top = 233
   end
   object dsPros: TDataSource
     DataSet = cdsPros
-    Left = 48
-    Top = 221
+    Left = 43
+    Top = 233
   end
   object cdsCreateor: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 161
-    Top = 221
+    Left = 142
+    Top = 234
   end
   object dsCreateor: TDataSource
     DataSet = cdsCreateor
-    Left = 200
-    Top = 220
+    Left = 176
+    Top = 233
   end
   object cdsCoser: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 88
-    Top = 223
+    Left = 77
+    Top = 234
   end
   object dsCloser: TDataSource
     DataSet = cdsCoser
-    Left = 124
-    Top = 223
+    Left = 109
+    Top = 234
+  end
+  object cdssubmis: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 208
+    Top = 233
+  end
+  object dssubmis: TDataSource
+    DataSet = cdssubmis
+    Left = 242
+    Top = 232
   end
 end

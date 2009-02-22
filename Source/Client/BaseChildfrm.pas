@@ -33,6 +33,8 @@ type
 
     //显示状态文字
     procedure ShowStatusBarText(Aindex:integer;AStr:String);
+    //取出发送邮件的地址
+    function GetMailAdder(AUserNames:string):string;
 
     //显示进度窗口
     procedure ShowProgress(const Title: string;ACount:integer);
@@ -48,7 +50,7 @@ var
 
 implementation
 uses
-  ClinetSystemUnits, Mainfrm,CnProgressFrm;
+  ClinetSystemUnits, Mainfrm,CnProgressFrm, DmUints;
 
 {$R *.dfm}
 
@@ -64,6 +66,52 @@ end;
 procedure TBaseChildDlg.freeBase;
 begin
   //子类重载
+end;
+
+function TBaseChildDlg.GetMailAdder(AUserNames: string): string;
+var
+  i : integer;
+  mysv,mysl : TStringList;
+  mystr,mymail : string;
+begin
+  mysv := TStringList.Create;
+  mysl := TStringList.Create;
+  try
+    mysv.Delimiter := ';';
+    mysv.DelimitedText := AUserNames;
+    mymail := '';
+    for i:=0 to  mysv.Count -1 do
+    begin
+      //如是当前的编辑内都不必要发送了
+      if (Trim(mysv.Strings[i])='') or
+         (mysv.Strings[i]=Format('%s(%d)',[ClientSystem.fEditer,ClientSystem.fEditer_id])) then
+        Continue;
+
+      if mysl.IndexOf(mysv[i]) < 0 then
+      begin
+        mysl.Add(mysv[i]);
+        DM.cdsUser.First;
+        while not DM.cdsUser.Eof do
+        begin
+          myStr := format('%s(%d)',[DM.cdsUser.FieldByName('ZNAME').AsString,
+            DM.cdsUser.FieldByName('ZID').AsInteger]);
+          if CompareText(myStr,mysv[i]) = 0 then
+          begin
+            if mymail = '' then
+              mymail := DM.cdsUser.FieldByName('ZEMAIL').AsString
+            else
+              mymail := mymail + ';' + DM.cdsUser.FieldByName('ZEMAIL').AsString;
+            break;
+          end;
+          DM.cdsUser.Next;
+        end;
+      end;
+    end;
+    Result := mymail;
+  finally
+    mysv.free;
+    mysl.Free;
+  end;
 end;
 
 class function TBaseChildDlg.GetModuleID: integer;

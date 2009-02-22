@@ -30,6 +30,10 @@ type
     chkStats: TCheckBox;
     rbSubmit: TRadioButton;
     rbAction: TRadioButton;
+    chkSubmis: TCheckBox;
+    dblkcbb4: TDBLookupComboBox;
+    cdssubmis: TClientDataSet;
+    dssubmis: TDataSource;
     procedure edtCodeChange(Sender: TObject);
     procedure btnAllClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -40,9 +44,6 @@ type
     fShowAllItem : Boolean ; //=True 表示显示全部
     function GetwhereStr():string;
   end;
-
-var
-  TestHighQueryDlg: TTestHighQueryDlg;
 
 implementation
 
@@ -130,6 +131,16 @@ begin
       mystr := Format('%s and ((ZSTATUS=0) or (ZSTATUS=2))',[mystr])
     else
       mystr := '(ZSTATUS=0) or (ZSTATUS=2)'
+  end;
+
+  if chkSubmis.Checked then
+  begin
+    if mystr <> '' then
+      mystr := Format('%s and ZSUBMISBY=%d ',[mystr,
+        cdssubmis.FieldByName('ZID').AsInteger])
+    else
+      mystr :=   Format('ZSUBMISBY=%d ',[
+        cdssubmis.FieldByName('ZID').AsInteger]);
   end;
 
   Result := mystr;
