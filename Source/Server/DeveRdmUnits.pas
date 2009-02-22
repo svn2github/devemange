@@ -14,7 +14,8 @@
 //     5) 修改回复邮件的问题 ver=1.0.7 2008-4-28
 //     6) 更新邮件回复采用存储过程 ver=1.0.8 2008-5-21
 //     7) 增加的测试的邮件处理功能 ver=1.1.0 2008-10-6
-//     8) 增加发布管理邮件处理功能 ver=1.1.2 2008-12-20 
+//     8) 增加发布管理邮件处理功能 ver=1.1.2 2008-12-20
+//     9) 增加直接发送邮件的功能不必采用ID号 ver=1.1.3 2009-2-21
 //
 //
 ///////////////////////////////////////////////////////////////////////////////
@@ -79,6 +80,7 @@ type
     function UpFileChunk(AFile_ID: Integer; AVer: Integer; AGroupID: Integer; AStream: OleVariant): Integer; safecall;
     procedure MailTo(AStyle: Integer; const AMails: WideString; AContextID: Integer); safecall;
     function GetSysDateTime: OleVariant; safecall;
+    procedure MailToEx(const MailTo: WideString; const Title: WideString; const Content: WideString); safecall;
 
   public
     { Public declarations }
@@ -633,6 +635,66 @@ function TBFSSRDM.GetSysDateTime: OleVariant;
 begin
   Result := now();
 end;
+
+procedure TBFSSRDM.MailToEx(const MailTo, Title, Content: WideString);
+begin
+  if not CurrBFSSSystem.fSMTPParams.fAction then Exit;
+
+  if not SMTP.Connected then
+  begin
+    SMTP.AuthenticationType := atLogin;
+    SMTP.Host     := CurrBFSSSystem.fSMTPParams.fHost;
+    SMTP.Port     := CurrBFSSSystem.fSMTPParams.fPort;
+    SMTP.Username := CurrBFSSSystem.fSMTPParams.fUserName;
+    SMTP.Password := CurrBFSSSystem.fSMTPParams.fPassword;
+    try
+      SMTP.Connect;
+      if not SMTP.Connected then
+      begin
+        CurrBFSSSystem.WriteLog('连接邮件服务器出错。');
+        Exit;
+      end;
+    except
+      on E: Exception do
+      begin
+        CurrBFSSSystem.WriteLog('连接邮件服务器出错。'+ E.Message);
+        Exit;
+      end;
+    end;
+  end;
+
+  if SMTP.Connected then
+  begin
+    //发送内容:
+    try
+      IdMessage1.Clear;
+      IdMessage1.ContentType := 'text/html';
+      IdMessage1.MessageParts.Clear;
+      IdMessage1.CharSet := 'BIG5';
+      IdMessage1.Encoding := (meUU);
+      IdMessage1.ClearBody;
+      IdMessage1.Body.Add(Content);
+      IdMessage1.From.Text := CurrBFSSSystem.fSMTPParams.fUserName;
+      //回复地址
+      //IdMessage1.ReplyTo.EMailAddresses := CurrBFSSSystem.fSMTPParams.fUserName;
+      //
+      IdMessage1.Priority := TIdMessagePriority(2);
+      IdMessage1.ReceiptRecipient.Text := '';
+
+      IdMessage1.Subject := Title;
+      IdMessage1.Recipients.EMailAddresses := MailTo;
+
+      SMTP.Send(IdMessage1);
+    finally
+
+    end;
+  end;
+
+  if SMTP.Connected then
+    SMTP.Disconnect;
+
+end;
+
 
 initialization
   TComponentFactory.Create(ComServer, TBFSSRDM,

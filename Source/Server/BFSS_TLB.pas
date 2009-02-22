@@ -12,7 +12,7 @@ unit BFSS_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 2008-7-12 13:41:21 from Type Library described below.
+// File generated on 2009-2-22 11:47:31 from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\devemanage\Source\Server\DeveManage.tlb (1)
@@ -81,6 +81,7 @@ type
     function UpFileChunk(AFile_ID: Integer; AVer: Integer; AGroupID: Integer; AStream: OleVariant): Integer; safecall;
     procedure MailTo(AStyle: Integer; const AMails: WideString; AContextID: Integer); safecall;
     function GetSysDateTime: OleVariant; safecall;
+    procedure MailToEx(const MailTo: WideString; const Title: WideString; const Content: WideString); safecall;
   end;
 
 // *********************************************************************//
@@ -100,6 +101,7 @@ type
     function UpFileChunk(AFile_ID: Integer; AVer: Integer; AGroupID: Integer; AStream: OleVariant): Integer; dispid 8;
     procedure MailTo(AStyle: Integer; const AMails: WideString; AContextID: Integer); dispid 301;
     function GetSysDateTime: OleVariant; dispid 302;
+    procedure MailToEx(const MailTo: WideString; const Title: WideString; const Content: WideString); dispid 303;
     function AS_ApplyUpdates(const ProviderName: WideString; Delta: OleVariant; MaxErrors: Integer; 
                              out ErrorCount: Integer; var OwnerData: OleVariant): OleVariant; dispid 20000000;
     function AS_GetRecords(const ProviderName: WideString; Count: Integer; out RecsOut: Integer; 
