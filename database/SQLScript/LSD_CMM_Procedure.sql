@@ -455,7 +455,7 @@ begin
    if (@myUser_Type =1) or (@myUser_Type=0)
    begin
       select @c10= sum(a.ZCLOSESOCRE)   from TB_TEST_ITEM as a 
-       where  a.ZOPENEDBY=@myUser_ID and
+       where  a.ZSUBMISBY=@myUser_ID and   --改为提交用例 2009-2-22
               (a.ZSTATUS = 3) and --3=关闭
               (a.ZRESULTDATE between  @StatbeginDate and  @StatendDate)
    end

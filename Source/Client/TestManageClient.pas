@@ -6,6 +6,7 @@
 //
 //  修改:
 //    1.增加回复人 2009-1-1 元旦快乐
+//    2.修改提交回复进只有开发人员与测试人员,管理员人.作者:龙仕云 2009-2-24
 //
 //
 //
@@ -1475,10 +1476,9 @@ var
   myver : string;
 begin
 
-  if (cdsTestitem.FieldByName('ZOPENEDBY').AsInteger <>ClientSystem.fEditer_id) and
-     (ClientSystem.fEditerType<>etAdmin) then
+  if (ClientSystem.fEditerType in [etAdmin,etDeve,etTest]) then
   begin
-    MessageBox(Handle,'不是你创建的测试用例,不能提交','测试',MB_ICONERROR+MB_OK);
+    MessageBox(Handle,'你没有提交测试用例的权限,不能提交','测试',MB_ICONERROR+MB_OK);
     Exit;
   end;
 
