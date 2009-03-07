@@ -1278,10 +1278,10 @@ begin
           if mymailto <> '' then
           begin
             if DataSet.FieldByName('ZSTATUS').AsInteger=Ord(ps_close) then
-              myTitle := format('&%d 关闭任务 ',[DataSet.FieldByName('ZID').AsInteger])
+              myTitle := format('@%d 关闭任务 ',[DataSet.FieldByName('ZID').AsInteger])
                  + DataSet.FieldByName('ZNAME').AsString
             else
-              myTitle := format('&%d 激活任务 ',[DataSet.FieldByName('ZID').AsInteger])
+              myTitle := format('@%d 激活任务 ',[DataSet.FieldByName('ZID').AsInteger])
                 + DataSet.FieldByName('ZNAME').AsString;
 
             ClientSystem.fDbOpr.MailToEx(mymailto,myTitle,'');
