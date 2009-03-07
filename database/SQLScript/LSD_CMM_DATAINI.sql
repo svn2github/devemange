@@ -93,6 +93,8 @@ insert into TB_PLAN_PARAMS (ZTYPE,ZID,ZNAME) values(0,0,'开始');
 insert into TB_PLAN_PARAMS (ZTYPE,ZID,ZNAME) values(0,1,'完成');
 insert into TB_PLAN_PARAMS (ZTYPE,ZID,ZNAME) values(0,2,'延期');
 insert into TB_PLAN_PARAMS (ZTYPE,ZID,ZNAME) values(0,3,'关闭');
+insert into TB_PLAN_PARAMS (ZTYPE,ZID,ZNAME) values(0,4,'待中');
+insert into TB_PLAN_PARAMS (ZTYPE,ZID,ZNAME) values(0,5,'激活');
 
 /*发布管理参数*/
 insert into TB_RELEASE_PARAMS (ZTYPE,ZID,ZNAME) values(0,0,'马上');

@@ -12,6 +12,7 @@ type
     BitBtn2: TBitBtn;
     edPasswd1: TEdit;
     edPasswd2: TEdit;
+    lbl1: TLabel;
   private
     { Private declarations }
   public

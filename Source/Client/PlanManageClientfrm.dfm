@@ -1,6 +1,6 @@
 inherited PlanManageClientDlg: TPlanManageClientDlg
-  Left = 119
-  Top = 140
+  Left = 67
+  Top = 64
   Width = 1043
   Caption = #39033#30446#35745#21010
   OldCreateOrder = True
@@ -83,7 +83,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
             TabOrder = 0
           end
           object btnItem_Success: TBitBtn
-            Left = 112
+            Left = 216
             Top = 8
             Width = 100
             Height = 25
@@ -92,7 +92,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
             TabOrder = 1
           end
           object btnItem_Close: TBitBtn
-            Left = 216
+            Left = 320
             Top = 8
             Width = 100
             Height = 25
@@ -101,7 +101,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
             TabOrder = 2
           end
           object btnItem_Action: TBitBtn
-            Left = 320
+            Left = 424
             Top = 8
             Width = 100
             Height = 25
@@ -117,7 +117,17 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
             Anchors = [akTop, akRight]
             DataField = 'ZSORT'
             DataSource = dsPlanItem
+            ImeName = #26497#21697#20116#31508#36755#20837#27861
             TabOrder = 4
+          end
+          object btnItem_Starting: TBitBtn
+            Left = 112
+            Top = 8
+            Width = 100
+            Height = 24
+            Action = actItem_Starting
+            Caption = #24320#22987#25191#34892
+            TabOrder = 5
           end
         end
         object dbgrdPlanItem: TDBGrid
@@ -127,6 +137,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
           Height = 404
           Align = alClient
           DataSource = dsPlanItem
+          ImeName = #26497#21697#20116#31508#36755#20837#27861
           Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
           TabOrder = 1
           TitleFont.Charset = GB2312_CHARSET
@@ -149,8 +160,8 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
               Expanded = False
               FieldName = 'ZSUCCESSRATE'
               Title.Alignment = taCenter
-              Title.Caption = #23436#25104#27604#20363'(%)'
-              Width = 95
+              Title.Caption = #27604#20363'(%)'
+              Width = 60
               Visible = True
             end
             item
@@ -175,6 +186,14 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
               FieldName = 'ZFEDATE'
               Title.Alignment = taCenter
               Title.Caption = #23454#38469#32467#26463#26085#26399
+              Width = 101
+              Visible = True
+            end
+            item
+              Expanded = False
+              FieldName = 'ZPEDATE'
+              Title.Alignment = taCenter
+              Title.Caption = #35745#21010#32467#26463#26085#26399
               Width = 101
               Visible = True
             end
@@ -364,6 +383,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
             Height = 23
             DataField = 'ZNAME'
             DataSource = dsPlanItem
+            ImeName = #26497#21697#20116#31508#36755#20837#27861
             TabOrder = 0
           end
           object dblkcbbZMAINDEVENAME: TDBLookupComboBox
@@ -374,6 +394,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
             DataField = 'ZMAINDEVENAME'
             DataSource = dsPlanItem
             DropDownRows = 30
+            ImeName = #26497#21697#20116#31508#36755#20837#27861
             KeyField = 'ZID'
             ListField = 'ZNAME'
             ListSource = DM.dsUsers
@@ -386,6 +407,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
             Height = 23
             DataField = 'ZPBDATE'
             DataSource = dsPlanItem
+            ImeName = #26497#21697#20116#31508#36755#20837#27861
             TabOrder = 2
           end
           object dbedtZFBDATE1: TDBEdit
@@ -393,8 +415,11 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
             Top = 63
             Width = 180
             Height = 23
+            Color = clBtnFace
             DataField = 'ZFBDATE'
             DataSource = dsPlanItem
+            ImeName = #26497#21697#20116#31508#36755#20837#27861
+            ReadOnly = True
             TabOrder = 3
           end
           object dbedtZFEDATE: TDBEdit
@@ -404,6 +429,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
             Height = 23
             DataField = 'ZPEDATE'
             DataSource = dsPlanItem
+            ImeName = #26497#21697#20116#31508#36755#20837#27861
             TabOrder = 4
           end
           object dbedtZFBDATE2: TDBEdit
@@ -414,6 +440,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
             Color = clBtnFace
             DataField = 'ZFEDATE'
             DataSource = dsPlanItem
+            ImeName = #26497#21697#20116#31508#36755#20837#27861
             ReadOnly = True
             TabOrder = 5
           end
@@ -424,6 +451,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
             Height = 23
             DataField = 'ZREMARK'
             DataSource = dsPlanItem
+            ImeName = #26497#21697#20116#31508#36755#20837#27861
             TabOrder = 6
           end
           object dbedtZSUCCESSRATE: TDBEdit
@@ -434,6 +462,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
             Color = clBtnFace
             DataField = 'ZSUCCESSRATE'
             DataSource = dsPlanItem
+            ImeName = #26497#21697#20116#31508#36755#20837#27861
             TabOrder = 7
           end
           object btnItem_Save: TBitBtn
@@ -564,6 +593,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
             Height = 280
             Align = alLeft
             DataSource = dsPlanDetail
+            ImeName = #26497#21697#20116#31508#36755#20837#27861
             Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
             ReadOnly = True
             TabOrder = 1
@@ -609,6 +639,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
               Align = alClient
               DataField = 'ZCONTENT'
               DataSource = dsPlanDetail
+              ImeName = #26497#21697#20116#31508#36755#20837#27861
               ScrollBars = ssBoth
               TabOrder = 0
             end
@@ -676,6 +707,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
                 DataField = 'ZDEVENAME'
                 DataSource = dsPlanDetail
                 DropDownRows = 30
+                ImeName = #26497#21697#20116#31508#36755#20837#27861
                 TabOrder = 0
               end
               object dbedtZNAME2: TDBEdit
@@ -686,6 +718,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
                 Anchors = [akLeft, akTop, akRight]
                 DataField = 'ZNAME'
                 DataSource = dsPlanDetail
+                ImeName = #26497#21697#20116#31508#36755#20837#27861
                 TabOrder = 1
               end
               object dbedtZSOCRE: TDBEdit
@@ -696,6 +729,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
                 Color = clBtnFace
                 DataField = 'ZSOCRE'
                 DataSource = dsPlanDetail
+                ImeName = #26497#21697#20116#31508#36755#20837#27861
                 ReadOnly = True
                 TabOrder = 2
               end
@@ -729,6 +763,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
                 Anchors = [akLeft, akTop, akRight]
                 DataField = 'ZTESTCASE'
                 DataSource = dsPlanDetail
+                ImeName = #26497#21697#20116#31508#36755#20837#27861
                 TabOrder = 0
               end
               object btnGotoTest: TBitBtn
@@ -931,6 +966,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
             Height = 23
             DataField = 'ZNAME'
             DataSource = dsPlan
+            ImeName = #26497#21697#20116#31508#36755#20837#27861
             TabOrder = 0
           end
           object dbedtZPRO_ID: TDBEdit
@@ -940,6 +976,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
             Height = 23
             DataField = 'ZPRO_ID'
             DataSource = dsPlan
+            ImeName = #26497#21697#20116#31508#36755#20837#27861
             TabOrder = 1
           end
           object dblkcbbZPMNAME: TDBLookupComboBox
@@ -950,6 +987,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
             DataField = 'ZPMNAME'
             DataSource = dsPlan
             DropDownRows = 30
+            ImeName = #26497#21697#20116#31508#36755#20837#27861
             KeyField = 'ZID'
             ListField = 'ZNAME'
             ListSource = DM.dsUsers
@@ -963,6 +1001,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
             Anchors = [akLeft, akTop, akRight, akBottom]
             DataField = 'ZSUMTEXT'
             DataSource = dsPlan
+            ImeName = #26497#21697#20116#31508#36755#20837#27861
             ScrollBars = ssBoth
             TabOrder = 3
           end
@@ -971,6 +1010,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
             Top = 24
             Width = 121
             Height = 89
+            ImeName = #26497#21697#20116#31508#36755#20837#27861
             ItemHeight = 15
             TabOrder = 4
             Visible = False
@@ -982,6 +1022,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
             Height = 23
             DataField = 'ZMEMBER'
             DataSource = dsPlan
+            ImeName = #26497#21697#20116#31508#36755#20837#27861
             TabOrder = 5
           end
           object dblkcbb1: TDBLookupComboBox
@@ -990,6 +1031,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
             Width = 145
             Height = 23
             DropDownRows = 50
+            ImeName = #26497#21697#20116#31508#36755#20837#27861
             KeyField = 'ZID'
             ListField = 'ZNAME'
             ListSource = DM.dsUsers
@@ -1415,6 +1457,14 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
       Category = #39033#30446#20219#21153
       Caption = #21047#26032#25968#25454
       OnExecute = actItem_RefreshDataExecute
+      OnUpdate = actItem_RefreshDataUpdate
+    end
+    object actItem_Starting: TAction
+      Category = #39033#30446#20219#21153
+      Caption = #24320#22987#25191#34892
+      Hint = #24320#22987#25191#34892#20219#21153
+      OnExecute = actItem_StartingExecute
+      OnUpdate = actItem_StartingUpdate
     end
   end
   object cdsPlanStauts: TClientDataSet

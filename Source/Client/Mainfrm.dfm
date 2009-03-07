@@ -15,6 +15,7 @@ object MainDlg: TMainDlg
   WindowState = wsMaximized
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
+  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 15
   object plForm: TPanel

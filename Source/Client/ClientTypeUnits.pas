@@ -20,6 +20,9 @@ type
     );
   //项目文档
   TDocSubModuleStype = (bsDocTree=1);
+  
+  //项目计划
+  TPlanSubModuleStype=(psTree=1);
 
 
   //权限操作权限

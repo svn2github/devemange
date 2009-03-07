@@ -120,6 +120,7 @@ type
     procedure actMod_AntExecute(Sender: TObject);
     procedure actMod_DayworktableExecute(Sender: TObject);
     procedure actMod_ReleaseExecute(Sender: TObject);
+    procedure FormShow(Sender: TObject);
   private
     fChildform : TList; //所有子窗口的对象
     fCurrentChildform : TBaseChildDlg;
@@ -468,6 +469,12 @@ begin
         Exit;
       end;
 
+      if Length(edPasswd1.Text) < 6 then
+      begin
+        MessageBox(Handle,'密码必须大于5位','提示',MB_ICONWARNING+MB_OK);
+        Exit;
+      end;
+
       //执行修改密码
       mysql := format(glSql,[edPasswd1.Text, ClientSystem.fEditer_id]);
       if not ClientSystem.fDbOpr.ExeSQL(PChar(mysql)) then
@@ -477,6 +484,7 @@ begin
       end
       else begin
         MessageBox(Handle,'修改密码成功','提示',MB_OK);
+        ClientSystem.fEditer_mm := edPasswd1.Text;
       end;
     end;
 
@@ -770,6 +778,23 @@ begin
     SendMessage(myBaseform.Handle,gcMSG_GetPlanItem,msg.WParam,msg.LParam);
   end;
 
+end;
+
+procedure TMainDlg.FormShow(Sender: TObject);
+var
+  c : integer;
+begin
+  c := 1;
+  while ClientSystem.fEditer_mm = '123456' do
+  begin
+    if c >3 then
+    begin
+      Application.Terminate;
+      break;
+    end;
+    actFile_ChangPasswd.Execute;
+    inc(c);
+  end;
 end;
 
 end.

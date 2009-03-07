@@ -129,7 +129,12 @@ begin
   if (cdswork.FieldByName('ZROWTYPE').AsInteger in [Ord(rtTest),Ord(rtCreateTest)])
     and (cdswork.FieldByName('ZSTATUS').AsInteger in [Ord(bgsAction),Ord(bgsReAction)]) then
   begin
-    dbgrdwork.Canvas.Font.Style := [fsBold];
+    dbgrdwork.Canvas.Font.Style := [fsItalic];
+    if Column.Index = 3 then
+    begin
+      dbgrdwork.Canvas.Brush.Color := clMaroon;
+      dbgrdwork.Canvas.Font.Color := clwhite;
+    end;
   end;
 
   //ÊÇ·Ö²¿

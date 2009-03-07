@@ -21,7 +21,7 @@ uses
   ClientTypeUnits;
 
 type
-  TPlanStatus = (ps_doing,ps_success,ps_over,ps_close);
+  TPlanStatus = (ps_doing,ps_success,ps_over,ps_close,ps_waiting,ps_reaction);
 
   TPlanPageRec = record
     fCount : integer;
@@ -185,6 +185,8 @@ type
     lblItemPage: TLabel;
     actItem_RefreshData: TAction;
     btnItem_RefreshData: TBitBtn;
+    actItem_Starting: TAction;
+    btnItem_Starting: TBitBtn;
     procedure cdsPlanNewRecord(DataSet: TDataSet);
     procedure actPan_SaveUpdate(Sender: TObject);
     procedure actPan_SaveExecute(Sender: TObject);
@@ -260,6 +262,9 @@ type
     procedure actItem_LastPageExecute(Sender: TObject);
     procedure actItem_RefreshDataExecute(Sender: TObject);
     procedure btnGotoTestClick(Sender: TObject);
+    procedure actItem_RefreshDataUpdate(Sender: TObject);
+    procedure actItem_StartingExecute(Sender: TObject);
+    procedure actItem_StartingUpdate(Sender: TObject);
   private
     { Private declarations }
     fPlanPageRec : TPlanPageRec;
@@ -676,6 +681,16 @@ begin
     cdsTemp.First;
     while not cdsTemp.Eof do
     begin
+      //
+      // 处理权限,没有权限不能加载了
+      //
+      if not HasModuleAction(Ord(psTree),
+        cdstemp.FieldByName('ZID').AsInteger,atView) then
+      begin
+        cdstemp.Next;
+        Continue;
+      end;
+
       lstPlanGUID.Items.Add(cdstemp.FieldByName('ZGUID').AsString);
       myNode := tvPlan.Items.AddChild(nil,cdstemp.FieldByName('ZNAME').AsString);
       myNode.ImageIndex := 0;
@@ -823,7 +838,7 @@ begin
   if fLoading then Exit;
   DataSet.FieldByName('ZGUID').AsString := NewGuid;
   DataSet.FieldByName('ZPLAN_GUID').AsString := cdsPlan.FieldByName('ZGUID').AsString;
-  DataSet.FieldByName('ZSTATUS').AsInteger := Ord(ps_doing);
+  DataSet.FieldByName('ZSTATUS').AsInteger := Ord(ps_waiting);
   DataSet.FieldByName('ZCHILDCOUNT').AsInteger := 0;
   DataSet.FieldByName('ZPASSCOUNT').AsInteger := 0;
   DataSet.FieldByName('ZPBDATE').AsDateTime := ClientSystem.fDbOpr.GetSysDateTime;
@@ -849,6 +864,15 @@ end;
 procedure TPlanManageClientDlg.pgcplanChanging(Sender: TObject;
   var AllowChange: Boolean);
 begin
+
+  if (pgcplan.ActivePageIndex = 0) and
+     (cdsPlanItem.IsEmpty) and
+     (cdsPlan.IsEmpty) then
+  begin
+    AllowChange := False;
+    Exit;
+  end;
+
   if (cdsPlanItem.State in [dsEdit,dsInsert]) or
      (cdsPlanDetail.State in [dsEdit,dsInsert]) then
   begin
@@ -856,6 +880,7 @@ begin
     MessageBox(Handle,'内容已修改，请点保存或取消。','提示',MB_ICONWARNING+MB_OK);
     Exit;
   end;
+  
 end;
 
 procedure TPlanManageClientDlg.actItem_CancelUpdate(Sender: TObject);
@@ -950,7 +975,7 @@ begin
     Exit;
   end;
 
-  if cdsPlanItem.FieldByName('ZCHILDCOUNT').AsInteger <>
+  if cdsPlanItem.FieldByName('ZCHILDCOUNT').AsInteger >
      cdsPlanItem.FieldByName('ZPASSCOUNT').AsInteger then
   begin
     MessageBox(Handle,'任务内容没有完成，不能点提交完成。','提示',MB_ICONWARNING+
@@ -974,7 +999,8 @@ end;
 procedure TPlanManageClientDlg.actItem_SuccessUpdate(Sender: TObject);
 begin
   (Sender as TAction).Enabled := (cdsPlanItem.Active) and
-  (cdsPlanItem.FieldByName('ZSTATUS').AsInteger in [Ord(ps_doing)]);
+  (cdsPlanItem.FieldByName('ZSTATUS').AsInteger in [Ord(ps_doing),
+    Ord(ps_reaction)]);
 end;
 
 procedure TPlanManageClientDlg.actItem_CloseUpdate(Sender: TObject);
@@ -996,7 +1022,7 @@ procedure TPlanManageClientDlg.actItem_ActionExecute(Sender: TObject);
 begin
   if not (cdsPlanItem.State in [dsEdit,dsInsert]) then
     cdsPlanItem.Edit;
-  cdsPlanItem.FieldByName('ZSTATUS').AsInteger := Ord(ps_doing);
+  cdsPlanItem.FieldByName('ZSTATUS').AsInteger := Ord(ps_reaction);
   cdsPlanItem.Post;
 end;
 
@@ -1010,7 +1036,10 @@ begin
   if (cdsPlanItem.FieldByName('ZSTATUS').AsInteger = Ord(ps_close)) then
   begin
     dbgrdPlanItem.Canvas.Font.Color := clblue;
-  end;
+  end
+  else if (cdsPlanItem.FieldByName('ZSTATUS').AsInteger = Ord(ps_waiting)) then
+    dbgrdPlanItem.Canvas.Font.Style := [fsItalic];
+
 
   case Column.Index of
     5  :
@@ -1019,6 +1048,28 @@ begin
       begin
         dbgrdPlanItem.Canvas.Brush.Color := clLime;
       end;
+    2:
+      if cdsPlanItem.FieldByName('ZSTATUS').AsInteger = Ord(ps_waiting) then
+      begin
+        dbgrdPlanItem.Canvas.Brush.Color := clMaroon;
+        dbgrdPlanItem.Canvas.Font.Color  := clwhite;
+      end;
+    3,4:
+      if cdsPlanItem.FieldByName('ZSTATUS').AsInteger = Ord(ps_waiting) then
+      begin
+        if gdSelected in State then
+        begin
+          dbgrdPlanItem.Canvas.Brush.Color := clHighlight;
+          dbgrdPlanItem.Canvas.Font.Color  := clHighlight;
+          dbgrdPlanItem.Canvas.FillRect(Rect);
+        end
+        else begin
+          dbgrdPlanItem.Canvas.Brush.Color := clwhite;
+          dbgrdPlanItem.Canvas.Font.Color := clwhite;
+          dbgrdPlanItem.Canvas.FillRect(Rect);
+        end;
+      end;
+
   end;
 
   dbgrdPlanItem.DefaultDrawColumnCell(Rect,DataCol,Column,State);
@@ -1216,8 +1267,10 @@ begin
       end;
       ClientSystem.fDbOpr.CommitTrans;
 
+      //只有关闭或激活才处理
       //发邮件
-      if DataSet.FieldByName('ZSTATUS').AsInteger in [Ord(ps_close),Ord(ps_doing)] then
+      if DataSet.FieldByName('ZSTATUS').AsInteger in [Ord(ps_close),
+        Ord(ps_reaction)] then
       begin
         ShowProgress('发送邮件...',0);
         try
@@ -1225,9 +1278,11 @@ begin
           if mymailto <> '' then
           begin
             if DataSet.FieldByName('ZSTATUS').AsInteger=Ord(ps_close) then
-              myTitle := '关闭任务 ' + DataSet.FieldByName('ZNAME').AsString
+              myTitle := format('&%d 关闭任务 ',[DataSet.FieldByName('ZID').AsInteger])
+                 + DataSet.FieldByName('ZNAME').AsString
             else
-              myTitle := '激活任务 ' + DataSet.FieldByName('ZNAME').AsString;
+              myTitle := format('&%d 激活任务 ',[DataSet.FieldByName('ZID').AsInteger])
+                + DataSet.FieldByName('ZNAME').AsString;
 
             ClientSystem.fDbOpr.MailToEx(mymailto,myTitle,'');
           end;
@@ -1236,8 +1291,6 @@ begin
         end;
       end;
 
-
-      
     except
       ClientSystem.fDbOpr.RollbackTrans;
     end;
@@ -1248,7 +1301,15 @@ end;
 procedure TPlanManageClientDlg.pgcplanChange(Sender: TObject);
 begin
   if pgcplan.ActivePageIndex = 1 then
+  begin
+    if cdsPlanItem.IsEmpty then
+    begin
+      pgcplan.ActivePageIndex := 0;
+      Exit;
+    end;
+
     LoadPlanDetail(cdsPlanItem.FieldByName('ZGUID').AsString);
+  end;
 end;
 
 procedure TPlanManageClientDlg.actItem_PiroPageExecute(Sender: TObject);
@@ -1294,7 +1355,9 @@ end;
 procedure TPlanManageClientDlg.actDetail_SUCCESSUpdate(Sender: TObject);
 begin
   (Sender as TAction).Enabled := (cdsPlanDetail.State = dsBrowse)
-  and (cdsPlanDetail.FieldByName('ZSTATUS').AsInteger=Ord(ps_doing));
+  and (cdsPlanDetail.FieldByName('ZSTATUS').AsInteger in [Ord(ps_doing),
+    Ord(ps_reaction)])
+  and (cdsPlanItem.FieldByName('ZSTATUS').AsInteger<>Ord(ps_waiting));
 end;
 
 procedure TPlanManageClientDlg.actDetail_ColseUpdate(Sender: TObject);
@@ -1329,7 +1392,8 @@ begin
         cdsPlanItem.Edit;
       cdsPlanItem.FieldByName('ZPASSCOUNT').AsInteger :=
         cdsPlanItem.FieldByName('ZPASSCOUNT').AsInteger - 1;
-      cdsPlanItem.FieldByName('ZSTATUS').AsInteger := Ord(ps_doing);
+      if cdsPlanItem.FieldByName('ZSTATUS').AsInteger = Ord(ps_close) then
+        cdsPlanItem.FieldByName('ZSTATUS').AsInteger := Ord(ps_reaction);
       cdsPlanItem.Post;
     finally
       fLoading := myb;
@@ -1337,7 +1401,7 @@ begin
   end;
 
   cdsPlanDetail.Edit;
-  cdsPlanDetail.FieldByName('ZSTATUS').AsInteger := Ord(ps_doing);
+  cdsPlanDetail.FieldByName('ZSTATUS').AsInteger := Ord(ps_reaction);
   cdsPlanDetail.Post;
 end;
 
@@ -1349,6 +1413,13 @@ end;
 
 procedure TPlanManageClientDlg.actPan_successExecute(Sender: TObject);
 begin
+  if cdsPlan.FieldByName('ZPM').AsInteger <> ClientSystem.fEditer_id then
+  begin
+    MessageBox(Handle,'你不是这个项目的项目经理,不能关闭','提示',
+      MB_ICONERROR+MB_OK);
+    Exit;
+  end;
+
   cdsPlan.Edit;
   cdsPlan.FieldByName('ZSTATUS').AsInteger := Ord(ps_success);
   cdsPlan.Post;
@@ -1620,6 +1691,37 @@ begin
       break;
     end;
   end;
+end;
+
+procedure TPlanManageClientDlg.actItem_RefreshDataUpdate(Sender: TObject);
+begin
+  (Sender as TAction).Enabled := (fPlanItemPageRec.fPageindex > 0)
+end;
+
+procedure TPlanManageClientDlg.actItem_StartingExecute(Sender: TObject);
+begin
+  if (cdsPlanItem.FieldByName('ZMAINDEVE').AsInteger <>
+     ClientSystem.fEditer_id) then
+  begin
+    MessageBox(Handle,'不是你的任务不能点开始执行','提示',MB_ICONERROR);
+    Exit;
+  end;
+
+  if MessageBox(Handle,'确定你要开始执行这个任务?','询问',
+    MB_ICONQUESTION+MB_YESNO)=IDNO then
+    Exit;
+
+  if not (cdsPlanItem.State in [dsEdit,dsInsert]) then
+    cdsPlanItem.Edit;
+  cdsPlanItem.FieldByName('ZSTATUS').AsInteger := Ord(ps_doing);
+  cdsPlanItem.FieldByName('ZFBDATE').AsString := ClientSystem.fDbOpr.GetSysDateTime;
+  cdsPlanItem.Post;
+end;
+
+procedure TPlanManageClientDlg.actItem_StartingUpdate(Sender: TObject);
+begin
+  (Sender as TAction).Enabled := (not cdsPlanItem.IsEmpty) and
+  (cdsPlanItem.FieldByName('ZSTATUS').AsInteger=Ord(ps_waiting));
 end;
 
 end.

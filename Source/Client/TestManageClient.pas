@@ -1073,7 +1073,7 @@ begin
   if (cdsTestItem.FieldByName('ZSTATUS').AsInteger in
     [Ord(bgsAction),Ord(bgsReAction)]) then
   begin
-    dbgrdTest.Canvas.Font.Style := [fsBold];
+    dbgrdTest.Canvas.Font.Style := [fsItalic];
   end;
 
   case Column.Index of
@@ -1088,6 +1088,12 @@ begin
          ClientSystem.fEditer_id then
       begin
         dbgrdTest.Canvas.Brush.Color := clYellow;
+      end;
+    4: {等级}
+      if (cdsTestItem.FieldByName('ZLEVEL').AsInteger=4) then
+      begin
+        dbgrdTest.Canvas.Brush.Color := clMaroon;
+        dbgrdTest.Canvas.Font.Color  := clwhite;
       end;
     5  :
       if cdsTestItem.FieldByName('ZTESTRESULTBY').AsInteger =
@@ -1476,7 +1482,7 @@ var
   myver : string;
 begin
 
-  if (ClientSystem.fEditerType in [etAdmin,etDeve,etTest]) then
+  if not (ClientSystem.fEditerType in [etAdmin,etDeve,etTest]) then
   begin
     MessageBox(Handle,'你没有提交测试用例的权限,不能提交','测试',MB_ICONERROR+MB_OK);
     Exit;

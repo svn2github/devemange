@@ -1,6 +1,6 @@
 inherited UserManageClientDlg: TUserManageClientDlg
-  Left = 220
-  Top = 116
+  Left = 235
+  Top = 67
   Height = 798
   Caption = #29992#25143#31649#29702
   OldCreateOrder = True
@@ -45,6 +45,7 @@ inherited UserManageClientDlg: TUserManageClientDlg
           Height = 628
           Align = alClient
           DataSource = dsUsers
+          ImeName = #26497#21697#20116#31508#36755#20837#27861
           Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
           TabOrder = 0
           TitleFont.Charset = GB2312_CHARSET
@@ -133,7 +134,7 @@ inherited UserManageClientDlg: TUserManageClientDlg
           TabOrder = 1
           object cbEditUser: TCheckBox
             Left = 8
-            Top = 16
+            Top = 12
             Width = 57
             Height = 17
             Caption = #32534#36753
@@ -150,7 +151,7 @@ inherited UserManageClientDlg: TUserManageClientDlg
             TabOrder = 1
           end
           object BitBtn2: TBitBtn
-            Left = 192
+            Left = 184
             Top = 8
             Width = 100
             Height = 25
@@ -159,7 +160,7 @@ inherited UserManageClientDlg: TUserManageClientDlg
             TabOrder = 2
           end
           object BitBtn3: TBitBtn
-            Left = 304
+            Left = 288
             Top = 8
             Width = 100
             Height = 25
@@ -168,7 +169,7 @@ inherited UserManageClientDlg: TUserManageClientDlg
             TabOrder = 3
           end
           object BitBtn4: TBitBtn
-            Left = 416
+            Left = 392
             Top = 8
             Width = 100
             Height = 25
@@ -177,7 +178,7 @@ inherited UserManageClientDlg: TUserManageClientDlg
             TabOrder = 4
           end
           object BitBtn9: TBitBtn
-            Left = 528
+            Left = 496
             Top = 8
             Width = 100
             Height = 25
@@ -244,7 +245,7 @@ inherited UserManageClientDlg: TUserManageClientDlg
             TabOrder = 1
           end
           object BitBtn6: TBitBtn
-            Left = 194
+            Left = 186
             Top = 7
             Width = 100
             Height = 25
@@ -253,7 +254,7 @@ inherited UserManageClientDlg: TUserManageClientDlg
             TabOrder = 2
           end
           object BitBtn7: TBitBtn
-            Left = 306
+            Left = 290
             Top = 7
             Width = 100
             Height = 25
@@ -262,7 +263,7 @@ inherited UserManageClientDlg: TUserManageClientDlg
             TabOrder = 3
           end
           object BitBtn8: TBitBtn
-            Left = 418
+            Left = 394
             Top = 7
             Width = 100
             Height = 25
@@ -278,6 +279,7 @@ inherited UserManageClientDlg: TUserManageClientDlg
           Height = 413
           Align = alClient
           DataSource = dsUserPriv
+          ImeName = #26497#21697#20116#31508#36755#20837#27861
           Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
           TabOrder = 1
           TitleFont.Charset = GB2312_CHARSET
@@ -389,6 +391,7 @@ inherited UserManageClientDlg: TUserManageClientDlg
             Height = 23
             DataField = 'ZSTYLE'
             DataSource = dsUserPriv
+            ImeName = #26497#21697#20116#31508#36755#20837#27861
             ReadOnly = True
             TabOrder = 0
           end
@@ -399,6 +402,7 @@ inherited UserManageClientDlg: TUserManageClientDlg
             Height = 23
             DataField = 'ZSUBSTYLE'
             DataSource = dsUserPriv
+            ImeName = #26497#21697#20116#31508#36755#20837#27861
             ReadOnly = True
             TabOrder = 1
           end
@@ -409,6 +413,7 @@ inherited UserManageClientDlg: TUserManageClientDlg
             Height = 23
             DataField = 'ZMODULEID'
             DataSource = dsUserPriv
+            ImeName = #26497#21697#20116#31508#36755#20837#27861
             ReadOnly = True
             TabOrder = 2
           end
@@ -419,6 +424,7 @@ inherited UserManageClientDlg: TUserManageClientDlg
             Height = 23
             DataField = 'ZRIGHTMASK'
             DataSource = dsUserPriv
+            ImeName = #26497#21697#20116#31508#36755#20837#27861
             ReadOnly = True
             TabOrder = 3
           end
@@ -470,6 +476,7 @@ inherited UserManageClientDlg: TUserManageClientDlg
           Width = 852
           Height = 188
           Align = alBottom
+          ImeName = #26497#21697#20116#31508#36755#20837#27861
           Lines.Strings = (
             '#######################'
             '# '#39033#30446#25991#26723' '
@@ -496,6 +503,12 @@ inherited UserManageClientDlg: TUserManageClientDlg
             #27169#22359'=300'
             #29256#26412#21495#23376#27169#22359'=1 ,'#25805#20316#23545#35937#39033#30446'ID'#21495
             #20219#21153#21333#23376#27169#22359'=2 ,'#25805#20316#23545#35937#39033#30446'ID'#21495
+            ''
+            '######################'
+            '# '#39033#30446#35745#21010
+            '######################'
+            #27169#22359'=700'
+            #23376#27169#22359'=1 ,'#25805#20316#23545#35937#39033#30446'ID'#21495
             '')
           ScrollBars = ssBoth
           TabOrder = 3

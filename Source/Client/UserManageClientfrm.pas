@@ -237,6 +237,7 @@ begin
   DataSet.FieldByName('ZISNEW').AsBoolean := True;
   DataSet.FieldByName('ZISLOAD').AsBoolean := False;
   DataSet.FieldByName('ZCHECKTASK').AsBoolean := False;
+  DataSet.FieldByName('ZPASS').AsString := '123456';
 end;
 
 procedure TUserManageClientDlg.actUser_DelExecute(Sender: TObject);

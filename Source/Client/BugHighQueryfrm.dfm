@@ -10,7 +10,7 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
   PixelsPerInch = 96
   TextHeight = 15
   object btn1: TBitBtn
-    Left = 496
+    Left = 482
     Top = 428
     Width = 100
     Height = 25
@@ -18,7 +18,7 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
     Kind = bkCancel
   end
   object btn2: TBitBtn
-    Left = 376
+    Left = 378
     Top = 428
     Width = 100
     Height = 25
@@ -40,6 +40,7 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
     Height = 23
     Date = 39648.739446967590000000
     Time = 39648.739446967590000000
+    ImeName = #26497#21697#20116#31508#36755#20837#27861
     TabOrder = 4
   end
   object btntoday: TBitBtn
@@ -75,6 +76,7 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
     Height = 23
     Date = 39648.741306423610000000
     Time = 39648.741306423610000000
+    ImeName = #26497#21697#20116#31508#36755#20837#27861
     TabOrder = 8
   end
   object btntodayBug: TBitBtn
@@ -110,6 +112,7 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
     Width = 194
     Height = 23
     Style = csDropDownList
+    ImeName = #26497#21697#20116#31508#36755#20837#27861
     ItemHeight = 15
     TabOrder = 12
     OnChange = cbbModuleChange
@@ -135,6 +138,7 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
     Top = 70
     Width = 194
     Height = 23
+    ImeName = #26497#21697#20116#31508#36755#20837#27861
     KeyField = 'ZID'
     ListField = 'ZVER'
     ListSource = dsProject
@@ -154,6 +158,7 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
     Top = 212
     Width = 194
     Height = 23
+    ImeName = #26497#21697#20116#31508#36755#20837#27861
     KeyField = 'ZID'
     ListField = 'ZNAME'
     ListSource = dsBugType
@@ -172,6 +177,7 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
     Top = 101
     Width = 194
     Height = 23
+    ImeName = #26497#21697#20116#31508#36755#20837#27861
     KeyField = 'ZID'
     ListField = 'ZVER'
     ListSource = dsAmdieVer
@@ -182,6 +188,7 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
     Top = 37
     Width = 97
     Height = 23
+    ImeName = #26497#21697#20116#31508#36755#20837#27861
     ItemHeight = 15
     TabOrder = 20
     Text = 'cbbModuleID'
@@ -200,11 +207,12 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
     Top = 11
     Width = 194
     Height = 23
+    ImeName = #26497#21697#20116#31508#36755#20837#27861
     TabOrder = 0
     OnChange = edtCodeChange
   end
   object btnAll: TBitBtn
-    Left = 253
+    Left = 274
     Top = 428
     Width = 100
     Height = 25
@@ -218,6 +226,7 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
     Top = 36
     Width = 88
     Height = 23
+    ImeName = #26497#21697#20116#31508#36755#20837#27861
     ItemHeight = 15
     TabOrder = 23
     Text = 'cbbTreeID'
@@ -236,6 +245,7 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
     Top = 243
     Width = 194
     Height = 23
+    ImeName = #26497#21697#20116#31508#36755#20837#27861
     KeyField = 'ZID'
     ListField = 'ZNAME'
     ListSource = dsBugLevel
@@ -281,6 +291,7 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
     Top = 321
     Width = 201
     Height = 23
+    ImeName = #26497#21697#20116#31508#36755#20837#27861
     KeyField = 'ZID'
     ListField = 'ZNAME'
     ListSource = dsBugCreaeter
@@ -291,6 +302,7 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
     Top = 352
     Width = 201
     Height = 23
+    ImeName = #26497#21697#20116#31508#36755#20837#27861
     KeyField = 'ZID'
     ListField = 'ZNAME'
     ListSource = dsAmder
@@ -310,6 +322,7 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
     Width = 199
     Height = 23
     Style = csDropDownList
+    ImeName = #26497#21697#20116#31508#36755#20837#27861
     ItemHeight = 15
     TabOrder = 33
   end

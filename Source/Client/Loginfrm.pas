@@ -29,6 +29,7 @@ type
     rbLocal: TRadioButton;
     rbRemoate: TRadioButton;
     lbStutas: TLabel;
+    lbl1: TLabel;
     procedure btOKClick(Sender: TObject);
     procedure rbLocalClick(Sender: TObject);
     procedure rbRemoateClick(Sender: TObject);
@@ -113,6 +114,7 @@ begin
       begin
         ClientSystem.fEditer_id  := myid;
         ClientSystem.fEditer     := edName.Text;
+        ClientSystem.fEditer_mm  := edPass.text;
         ClientSystem.fEditerType := TEditerType(
           ClientSystem.fDbOpr.ReadInt(PChar(format(glSQL,[myid]))));
         if rbLocal.Checked then

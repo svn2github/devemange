@@ -1,9 +1,9 @@
 object LoginDlg: TLoginDlg
-  Left = 459
+  Left = 435
   Top = 264
   BorderStyle = bsDialog
   Caption = #29992#25143#30331#24405
-  ClientHeight = 245
+  ClientHeight = 252
   ClientWidth = 453
   Color = clBtnFace
   Font.Charset = GB2312_CHARSET
@@ -65,6 +65,19 @@ object LoginDlg: TLoginDlg
     ParentColor = False
     ParentFont = False
   end
+  object lbl1: TLabel
+    Left = 96
+    Top = 189
+    Width = 350
+    Height = 14
+    Caption = #40664#35748#23494#30721#23558#21435#25481','#35831#22823#23478#35774#32622#23494#30721','#24182#20316#22909#23494#30721#20445#23494#24037#20316#12290
+    Font.Charset = GB2312_CHARSET
+    Font.Color = clMaroon
+    Font.Height = -14
+    Font.Name = #23435#20307
+    Font.Style = []
+    ParentFont = False
+  end
   object cbServerIP: TComboBox
     Left = 128
     Top = 73
@@ -72,6 +85,7 @@ object LoginDlg: TLoginDlg
     Height = 24
     Color = clBtnFace
     Enabled = False
+    ImeName = #26497#21697#20116#31508#36755#20837#27861
     ItemHeight = 16
     TabOrder = 1
     Text = 'localhost'
@@ -81,6 +95,7 @@ object LoginDlg: TLoginDlg
     Top = 125
     Width = 309
     Height = 24
+    ImeName = #26497#21697#20116#31508#36755#20837#27861
     TabOrder = 2
     Text = 'admin'
   end
@@ -89,13 +104,13 @@ object LoginDlg: TLoginDlg
     Top = 157
     Width = 309
     Height = 24
+    ImeName = #26497#21697#20116#31508#36755#20837#27861
     PasswordChar = '*'
     TabOrder = 0
-    Text = '123456'
   end
   object btOK: TBitBtn
     Left = 230
-    Top = 198
+    Top = 214
     Width = 100
     Height = 25
     Caption = #30830#23450
@@ -123,7 +138,7 @@ object LoginDlg: TLoginDlg
   end
   object btCancel: TBitBtn
     Left = 334
-    Top = 198
+    Top = 214
     Width = 100
     Height = 25
     Caption = #21462#28040

@@ -40,6 +40,7 @@ type
     fDbOpr  : IDbOperator;        //数据接口处理
     fEditer_id : integer;         //用户的id号
     fEditer : String;             //用户名
+    fEditer_mm : string;          //用户密码  
     fEditerType : TEditerType;    //用户类型
     fHost   : String;             //服务器名
     fcdsUsePriv : TClientDataSet; //用户权限表
