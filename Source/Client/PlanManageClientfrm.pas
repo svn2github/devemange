@@ -187,6 +187,8 @@ type
     btnItem_RefreshData: TBitBtn;
     actItem_Starting: TAction;
     btnItem_Starting: TBitBtn;
+    actItem_Waiting: TAction;
+    btnItem_Waiting: TBitBtn;
     procedure cdsPlanNewRecord(DataSet: TDataSet);
     procedure actPan_SaveUpdate(Sender: TObject);
     procedure actPan_SaveExecute(Sender: TObject);
@@ -265,6 +267,8 @@ type
     procedure actItem_RefreshDataUpdate(Sender: TObject);
     procedure actItem_StartingExecute(Sender: TObject);
     procedure actItem_StartingUpdate(Sender: TObject);
+    procedure actItem_WaitingExecute(Sender: TObject);
+    procedure actItem_WaitingUpdate(Sender: TObject);
   private
     { Private declarations }
     fPlanPageRec : TPlanPageRec;
@@ -1042,7 +1046,7 @@ begin
 
 
   case Column.Index of
-    5  :
+    6  :
       if cdsPlanItem.FieldByName('ZMAINDEVE').AsInteger =
          ClientSystem.fEditer_id then
       begin
@@ -1064,8 +1068,8 @@ begin
           dbgrdPlanItem.Canvas.FillRect(Rect);
         end
         else begin
-          dbgrdPlanItem.Canvas.Brush.Color := clwhite;
-          dbgrdPlanItem.Canvas.Font.Color := clwhite;
+          //dbgrdPlanItem.Canvas.Brush.Color := clwhite;
+          dbgrdPlanItem.Canvas.Font.Color := dbgrdPlanItem.Canvas.Brush.Color;
           dbgrdPlanItem.Canvas.FillRect(Rect);
         end;
       end;
@@ -1722,6 +1726,32 @@ procedure TPlanManageClientDlg.actItem_StartingUpdate(Sender: TObject);
 begin
   (Sender as TAction).Enabled := (not cdsPlanItem.IsEmpty) and
   (cdsPlanItem.FieldByName('ZSTATUS').AsInteger=Ord(ps_waiting));
+end;
+
+procedure TPlanManageClientDlg.actItem_WaitingExecute(Sender: TObject);
+begin
+  if (cdsPlanItem.FieldByName('ZMAINDEVE').AsInteger <>
+     ClientSystem.fEditer_id) and
+     (ClientSystem.fEditerType<>etAdmin) then
+  begin
+    MessageBox(Handle,'不是你的任务不能点','提示',MB_ICONERROR);
+    Exit;
+  end;
+
+  if MessageBox(Handle,'确定你要任务设为等待中?','询问',
+    MB_ICONQUESTION+MB_YESNO)=IDNO then
+    Exit;
+
+  if not (cdsPlanItem.State in [dsEdit,dsInsert]) then
+    cdsPlanItem.Edit;
+  cdsPlanItem.FieldByName('ZSTATUS').AsInteger := Ord(ps_waiting);
+  cdsPlanItem.Post;
+end;
+
+procedure TPlanManageClientDlg.actItem_WaitingUpdate(Sender: TObject);
+begin
+  (Sender as TAction).Enabled := (not cdsPlanItem.IsEmpty) and
+  (cdsPlanItem.FieldByName('ZSTATUS').AsInteger<>Ord(ps_waiting));
 end;
 
 end.

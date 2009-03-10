@@ -1,6 +1,6 @@
 inherited PlanManageClientDlg: TPlanManageClientDlg
-  Left = 67
-  Top = 64
+  Left = 66
+  Top = 192
   Width = 1043
   Caption = #39033#30446#35745#21010
   OldCreateOrder = True
@@ -129,6 +129,15 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
             Caption = #24320#22987#25191#34892
             TabOrder = 5
           end
+          object btnItem_Waiting: TBitBtn
+            Left = 528
+            Top = 8
+            Width = 100
+            Height = 25
+            Action = actItem_Waiting
+            Caption = #20219#21153#31561#24453#20013
+            TabOrder = 6
+          end
         end
         object dbgrdPlanItem: TDBGrid
           Left = 0
@@ -137,7 +146,6 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
           Height = 404
           Align = alClient
           DataSource = dsPlanItem
-          ImeName = #26497#21697#20116#31508#36755#20837#27861
           Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
           TabOrder = 1
           TitleFont.Charset = GB2312_CHARSET
@@ -1465,6 +1473,12 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
       Hint = #24320#22987#25191#34892#20219#21153
       OnExecute = actItem_StartingExecute
       OnUpdate = actItem_StartingUpdate
+    end
+    object actItem_Waiting: TAction
+      Category = #39033#30446#20219#21153
+      Caption = #20219#21153#31561#24453#20013
+      OnExecute = actItem_WaitingExecute
+      OnUpdate = actItem_WaitingUpdate
     end
   end
   object cdsPlanStauts: TClientDataSet
