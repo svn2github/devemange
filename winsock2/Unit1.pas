@@ -191,9 +191,19 @@ begin
               cmdcommand := Format('cmd /c %s %s > %s',[edt1.Text,
                GetShortName(mybat),GetShortName(mybfile)]);
               //winexec(Pchar(cmdcommand),0);
-              mmo1.Lines.Add(datetimetostr(now())+ ' ' + mybat);
+              mmo1.Lines.Add(datetimetostr(now())+ '执行的代码 ' + cmdcommand);
               if WinExecExW(PChar(cmdcommand),PChar(fPyDir),0)<>0 then
-                AThread.Connection.WriteLn('编译进度出错...')
+              begin
+                //
+                // 经以前的用过程中,b.txt 可能锁了,产生的问题
+                //
+                mybfile := fPyDir + '\b1.txt';
+                cmdcommand := Format('cmd /c %s %s > %s',[edt1.Text,
+                  GetShortName(mybat),GetShortName(mybfile)]);
+                mmo1.Lines.Add(cmdcommand);
+                if WinExecExW(PChar(cmdcommand),PChar(fPyDir),0)<>0 then
+                  AThread.Connection.WriteLn('编译进度出错...');
+              end
               else
                 AThread.Connection.WriteLn('编译完成。');
 
