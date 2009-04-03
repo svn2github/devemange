@@ -211,6 +211,15 @@ type
     dsBug: TDataSource;
     btnAddDesText: TBitBtn;
     dblkcbbZPRO_ID: TDBLookupComboBox;
+    pnltestBottom: TPanel;
+    lbl3: TLabel;
+    btnTask_gotoTest: TBitBtn;
+    actTask_gotoTest: TAction;
+    dblkcbb1: TDBLookupComboBox;
+    cdsUser: TClientDataSet;
+    dsUser: TDataSource;
+    btnTask_FindWho: TBitBtn;
+    actTask_FindWho: TAction;
     procedure actPro_AddExecute(Sender: TObject);
     procedure cbEditProItemClick(Sender: TObject);
     procedure actPro_AddUpdate(Sender: TObject);
@@ -278,6 +287,8 @@ type
     procedure actTASK_MeCheckExecute(Sender: TObject);
     procedure btnFindBugClick(Sender: TObject);
     procedure btnAddDesTextClick(Sender: TObject);
+    procedure actTask_gotoTestExecute(Sender: TObject);
+    procedure actTask_FindWhoExecute(Sender: TObject);
   private
     { Private declarations }
     fTaskPageRec : TTaskPageRec;
@@ -429,7 +440,7 @@ begin
   cdsCheckName.Filtered := False;
   cdsCheckName.Filter   := 'not (ZCHECKTASK=0)';
   cdsCheckName.Filtered := True;
-
+  cdsUser.CloneCursor(DM.cdsUser,True);
 
 
   LoadProjectItem();
@@ -1068,7 +1079,7 @@ begin
     cdsProjectItem.FieldByName('ZHIGHVERID').AsInteger;
   DataSet.FieldByName('ZPALNDAY').AsInteger := 0;
   DataSet.FieldByName('ZDESIGN').AsString   := '#设计说明';
-  DataSet.FieldByName('ZTESTCASE').AsString := '#测试用例';
+  //DataSet.FieldByName('ZTESTCASE').AsString := '#测试用例';
   DataSet.FieldByName('ZISNEW').AsBoolean := True;
   DataSet.FieldByName('ZOVERWORK').AsBoolean := False;
 end;
@@ -1723,6 +1734,10 @@ begin
   if (cdsTask.FieldByName('ZSTATUS').AsInteger = Ord(tsClose)) then
   begin
     dgTaskList.Canvas.Font.Color := clblue;
+  end
+  else if (cdsTask.FieldByName('ZSTATUS').AsInteger=Ord(tsSccuess)) then
+  begin
+    dgTaskList.Canvas.Brush.Color := clLime;
   end;
   dgTaskList.DefaultDrawColumnCell(Rect,DataCol,Column,State);
 end;
@@ -1977,6 +1992,51 @@ begin
   cdsTask.FieldByName('ZDESIGN').AsString := cdsTask.FieldByName('ZDESIGN').AsString
     +#10#13+ format('  #%s %s 状态:%s',[
     edtBugCode.Text ,dbedtZTITLE.Text,dbtxt1.Caption]);
+
+end;
+
+procedure TProjectManageClientDlg.actTask_gotoTestExecute(Sender: TObject);
+var
+  mystr : string;
+begin
+  if cdsTask.FieldByName('ZTESTCASE').AsString <> '' then
+  begin
+    mystr := cdsTask.FieldByName('ZTESTCASE').AsString;
+
+   SendMessage(Application.MainForm.Handle,gcMSG_GetTestItemByCode,
+      0,Integer(PChar(mystr)));
+  end;
+end;
+
+procedure TProjectManageClientDlg.actTask_FindWhoExecute(Sender: TObject);
+var
+  mySQL : string;
+  myb : Boolean;
+begin
+  if (ClientSystem.fEditerType <> etAdmin) and
+     (cdsUser.FieldByName('ZID').AsInteger <>ClientSystem.fEditer_id) then
+  begin
+    MessageBox(Handle,'你没有权限','提示',MB_ICONWARNING+MB_OK);
+    Exit;
+  end;
+
+  //生成数据
+  myb := fLoading;
+  fLoading := True;
+  cdsTask.DisableControls;
+  try
+    fTaskPageRec.fwhere := format('ZUSER_ID=%d',[
+      cdsUser.FieldByName('ZID').AsInteger]);
+    fTaskPageRec.fPageindex := 1;
+    fTaskPageRec.fCount := Self.GetTaskItemPageCount(1,fTaskPageRec.fwhere);
+    LoadTaskItem(1,fTaskPageRec.fwhere);
+
+    cdsTask.First;
+  finally
+    cdsTask.EnableControls;
+    fLoading := myb;
+  end;
+  
 
 end;
 

@@ -1751,7 +1751,7 @@ end;
 procedure TPlanManageClientDlg.actItem_WaitingUpdate(Sender: TObject);
 begin
   (Sender as TAction).Enabled := (not cdsPlanItem.IsEmpty) and
-  (cdsPlanItem.FieldByName('ZSTATUS').AsInteger<>Ord(ps_waiting));
+  (cdsPlanItem.FieldByName('ZSTATUS').AsInteger in [Ord(ps_doing)]);
 end;
 
 end.
