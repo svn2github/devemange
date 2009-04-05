@@ -2010,7 +2010,6 @@ end;
 
 procedure TProjectManageClientDlg.actTask_FindWhoExecute(Sender: TObject);
 var
-  mySQL : string;
   myb : Boolean;
 begin
   if (ClientSystem.fEditerType <> etAdmin) and

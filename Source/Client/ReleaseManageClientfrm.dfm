@@ -61,8 +61,8 @@ inherited ReleaseManageClientDlg: TReleaseManageClientDlg
         BevelOuter = bvNone
         TabOrder = 1
         object lblPage: TLabel
-          Left = 543
-          Top = 12
+          Left = 542
+          Top = 13
           Width = 56
           Height = 15
           Caption = 'lblPage'
@@ -100,7 +100,7 @@ inherited ReleaseManageClientDlg: TReleaseManageClientDlg
           Width = 100
           Height = 25
           Action = act_LastPage
-          Caption = #19979#19968#39029
+          Caption = #26368#21518#19968#39029
           TabOrder = 3
         end
         object btnPageRefresh: TBitBtn
@@ -120,6 +120,7 @@ inherited ReleaseManageClientDlg: TReleaseManageClientDlg
         Height = 431
         Align = alClient
         DataSource = dsRelease
+        ImeName = #26497#21697#20116#31508#36755#20837#27861
         Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
         ReadOnly = True
         TabOrder = 2
@@ -236,7 +237,7 @@ inherited ReleaseManageClientDlg: TReleaseManageClientDlg
         object lbl2: TLabel
           Left = 543
           Top = 63
-          Width = 70
+          Width = 75
           Height = 15
           Caption = #35201#27714#26399#38480#65306
         end
@@ -327,14 +328,14 @@ inherited ReleaseManageClientDlg: TReleaseManageClientDlg
         object lbl15: TLabel
           Left = 25
           Top = 208
-          Width = 55
+          Width = 60
           Height = 15
           Caption = #19978#20256#20154#65306
         end
         object lbl16: TLabel
           Left = 283
           Top = 208
-          Width = 68
+          Width = 75
           Height = 15
           Caption = #26159#21542#22791#20221#65306
         end
@@ -381,6 +382,7 @@ inherited ReleaseManageClientDlg: TReleaseManageClientDlg
           Height = 23
           DataField = 'ZNEEDTERMNAME'
           DataSource = dsRelease
+          ImeName = #26497#21697#20116#31508#36755#20837#27861
           TabOrder = 4
         end
         object dbedtZNAME: TDBEdit
@@ -390,6 +392,7 @@ inherited ReleaseManageClientDlg: TReleaseManageClientDlg
           Height = 23
           DataField = 'ZNAME'
           DataSource = dsRelease
+          ImeName = #26497#21697#20116#31508#36755#20837#27861
           TabOrder = 5
         end
         object dblkcbbZPRO_NAME: TDBLookupComboBox
@@ -399,6 +402,7 @@ inherited ReleaseManageClientDlg: TReleaseManageClientDlg
           Height = 23
           DataField = 'ZPRO_NAME'
           DataSource = dsRelease
+          ImeName = #26497#21697#20116#31508#36755#20837#27861
           TabOrder = 6
         end
         object dblkcbbZASSIGNEDTONAME: TDBLookupComboBox
@@ -408,6 +412,7 @@ inherited ReleaseManageClientDlg: TReleaseManageClientDlg
           Height = 23
           DataField = 'ZASSIGNEDTONAME'
           DataSource = dsRelease
+          ImeName = #26497#21697#20116#31508#36755#20837#27861
           TabOrder = 7
         end
         object dbedtZRELEASEDATE: TDBEdit
@@ -418,6 +423,7 @@ inherited ReleaseManageClientDlg: TReleaseManageClientDlg
           Color = clScrollBar
           DataField = 'ZRELEASEDATE'
           DataSource = dsRelease
+          ImeName = #26497#21697#20116#31508#36755#20837#27861
           ReadOnly = True
           TabOrder = 8
         end
@@ -429,6 +435,7 @@ inherited ReleaseManageClientDlg: TReleaseManageClientDlg
           Color = clScrollBar
           DataField = 'ZOPENDATE'
           DataSource = dsRelease
+          ImeName = #26497#21697#20116#31508#36755#20837#27861
           ReadOnly = True
           TabOrder = 9
         end
@@ -439,6 +446,7 @@ inherited ReleaseManageClientDlg: TReleaseManageClientDlg
           Height = 23
           DataField = 'ZOPENEDBYNAME'
           DataSource = dsRelease
+          ImeName = #26497#21697#20116#31508#36755#20837#27861
           TabOrder = 10
         end
         object dblkcbbZURLTYPENAME: TDBLookupComboBox
@@ -448,6 +456,7 @@ inherited ReleaseManageClientDlg: TReleaseManageClientDlg
           Height = 23
           DataField = 'ZURLTYPENAME'
           DataSource = dsRelease
+          ImeName = #26497#21697#20116#31508#36755#20837#27861
           TabOrder = 11
         end
         object dbedtZURL: TDBEdit
@@ -457,6 +466,7 @@ inherited ReleaseManageClientDlg: TReleaseManageClientDlg
           Height = 23
           DataField = 'ZURL'
           DataSource = dsRelease
+          ImeName = #26497#21697#20116#31508#36755#20837#27861
           TabOrder = 12
         end
         object dblkcbb6: TDBLookupComboBox
@@ -465,6 +475,7 @@ inherited ReleaseManageClientDlg: TReleaseManageClientDlg
           Width = 147
           Height = 23
           DropDownRows = 30
+          ImeName = #26497#21697#20116#31508#36755#20837#27861
           KeyField = 'ZID'
           ListField = 'ZNAME'
           ListSource = dsUser
@@ -478,6 +489,7 @@ inherited ReleaseManageClientDlg: TReleaseManageClientDlg
           Height = 23
           DataField = 'ZMAILTO'
           DataSource = dsRelease
+          ImeName = #26497#21697#20116#31508#36755#20837#27861
           TabOrder = 14
         end
         object dblkcbb7: TDBLookupComboBox
@@ -486,6 +498,7 @@ inherited ReleaseManageClientDlg: TReleaseManageClientDlg
           Width = 145
           Height = 23
           DropDownRows = 30
+          ImeName = #26497#21697#20116#31508#36755#20837#27861
           KeyField = 'ZID'
           ListField = 'ZNAME'
           ListSource = dsUser
@@ -499,6 +512,7 @@ inherited ReleaseManageClientDlg: TReleaseManageClientDlg
           Height = 23
           DataField = 'ZPRODUCTURL'
           DataSource = dsRelease
+          ImeName = #26497#21697#20116#31508#36755#20837#27861
           TabOrder = 16
         end
         object dbedtZVERSION: TDBEdit
@@ -508,6 +522,7 @@ inherited ReleaseManageClientDlg: TReleaseManageClientDlg
           Height = 23
           DataField = 'ZVERSION'
           DataSource = dsRelease
+          ImeName = #26497#21697#20116#31508#36755#20837#27861
           TabOrder = 17
         end
         object dbedtZRELEASERNAME: TDBEdit
@@ -518,6 +533,7 @@ inherited ReleaseManageClientDlg: TReleaseManageClientDlg
           Color = clSilver
           DataField = 'ZRELEASERNAME'
           DataSource = dsRelease
+          ImeName = #26497#21697#20116#31508#36755#20837#27861
           ReadOnly = True
           TabOrder = 18
         end
@@ -528,6 +544,7 @@ inherited ReleaseManageClientDlg: TReleaseManageClientDlg
           Height = 23
           DataField = 'ZBACKUPNAME'
           DataSource = dsRelease
+          ImeName = #26497#21697#20116#31508#36755#20837#27861
           TabOrder = 19
         end
       end
@@ -566,6 +583,7 @@ inherited ReleaseManageClientDlg: TReleaseManageClientDlg
         Align = alClient
         DataField = 'ZPROCONTENT'
         DataSource = dsRelease
+        ImeName = #26497#21697#20116#31508#36755#20837#27861
         ScrollBars = ssBoth
         TabOrder = 2
       end
@@ -616,7 +634,7 @@ inherited ReleaseManageClientDlg: TReleaseManageClientDlg
     end
     object act_LastPage: TAction
       Category = #21015#34920
-      Caption = #19979#19968#39029
+      Caption = #26368#21518#19968#39029
       OnExecute = act_LastPageExecute
       OnUpdate = act_LastPageUpdate
     end

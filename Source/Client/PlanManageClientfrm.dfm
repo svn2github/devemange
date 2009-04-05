@@ -1,6 +1,6 @@
 inherited PlanManageClientDlg: TPlanManageClientDlg
-  Left = 66
-  Top = 192
+  Left = 72
+  Top = 85
   Width = 1043
   Caption = #39033#30446#35745#21010
   OldCreateOrder = True
@@ -296,6 +296,9 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
       object tsPlanDetial: TTabSheet
         Caption = #20219#21153#20869#23481
         ImageIndex = 2
+        DesignSize = (
+          830
+          501)
         object dbtxtZNAME1: TDBText
           Left = 0
           Top = 0
@@ -393,6 +396,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
             DataField = 'ZNAME'
             DataSource = dsPlanItem
             ImeName = #26497#21697#20116#31508#36755#20837#27861
+            ReadOnly = True
             TabOrder = 0
           end
           object dblkcbbZMAINDEVENAME: TDBLookupComboBox
@@ -407,6 +411,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
             KeyField = 'ZID'
             ListField = 'ZNAME'
             ListSource = DM.dsUsers
+            ReadOnly = True
             TabOrder = 1
           end
           object dbedtZFBDATE: TDBEdit
@@ -417,6 +422,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
             DataField = 'ZPBDATE'
             DataSource = dsPlanItem
             ImeName = #26497#21697#20116#31508#36755#20837#27861
+            ReadOnly = True
             TabOrder = 2
           end
           object dbedtZFBDATE1: TDBEdit
@@ -439,6 +445,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
             DataField = 'ZPEDATE'
             DataSource = dsPlanItem
             ImeName = #26497#21697#20116#31508#36755#20837#27861
+            ReadOnly = True
             TabOrder = 4
           end
           object dbedtZFBDATE2: TDBEdit
@@ -461,6 +468,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
             DataField = 'ZREMARK'
             DataSource = dsPlanItem
             ImeName = #26497#21697#20116#31508#36755#20837#27861
+            ReadOnly = True
             TabOrder = 6
           end
           object dbedtZSUCCESSRATE: TDBEdit
@@ -649,6 +657,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
               DataField = 'ZCONTENT'
               DataSource = dsPlanDetail
               ImeName = #26497#21697#20116#31508#36755#20837#27861
+              ReadOnly = True
               ScrollBars = ssBoth
               TabOrder = 0
             end
@@ -717,6 +726,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
                 DataSource = dsPlanDetail
                 DropDownRows = 30
                 ImeName = #26497#21697#20116#31508#36755#20837#27861
+                ReadOnly = True
                 TabOrder = 0
               end
               object dbedtZNAME2: TDBEdit
@@ -728,6 +738,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
                 DataField = 'ZNAME'
                 DataSource = dsPlanDetail
                 ImeName = #26497#21697#20116#31508#36755#20837#27861
+                ReadOnly = True
                 TabOrder = 1
               end
               object dbedtZSOCRE: TDBEdit
@@ -773,6 +784,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
                 DataField = 'ZTESTCASE'
                 DataSource = dsPlanDetail
                 ImeName = #26497#21697#20116#31508#36755#20837#27861
+                ReadOnly = True
                 TabOrder = 0
               end
               object btnGotoTest: TBitBtn
@@ -787,6 +799,24 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
               end
             end
           end
+        end
+        object chkEdit: TCheckBox
+          Left = 768
+          Top = 0
+          Width = 55
+          Height = 17
+          Anchors = [akTop, akRight]
+          Caption = #32534#36753
+          Color = clNavy
+          Font.Charset = GB2312_CHARSET
+          Font.Color = clYellow
+          Font.Height = -15
+          Font.Name = #23435#20307
+          Font.Style = []
+          ParentColor = False
+          ParentFont = False
+          TabOrder = 2
+          OnClick = chkEditClick
         end
       end
       object tsPlan: TTabSheet
@@ -1029,6 +1059,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
             Top = 130
             Width = 520
             Height = 23
+            Hint = #21482#26377#31649#29702#21592#25165#33021#22686#21152
             DataField = 'ZMEMBER'
             DataSource = dsPlan
             ImeName = #26497#21697#20116#31508#36755#20837#27861

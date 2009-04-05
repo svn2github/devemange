@@ -189,6 +189,7 @@ type
     btnItem_Starting: TBitBtn;
     actItem_Waiting: TAction;
     btnItem_Waiting: TBitBtn;
+    chkEdit: TCheckBox;
     procedure cdsPlanNewRecord(DataSet: TDataSet);
     procedure actPan_SaveUpdate(Sender: TObject);
     procedure actPan_SaveExecute(Sender: TObject);
@@ -269,6 +270,7 @@ type
     procedure actItem_StartingUpdate(Sender: TObject);
     procedure actItem_WaitingExecute(Sender: TObject);
     procedure actItem_WaitingUpdate(Sender: TObject);
+    procedure chkEditClick(Sender: TObject);
   private
     { Private declarations }
     fPlanPageRec : TPlanPageRec;
@@ -583,6 +585,10 @@ const
   gl_SQLTXT1 = 'insert TB_PLAN (ZGUID,ZNAME,ZSTATUS,ZPRO_ID,ZSUMTEXT,'
      +'ZPM,ZBUILDDATE,ZMEMBER) values(''%s'',''%s'',%d,%d,''%s'',%d,''%s'',''%s'')';
   gl_SQLTXT2  = 'update TB_PLAN set ZNAME=''%s'',ZSTATUS=%d,ZPRO_ID=%d, '
+     + 'ZSUMTEXT=''%s'' where ZGUID=''%s''';
+
+  //管理员提交
+  gl_SQLTXT3  = 'update TB_PLAN set ZNAME=''%s'',ZSTATUS=%d,ZPRO_ID=%d, '
      + 'ZSUMTEXT=''%s'',ZPM=%d,ZMEMBER=''%s'' where ZGUID=''%s''';
 begin
   if fLoading then Exit;
@@ -605,14 +611,26 @@ begin
     lstPlanGUID.Items.Add(DataSet.FieldByName('ZGUID').AsString);
   end
   else begin
-    mySQL := Format(gl_SQLTXT2,[
-      DataSet.FieldByName('ZNAME').AsString,
-      DataSet.FieldByName('ZSTATUS').AsInteger,
-      DataSet.FieldByName('ZPRO_ID').AsInteger,
-      DataSet.FieldByName('ZSUMTEXT').AsString,
-      DataSet.FieldByName('ZPM').AsInteger,
-      DataSet.FieldByName('ZMEMBER').AsString,
-      DataSet.FieldByName('ZGUID').AsString]);
+    if ClientSystem.fEditerType = etAdmin then
+    begin
+      mySQL := Format(gl_SQLTXT3,[
+        DataSet.FieldByName('ZNAME').AsString,
+        DataSet.FieldByName('ZSTATUS').AsInteger,
+        DataSet.FieldByName('ZPRO_ID').AsInteger,
+        DataSet.FieldByName('ZSUMTEXT').AsString,
+        DataSet.FieldByName('ZPM').AsInteger,
+        DataSet.FieldByName('ZMEMBER').AsString,
+        DataSet.FieldByName('ZGUID').AsString]);
+    end
+    else begin
+      mySQL := Format(gl_SQLTXT2,[
+        DataSet.FieldByName('ZNAME').AsString,
+        DataSet.FieldByName('ZSTATUS').AsInteger,
+        DataSet.FieldByName('ZPRO_ID').AsInteger,
+        DataSet.FieldByName('ZSUMTEXT').AsString,
+        DataSet.FieldByName('ZGUID').AsString]);
+    end;
+
     ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
 
     if Assigned(tvPlan.Selected) then
@@ -650,6 +668,7 @@ var
   i : integer;
   myb : Boolean;
   myNode : TTreeNode;
+  myUserName : string;
 const
     glSQL = 'exec pt_SplitPage ''TB_PLAN'',' +
           '''ZGUID,ZID,ZNAME,ZSTATUS,ZPRO_ID,ZSUMTEXT,ZPM,ZBUILDDATE,ZMEMBER'', ' +
@@ -688,8 +707,15 @@ begin
       //
       // 处理权限,没有权限不能加载了
       //
-      if not HasModuleAction(Ord(psTree),
-        cdstemp.FieldByName('ZID').AsInteger,atView) then
+      // 权限改为是否是成员,成员可以进来
+      //
+      myUserName := format('%s(%d)',[ClientSystem.fEditer,
+        ClientSystem.fEditer_id]);
+      if (ClientSystem.fEditerType <>etAdmin) and
+         (Pos(myUserName,cdstemp.FieldByName('ZMEMBER').AsString)=0) then
+
+      //if not HasModuleAction(Ord(psTree),
+      //  cdstemp.FieldByName('ZID').AsInteger,atView) then
       begin
         cdstemp.Next;
         Continue;
@@ -1539,6 +1565,11 @@ var
   myaddstr : string;
 begin
   if (Sender as TDBLookupComboBox).Text = '' then Exit;
+  if ClientSystem.fEditerType <> etAdmin then
+  begin
+    MessageBox(Handle,'你没有权限','提示',MB_ICONWARNING+MB_OK);
+    Exit;
+  end;
 
   if cdsPlan.State in [dsBrowse] then
     cdsPlan.Edit;
@@ -1752,6 +1783,24 @@ procedure TPlanManageClientDlg.actItem_WaitingUpdate(Sender: TObject);
 begin
   (Sender as TAction).Enabled := (not cdsPlanItem.IsEmpty) and
   (cdsPlanItem.FieldByName('ZSTATUS').AsInteger in [Ord(ps_doing)]);
+end;
+
+procedure TPlanManageClientDlg.chkEditClick(Sender: TObject);
+var
+  myEdit : Boolean;
+begin
+  //
+  myEdit := chkEdit.Checked;
+
+  dbedtZNAME1.ReadOnly := not myEdit;
+  dbedtZFBDATE.ReadOnly := not myEdit;
+  dbedtZFEDATE.ReadOnly := not myEdit;
+  dblkcbbZMAINDEVENAME.ReadOnly := not myEdit;
+  dbedtZREMARK.ReadOnly := not myEdit;
+  dbedtZNAME2.ReadOnly := not myEdit;
+  dblkcbbZSTATUSNAME.ReadOnly := not myEdit;
+  dbmmoZCONTENT.ReadOnly := not myEdit;
+  dbedtZTESTCASE.ReadOnly := not myEdit;
 end;
 
 end.

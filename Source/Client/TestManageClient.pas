@@ -170,6 +170,7 @@ type
     btnnewByPlanCode: TBitBtn;
     act_GetPlanItem: TAction;
     btnGetBugItem1: TBitBtn;
+    dbchkOK: TDBCheckBox;
     procedure act_NewExecute(Sender: TObject);
     procedure act_CancelUpdate(Sender: TObject);
     procedure act_CancelExecute(Sender: TObject);
@@ -228,6 +229,7 @@ type
     procedure act_newByPlanCodeExecute(Sender: TObject);
     procedure act_GetPlanItemExecute(Sender: TObject);
     procedure act_GetPlanItemUpdate(Sender: TObject);
+    procedure cdsResultAfterEdit(DataSet: TDataSet);
   private
     { Private declarations }
     fTestPageRec : TTestPageRec;
@@ -942,13 +944,14 @@ procedure TTestManageChildfrm.cdsResultBeforePost(DataSet: TDataSet);
 var
   mySQL : string;
 const
-  glSQL = 'insert TB_TEST_RESULT(ZTEST_ID,ZACTION,ZTRUEVALUE,ZINFACE,ZUSER_ID) values '+
-          '(%d,''%s'',''%s'',''%s'',%d)';
+  glSQL = 'insert TB_TEST_RESULT(ZTEST_ID,ZACTION,ZTRUEVALUE,ZINFACE,ZUSER_ID,ZPASS) values '+
+          '(%d,''%s'',''%s'',''%s'',%d,0)';
   glSQL2 = 'update TB_TEST_RESULT set ' +
            'ZACTION=''%s'', ' +
            'ZTRUEVALUE=''%s'', ' +
            'ZINFACE=''%s'', ' +
-           'ZUSER_ID=%d' +
+           'ZUSER_ID=%d,' +
+           'ZPASS=%d ' +
            'where ZID=%d';
 begin
   //
@@ -960,6 +963,7 @@ begin
       DataSet.FieldByName('ZTRUEVALUE').AsString,
       DataSet.FieldByName('ZINFACE').AsString,
       DataSet.FieldByName('ZUSER_ID').AsInteger,
+      Ord(DataSet.FieldByName('ZPASS').AsBoolean),
       DataSet.FieldByName('ZMYID').AsInteger
 
       ]);
@@ -1474,7 +1478,6 @@ begin
     DBCtrlGrid.Canvas.FillRect(DBCtrlGrid.ClientRect);
     DBCtrlGrid.Canvas.FrameRect(DBCtrlGrid.ClientRect);
   end;
-
 end;
 
 procedure TTestManageChildfrm.act_SubbimExecute(Sender: TObject);
@@ -1665,6 +1668,16 @@ procedure TTestManageChildfrm.act_GetPlanItemUpdate(Sender: TObject);
 begin
   (Sender as TAction).Enabled := not cdsTestItem.IsEmpty and
     (cdsTestItem.FieldByName('ZCASETASK').AsString <>'')
+end;
+
+procedure TTestManageChildfrm.cdsResultAfterEdit(DataSet: TDataSet);
+begin
+  if fLoading then Exit;
+  
+  if (not DataSet.FieldByName('ZPASS').AsBoolean) and
+     (DataSet.FieldByName('ZINFACE').AsString='') then
+  DataSet.FieldByName('ZINFACE').AsString :=
+    DataSet.FieldByName('ZTRUEVALUE').AsString;
 end;
 
 end.

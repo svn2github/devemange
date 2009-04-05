@@ -1,6 +1,6 @@
 inherited TestManageChildfrm: TTestManageChildfrm
-  Left = 84
-  Top = 49
+  Left = 85
+  Top = 72
   Width = 1139
   Height = 713
   Caption = #27979#35797#31649#29702
@@ -35,6 +35,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
         Height = 501
         Align = alClient
         DataSource = dsTestItem
+        ImeName = #26497#21697#20116#31508#36755#20837#27861
         Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
         TabOrder = 0
         TitleFont.Charset = GB2312_CHARSET
@@ -348,7 +349,6 @@ inherited TestManageChildfrm: TTestManageChildfrm
             ParentColor = False
             ParentFont = False
             Transparent = False
-            Visible = False
           end
           object bvl1: TBevel
             Left = 0
@@ -366,6 +366,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
             Anchors = [akLeft, akTop, akRight, akBottom]
             DataField = 'ZACTION'
             DataSource = dsResult
+            ImeName = #26497#21697#20116#31508#36755#20837#27861
             ScrollBars = ssVertical
             TabOrder = 0
           end
@@ -377,6 +378,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
             Anchors = [akLeft, akBottom]
             DataField = 'ZTRUEVALUE'
             DataSource = dsResult
+            ImeName = #26497#21697#20116#31508#36755#20837#27861
             TabOrder = 1
           end
           object dbedtZINFACE: TDBEdit
@@ -387,7 +389,21 @@ inherited TestManageChildfrm: TTestManageChildfrm
             Anchors = [akLeft, akBottom]
             DataField = 'ZINFACE'
             DataSource = dsResult
+            ImeName = #26497#21697#20116#31508#36755#20837#27861
             TabOrder = 2
+          end
+          object dbchkOK: TDBCheckBox
+            Left = 428
+            Top = 69
+            Width = 37
+            Height = 17
+            Anchors = [akLeft, akBottom]
+            Caption = 'OK'
+            DataField = 'ZPASS'
+            DataSource = dsResult
+            TabOrder = 3
+            ValueChecked = 'True'
+            ValueUnchecked = 'False'
           end
         end
         object pnl1: TPanel
@@ -634,6 +650,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
           Height = 23
           DataField = 'ZNAME'
           DataSource = dsTestItem
+          ImeName = #26497#21697#20116#31508#36755#20837#27861
           TabOrder = 0
         end
         object dblkcbbZTYPE: TDBLookupComboBox
@@ -643,6 +660,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
           Height = 23
           DataField = 'ZTYPE'
           DataSource = dsTestItem
+          ImeName = #26497#21697#20116#31508#36755#20837#27861
           KeyField = 'ZID'
           ListField = 'ZNAME'
           ListSource = dsTestType
@@ -656,6 +674,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
           DataField = 'ZASSIGNEDTONAME'
           DataSource = dsTestItem
           DropDownRows = 30
+          ImeName = #26497#21697#20116#31508#36755#20837#27861
           TabOrder = 2
         end
         object dbedtZCASEBUG: TDBEdit
@@ -665,6 +684,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
           Height = 23
           DataField = 'ZCASEBUG'
           DataSource = dsTestItem
+          ImeName = #26497#21697#20116#31508#36755#20837#27861
           TabOrder = 3
         end
         object dbedtZMAILTO: TDBEdit
@@ -674,6 +694,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
           Height = 23
           DataField = 'ZMAILTO'
           DataSource = dsTestItem
+          ImeName = #26497#21697#20116#31508#36755#20837#27861
           TabOrder = 4
         end
         object dblcSelectUsermail: TDBLookupComboBox
@@ -682,6 +703,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
           Width = 150
           Height = 23
           DropDownRows = 50
+          ImeName = #26497#21697#20116#31508#36755#20837#27861
           KeyField = 'ZID'
           ListField = 'ZNAME'
           ListSource = DM.dsUsers
@@ -696,6 +718,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
           Color = clScrollBar
           DataField = 'ZRESULTDATE'
           DataSource = dsTestItem
+          ImeName = #26497#21697#20116#31508#36755#20837#27861
           ReadOnly = True
           TabOrder = 6
         end
@@ -706,6 +729,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
           Height = 23
           DataField = 'ZTESTMETHOD'
           DataSource = dsTestItem
+          ImeName = #26497#21697#20116#31508#36755#20837#27861
           KeyField = 'ZID'
           ListField = 'ZNAME'
           ListSource = dsmethod
@@ -718,6 +742,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
           Height = 23
           DataField = 'ZOPENEDDATE'
           DataSource = dsTestItem
+          ImeName = #26497#21697#20116#31508#36755#20837#27861
           TabOrder = 8
         end
         object dbedtZCASETASK: TDBEdit
@@ -727,6 +752,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
           Height = 23
           DataField = 'ZCASETASK'
           DataSource = dsTestItem
+          ImeName = #26497#21697#20116#31508#36755#20837#27861
           TabOrder = 9
         end
         object btnGetVer: TBitBtn
@@ -745,6 +771,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
           Height = 23
           DataField = 'ZPRO_SVN'
           DataSource = dsTestItem
+          ImeName = #26497#21697#20116#31508#36755#20837#27861
           TabOrder = 11
         end
         object dblkcbbZLEVEL: TDBLookupComboBox
@@ -755,6 +782,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
           Hint = #19968#32423#20026#39532#19978#35201#27979#23436#30340#65292#24182#24456#37325#35201#12290#21521#19979#31867#25512#12290
           DataField = 'ZLEVEL'
           DataSource = dsTestItem
+          ImeName = #26497#21697#20116#31508#36755#20837#27861
           KeyField = 'ZID'
           ListField = 'ZNAME'
           ListSource = dsLevel
@@ -786,6 +814,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
           DataField = 'ZPRO_ID'
           DataSource = dsTestItem
           DropDownRows = 30
+          ImeName = #26497#21697#20116#31508#36755#20837#27861
           KeyField = 'ZID'
           ListField = 'ZNAME'
           ListSource = dsProject
@@ -799,6 +828,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
           Hint = #22914#27809#26377#20869#23481#65292#21017#28857'[G]'#12290
           DataField = 'ZPRO_VER'
           DataSource = dsTestItem
+          ImeName = #26497#21697#20116#31508#36755#20837#27861
           KeyField = 'ZID'
           ListField = 'ZVER'
           ListSource = dsProVer
@@ -830,6 +860,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
           Color = clScrollBar
           DataField = 'ZSTATUSNAME'
           DataSource = dsTestItem
+          ImeName = #26497#21697#20116#31508#36755#20837#27861
           ReadOnly = True
           TabOrder = 19
         end
@@ -840,6 +871,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
           Height = 23
           DataField = 'ZREMORK'
           DataSource = dsTestItem
+          ImeName = #26497#21697#20116#31508#36755#20837#27861
           TabOrder = 20
         end
         object dbedtdbgrdTest: TDBEdit
@@ -850,6 +882,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
           Color = clScrollBar
           DataField = 'ZTESTRESULTBYNAME'
           DataSource = dsTestItem
+          ImeName = #26497#21697#20116#31508#36755#20837#27861
           ReadOnly = True
           TabOrder = 21
         end
@@ -870,6 +903,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
           Color = clScrollBar
           DataField = 'ZCLOSESTATUSNAME'
           DataSource = dsTestItem
+          ImeName = #26497#21697#20116#31508#36755#20837#27861
           TabOrder = 23
         end
         object dbedtZSUBMISBYNAME: TDBEdit
@@ -879,6 +913,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
           Height = 23
           DataField = 'ZSUBMISBYNAME'
           DataSource = dsTestItem
+          ImeName = #26497#21697#20116#31508#36755#20837#27861
           TabOrder = 24
         end
         object btnGetBugItem1: TBitBtn
@@ -1178,6 +1213,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
   object cdsResult: TClientDataSet
     Aggregates = <>
     Params = <>
+    AfterEdit = cdsResultAfterEdit
     BeforePost = cdsResultBeforePost
     OnNewRecord = cdsResultNewRecord
     Left = 276
