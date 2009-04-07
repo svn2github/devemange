@@ -1006,10 +1006,15 @@ begin
   DataSet.FieldByName('ZUSER_ID').AsInteger := ClientSystem.fEditer_id;
   if ClientSystem.fEditer_id <> cdstestItem.FieldByName('ZOPENEDBY').AsInteger then
     DataSet.FieldByName('ZUSERNAME').AsString := ClientSystem.fEditer;
+  DataSet.FieldByName('ZPASS').AsBoolean := False;
 end;
 
 procedure TTestManageChildfrm.act_SuccessExecute(Sender: TObject);
 begin
+  if MessageBox(Handle,'确定测试完成了吗?','提示',
+    MB_ICONQUESTION+MB_YESNO)=IDNO then
+    Exit;
+
   if not (cdsTestItem.State in [dsEdit,dsinsert]) then
     cdsTestItem.Edit;
   cdsTestItem.FieldByName('ZSTATUS').AsInteger := Ord(bgsDeath);
