@@ -55,6 +55,10 @@ type
     dsAmder: TDataSource;
     chkTag: TCheckBox;
     cbbTag: TComboBox;
+    chkToWho: TCheckBox;
+    cdsToWho: TClientDataSet;
+    dsToWho: TDataSource;
+    dblkcbb2: TDBLookupComboBox;
     procedure chkmoduleClick(Sender: TObject);
     procedure btntodayClick(Sender: TObject);
     procedure btntodayBugClick(Sender: TObject);
@@ -245,6 +249,14 @@ begin
   if cbBugAmdorer.Checked then
   begin
     mystr := format('ZRESOLVEDBY=%d',[cdsBugAdmder.FieldByName('ZID').AsInteger]);
+  end;
+  if mystr <> '' then mywhere := mywhere + ' and ' + mystr;
+
+  //Ö¸ÅÉ¸øË­
+  mystr := '';
+  if chkToWho.Checked then
+  begin
+    mystr := format('ZASSIGNEDTO=%d',[cdsToWho.FieldByName('ZID').AsInteger]);
   end;
   if mystr <> '' then mywhere := mywhere + ' and ' + mystr;
 

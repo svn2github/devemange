@@ -89,6 +89,7 @@ inherited BugManageDlg: TBugManageDlg
             Height = 438
             Align = alClient
             DataSource = dsBugItem
+            ImeName = #26497#21697#20116#31508#36755#20837#27861
             Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
             PopupMenu = pmBugItem
             TabOrder = 0
@@ -311,6 +312,7 @@ inherited BugManageDlg: TBugManageDlg
               Hint = #25353#20160#20040#25490#24207
               Style = csDropDownList
               Color = clSkyBlue
+              ImeName = #26497#21697#20116#31508#36755#20837#27861
               ItemHeight = 15
               ItemIndex = 0
               TabOrder = 4
@@ -341,6 +343,7 @@ inherited BugManageDlg: TBugManageDlg
               Font.Height = -15
               Font.Name = #23435#20307
               Font.Style = []
+              ImeName = #26497#21697#20116#31508#36755#20837#27861
               ItemHeight = 15
               ParentFont = False
               TabOrder = 6
@@ -694,6 +697,7 @@ inherited BugManageDlg: TBugManageDlg
                 Anchors = [akLeft, akTop, akRight, akBottom]
                 DataField = 'ZCONTEXT'
                 DataSource = dsBugBugHistory
+                ImeName = #26497#21697#20116#31508#36755#20837#27861
                 ScrollBars = ssVertical
                 TabOrder = 0
               end
@@ -711,8 +715,8 @@ inherited BugManageDlg: TBugManageDlg
           object lbBugCaption: TLabel
             Left = 0
             Top = 0
-            Width = 880
-            Height = 18
+            Width = 96
+            Height = 15
             Align = alClient
             Caption = 'lbBugCaption'
             Color = clGray
@@ -882,6 +886,7 @@ inherited BugManageDlg: TBugManageDlg
             Height = 23
             DataField = 'ZOS'
             DataSource = dsBugItem
+            ImeName = #26497#21697#20116#31508#36755#20837#27861
             KeyField = 'ZID'
             ListField = 'ZNAME'
             ListSource = DM.dsOS
@@ -895,6 +900,7 @@ inherited BugManageDlg: TBugManageDlg
             Color = clMenuBar
             DataField = 'ZTREEPATH'
             DataSource = dsBugItem
+            ImeName = #26497#21697#20116#31508#36755#20837#27861
             ReadOnly = True
             TabOrder = 1
           end
@@ -906,6 +912,7 @@ inherited BugManageDlg: TBugManageDlg
             DataField = 'ZOPENVER'
             DataSource = dsBugItem
             DropDownRows = 30
+            ImeName = #26497#21697#20116#31508#36755#20837#27861
             KeyField = 'ZID'
             ListField = 'ZVER'
             ListSource = dsProject
@@ -918,6 +925,7 @@ inherited BugManageDlg: TBugManageDlg
             Height = 23
             DataField = 'ZTITLE'
             DataSource = dsBugItem
+            ImeName = #26497#21697#20116#31508#36755#20837#27861
             TabOrder = 3
           end
           object dblkcbbZLEVEL: TDBLookupComboBox
@@ -927,6 +935,7 @@ inherited BugManageDlg: TBugManageDlg
             Height = 23
             DataField = 'ZLEVEL'
             DataSource = dsBugItem
+            ImeName = #26497#21697#20116#31508#36755#20837#27861
             KeyField = 'ZID'
             ListField = 'ZNAME'
             ListSource = dsBugLevel
@@ -939,6 +948,7 @@ inherited BugManageDlg: TBugManageDlg
             Height = 23
             DataField = 'ZTYPE'
             DataSource = dsBugItem
+            ImeName = #26497#21697#20116#31508#36755#20837#27861
             KeyField = 'ZID'
             ListField = 'ZNAME'
             ListSource = dsBugType
@@ -970,6 +980,7 @@ inherited BugManageDlg: TBugManageDlg
             DataField = 'ZASSIGNEDTO'
             DataSource = dsBugItem
             DropDownRows = 30
+            ImeName = #26497#21697#20116#31508#36755#20837#27861
             KeyField = 'ZID'
             ListField = 'ZNAME'
             ListSource = DM.dsUsers
@@ -984,6 +995,7 @@ inherited BugManageDlg: TBugManageDlg
             Hint = #22810#20010#20197#20998#21495#20998#24320
             DataField = 'ZMAILTO'
             DataSource = dsBugItem
+            ImeName = #26497#21697#20116#31508#36755#20837#27861
             TabOrder = 9
           end
           object dbedtZASSIGNEDDATE: TDBEdit
@@ -993,6 +1005,7 @@ inherited BugManageDlg: TBugManageDlg
             Height = 23
             DataField = 'ZASSIGNEDDATE'
             DataSource = dsBugItem
+            ImeName = #26497#21697#20116#31508#36755#20837#27861
             TabOrder = 10
           end
           object dbedtZRESOLVEDNAME: TDBEdit
@@ -1003,6 +1016,7 @@ inherited BugManageDlg: TBugManageDlg
             Color = clScrollBar
             DataField = 'ZRESOLVEDNAME'
             DataSource = dsBugItem
+            ImeName = #26497#21697#20116#31508#36755#20837#27861
             ReadOnly = True
             TabOrder = 11
           end
@@ -1014,6 +1028,7 @@ inherited BugManageDlg: TBugManageDlg
             Color = clScrollBar
             DataField = 'ZRESOLUTIONNAME'
             DataSource = dsBugItem
+            ImeName = #26497#21697#20116#31508#36755#20837#27861
             ReadOnly = True
             TabOrder = 12
           end
@@ -1025,6 +1040,7 @@ inherited BugManageDlg: TBugManageDlg
             Color = clScrollBar
             DataField = 'ZRESOLVEDVER'
             DataSource = dsBugItem
+            ImeName = #26497#21697#20116#31508#36755#20837#27861
             KeyField = 'ZID'
             ListField = 'ZVER'
             ListSource = dsProject
@@ -1057,6 +1073,7 @@ inherited BugManageDlg: TBugManageDlg
             Color = clScrollBar
             DataField = 'ZRESOLVEDDATE'
             DataSource = dsBugItem
+            ImeName = #26497#21697#20116#31508#36755#20837#27861
             ReadOnly = True
             TabOrder = 16
           end
@@ -1066,6 +1083,7 @@ inherited BugManageDlg: TBugManageDlg
             Width = 144
             Height = 23
             DropDownRows = 50
+            ImeName = #26497#21697#20116#31508#36755#20837#27861
             KeyField = 'ZID'
             ListField = 'ZNAME'
             ListSource = DM.dsUsers
@@ -1079,6 +1097,7 @@ inherited BugManageDlg: TBugManageDlg
             Height = 23
             DataField = 'ZTERMNAME'
             DataSource = dsBugItem
+            ImeName = #26497#21697#20116#31508#36755#20837#27861
             TabOrder = 18
           end
         end

@@ -2183,6 +2183,7 @@ begin
         dtpBugday.DateTime := now();
         cdsBugCreater.CloneCursor(DM.cdsUser,True);
         cdsBugAdmder.CloneCursor(DM.cdsUser,True);
+        cdsToWho.CloneCursor(DM.cdsUser,True);
         cbbTag.Items.Clear;
         DM.cdsTag.First;
         while not DM.cdsTag.Eof do
