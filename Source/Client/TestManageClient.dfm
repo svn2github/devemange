@@ -298,17 +298,17 @@ inherited TestManageChildfrm: TTestManageChildfrm
           SelectedColor = clMoneyGreen
           OnPaintPanel = dbctrlgrd1PaintPanel
           object Label8: TLabel
-            Left = 5
+            Left = 4
             Top = 69
-            Width = 60
+            Width = 53
             Height = 15
             Anchors = [akLeft, akBottom]
             Caption = #26399#26395#20540#65306
           end
           object Label16: TLabel
-            Left = 218
+            Left = 181
             Top = 70
-            Width = 60
+            Width = 53
             Height = 15
             Anchors = [akLeft, akBottom]
             Caption = #23454#38469#20540#65306
@@ -371,9 +371,9 @@ inherited TestManageChildfrm: TTestManageChildfrm
             TabOrder = 0
           end
           object dbedtZTRUEVALUE: TDBEdit
-            Left = 61
+            Left = 55
             Top = 65
-            Width = 150
+            Width = 121
             Height = 23
             Anchors = [akLeft, akBottom]
             DataField = 'ZTRUEVALUE'
@@ -382,7 +382,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
             TabOrder = 1
           end
           object dbedtZINFACE: TDBEdit
-            Left = 273
+            Left = 234
             Top = 66
             Width = 150
             Height = 23
@@ -393,7 +393,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
             TabOrder = 2
           end
           object dbchkOK: TDBCheckBox
-            Left = 428
+            Left = 387
             Top = 69
             Width = 37
             Height = 17
