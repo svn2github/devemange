@@ -113,6 +113,8 @@ type
     btnReLoadAnt: TBitBtn;
     act_ReLoadAnt: TAction;
     cdsCloneAntList: TClientDataSet;
+    act_ApplyBuild: TAction;
+    btnApplyBuild: TBitBtn;
     procedure act_ProAddExecute(Sender: TObject);
     procedure cdsAntListNewRecord(DataSet: TDataSet);
     procedure act_ProSaveUpdate(Sender: TObject);
@@ -121,7 +123,6 @@ type
     procedure act_ProCancelExecute(Sender: TObject);
     procedure cdsAntListBeforePost(DataSet: TDataSet);
     procedure act_BuildConnectIPExecute(Sender: TObject);
-    procedure act_BuildProjectUpdate(Sender: TObject);
     procedure cdsAntListAfterScroll(DataSet: TDataSet);
     procedure act1_BuildInfoExecute(Sender: TObject);
     procedure act_BuildProjectExecute(Sender: TObject);
@@ -153,6 +154,8 @@ type
     procedure actSvnLog_AllProjectExecute(Sender: TObject);
     procedure btnEditSVNRULClick(Sender: TObject);
     procedure act_ReLoadAntExecute(Sender: TObject);
+    procedure act_ApplyBuildUpdate(Sender: TObject);
+    procedure act_ApplyBuildExecute(Sender: TObject);
   private
     { Private declarations }
     fSVNCommitPageRec :TSVNCommitPageRec;
@@ -195,8 +198,12 @@ type
 var
   fPySvning : Boolean;
 
+const
+  GC_STATEID = 0 ;//状态机的ZID;
+
 implementation
 uses
+  DmUints,
   ClinetSystemUnits, Mainfrm;
 
 {$R *.dfm}
@@ -437,11 +444,6 @@ begin
   end;
 end;
 
-procedure TAntManageClientDlg.act_BuildProjectUpdate(Sender: TObject);
-begin
-  (Sender as TAction).Enabled := idtcpclnt1.Connected;
-end;
-
 procedure TAntManageClientDlg.cdsAntListAfterScroll(DataSet: TDataSet);
 begin
   if idtcpclnt1.Connected then
@@ -455,6 +457,9 @@ var
   mystr : string;
   myverstr,mys : string;
   myver : Integer;
+  mySQL : string;
+const
+  gl_SQLTXT = 'update TB_STATE set ZSTATECODE=%d where ZID=%d';
 begin
   idtcpclnt1.WriteLn('A');
   count := idtcpclnt1.ReadInteger;
@@ -463,6 +468,9 @@ begin
     lstResult.Items.Add('还没有编译完成，请稍候...');
     Exit;
   end;
+
+  mySQL := format(gl_SQLTXT,[Ord(sc_end),GC_STATEID]);
+  ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
 
   lstResult.Items.Clear;
 
@@ -512,10 +520,16 @@ end;
 procedure TAntManageClientDlg.act_BuildProjectExecute(Sender: TObject);
 var
   MyThread : TPySvnThread;
+  mySQL : string;
+const
+  gl_SQLTXT = 'update TB_STATE set ZSTATECODE=%d where ZID=%d';
 begin
   MyThread := TPySvnThread.Create(cdsAntList,ani1,lstResult,idtcpclnt1,
     MainDlg.actMod_Ant);
   MyThread.Resume;
+  //编译中的状态
+  mySQL := format(gl_SQLTXT,[Ord(sc_doing),GC_STATEID]);
+  ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
 end;
 
 procedure TAntManageClientDlg.act1_BuildInfoUpdate(Sender: TObject);
@@ -984,6 +998,80 @@ end;
 procedure TAntManageClientDlg.act_ReLoadAntExecute(Sender: TObject);
 begin
   LoadAnt();
+end;
+
+procedure TAntManageClientDlg.act_ApplyBuildUpdate(Sender: TObject);
+begin
+  (Sender as TAction).Enabled := idtcpclnt1.Connected;
+end;
+
+procedure TAntManageClientDlg.act_ApplyBuildExecute(Sender: TObject);
+var
+  mySQL : string;
+  mycds : TClientDataSet;
+  mymsg : string; //提示内容
+  myName : string; //编译人
+  myv : Extended;
+const
+  gl_SQLTXT = 'select * from TB_STATE where ZID=%d';
+  gl_SQLTXT2 = 'update TB_STATE set ZSTATECODE=%d,ZUSER_ID=%d,ZSTATETIME=''%s'',' +
+    'ZNOTE=''%s'' where ZID=%d';
+begin
+  //申请编译
+  //1.是否有人占用了
+  mycds := TClientDataSet.Create(nil);
+  try
+    mySQL := format(gl_SQLTXT,[GC_STATEID]);
+    mycds.Data := ClientSystem.fDbOpr.ReadDataSet(PChar(mySQL));
+    if mycds.RecordCount > 0 then
+    begin
+      //
+      // 已超过15分钟的情况
+      //
+      myv :=ClientSystem.fDbOpr.GetSysDateTime -  mycds.FieldByName('ZSTATETIME').AsDateTime;
+      if (mycds.FieldByName('ZSTATECODE').AsInteger in [Ord(sc_end)]) or
+         (myv>0.015) or
+         (mycds.FieldByName('ZUSER_ID').AsInteger=ClientSystem.fEditer_id) then
+      begin
+        mySQL := format(gl_SQLTXT2,[
+          Ord(sc_begint),
+          ClientSystem.fEditer_id,
+          DateTimetoStr(ClientSystem.fDbOpr.GetSysDateTime),
+          cdsAntList.FieldByName('ZNAME').AsString,
+          GC_STATEID]);
+        if ClientSystem.fDbOpr.ExeSQL(PChar(mySQL)) then
+          act_BuildProject.Enabled := True
+        else
+          act_BuildProject.Enabled := False;
+      end
+      else begin
+        //
+        DM.cdsUser.First;
+        while not DM.cdsUser.Eof do
+        begin
+          if DM.cdsUser.FieldByName('ZID').AsInteger =
+            mycds.FieldByName('ZUSER_ID').AsInteger then
+          begin
+            myName := DM.cdsUser.FieldByName('ZNAME').AsString;
+            break;
+          end;
+          DM.cdsUser.Next;
+        end;
+
+        mymsg := '已有人在编译了,请稍候,最多15分钟。'+#13#10 +
+             '在编译人: ' + myName + #13#10 +
+             '编译开始时间:' + datetimetostr(mycds.FieldByName('ZSTATETIME').AsDateTime) + #13#10 +
+             '编译内容:' + mycds.FieldByName('ZNOTE').AsString ;
+        MessageBox(Handle,PChar(mymsg),'编译',MB_ICONWARNING+MB_OK);
+
+      end;
+    end
+    else
+      act_BuildProject.Enabled := False;
+
+  finally
+    mycds.Free;
+  end;
 end;
 
 end.

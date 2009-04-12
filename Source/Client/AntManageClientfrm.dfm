@@ -1,6 +1,6 @@
 inherited AntManageClientDlg: TAntManageClientDlg
-  Left = 178
-  Top = 123
+  Left = 192
+  Top = 168
   Width = 964
   Height = 496
   Caption = #32534#35793#37096#32626
@@ -53,6 +53,7 @@ inherited AntManageClientDlg: TAntManageClientDlg
         Height = 392
         Align = alClient
         DataSource = dsAntList
+        ImeName = #26497#21697#20116#31508#36755#20837#27861
         Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
         TabOrder = 1
         TitleFont.Charset = GB2312_CHARSET
@@ -174,7 +175,7 @@ inherited AntManageClientDlg: TAntManageClientDlg
           Color = clGreen
           TabOrder = 0
           object lblError: TLabel
-            Left = 349
+            Left = 484
             Top = 12
             Width = 64
             Height = 15
@@ -190,12 +191,12 @@ inherited AntManageClientDlg: TAntManageClientDlg
             Visible = False
           end
           object btnBuildProject: TBitBtn
-            Left = 120
+            Left = 224
             Top = 8
             Width = 100
             Height = 25
             Action = act_BuildProject
-            Caption = #32534#35793
+            Caption = '3.'#32534#35793
             TabOrder = 0
           end
           object btnBuildConnectIP: TBitBtn
@@ -204,17 +205,26 @@ inherited AntManageClientDlg: TAntManageClientDlg
             Width = 100
             Height = 25
             Action = act_BuildConnectIP
-            Caption = #36830#25509#26381#21153#22120
+            Caption = '1.'#36830#25509#26381#21153#22120
             TabOrder = 1
           end
           object btn1_BuildInfo: TBitBtn
-            Left = 224
+            Left = 328
             Top = 8
             Width = 100
             Height = 25
             Action = act1_BuildInfo
-            Caption = #32534#35793#32467#26524
+            Caption = '4.'#32534#35793#32467#26524
             TabOrder = 2
+          end
+          object btnApplyBuild: TBitBtn
+            Left = 120
+            Top = 8
+            Width = 100
+            Height = 25
+            Action = act_ApplyBuild
+            Caption = '2.'#25105#30003#35831#32534#35793
+            TabOrder = 3
           end
         end
         object lstResult: TListBox
@@ -224,6 +234,7 @@ inherited AntManageClientDlg: TAntManageClientDlg
           Height = 118
           Style = lbOwnerDrawFixed
           Align = alClient
+          ImeName = #26497#21697#20116#31508#36755#20837#27861
           ItemHeight = 16
           TabOrder = 1
           OnDrawItem = lstResultDrawItem
@@ -322,6 +333,7 @@ inherited AntManageClientDlg: TAntManageClientDlg
           Height = 23
           DataField = 'ZNAME'
           DataSource = dsAntList
+          ImeName = #26497#21697#20116#31508#36755#20837#27861
           TabOrder = 0
         end
         object dbedtZPRO_ID: TDBEdit
@@ -331,6 +343,7 @@ inherited AntManageClientDlg: TAntManageClientDlg
           Height = 23
           DataField = 'ZPRO_ID'
           DataSource = dsAntList
+          ImeName = #26497#21697#20116#31508#36755#20837#27861
           TabOrder = 1
         end
         object dbedtZIP: TDBEdit
@@ -340,6 +353,7 @@ inherited AntManageClientDlg: TAntManageClientDlg
           Height = 23
           DataField = 'ZIP'
           DataSource = dsAntList
+          ImeName = #26497#21697#20116#31508#36755#20837#27861
           TabOrder = 2
         end
         object dbedtZPYFILE: TDBEdit
@@ -349,6 +363,7 @@ inherited AntManageClientDlg: TAntManageClientDlg
           Height = 23
           DataField = 'ZPYFILE'
           DataSource = dsAntList
+          ImeName = #26497#21697#20116#31508#36755#20837#27861
           TabOrder = 3
         end
         object btnProSave: TBitBtn
@@ -376,6 +391,7 @@ inherited AntManageClientDlg: TAntManageClientDlg
           Height = 75
           DataField = 'ZREMARK'
           DataSource = dsAntList
+          ImeName = #26497#21697#20116#31508#36755#20837#27861
           ScrollBars = ssVertical
           TabOrder = 6
         end
@@ -386,6 +402,7 @@ inherited AntManageClientDlg: TAntManageClientDlg
           Height = 23
           DataField = 'ZDATE'
           DataSource = dsAntList
+          ImeName = #26497#21697#20116#31508#36755#20837#27861
           TabOrder = 7
         end
         object dbedtZVERSION: TDBEdit
@@ -395,6 +412,7 @@ inherited AntManageClientDlg: TAntManageClientDlg
           Height = 23
           DataField = 'ZVERSION'
           DataSource = dsAntList
+          ImeName = #26497#21697#20116#31508#36755#20837#27861
           TabOrder = 8
         end
         object dbedtZSVN: TDBEdit
@@ -404,6 +422,7 @@ inherited AntManageClientDlg: TAntManageClientDlg
           Height = 23
           DataField = 'ZSVN'
           DataSource = dsAntList
+          ImeName = #26497#21697#20116#31508#36755#20837#27861
           TabOrder = 9
         end
         object dbedtZSVN_LATEST_VERSION: TDBEdit
@@ -414,6 +433,7 @@ inherited AntManageClientDlg: TAntManageClientDlg
           Color = clBtnFace
           DataField = 'ZSVN_LATEST_VERSION'
           DataSource = dsAntList
+          ImeName = #26497#21697#20116#31508#36755#20837#27861
           ReadOnly = True
           TabOrder = 10
         end
@@ -424,6 +444,7 @@ inherited AntManageClientDlg: TAntManageClientDlg
           Height = 23
           DataField = 'ZSVN_URL'
           DataSource = dsAntList
+          ImeName = #26497#21697#20116#31508#36755#20837#27861
           TabOrder = 11
           Visible = False
         end
@@ -552,6 +573,7 @@ inherited AntManageClientDlg: TAntManageClientDlg
         Height = 168
         Align = alBottom
         DataSource = dsSvnChanges
+        ImeName = #26497#21697#20116#31508#36755#20837#27861
         Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
         TabOrder = 1
         TitleFont.Charset = GB2312_CHARSET
@@ -617,6 +639,7 @@ inherited AntManageClientDlg: TAntManageClientDlg
           Height = 102
           Align = alClient
           DataSource = dsSvnCommits
+          ImeName = #26497#21697#20116#31508#36755#20837#27861
           Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
           ReadOnly = True
           TabOrder = 0
@@ -676,6 +699,7 @@ inherited AntManageClientDlg: TAntManageClientDlg
           Align = alBottom
           DataField = 'ZMESSAGE'
           DataSource = dsSvnCommits
+          ImeName = #26497#21697#20116#31508#36755#20837#27861
           ScrollBars = ssVertical
           TabOrder = 1
         end
@@ -685,10 +709,16 @@ inherited AntManageClientDlg: TAntManageClientDlg
   object actlst1: TActionList
     Left = 48
     Top = 328
+    object act_BuildConnectIP: TAction
+      Category = #32534#35793
+      Caption = '1.'#36830#25509#26381#21153#22120
+      OnExecute = act_BuildConnectIPExecute
+    end
     object act_BuildProject: TAction
-      Caption = #32534#35793
+      Category = #32534#35793
+      Caption = '3.'#32534#35793
+      Enabled = False
       OnExecute = act_BuildProjectExecute
-      OnUpdate = act_BuildProjectUpdate
     end
     object act_ProAdd: TAction
       Caption = #22686#21152#39033#30446
@@ -704,12 +734,9 @@ inherited AntManageClientDlg: TAntManageClientDlg
       OnExecute = act_ProCancelExecute
       OnUpdate = act_ProCancelUpdate
     end
-    object act_BuildConnectIP: TAction
-      Caption = #36830#25509#26381#21153#22120
-      OnExecute = act_BuildConnectIPExecute
-    end
     object act1_BuildInfo: TAction
-      Caption = #32534#35793#32467#26524
+      Category = #32534#35793
+      Caption = '4.'#32534#35793#32467#26524
       OnExecute = act1_BuildInfoExecute
       OnUpdate = act1_BuildInfoUpdate
     end
@@ -761,6 +788,12 @@ inherited AntManageClientDlg: TAntManageClientDlg
     object act_ReLoadAnt: TAction
       Caption = #21047#26032#25968#25454
       OnExecute = act_ReLoadAntExecute
+    end
+    object act_ApplyBuild: TAction
+      Category = #32534#35793
+      Caption = '2.'#25105#30003#35831#32534#35793
+      OnExecute = act_ApplyBuildExecute
+      OnUpdate = act_ApplyBuildUpdate
     end
   end
   object idtcpclnt1: TIdTCPClient

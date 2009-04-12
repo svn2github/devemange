@@ -716,7 +716,23 @@ create table TB_SVN_CHANGES(
 )
 go
 
+/*状态机*/
+if exists (select * from dbo.sysobjects
+  where id = object_id(N'[dbo].[TB_STATE]')
+  and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+drop table [dbo].[TB_STATE]
+go
 
+create table TB_STATE(
+	ZID          int ,         /*=0表示项目编译*/
+	ZSTATECODE   int,          /*状态码 =0 表示开始 =1表示进行中 =2 结束掉了*/ 
+	ZUSER_ID     int ,         /*操作的人*/
+	ZSTATETIME   datetime,     /*动作发生在时间*/
+	ZNOTE        varchar(200), /*备注*/
+	
+	constraint PK_TB_STATE primary key(ZID)
+)
+go
 
 
 

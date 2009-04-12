@@ -16,13 +16,15 @@ type
   TBugSubModuleStype = (bsBugTree=1
                          );
   //项目管理
-  TProjectSubModuleStype = (psVersion=1,psTask=2
-    );
+  TProjectSubModuleStype = (psVersion=1,psTask=2);
   //项目文档
   TDocSubModuleStype = (bsDocTree=1);
   
   //项目计划
   TPlanSubModuleStype=(psTree=1);
+
+  //状态码
+  TSTATECODE=(sc_begint=0,sc_doing=1,sc_end=2);
 
 
   //权限操作权限

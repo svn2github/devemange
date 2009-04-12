@@ -110,6 +110,8 @@ insert into TB_RELEASE_PARAMS (ZTYPE,ZID,ZNAME) values(2,1,'已上传');
 insert into TB_RELEASE_PARAMS (ZTYPE,ZID,ZNAME) values(3,0,'否');
 insert into TB_RELEASE_PARAMS (ZTYPE,ZID,ZNAME) values(3,1,'是');
 
+/*编译部署*/
+insert into TB_STATE (ZID,ZSTATECODE) values(0,0);
 
 
 GO
