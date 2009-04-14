@@ -1,6 +1,6 @@
 inherited PlanManageClientDlg: TPlanManageClientDlg
-  Left = 72
-  Top = 85
+  Left = 155
+  Top = 71
   Width = 1043
   Caption = #39033#30446#35745#21010
   OldCreateOrder = True
@@ -169,8 +169,8 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
               Expanded = False
               FieldName = 'ZSUCCESSRATE'
               Title.Alignment = taCenter
-              Title.Caption = #27604#20363'(%)'
-              Width = 60
+              Title.Caption = #27604#20363'%'
+              Width = 40
               Visible = True
             end
             item
@@ -204,6 +204,14 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
               Title.Alignment = taCenter
               Title.Caption = #35745#21010#32467#26463#26085#26399
               Width = 101
+              Visible = True
+            end
+            item
+              Expanded = False
+              FieldName = 'ZPROJECTTIME'
+              Title.Alignment = taCenter
+              Title.Caption = #24037#26399
+              Width = 40
               Visible = True
             end
             item
@@ -318,7 +326,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
         end
         object spl2: TSplitter
           Left = 0
-          Top = 171
+          Top = 172
           Width = 830
           Height = 10
           Cursor = crVSplit
@@ -329,7 +337,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
           Left = 0
           Top = 17
           Width = 830
-          Height = 154
+          Height = 155
           Align = alTop
           TabOrder = 0
           object lbl8: TLabel
@@ -347,7 +355,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
             Caption = #35745#21010#24320#22987#26085#26399':'
           end
           object lbl10: TLabel
-            Left = 340
+            Left = 339
             Top = 40
             Width = 98
             Height = 15
@@ -361,7 +369,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
             Caption = #23454#38469#24320#22987#26085#26399#65306
           end
           object lbl12: TLabel
-            Left = 340
+            Left = 339
             Top = 66
             Width = 105
             Height = 15
@@ -382,11 +390,18 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
             Caption = #22791#27880#65306
           end
           object lbl15: TLabel
-            Left = 340
+            Left = 309
             Top = 96
-            Width = 75
+            Width = 70
             Height = 15
             Caption = #23436#25104#27604#20363#65306
+          end
+          object lbl24: TLabel
+            Left = 470
+            Top = 96
+            Width = 68
+            Height = 15
+            Caption = #35745#21010#24037#26399':'
           end
           object dbedtZNAME1: TDBEdit
             Left = 109
@@ -438,7 +453,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
             TabOrder = 3
           end
           object dbedtZFEDATE: TDBEdit
-            Left = 448
+            Left = 447
             Top = 35
             Width = 180
             Height = 23
@@ -449,7 +464,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
             TabOrder = 4
           end
           object dbedtZFBDATE2: TDBEdit
-            Left = 448
+            Left = 447
             Top = 63
             Width = 180
             Height = 23
@@ -463,7 +478,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
           object dbedtZREMARK: TDBEdit
             Left = 108
             Top = 121
-            Width = 521
+            Width = 520
             Height = 23
             DataField = 'ZREMARK'
             DataSource = dsPlanItem
@@ -472,9 +487,9 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
             TabOrder = 6
           end
           object dbedtZSUCCESSRATE: TDBEdit
-            Left = 448
-            Top = 93
-            Width = 180
+            Left = 383
+            Top = 91
+            Width = 83
             Height = 23
             Color = clBtnFace
             DataField = 'ZSUCCESSRATE'
@@ -483,7 +498,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
             TabOrder = 7
           end
           object btnItem_Save: TBitBtn
-            Left = 648
+            Left = 647
             Top = 8
             Width = 100
             Height = 25
@@ -492,7 +507,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
             TabOrder = 8
           end
           object btnItem_Cancel: TBitBtn
-            Left = 648
+            Left = 647
             Top = 37
             Width = 100
             Height = 25
@@ -501,7 +516,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
             TabOrder = 9
           end
           object btnItem_Piro: TBitBtn
-            Left = 648
+            Left = 647
             Top = 66
             Width = 100
             Height = 25
@@ -510,7 +525,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
             TabOrder = 10
           end
           object btnItem_Next: TBitBtn
-            Left = 648
+            Left = 647
             Top = 95
             Width = 100
             Height = 25
@@ -518,12 +533,22 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
             Caption = #19979#19968#20010
             TabOrder = 11
           end
+          object dbedtZPROJECTT: TDBEdit
+            Left = 543
+            Top = 91
+            Width = 83
+            Height = 23
+            DataField = 'ZPROJECTTIME'
+            DataSource = dsPlanItem
+            ImeName = #26497#21697#20116#31508#36755#20837#27861
+            TabOrder = 12
+          end
         end
         object pnlPlanDetail: TPanel
           Left = 0
-          Top = 181
+          Top = 182
           Width = 830
-          Height = 320
+          Height = 319
           Align = alClient
           BevelOuter = bvNone
           Caption = 'pnlPlanDetail'
@@ -532,7 +557,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
             Left = 247
             Top = 40
             Width = 10
-            Height = 280
+            Height = 279
             Beveled = True
           end
           object pnlPlanDetailTop: TPanel
@@ -607,7 +632,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
             Left = 0
             Top = 40
             Width = 247
-            Height = 280
+            Height = 279
             Align = alLeft
             DataSource = dsPlanDetail
             ImeName = #26497#21697#20116#31508#36755#20837#27861
@@ -643,7 +668,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
             Left = 257
             Top = 40
             Width = 573
-            Height = 280
+            Height = 279
             Align = alClient
             BevelOuter = bvNone
             Caption = 'pnl3'
@@ -652,7 +677,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
               Left = 0
               Top = 65
               Width = 573
-              Height = 175
+              Height = 174
               Align = alClient
               DataField = 'ZCONTENT'
               DataSource = dsPlanDetail
@@ -756,7 +781,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
             end
             object pnlTestCase: TPanel
               Left = 0
-              Top = 240
+              Top = 239
               Width = 573
               Height = 40
               Align = alBottom

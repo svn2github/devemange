@@ -546,6 +546,7 @@ create table TB_PLAN_ITEM(
 	ZMAINDEVE    int ,                                          /*主要负责人*/
 	ZSORT        int ,                                          /*排序号*/ 
 	ZREMARK      varchar(255),                                  /*备注*/
+	ZPROJECTTIME float default 0,                               /*工期*/
 	
 
 	constraint PK_TB_PLAN_ITEM primary key(ZGUID,ZPLAN_GUID)  

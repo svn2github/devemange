@@ -190,6 +190,8 @@ type
     actItem_Waiting: TAction;
     btnItem_Waiting: TBitBtn;
     chkEdit: TCheckBox;
+    lbl24: TLabel;
+    dbedtZPROJECTT: TDBEdit;
     procedure cdsPlanNewRecord(DataSet: TDataSet);
     procedure actPan_SaveUpdate(Sender: TObject);
     procedure actPan_SaveExecute(Sender: TObject);
@@ -807,7 +809,7 @@ var
 const
   glSQL = 'exec pt_SplitPage ''TB_PLAN_ITEM'',' +
           '''ZGUID,ZPLAN_GUID,ZNAME,ZSTATUS,ZPBDATE,ZPEDATE,ZFBDATE,ZFEDATE,'+
-          'ZCHILDCOUNT,ZPASSCOUNT,ZMAINDEVE,ZSORT,ZREMARK'', ' +
+          'ZCHILDCOUNT,ZPASSCOUNT,ZMAINDEVE,ZSORT,ZREMARK,ZPROJECTTIME'', ' +
           '''%s'',20,%d,%d,0,''%s''';
 begin
 
@@ -946,11 +948,11 @@ var
   mySQL : string;
 const
   gl_SQLTXT1 = 'insert TB_PLAN_ITEM (ZGUID,ZPLAN_GUID,ZNAME,ZSTATUS,' +
-    'ZPBDATE,ZPEDATE,ZFBDATE,ZFEDATE,ZCHILDCOUNT,ZPASSCOUNT,ZMAINDEVE,ZSORT,ZREMARK ) '+
-    'values(''%s'',''%s'',''%s'',%d,''%s'',''%s'',''%s'',''%s'',%d,%d,%d,%d,''%s'')';
+    'ZPBDATE,ZPEDATE,ZFBDATE,ZFEDATE,ZCHILDCOUNT,ZPASSCOUNT,ZMAINDEVE,ZSORT,ZREMARK,ZPROJECTTIME ) '+
+    'values(''%s'',''%s'',''%s'',%d,''%s'',''%s'',''%s'',''%s'',%d,%d,%d,%d,''%s'',%f)';
   gl_SQLTXT2 = 'update TB_PLAN_ITEM set ZPLAN_GUID=''%s'',ZNAME=''%s'',ZSTATUS=%d, ' +
     'ZPBDATE=''%s'',ZPEDATE=''%s'',ZFBDATE=''%s'',ZFEDATE=''%s'',ZCHILDCOUNT=%d, ' +
-    'ZPASSCOUNT=%d,ZMAINDEVE=%d,ZSORT=%d,ZREMARK=''%s'' where ZGUID=''%s''';
+    'ZPASSCOUNT=%d,ZMAINDEVE=%d,ZSORT=%d,ZREMARK=''%s'',ZPROJECTTIME=%f where ZGUID=''%s''';
 begin
   //
   if fLoading then Exit;
@@ -970,7 +972,8 @@ begin
       DataSet.FieldByName('ZPASSCOUNT').AsInteger,
       DataSet.FieldByName('ZMAINDEVE').AsInteger,
       DataSet.FieldByName('ZSORT').AsInteger,
-      DataSet.FieldByName('ZREMARK').AsString ]);
+      DataSet.FieldByName('ZREMARK').AsString,
+      DataSet.FieldByName('ZPROJECTTIME').AsFloat]);
     ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
     DataSet.FieldByName('ZISNEW').AsBoolean := False;
   end
@@ -988,6 +991,7 @@ begin
       DataSet.FieldByName('ZMAINDEVE').AsInteger,
       DataSet.FieldByName('ZSORT').AsInteger,
       DataSet.FieldByName('ZREMARK').AsString,
+      DataSet.FieldByName('ZPROJECTTIME').AsFloat,
       DataSet.FieldByName('ZGUID').AsString]);
     ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
   end;
