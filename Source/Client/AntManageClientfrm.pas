@@ -469,15 +469,23 @@ begin
     Exit;
   end;
 
+  //改变状态
   mySQL := format(gl_SQLTXT,[Ord(sc_end),GC_STATEID]);
   ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
 
   lstResult.Items.Clear;
+  lblError.Caption := '';
+  lblError.Visible := False;
+  ClientSystem.fGauge.MaxValue := count;
+  ClientSystem.fGauge.MinValue := 0;
+  ClientSystem.fGauge.Progress := 0;
 
+
+  lstResult.Items.BeginUpdate;
   linenum := 0;
   for i:=0 to count -1 do
   begin
-    mystr := idtcpclnt1.ReadLn();
+    mystr := idtcpclnt1.ReadLn(); //取出编译的信息
     if (Pos('FATA',UpperCase(mystr)) + Pos('ERROR',UpperCase(mystr)) > 0)  then
     begin
       lblError.Visible := True;
@@ -508,13 +516,40 @@ begin
         cdsAntList.FieldByName('ZSVN').AsInteger := myver;
         cdsAntList.Post;
       end;
-    end;
-    lstResult.Items.Add(mystr);
+    end
+    else if Pos('取出版本 ',mystr) =1  then  //这个是采用svn的api
+    begin
+      myverstr := Copy(mystr,Length('取出版本 ')+1,MaxInt);
+      mys := '';
+      myverstr := Trim(myverstr);
+      for j:=1 to Length(myverstr) do
+      begin
+        if myverstr[j] in ['0','1','2','3','4','5','6','7','8','9'] then
+          mys := mys + myverstr[j]
+        else
+          Break;
+      end;
+      myver := StrToIntdef(mys,-1);
 
+      //更新svn 版本
+      if cdsAntList.FieldByName('ZSVN').AsInteger <> myver then
+      begin
+        if not (cdsAntList.State in [dsEdit,dsInsert]) then
+          cdsAntList.Edit;
+        cdsAntList.FieldByName('ZSVN').AsInteger := myver;
+        cdsAntList.Post;
+      end;
+    end;
+
+    lstResult.Items.Add(mystr);
+    ClientSystem.fGauge.Progress := ClientSystem.fGauge.Progress +1;
+    Application.ProcessMessages;
+    
   end;
   lstResult.ItemIndex := linenum;
   lstResult.Tag := linenum;
 
+  lstResult.Items.EndUpdate;
 end;
 
 procedure TAntManageClientDlg.act_BuildProjectExecute(Sender: TObject);

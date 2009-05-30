@@ -1076,7 +1076,7 @@ begin
 
 
   case Column.Index of
-    6  :
+    7  :
       if cdsPlanItem.FieldByName('ZMAINDEVE').AsInteger =
          ClientSystem.fEditer_id then
       begin

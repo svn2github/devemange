@@ -1276,6 +1276,11 @@ inherited BugManageDlg: TBugManageDlg
       Hint = #23558#38468#20214#21478#23384#20026'...'
       OnExecute = actBugHistory_SavetofileExecute
     end
+    object actBug_ExportExcel: TAction
+      Category = #38382#39064#21015#34920
+      Caption = #23548#20986#21040'Excel'
+      OnExecute = actBug_ExportExcelExecute
+    end
   end
   object pmBugTree: TPopupMenu
     AutoHotkeys = maManual
@@ -1337,6 +1342,9 @@ inherited BugManageDlg: TBugManageDlg
     end
     object N12: TMenuItem
       Caption = '-'
+    end
+    object Excel1: TMenuItem
+      Action = actBug_ExportExcel
     end
     object N11: TMenuItem
       Action = actBug_RefreshData

@@ -289,6 +289,11 @@ type
     procedure btnAddDesTextClick(Sender: TObject);
     procedure actTask_gotoTestExecute(Sender: TObject);
     procedure actTask_FindWhoExecute(Sender: TObject);
+    procedure dgProItemDrawColumnCell(Sender: TObject; const Rect: TRect;
+      DataCol: Integer; Column: TColumn; State: TGridDrawState);
+    procedure dgProVersionDrawColumnCell(Sender: TObject;
+      const Rect: TRect; DataCol: Integer; Column: TColumn;
+      State: TGridDrawState);
   private
     { Private declarations }
     fTaskPageRec : TTaskPageRec;
@@ -2037,6 +2042,26 @@ begin
   end;
   
 
+end;
+
+procedure TProjectManageClientDlg.dgProItemDrawColumnCell(Sender: TObject;
+  const Rect: TRect; DataCol: Integer; Column: TColumn;
+  State: TGridDrawState);
+begin
+  if (cdsProjectItem.RecNo mod 2  = 0) and not ( gdSelected in State)  then
+    dgProItem.Canvas.Brush.Color := clSilver;
+
+  dgProItem.DefaultDrawColumnCell(Rect,DataCol,Column,State);
+end;
+
+procedure TProjectManageClientDlg.dgProVersionDrawColumnCell(
+  Sender: TObject; const Rect: TRect; DataCol: Integer; Column: TColumn;
+  State: TGridDrawState);
+begin
+  if (cdsProVersion.RecNo mod 2  = 0) and not ( gdSelected in State)  then
+    dgProVersion.Canvas.Brush.Color := clSilver;
+
+  dgProVersion.DefaultDrawColumnCell(Rect,DataCol,Column,State);
 end;
 
 end.

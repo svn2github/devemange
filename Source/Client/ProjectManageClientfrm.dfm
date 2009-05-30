@@ -116,6 +116,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
           TitleFont.Height = -15
           TitleFont.Name = #23435#20307
           TitleFont.Style = []
+          OnDrawColumnCell = dgProItemDrawColumnCell
           Columns = <
             item
               Color = clBtnFace
@@ -303,6 +304,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
           TitleFont.Height = -15
           TitleFont.Name = #23435#20307
           TitleFont.Style = []
+          OnDrawColumnCell = dgProVersionDrawColumnCell
           Columns = <
             item
               Color = clBtnFace
