@@ -1,6 +1,6 @@
 object MainDlg: TMainDlg
-  Left = 224
-  Top = 90
+  Left = 213
+  Top = 98
   Width = 870
   Height = 640
   Caption = 'DeveManage'
@@ -351,6 +351,11 @@ object MainDlg: TMainDlg
       Caption = #21457#24067#31649#29702
       ImageIndex = 14
       OnExecute = actMod_ReleaseExecute
+    end
+    object actPw_GetPw: TAction
+      Category = #23494#30721
+      Caption = #33719#21462#23494#30721
+      OnExecute = actPw_GetPwExecute
     end
   end
   object ImageList1: TImageList
@@ -1089,6 +1094,12 @@ object MainDlg: TMainDlg
       Caption = #24037#20855'(&T)'
       object N12: TMenuItem
         Action = actTool_CheckFileContext
+      end
+    end
+    object P1: TMenuItem
+      Caption = #23494#30721'(&P)'
+      object N19: TMenuItem
+        Action = actPw_GetPw
       end
     end
   end

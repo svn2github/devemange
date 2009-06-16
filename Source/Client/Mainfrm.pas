@@ -91,6 +91,9 @@ type
     actMod_Release: TAction;
     btnMod_Release: TToolButton;
     N18: TMenuItem;
+    actPw_GetPw: TAction;
+    P1: TMenuItem;
+    N19: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure actmod_FilesExecute(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -121,6 +124,7 @@ type
     procedure actMod_DayworktableExecute(Sender: TObject);
     procedure actMod_ReleaseExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
+    procedure actPw_GetPwExecute(Sender: TObject);
   private
     fChildform : TList; //所有子窗口的对象
     fCurrentChildform : TBaseChildDlg;
@@ -148,6 +152,7 @@ var
 implementation
 uses
   ActiveX,
+  TimeEncrypt,
   ClinetSystemUnits,
   DelTempFilefrm,          {删除临时文件}
   FileMangeClientUnits,    {文件管理}
@@ -795,6 +800,16 @@ begin
     actFile_ChangPasswd.Execute;
     inc(c);
   end;
+end;
+
+procedure TMainDlg.actPw_GetPwExecute(Sender: TObject);
+var
+  mypw : string;
+  mydatetime : TDateTime;
+begin
+  mydatetime := ClientSystem.fDbOpr.GetSysDateTime;
+  mypw := EncryptStr(PChar(FormatDateTime('yyyy-mm-dd',mydatetime)));
+  InputBox('获取密码','密码',mypw);
 end;
 
 end.
