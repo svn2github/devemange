@@ -808,7 +808,7 @@ var
   mydatetime : TDateTime;
 begin
   mydatetime := ClientSystem.fDbOpr.GetSysDateTime;
-  mypw := EncryptStr(PChar(FormatDateTime('yyyy-mm-dd',mydatetime)));
+  mypw := EncryptString(PChar(FormatDateTime('yyyy-mm-dd',mydatetime)),'');
   InputBox('»ñÈ¡ÃÜÂë','ÃÜÂë',mypw);
 end;
 
