@@ -85,12 +85,13 @@ go
 
 
 
-/*Bug管理器的发布邮件*/
 /*
 创建: 2008-5-21  mrlong
 目的: 取出问题的邮件内容
 修改：
 编号   时间         修改人             修改内容
+  1      2009-6-27   龙仕云            .改为多个一起发送 
+
 */
 
 CREATE   PROCEDURE pt_MaintoByBug 
@@ -104,6 +105,7 @@ declare @Auathor varchar(20)
 declare @BugMaxID int
 declare @BugContext varchar(4000)
 declare @BugReplay  varchar(20)
+declare @Bugdata varchar(20)    --回复时间
 begin
 
 
@@ -119,37 +121,46 @@ close   my_cursor
 deallocate my_cursor
 
 --取现回复最大值
+
+--取出回复内容
+--格式
+set @mailtitle = '(错误管理) ' + @Title
+set @mailtext  = @TreePath  + char(13) +char(10)  + '创建人:' +  @Auathor + char(13)+char(10)
+
 declare my_cursor cursor
 for
-select isnull(max(ZID),0)  from TB_BUG_HISTORY where ZBUG_ID=@BugID 
+select a.ZCONTEXT,b.ZNAME,convert(varchar(20),a.ZACTIONDATE,120)  as mydate from TB_BUG_HISTORY as a , TB_USER_ITEM as b where a.ZUSER_ID=b.ZID and 
+   a.ZBUG_ID=@BugID  order by a.ZID
 open my_cursor
-fetch next from my_cursor into @BugMaxID
+	
+--取出多个
+fetch next from my_cursor into @BugContext,@BugReplay,@Bugdata
+while( @@fetch_status = 0)
+begin
+    set @mailtext = @mailtext +
+          '-------------------------------------------------------------------------------------------' + char(13) + char(10)+
+           @BugContext + char(13) +char(10)+
+             '   回复人:' + @BugReplay  + '  时间:' + @Bugdata  + char(13) +char(10)
+
+      fetch next from my_cursor into @BugContext,@BugReplay,@Bugdata
+end
+             	
 close my_cursor
 deallocate my_cursor
 
---取出回复内容
-if @BugMaxID > 0
-begin
-	declare my_cursor cursor
-	for
-	select a.ZCONTEXT,b.ZNAME  from TB_BUG_HISTORY as a , TB_USER_ITEM as b where a.ZID=@BugMaxID and
-	a.ZUSER_ID=b.ZID
-	open my_cursor
-	fetch next from my_cursor into @BugContext,@BugReplay
-	close my_cursor
-	deallocate my_cursor
-end
 
 --格式
-set @mailtitle = @Title
-set @mailtext  = @TreePath  + char(13) +char(10)+
-'-------------------------------------------------------------------------------------------' + char(13) + char(10)+
-@BugContext + char(13) +char(10)+char(13)+char(10)+
-'创建人:' +  @Auathor + '   回复人:' + @BugReplay
+set @mailtitle = '(错误管理) ' + @Title
+set @mailtext  = @mailtext + char(13) + char(10) +
+'         此邮件由开发管理系统发出，请勿直接回复！' 
 
+
+--set @mailtitle = "国家"
+--set @mailtext  = "bbbbbbbbbbbbb"
 
 end
 GO
+
 
 
 /*
