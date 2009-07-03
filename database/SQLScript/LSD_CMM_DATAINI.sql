@@ -113,5 +113,11 @@ insert into TB_RELEASE_PARAMS (ZTYPE,ZID,ZNAME) values(3,1,'是');
 /*编译部署*/
 insert into TB_STATE (ZID,ZSTATECODE) values(0,0);
 
+/*加班单状态*/
+insert into TB_WORKOVERTIME_PARAMS (ZTYPE,ZID,ZNAME) values(0,0,'申请');
+insert into TB_WORKOVERTIME_PARAMS (ZTYPE,ZID,ZNAME) values(0,1,'成功');
+insert into TB_WORKOVERTIME_PARAMS (ZTYPE,ZID,ZNAME) values(0,2,'失败');
+
+
 
 GO

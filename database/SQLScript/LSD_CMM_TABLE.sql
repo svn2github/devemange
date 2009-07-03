@@ -20,6 +20,7 @@
 *       7.增加测试功能模块的关闭等级 作者:龙仕云龙 2008-11-29
 *       8.增加问题管理内的期限 作者:龙仕云 2008-12-20
 *       9.增加发布管理功能 作者：龙仕云 20080-12-20
+*      10.增加加班单的功能 作者: 龙仕云 2009-7-3 
 *
 ******************************************************************************/
 
@@ -154,7 +155,7 @@ create table TB_PRO_ITEM(
 	ZMANAGERID     int ,                                     /*项目的负责人*/
 	ZUNITS         varchar(200),                             /*项目的使用单位*/     
 	ZHIGHVERID     int not null default -1,                  /*最新版本号的ID值*/
-	ZTESTTEAM      varchar(100),                             /*测试小组成员 格式 名称(编号) ,用于自动生成测试任务.     
+	ZTESTTEAM      varchar(100),                             /*测试小组成员 格式 名称(编号) ,用于自动生成测试任务.*/     
 	constraint PK_TB_PRO_ITEM primary key(ZID)   
 )
 go
@@ -192,7 +193,7 @@ create table TB_PRO_DOCUMENT(
 	ZSORT          int ,                                     /*排序号*/
 	ZHASCHILD      bit not null,                             /*是否有下级*/
 	ZDOCTYPE       int ,                                     /*文档类型 0=Excel 1=txt*/
-    ZCONTEXT       text,                                     /*内容 2008-3-11*/
+        ZCONTEXT       text,                                     /*内容 2008-3-11*/
 	constraint PK_TB_PRO_DOCUMENT primary key(ZID),   
 )
 go
@@ -335,7 +336,7 @@ create table TB_BUG_ITEM(
 	ZRESOLVEDDATE  datetime,                                  /*解决的时间*/
 	ZLASTEDITEDBY  int not null,                              /*最后修改的人*/
 	ZLASTEDITEDDATE datetime not null,                        /*最后修改的时间*/ 
-	ZOVERFRACTION  bit not null default 0                     /*=True表示已记过分了*/ 
+	ZOVERFRACTION  bit not null default 0 ,                   /*=True表示已记过分了*/ 
 	ZTAGNAME       varchar(100),                              /*标签 多个标签采用;号分开 */ 
 	ZTERM          int ,                                      /*要求期限(6)*/
 	
@@ -734,6 +735,49 @@ create table TB_STATE(
 	constraint PK_TB_STATE primary key(ZID)
 )
 go
+
+/*加班单功能*/
+if exists (select * from dbo.sysobjects
+  where id = object_id(N'[dbo].[TB_WORKOVERTIME]')
+  and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+drop table [dbo].[TB_WORKOVERTIME]
+go
+
+create table TB_WORKOVERTIME(
+	ZID           int IDENTITY (1, 1) not null,/*=加班ID*/
+	ZUSER_ID      int,                         /*加班人*/
+	ZDATE         varchar(20),                 /*日期*/
+	ZDATETIME     datetime,                    /*加班的开始时间* 这个目前是固定好是 晚上6:00*/
+	ZLASTDATETIME datetime,                    /*加班的下班时间*/
+	ZADDRESS      varchar(50),                 /*加班的地点*/
+	ZCONTENT      text,                        /*加班的事由*/
+	ZCHECK_USER_ID int default -1,             /*审核人ID，没有审核则=-1*/
+	ZMINUTE        int default 0,              /*加班的分钟*/ 
+	ZSTATUS        int not null,               /*状态=0 申请 1=同意 2=不同意*/
+	ZWEEKEND       bit default 0,              /*是否是周末或节假日加班*/
+	ZBUILDDATE    datetime,                    /*制单时间*/
+	
+	constraint PK_TB_WORKOVERTIME primary key(ZID)
+)
+go
+
+/*发布管理参数表*/
+if exists (select * from dbo.sysobjects
+  where id = object_id(N'[dbo].[TB_WORKOVERTIME_PARAMS]')
+  and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+drop table [dbo].[TB_WORKOVERTIME_PARAMS]
+go
+
+create table TB_WORKOVERTIME_PARAMS(
+	ZTYPE 	     int not null,                                   /*类型*/
+	ZID          int not null,                                   /*ID值*/
+	ZNAME        varchar(200)                                    /*值*/
+	constraint PK_TB_WORKOVERTIME_PARAMS primary key(ZTYPE,ZID)  
+)
+go
+
+
+
 
 
 
