@@ -94,6 +94,8 @@ type
     actPw_GetPw: TAction;
     P1: TMenuItem;
     N19: TMenuItem;
+    actwork_overtime: TAction;
+    N20: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure actmod_FilesExecute(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -125,6 +127,7 @@ type
     procedure actMod_ReleaseExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure actPw_GetPwExecute(Sender: TObject);
+    procedure actwork_overtimeExecute(Sender: TObject);
   private
     fChildform : TList; //所有子窗口的对象
     fCurrentChildform : TBaseChildDlg;
@@ -172,6 +175,7 @@ uses
   AntManageClientfrm,      {自动构建}
   DayWorktableManageClientfrm, {我的工作台}
   ReleaseManageClientfrm,  {发布管理}
+  WorkOverTimeClientfrm,   {加班单}
   WebClientfrm
 
   , SetSysParamsfrm;
@@ -810,6 +814,11 @@ begin
   mydatetime := ClientSystem.fDbOpr.GetSysDateTime;
   mypw := EncryptString(PChar(FormatDateTime('yyyy-mm-dd',mydatetime)),'');
   InputBox('获取密码','密码',mypw);
+end;
+
+procedure TMainDlg.actwork_overtimeExecute(Sender: TObject);
+begin
+  DoChangeClient(TWorkOverTimeClient);
 end;
 
 end.

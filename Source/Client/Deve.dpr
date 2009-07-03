@@ -23,7 +23,8 @@ uses
   TestHighQueryfrm in 'TestHighQueryfrm.pas' {TestHighQueryDlg},
   DayWorktableManageClientfrm in 'DayWorktableManageClientfrm.pas' {DayWorktableManageClientDlg},
   ReleaseManageClientfrm in 'ReleaseManageClientfrm.pas' {ReleaseManageClientDlg},
-  GetSVNVerfrm in 'GetSVNVerfrm.pas' {GetSVNVerDlg};
+  GetSVNVerfrm in 'GetSVNVerfrm.pas' {GetSVNVerDlg},
+  WorkOverTimeClientfrm in 'WorkOverTimeClientfrm.pas' {WorkOverTimeClient};
 
 {$R *.res}
 {$R resource.res}

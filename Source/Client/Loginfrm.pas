@@ -46,7 +46,7 @@ type
 implementation
 
 uses
-  ClinetSystemUnits;
+  ClinetSystemUnits,DBClient;
 
 {$R *.dfm}
 
@@ -72,8 +72,9 @@ var
   myid : integer;
   myhost : String;
   myPost : integer;
+  mycds  : TClientDataSet;
 const
-  glSQL  = 'select ZTYPE from  TB_USER_ITEM where ZID=%d ';
+  glSQL  = 'select ZTYPE,ZCHECKTASK from  TB_USER_ITEM where ZID=%d ';
 begin
   //
   // 合法性处理
@@ -112,11 +113,15 @@ begin
       myid := ClientSystem.fDbOpr.Login(edName.Text,edPass.Text);
       if myid >= 0 then
       begin
+        mycds  := TClientDataSet.Create(nil);
         ClientSystem.fEditer_id  := myid;
         ClientSystem.fEditer     := edName.Text;
         ClientSystem.fEditer_mm  := edPass.text;
+        mycds.Data := ClientSystem.fDbOpr.ReadDataSet(PChar(format(glSQL,[myid])));
+        ClientSystem.fEditer_CheckTask :=mycds.FieldByName('ZCHECKTASK').AsBoolean;
         ClientSystem.fEditerType := TEditerType(
-          ClientSystem.fDbOpr.ReadInt(PChar(format(glSQL,[myid]))));
+          mycds.FieldByName('ZTYPE').AsInteger);
+        mycds.Free;
         if rbLocal.Checked then
           ClientSystem.fHost     := '本地连接'
         else

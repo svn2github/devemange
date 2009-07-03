@@ -1,6 +1,6 @@
 object MainDlg: TMainDlg
-  Left = 213
-  Top = 98
+  Left = 219
+  Top = 87
   Width = 870
   Height = 640
   Caption = 'DeveManage'
@@ -356,6 +356,11 @@ object MainDlg: TMainDlg
       Category = #23494#30721
       Caption = #33719#21462#23494#30721
       OnExecute = actPw_GetPwExecute
+    end
+    object actwork_overtime: TAction
+      Category = #21152#29677#21333
+      Caption = #21152#29677#21333
+      OnExecute = actwork_overtimeExecute
     end
   end
   object ImageList1: TImageList
@@ -1101,6 +1106,9 @@ object MainDlg: TMainDlg
       object N19: TMenuItem
         Action = actPw_GetPw
       end
+    end
+    object N20: TMenuItem
+      Action = actwork_overtime
     end
   end
   object ApplicationEvents1: TApplicationEvents
