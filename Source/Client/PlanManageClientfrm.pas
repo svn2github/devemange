@@ -822,7 +822,7 @@ begin
   fLoading := True;
   cdsPlanItem.DisableControls;
   ShowProgress('¶ÁÈ¡Êý¾Ý...',0);
-
+  ClientSystem.BeginTickCount;
   try
 
     if cdsTemp.Active then cdsTemp.Close;
@@ -851,6 +851,7 @@ begin
     cdsPlanItem.EnableControls;
     fLoading := myb;
     HideProgress;
+    ClientSystem.EndTickCount;
   end;
 end;
 

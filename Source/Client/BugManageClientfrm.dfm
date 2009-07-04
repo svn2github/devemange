@@ -89,7 +89,6 @@ inherited BugManageDlg: TBugManageDlg
             Height = 438
             Align = alClient
             DataSource = dsBugItem
-            ImeName = #26497#21697#20116#31508#36755#20837#27861
             Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
             PopupMenu = pmBugItem
             TabOrder = 0
@@ -715,8 +714,8 @@ inherited BugManageDlg: TBugManageDlg
           object lbBugCaption: TLabel
             Left = 0
             Top = 0
-            Width = 96
-            Height = 15
+            Width = 880
+            Height = 18
             Align = alClient
             Caption = 'lbBugCaption'
             Color = clGray
@@ -979,8 +978,7 @@ inherited BugManageDlg: TBugManageDlg
             Height = 23
             DataField = 'ZASSIGNEDTO'
             DataSource = dsBugItem
-            DropDownRows = 30
-            ImeName = #26497#21697#20116#31508#36755#20837#27861
+            DropDownRows = 25
             KeyField = 'ZID'
             ListField = 'ZNAME'
             ListSource = DM.dsUsers
@@ -1082,8 +1080,7 @@ inherited BugManageDlg: TBugManageDlg
             Top = 124
             Width = 144
             Height = 23
-            DropDownRows = 50
-            ImeName = #26497#21697#20116#31508#36755#20837#27861
+            DropDownRows = 25
             KeyField = 'ZID'
             ListField = 'ZNAME'
             ListSource = DM.dsUsers

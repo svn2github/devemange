@@ -15,6 +15,9 @@ type
     fWhereStr : string; //分页的where条件
   end;
 
+  TWorkOverTiemColumn=(wot_No,wot_Name,wot_Date,wot_Lost,wot_Minue,wot_Note,
+    wot_Status,wot_CheckName);
+
   TWorkOverTimeClient = class(TBaseChildDlg)
     pgc1: TPageControl;
     tsWorkList: TTabSheet;
@@ -80,6 +83,18 @@ type
     dbchkZWEEKEND: TDBCheckBox;
     lbl11: TLabel;
     dbtxtZBUILDDATE: TDBText;
+    lbl12: TLabel;
+    act_CancellBill: TAction;
+    btnCancellBill: TBitBtn;
+    act_CheckList: TAction;
+    btnCheckList: TBitBtn;
+    cdsUser: TClientDataSet;
+    dsUser: TDataSource;
+    dblkcbb1: TDBLookupComboBox;
+    btnmework1: TBitBtn;
+    act_OtherWork: TAction;
+    act_All: TAction;
+    btnAll: TBitBtn;
     procedure act_AddLoadExecute(Sender: TObject);
     procedure cdsWrokListCalcFields(DataSet: TDataSet);
     procedure act_firstPageExecute(Sender: TObject);
@@ -110,6 +125,11 @@ type
     procedure act_NextExecute(Sender: TObject);
     procedure pgc1Changing(Sender: TObject; var AllowChange: Boolean);
     procedure dbchkZWEEKENDClick(Sender: TObject);
+    procedure act_CancellBillExecute(Sender: TObject);
+    procedure act_CancellBillUpdate(Sender: TObject);
+    procedure act_CheckListExecute(Sender: TObject);
+    procedure act_OtherWorkExecute(Sender: TObject);
+    procedure act_AllExecute(Sender: TObject);
   private
     { Private declarations }
     fPageType : TPageTypeRec;
@@ -184,6 +204,7 @@ begin
       mywhere]);
 
   ClientSystem.BeginTickCount;
+  ShowProgress('读取数据',0);
   myb := fLoading;
   fLoading := True;
   myDataSet := TClientDataSet.Create(nil);
@@ -299,6 +320,7 @@ begin
     myDataSet.Free;
     fLoading :=myb;
     ClientSystem.EndTickCount;
+    HideProgress;
   end;
 end;
 
@@ -339,13 +361,20 @@ const
   gl_SQLTXT = 'select * from TB_WORKOVERTIME_PARAMS where ZTYPE=0';
 begin
   inherited;
-  cdsParams.Data := ClientSystem.fDbOpr.ReadDataSet(PChar(gl_SQLTXT));
-  fPageType.fIndex := 1;
-  fPageType.fIndexCount := GetWorkListPageCount('');
-  LoadWrokList(1,'');
-  lblPageCount.Caption := format('%d/%d',[
-      fPageType.fIndex,
-      fPageType.fIndexCount]);
+  ShowProgress('读取数据',0);
+  try
+    cdsParams.Data := ClientSystem.fDbOpr.ReadDataSet(PChar(gl_SQLTXT));
+    cdsUser.CloneCursor(DM.cdsUser,True);
+    
+    fPageType.fIndex := 1;
+    fPageType.fIndexCount := GetWorkListPageCount('');
+    LoadWrokList(1,'');
+    lblPageCount.Caption := format('%d/%d',[
+        fPageType.fIndex,
+        fPageType.fIndexCount]);
+  finally
+    HideProgress;
+  end;
 end;
 
 procedure TWorkOverTimeClient.act_firstPageUpdate(Sender: TObject);
@@ -454,13 +483,26 @@ const
                'ZWEEKEND=%d, '     +
                'ZBUILDDATE=''%s'', '   +
                'ZCHECK_USER_ID=%d where ZID=%d ';
+  gl_SQLTXT3 = 'select ZID from TB_WORKOVERTIME where ZDATE=''%s'' and ZUSER_ID=%d ';
 begin
   //
   if fLoading then Exit;
+  
 
   CalcMinute();
   if DataSet.FieldByName('ZISNEW').AsBoolean then
   begin
+    //校对一下,是否已有了加班单
+    mySQL := Format(gl_SQLTXT3,[
+      DataSet.FieldByName('ZDATE').AsString,
+      DataSet.FieldByName('ZUSER_ID').AsInteger]);
+    if ClientSystem.fDbOpr.ReadRecordCount(PChar(mySQL)) > 0 then
+    begin
+      MessageBox(Handle,'你的加班单已填过了','提示',MB_ICONWARNING+MB_OK);
+      DataSet.Cancel;
+      Exit;
+    end;
+
     mySQL := Format(gl_SQLTXT,[
       DataSet.FieldByName('ZUSER_ID').AsInteger,
       DataSet.FieldByName('ZDATE').AsString,
@@ -517,6 +559,24 @@ begin
   begin
     dbgrd1.Canvas.Font.Color := clblue;
   end;
+
+  case Column.Index of
+    Ord(wot_Name):
+      if cdsWrokList.FieldByName('ZUSER_ID').AsInteger =
+         ClientSystem.fEditer_id then
+      begin
+        dbgrd1.Canvas.Brush.Color := clAqua;
+      end;
+    Ord(wot_CheckName):
+      if cdsWrokList.FieldByName('ZCHECK_USER_ID').AsInteger =
+         ClientSystem.fEditer_id then
+      begin
+        dbgrd1.Canvas.Brush.Color := clLime;
+      end;
+
+  end;
+
+
   dbgrd1.DefaultDrawColumnCell(Rect,DataCol,Column,State);
 end;
 
@@ -537,7 +597,6 @@ end;
 
 procedure TWorkOverTimeClient.dtp1Change(Sender: TObject);
 var
-  myMinute : Integer;
   mydatetime : TDateTime;
   myy,mymo,myday : Word;
 begin
@@ -556,14 +615,12 @@ end;
 procedure TWorkOverTimeClient.cdsWrokListNewRecord(DataSet: TDataSet);
 begin
   if fLoading then Exit;
-
   DataSet.FieldByName('ZSTATUS').AsInteger := 0;
   cdsWrokList.FieldByName('ZISNEW').AsBoolean := True;
   cdsWrokList.FieldByName('ZUSER_ID').AsInteger := ClientSystem.fEditer_id;
   cdsWrokList.FieldByName('ZCHECK_USER_ID').AsInteger := -1;
   cdsWrokList.FieldByName('ZWEEKEND').AsBoolean := False;
   cdsWrokList.FieldByName('ZBUILDDATE').AsDateTime := ClientSystem.fDbOpr.GetSysDateTime;
-
 end;
 
 procedure TWorkOverTimeClient.act_AgreeExecute(Sender: TObject);
@@ -647,8 +704,8 @@ begin
   MinuteOf(cdsWrokList.FieldByName('ZLASTDATETIME').AsDateTime)-
   MinuteOf(cdsWrokList.FieldByName('ZDATETIME').AsDateTime);
 
-  //if not (cdsWrokList.State in [dsEdit,dsInsert]) then
-  //  cdsWrokList.Edit;
+  if not (cdsWrokList.State in [dsEdit,dsInsert]) then
+    cdsWrokList.Edit;
 
   if dbchkZWEEKEND.Checked then
     cdsWrokList.FieldByName('ZMINUTE').AsInteger := myMinute*2
@@ -672,6 +729,57 @@ begin
     dbedtZDATE.Color    := clBtnFace;
   end;
 
+end;
+
+procedure TWorkOverTimeClient.act_CancellBillExecute(Sender: TObject);
+begin
+   
+  if not (cdsWrokList.State in [dsEdit,dsInsert]) then
+    cdsWrokList.Edit;
+  if cdsWrokList.FieldByName('ZSTATUS').AsInteger = 0 then
+    cdsWrokList.FieldByName('ZSTATUS').AsInteger := 3
+  else
+    cdsWrokList.FieldByName('ZSTATUS').AsInteger := 0;
+end;
+
+procedure TWorkOverTimeClient.act_CancellBillUpdate(Sender: TObject);
+begin
+  (Sender as TAction).Enabled := (cdsWrokList.RecordCount > 0) and
+  (cdsWrokList.FieldByName('ZUSER_ID').AsInteger=ClientSystem.fEditer_id) and
+  (cdsWrokList.FieldByName('ZSTATUS').AsInteger in [0,3]);
+
+end;
+
+procedure TWorkOverTimeClient.act_CheckListExecute(Sender: TObject);
+var
+  mywhere : string;
+begin
+  fPageType.fIndex := 1;
+  mywhere := 'ZSTATUS=0';
+  fPageType.fIndexCount := GetWorkListPageCount(mywhere);
+  fPageType.fWhereStr := mywhere;
+  LoadWrokList(fPageType.fIndex,fPageType.fWhereStr);
+end;
+
+procedure TWorkOverTimeClient.act_OtherWorkExecute(Sender: TObject);
+var
+  mywhere : string;
+begin
+  fPageType.fIndex := 1;
+  mywhere := Format('ZUSER_ID=%d',[cdsUser.FieldByName('ZID').AsInteger]);
+  fPageType.fIndexCount := GetWorkListPageCount(mywhere);
+  fPageType.fWhereStr := mywhere;
+  LoadWrokList(fPageType.fIndex,fPageType.fWhereStr);
+end;
+
+procedure TWorkOverTimeClient.act_AllExecute(Sender: TObject);
+begin
+  fPageType.fIndex := 1;
+  fPageType.fIndexCount := GetWorkListPageCount('');
+  LoadWrokList(1,'');
+  lblPageCount.Caption := format('%d/%d',[
+        fPageType.fIndex,
+        fPageType.fIndexCount]);
 end;
 
 end.

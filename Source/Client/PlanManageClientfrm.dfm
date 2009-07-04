@@ -146,7 +146,6 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
           Height = 404
           Align = alClient
           DataSource = dsPlanItem
-          ImeName = #26497#21697#20116#31508#36755#20837#27861
           Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
           TabOrder = 1
           TitleFont.Charset = GB2312_CHARSET
@@ -392,7 +391,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
           object lbl15: TLabel
             Left = 309
             Top = 96
-            Width = 70
+            Width = 75
             Height = 15
             Caption = #23436#25104#27604#20363#65306
           end
@@ -410,7 +409,6 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
             Height = 23
             DataField = 'ZNAME'
             DataSource = dsPlanItem
-            ImeName = #26497#21697#20116#31508#36755#20837#27861
             ReadOnly = True
             TabOrder = 0
           end
@@ -421,7 +419,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
             Height = 23
             DataField = 'ZMAINDEVENAME'
             DataSource = dsPlanItem
-            DropDownRows = 30
+            DropDownRows = 25
             ImeName = #26497#21697#20116#31508#36755#20837#27861
             KeyField = 'ZID'
             ListField = 'ZNAME'
@@ -436,7 +434,6 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
             Height = 23
             DataField = 'ZPBDATE'
             DataSource = dsPlanItem
-            ImeName = #26497#21697#20116#31508#36755#20837#27861
             ReadOnly = True
             TabOrder = 2
           end
@@ -459,7 +456,6 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
             Height = 23
             DataField = 'ZPEDATE'
             DataSource = dsPlanItem
-            ImeName = #26497#21697#20116#31508#36755#20837#27861
             ReadOnly = True
             TabOrder = 4
           end
@@ -482,7 +478,6 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
             Height = 23
             DataField = 'ZREMARK'
             DataSource = dsPlanItem
-            ImeName = #26497#21697#20116#31508#36755#20837#27861
             ReadOnly = True
             TabOrder = 6
           end
@@ -635,7 +630,6 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
             Height = 279
             Align = alLeft
             DataSource = dsPlanDetail
-            ImeName = #26497#21697#20116#31508#36755#20837#27861
             Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
             ReadOnly = True
             TabOrder = 1
@@ -681,7 +675,6 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
               Align = alClient
               DataField = 'ZCONTENT'
               DataSource = dsPlanDetail
-              ImeName = #26497#21697#20116#31508#36755#20837#27861
               ReadOnly = True
               ScrollBars = ssBoth
               TabOrder = 0
@@ -750,7 +743,6 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
                 DataField = 'ZDEVENAME'
                 DataSource = dsPlanDetail
                 DropDownRows = 30
-                ImeName = #26497#21697#20116#31508#36755#20837#27861
                 ReadOnly = True
                 TabOrder = 0
               end
@@ -762,7 +754,6 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
                 Anchors = [akLeft, akTop, akRight]
                 DataField = 'ZNAME'
                 DataSource = dsPlanDetail
-                ImeName = #26497#21697#20116#31508#36755#20837#27861
                 ReadOnly = True
                 TabOrder = 1
               end
@@ -774,7 +765,6 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
                 Color = clBtnFace
                 DataField = 'ZSOCRE'
                 DataSource = dsPlanDetail
-                ImeName = #26497#21697#20116#31508#36755#20837#27861
                 ReadOnly = True
                 TabOrder = 2
               end
@@ -808,7 +798,6 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
                 Anchors = [akLeft, akTop, akRight]
                 DataField = 'ZTESTCASE'
                 DataSource = dsPlanDetail
-                ImeName = #26497#21697#20116#31508#36755#20837#27861
                 ReadOnly = True
                 TabOrder = 0
               end
@@ -1065,7 +1054,6 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
             Anchors = [akLeft, akTop, akRight, akBottom]
             DataField = 'ZSUMTEXT'
             DataSource = dsPlan
-            ImeName = #26497#21697#20116#31508#36755#20837#27861
             ScrollBars = ssBoth
             TabOrder = 3
           end
@@ -1095,8 +1083,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
             Top = 130
             Width = 145
             Height = 23
-            DropDownRows = 50
-            ImeName = #26497#21697#20116#31508#36755#20837#27861
+            DropDownRows = 25
             KeyField = 'ZID'
             ListField = 'ZNAME'
             ListSource = DM.dsUsers

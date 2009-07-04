@@ -38,9 +38,9 @@ object FileManageDlg: TFileManageDlg
     TabOrder = 0
     object lvFileItem: TListView
       Left = 0
-      Top = 41
+      Top = 40
       Width = 562
-      Height = 467
+      Height = 468
       Hint = #28857#20987#21015#21487#20197#36827#34892#21015#20869#23481#30340#25490#24207#12290
       Align = alClient
       Columns = <
@@ -90,13 +90,13 @@ object FileManageDlg: TFileManageDlg
       Left = 0
       Top = 0
       Width = 562
-      Height = 41
+      Height = 40
       Align = alTop
       BevelOuter = bvNone
       ParentColor = True
       TabOrder = 1
       object BitBtn3: TBitBtn
-        Left = 123
+        Left = 116
         Top = 8
         Width = 100
         Height = 25
@@ -105,7 +105,7 @@ object FileManageDlg: TFileManageDlg
         TabOrder = 0
       end
       object BitBtn4: TBitBtn
-        Left = 234
+        Left = 220
         Top = 8
         Width = 100
         Height = 25
@@ -114,7 +114,7 @@ object FileManageDlg: TFileManageDlg
         TabOrder = 1
       end
       object BitBtn5: TBitBtn
-        Left = 347
+        Left = 324
         Top = 8
         Width = 100
         Height = 25
@@ -123,7 +123,7 @@ object FileManageDlg: TFileManageDlg
         TabOrder = 2
       end
       object BitBtn6: TBitBtn
-        Left = 460
+        Left = 428
         Top = 8
         Width = 100
         Height = 25
@@ -159,7 +159,7 @@ object FileManageDlg: TFileManageDlg
         TabOrder = 0
       end
       object Button8: TButton
-        Left = 122
+        Left = 116
         Top = 9
         Width = 100
         Height = 25
@@ -167,7 +167,7 @@ object FileManageDlg: TFileManageDlg
         TabOrder = 1
       end
       object BitBtn1: TBitBtn
-        Left = 232
+        Left = 220
         Top = 9
         Width = 100
         Height = 25
@@ -176,7 +176,7 @@ object FileManageDlg: TFileManageDlg
         TabOrder = 2
       end
       object BitBtn2: TBitBtn
-        Left = 342
+        Left = 324
         Top = 8
         Width = 100
         Height = 25

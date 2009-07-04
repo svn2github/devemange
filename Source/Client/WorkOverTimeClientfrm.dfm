@@ -1,6 +1,6 @@
 inherited WorkOverTimeClient: TWorkOverTimeClient
-  Left = 320
-  Top = 46
+  Left = 225
+  Top = 57
   Height = 679
   Caption = #21152#29677#21333
   OldCreateOrder = True
@@ -52,6 +52,35 @@ inherited WorkOverTimeClient: TWorkOverTimeClient
           Caption = #25105#30340#21152#29677#21333
           TabOrder = 2
         end
+        object btnCheckList: TBitBtn
+          Left = 320
+          Top = 8
+          Width = 100
+          Height = 25
+          Action = act_CheckList
+          Caption = #35201#25105#23457#26680#30340
+          TabOrder = 3
+        end
+        object dblkcbb1: TDBLookupComboBox
+          Left = 428
+          Top = 9
+          Width = 145
+          Height = 23
+          DropDownRows = 25
+          KeyField = 'ZID'
+          ListField = 'ZNAME'
+          ListSource = dsUser
+          TabOrder = 4
+        end
+        object btnmework1: TBitBtn
+          Left = 577
+          Top = 7
+          Width = 100
+          Height = 25
+          Action = act_OtherWork
+          Caption = #20182#20154#21152#29677#21333
+          TabOrder = 5
+        end
       end
       object dbgrd1: TDBGrid
         Left = 0
@@ -82,7 +111,7 @@ inherited WorkOverTimeClient: TWorkOverTimeClient
             FieldName = 'ZUSERNAME'
             Title.Alignment = taCenter
             Title.Caption = #35841#21152#29677
-            Width = 100
+            Width = 80
             Visible = True
           end
           item
@@ -102,14 +131,6 @@ inherited WorkOverTimeClient: TWorkOverTimeClient
             Visible = True
           end
           item
-            Expanded = False
-            FieldName = 'ZADDRESS'
-            Title.Alignment = taCenter
-            Title.Caption = #21152#29677#22320#28857
-            Width = 100
-            Visible = True
-          end
-          item
             Alignment = taCenter
             Expanded = False
             FieldName = 'ZMINUTE'
@@ -123,7 +144,7 @@ inherited WorkOverTimeClient: TWorkOverTimeClient
             FieldName = 'ZCONTENTTEXT'
             Title.Alignment = taCenter
             Title.Caption = #20107#30001
-            Width = 200
+            Width = 300
             Visible = True
           end
           item
@@ -140,7 +161,7 @@ inherited WorkOverTimeClient: TWorkOverTimeClient
             FieldName = 'ZCHECKNAME'
             Title.Alignment = taCenter
             Title.Caption = #23457#26680#20154
-            Width = 100
+            Width = 80
             Visible = True
           end>
       end
@@ -153,7 +174,7 @@ inherited WorkOverTimeClient: TWorkOverTimeClient
         BevelOuter = bvNone
         TabOrder = 2
         object lblPageCount: TLabel
-          Left = 536
+          Left = 640
           Top = 13
           Width = 96
           Height = 15
@@ -204,6 +225,15 @@ inherited WorkOverTimeClient: TWorkOverTimeClient
           Caption = #21047#26032#25968#25454
           TabOrder = 4
         end
+        object btnAll: TBitBtn
+          Left = 532
+          Top = 8
+          Width = 100
+          Height = 25
+          Action = act_All
+          Caption = #20840#37096#25968#25454
+          TabOrder = 5
+        end
       end
     end
     object tsWorkContent: TTabSheet
@@ -212,7 +242,7 @@ inherited WorkOverTimeClient: TWorkOverTimeClient
       object lbl4: TLabel
         Left = 15
         Top = 160
-        Width = 72
+        Width = 77
         Height = 15
         Caption = #20107'    '#30001#65306
       end
@@ -230,6 +260,13 @@ inherited WorkOverTimeClient: TWorkOverTimeClient
         Height = 17
         DataField = 'ZBUILDDATE'
         DataSource = dsWorkList
+      end
+      object lbl12: TLabel
+        Left = 16
+        Top = 186
+        Width = 77
+        Height = 15
+        Caption = #20107'    '#30001#65306
       end
       object dbmmoZCONTENT: TDBMemo
         Left = 90
@@ -287,7 +324,7 @@ inherited WorkOverTimeClient: TWorkOverTimeClient
         object lbl7: TLabel
           Left = 16
           Top = 68
-          Width = 71
+          Width = 77
           Height = 15
           Caption = #26085'    '#26399#65306
         end
@@ -306,8 +343,8 @@ inherited WorkOverTimeClient: TWorkOverTimeClient
           Caption = '<<<'
         end
         object lbl10: TLabel
-          Left = 304
-          Top = 156
+          Left = 302
+          Top = 157
           Width = 45
           Height = 15
           Caption = #29366#24577#65306
@@ -426,9 +463,9 @@ inherited WorkOverTimeClient: TWorkOverTimeClient
           OnChange = dtp1Change
         end
         object dbedtZSTATUSNAME: TDBEdit
-          Left = 346
-          Top = 152
-          Width = 207
+          Left = 341
+          Top = 154
+          Width = 84
           Height = 23
           DataField = 'ZSTATUSNAME'
           DataSource = dsWorkList
@@ -447,10 +484,19 @@ inherited WorkOverTimeClient: TWorkOverTimeClient
           ValueUnchecked = 'False'
           OnClick = dbchkZWEEKENDClick
         end
+        object btnCancellBill: TBitBtn
+          Left = 430
+          Top = 152
+          Width = 124
+          Height = 25
+          Action = act_CancellBill
+          Caption = #21462#28040'\'#30003#35831#21152#29677#21333
+          TabOrder = 14
+        end
       end
       object btnAgree: TBitBtn
         Left = 600
-        Top = 165
+        Top = 197
         Width = 98
         Height = 25
         Action = act_Agree
@@ -459,7 +505,7 @@ inherited WorkOverTimeClient: TWorkOverTimeClient
       end
       object btnNoAgree: TBitBtn
         Left = 600
-        Top = 197
+        Top = 229
         Width = 100
         Height = 25
         Action = act_NoAgree
@@ -551,6 +597,23 @@ inherited WorkOverTimeClient: TWorkOverTimeClient
       OnExecute = act_NextExecute
       OnUpdate = act_NextUpdate
     end
+    object act_CancellBill: TAction
+      Caption = #21462#28040#21152#29677#21333
+      OnExecute = act_CancellBillExecute
+      OnUpdate = act_CancellBillUpdate
+    end
+    object act_CheckList: TAction
+      Caption = #35201#25105#23457#26680#30340
+      OnExecute = act_CheckListExecute
+    end
+    object act_OtherWork: TAction
+      Caption = #20182#20154#21152#29677#21333
+      OnExecute = act_OtherWorkExecute
+    end
+    object act_All: TAction
+      Caption = #20840#37096#25968#25454
+      OnExecute = act_AllExecute
+    end
   end
   object cdsWrokList: TClientDataSet
     Aggregates = <>
@@ -571,5 +634,16 @@ inherited WorkOverTimeClient: TWorkOverTimeClient
     Params = <>
     Left = 104
     Top = 8
+  end
+  object cdsUser: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 139
+    Top = 8
+  end
+  object dsUser: TDataSource
+    DataSet = cdsUser
+    Left = 139
+    Top = 40
   end
 end

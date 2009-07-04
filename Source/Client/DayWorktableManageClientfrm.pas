@@ -245,6 +245,7 @@ const
 begin
   //Õ≥º∆
   ShowProgress('«Î…‘∫Ú...',0);
+  ClientSystem.BeginTickCount;
   try
     mySQL := format(glSQL,[
       AUseID,
@@ -252,6 +253,7 @@ begin
     cdswork.Data := ClientSystem.fDbOpr.ReadDataSet(pchar(mySQL));
 
   finally
+    ClientSystem.EndTickCount;
     HideProgress;
   end;
 end;

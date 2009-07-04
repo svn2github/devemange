@@ -350,6 +350,8 @@ begin
   myb := fLoading;
   fLoading := True;
   cdsAntList.DisableControls;
+  ClientSystem.BeginTickCount;
+  ShowProgress('读取数据...',0);
   try
     while not cdsAntList.Eof do
       cdsAntList.Delete;
@@ -383,6 +385,8 @@ begin
   finally
     cdsAntList.EnableControls;
     fLoading := myb;
+    HideProgress;
+    ClientSystem.EndTickCount;
   end;
 end;
 
@@ -623,7 +627,7 @@ begin
   myb := fLoading;
   fLoading := True;
   cdsSvnCommits.DisableControls;
-
+  ClientSystem.BeginTickCount;
 
   ShowProgress('读取数据...',0);
 
@@ -714,6 +718,7 @@ begin
     cdsSvnCommits.EnableControls;
     fLoading := myb;
     HideProgress;
+    ClientSystem.EndTickCount;
   end;
 end;
 

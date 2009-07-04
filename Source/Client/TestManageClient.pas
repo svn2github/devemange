@@ -484,9 +484,8 @@ begin
   fLoading := True;
   cdsTestItem.DisableControls;
 
-
   ShowProgress('¶ÁÈ¡Êý¾Ý...',0);
-  
+  ClientSystem.BeginTickCount;
   try
     lblPage.Caption := format('%d/%d',[fTestPageRec.fPageindex,
       fTestPageRec.fCount]);
@@ -515,6 +514,7 @@ begin
     cdsTestItem.EnableControls;
     fLoading := myb;
     HideProgress;
+    ClientSystem.EndTickCount;
   end;
 end;
 

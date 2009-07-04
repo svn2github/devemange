@@ -1,6 +1,6 @@
 inherited TestManageChildfrm: TTestManageChildfrm
-  Left = 85
-  Top = 72
+  Left = 87
+  Top = 33
   Width = 1139
   Height = 713
   Caption = #27979#35797#31649#29702
@@ -35,7 +35,6 @@ inherited TestManageChildfrm: TTestManageChildfrm
         Height = 501
         Align = alClient
         DataSource = dsTestItem
-        ImeName = #26497#21697#20116#31508#36755#20837#27861
         Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
         TabOrder = 0
         TitleFont.Charset = GB2312_CHARSET
@@ -300,7 +299,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
           object Label8: TLabel
             Left = 4
             Top = 69
-            Width = 53
+            Width = 60
             Height = 15
             Anchors = [akLeft, akBottom]
             Caption = #26399#26395#20540#65306
@@ -308,7 +307,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
           object Label16: TLabel
             Left = 181
             Top = 70
-            Width = 53
+            Width = 60
             Height = 15
             Anchors = [akLeft, akBottom]
             Caption = #23454#38469#20540#65306
@@ -366,7 +365,6 @@ inherited TestManageChildfrm: TTestManageChildfrm
             Anchors = [akLeft, akTop, akRight, akBottom]
             DataField = 'ZACTION'
             DataSource = dsResult
-            ImeName = #26497#21697#20116#31508#36755#20837#27861
             ScrollBars = ssVertical
             TabOrder = 0
           end
@@ -650,7 +648,6 @@ inherited TestManageChildfrm: TTestManageChildfrm
           Height = 23
           DataField = 'ZNAME'
           DataSource = dsTestItem
-          ImeName = #26497#21697#20116#31508#36755#20837#27861
           TabOrder = 0
         end
         object dblkcbbZTYPE: TDBLookupComboBox
@@ -673,8 +670,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
           Height = 23
           DataField = 'ZASSIGNEDTONAME'
           DataSource = dsTestItem
-          DropDownRows = 30
-          ImeName = #26497#21697#20116#31508#36755#20837#27861
+          DropDownRows = 20
           TabOrder = 2
         end
         object dbedtZCASEBUG: TDBEdit
@@ -694,7 +690,6 @@ inherited TestManageChildfrm: TTestManageChildfrm
           Height = 23
           DataField = 'ZMAILTO'
           DataSource = dsTestItem
-          ImeName = #26497#21697#20116#31508#36755#20837#27861
           TabOrder = 4
         end
         object dblcSelectUsermail: TDBLookupComboBox
@@ -702,8 +697,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
           Top = 149
           Width = 150
           Height = 23
-          DropDownRows = 50
-          ImeName = #26497#21697#20116#31508#36755#20837#27861
+          DropDownRows = 20
           KeyField = 'ZID'
           ListField = 'ZNAME'
           ListSource = DM.dsUsers
@@ -871,7 +865,6 @@ inherited TestManageChildfrm: TTestManageChildfrm
           Height = 23
           DataField = 'ZREMORK'
           DataSource = dsTestItem
-          ImeName = #26497#21697#20116#31508#36755#20837#27861
           TabOrder = 20
         end
         object dbedtdbgrdTest: TDBEdit
