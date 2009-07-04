@@ -753,7 +753,7 @@ create table TB_WORKOVERTIME(
 	ZCONTENT      text,                        /*加班的事由*/
 	ZCHECK_USER_ID int default -1,             /*审核人ID，没有审核则=-1*/
 	ZMINUTE        int default 0,              /*加班的分钟*/ 
-	ZSTATUS        int not null,               /*状态=0 申请 1=同意 2=不同意*/
+	ZSTATUS        int not null,               /*状态=0 申请 1=同意 2=不同意 3=废单*/
 	ZWEEKEND       bit default 0,              /*是否是周末或节假日加班*/
 	ZBUILDDATE    datetime,                    /*制单时间*/
 	
@@ -761,7 +761,7 @@ create table TB_WORKOVERTIME(
 )
 go
 
-/*发布管理参数表*/
+/*加班单参数表*/
 if exists (select * from dbo.sysobjects
   where id = object_id(N'[dbo].[TB_WORKOVERTIME_PARAMS]')
   and OBJECTPROPERTY(id, N'IsUserTable') = 1)

@@ -117,6 +117,8 @@ insert into TB_STATE (ZID,ZSTATECODE) values(0,0);
 insert into TB_WORKOVERTIME_PARAMS (ZTYPE,ZID,ZNAME) values(0,0,'申请');
 insert into TB_WORKOVERTIME_PARAMS (ZTYPE,ZID,ZNAME) values(0,1,'成功');
 insert into TB_WORKOVERTIME_PARAMS (ZTYPE,ZID,ZNAME) values(0,2,'失败');
+insert into TB_WORKOVERTIME_PARAMS (ZTYPE,ZID,ZNAME) values(0,3,'取消');
+
 
 
 
