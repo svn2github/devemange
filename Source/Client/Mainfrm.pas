@@ -55,7 +55,7 @@ type
     btbnCancelUp: TBitBtn;
     actMod_ProDoc: TAction;
     N5: TMenuItem;
-    ToolButton4: TToolButton;
+    btnMod_Demand: TToolButton;
     actFile_Close: TAction;
     N6: TMenuItem;
     actFile_TodaySay: TAction;
@@ -96,6 +96,7 @@ type
     N19: TMenuItem;
     actwork_overtime: TAction;
     N20: TMenuItem;
+    actMod_Demand: TAction;
     procedure FormCreate(Sender: TObject);
     procedure actmod_FilesExecute(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -128,6 +129,7 @@ type
     procedure FormShow(Sender: TObject);
     procedure actPw_GetPwExecute(Sender: TObject);
     procedure actwork_overtimeExecute(Sender: TObject);
+    procedure actMod_DemandExecute(Sender: TObject);
   private
     fChildform : TList; //所有子窗口的对象
     fCurrentChildform : TBaseChildDlg;
@@ -143,6 +145,7 @@ type
     procedure WMShowTestItemCode(var msg:TMessage); message gcMSG_GetTestItemByCode;
     procedure WMShowReleaseItem(var msg:TMessage);message gcMSG_GetReleaseItem;
     procedure WMShowPlanItem(var msg:TMessage); message gcMSG_GetPlanItem;
+    procedure WMShowDemandItem(var msg:TMessage); message gcMSG_GetDemandItem;
 
   public
     property CurrentChildform : TBaseChildDlg read fCurrentChildform;
@@ -176,6 +179,7 @@ uses
   DayWorktableManageClientfrm, {我的工作台}
   ReleaseManageClientfrm,  {发布管理}
   WorkOverTimeClientfrm,   {加班单}
+  DemandClientfrm,         {需求管理}
   WebClientfrm
 
   , SetSysParamsfrm;
@@ -819,6 +823,36 @@ end;
 procedure TMainDlg.actwork_overtimeExecute(Sender: TObject);
 begin
   DoChangeClient(TWorkOverTimeClient);
+end;
+
+procedure TMainDlg.actMod_DemandExecute(Sender: TObject);
+begin
+  DoChangeClient(TDemandClientDlg);
+end;
+
+procedure TMainDlg.WMShowDemandItem(var msg: TMessage);
+var
+  myBaseform,myform : TBaseChildDlg;
+  i : Integer;
+begin
+  DoChangeClient(TDemandClientDlg);
+
+  myBaseform := nil;
+  for i:=0 to fChildform.Count -1 do
+  begin
+    myform := fChildform.items[i];
+    if myform is TDemandClientDlg then
+    begin
+      myBaseform :=fChildform.items[i];
+      break;
+    end;
+  end;
+
+  if Assigned(myBaseform) then
+  begin
+    SendMessage(myBaseform.Handle,gcMSG_GetDemandItem,msg.WParam,msg.LParam);
+  end;
+
 end;
 
 end.

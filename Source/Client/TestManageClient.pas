@@ -171,6 +171,12 @@ type
     act_GetPlanItem: TAction;
     btnGetBugItem1: TBitBtn;
     dbchkOK: TDBCheckBox;
+    act_AddData: TAction;
+    btnAddData: TBitBtn;
+    lbl4: TLabel;
+    dbedtZDEMAND_ID: TDBEdit;
+    act_gotoDemand: TAction;
+    btnGetPlanItem: TBitBtn;
     procedure act_NewExecute(Sender: TObject);
     procedure act_CancelUpdate(Sender: TObject);
     procedure act_CancelExecute(Sender: TObject);
@@ -230,6 +236,9 @@ type
     procedure act_GetPlanItemExecute(Sender: TObject);
     procedure act_GetPlanItemUpdate(Sender: TObject);
     procedure cdsResultAfterEdit(DataSet: TDataSet);
+    procedure act_AddDataExecute(Sender: TObject);
+    procedure act_gotoDemandUpdate(Sender: TObject);
+    procedure act_gotoDemandExecute(Sender: TObject);
   private
     { Private declarations }
     fTestPageRec : TTestPageRec;
@@ -471,7 +480,7 @@ const
     glSQL = 'exec pt_SplitPage ''TB_TEST_ITEM'',' +
           '''ZID,ZNAME,ZSTATUS,ZOPENEDBY,ZOPENEDDATE,ZLEVEL,ZTYPE,ZASSIGNEDTO,' +
           'ZRESULT,ZTESTRESULTBY,ZRESULTDATE,ZTESTMETHOD,ZCASEBUG,'+
-          'ZCASETASK,ZMAILTO,ZPRO_ID,ZPRO_VER,ZPRO_SVN,ZREMORK,ZCLOSESTATUS,ZCLOSESOCRE,ZSUBMISBY'', ' +
+          'ZCASETASK,ZMAILTO,ZPRO_ID,ZPRO_VER,ZPRO_SVN,ZREMORK,ZCLOSESTATUS,ZCLOSESOCRE,ZSUBMISBY,ZDEMAND_ID'', ' +
           '''%s'',20,%d,%d,1,''%s''';
 begin
 
@@ -568,6 +577,7 @@ begin
   DataSet.FieldByName('ZSTATUS').AsInteger := Ord(bgsAction);
   DataSet.FieldByName('ZTESTMETHOD').AsInteger := 0;
   DataSet.FieldByName('ZTYPE').AsInteger := 0;
+  DataSet.FieldByName('ZDEMAND_ID').AsInteger := -1;
 
   if cdsResult.Active and (not cdsResult.IsEmpty) then
     while cdsResult.Eof do
@@ -602,9 +612,9 @@ const
   glSQL2  = 'insert TB_TEST_ITEM (ZID,ZNAME,ZSTATUS,ZOPENEDBY,ZOPENEDDATE,'+
             'ZLEVEL,ZTYPE,ZASSIGNEDTO,ZRESULT,ZTESTRESULTBY,ZRESULTDATE,' +
             'ZTESTMETHOD,ZCASEBUG,ZCASETASK,ZMAILTO,ZPRO_ID,'+
-            'ZPRO_VER,ZPRO_SVN,ZREMORK,ZSUBMISBY) ' +
+            'ZPRO_VER,ZPRO_SVN,ZREMORK,ZSUBMISBY,ZDEMAND_ID) ' +
              'values(%d,''%s'',%d,%d,getdate(),%d,%d,%d,%d,%d,''%s'',' +
-             '%d,''%s'',''%s'',''%s'',%d,%d,%d,''%s'',''%s'')' ;
+             '%d,''%s'',''%s'',''%s'',%d,%d,%d,''%s'',''%s'',%d)' ;
 
   glSQL3  = 'update TB_TEST_ITEM set ' +
             'ZNAME=''%s'', ' +
@@ -627,6 +637,7 @@ const
             'ZREMORK=''%s'', '+
             'ZCLOSESTATUS=%d,'+
             'ZCLOSESOCRE=%d,' +
+            'ZDEMAND_ID=%d, ' +
             'ZSUBMISBY=''%s''' +
             'where ZID=%d';
 begin
@@ -654,6 +665,7 @@ begin
       DataSet.FieldByName('ZREMORK').AsString,
       DataSet.FieldByName('ZCLOSESTATUS').AsInteger,
       DataSet.FieldByName('ZCLOSESOCRE').AsInteger,
+      DataSet.FieldByName('ZDEMAND_ID').AsInteger,
       DataSet.FieldByName('ZSUBMISBY').AsString,
       DataSet.FieldByName('ZID').AsInteger
       ]);
@@ -692,8 +704,8 @@ begin
       DataSet.FieldByName('ZPRO_VER').AsInteger,
       DataSet.FieldByName('ZPRO_SVN').AsInteger,
       DataSet.FieldByName('ZREMORK').AsString,
-      DataSet.FieldByName('ZSUBMISBY').AsString
-      ]);
+      DataSet.FieldByName('ZSUBMISBY').AsString,
+      DataSet.FieldByName('ZDEMAND_ID').AsInteger]);
 
     ClientSystem.fDbOpr.BeginTrans;
     try
@@ -1303,6 +1315,7 @@ begin
     cdsTestItem.First;
     cdsTestItem.Insert;
     cdsTestItem.FieldByName('ZNAME').AsString := mycds.fieldByName('ZTITLE').AsString;
+    cdsTestItem.FieldByName('ZDEMAND_ID').AsInteger := mycds.FieldByName('ZDEMAND_ID').AsInteger;
     cdsTestItem.FieldByName('ZTYPE').AsInteger := 0; //¹¦ÄÜ
     cdsTestItem.FieldByName('ZCASEBUG').AsString := IntToStr(myBugid);
     if mycdsPro.RecordCount > 0 then
@@ -1683,6 +1696,28 @@ begin
      (DataSet.FieldByName('ZINFACE').AsString='') then
   DataSet.FieldByName('ZINFACE').AsString :=
     DataSet.FieldByName('ZTRUEVALUE').AsString;
+end;
+
+procedure TTestManageChildfrm.act_AddDataExecute(Sender: TObject);
+begin
+  fTestPageRec.fPageindex := 1;
+  fTestPageRec.fwhere := '1=1';
+  fTestPageRec.fCount := GetTestItemPageCount(1,'1=1');
+  LoadTestItem(fTestPageRec.fPageindex,fTestPageRec.fwhere);
+end;
+
+procedure TTestManageChildfrm.act_gotoDemandUpdate(Sender: TObject);
+begin
+  (Sender as TAction).Enabled := (cdsTestItem.FieldByName('ZDEMAND_ID').AsInteger>0);
+end;
+
+procedure TTestManageChildfrm.act_gotoDemandExecute(Sender: TObject);
+var
+  myZID : Integer;
+begin
+  myZID := cdsTestItem.FieldByName('ZDEMAND_ID').AsInteger;
+  if myZID = -1 then Exit;
+  SendMessage(Application.MainForm.Handle,gcMSG_GetDemandItem,myZID,0);
 end;
 
 end.

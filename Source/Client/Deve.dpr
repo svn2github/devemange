@@ -24,7 +24,8 @@ uses
   DayWorktableManageClientfrm in 'DayWorktableManageClientfrm.pas' {DayWorktableManageClientDlg},
   ReleaseManageClientfrm in 'ReleaseManageClientfrm.pas' {ReleaseManageClientDlg},
   GetSVNVerfrm in 'GetSVNVerfrm.pas' {GetSVNVerDlg},
-  WorkOverTimeClientfrm in 'WorkOverTimeClientfrm.pas' {WorkOverTimeClient};
+  WorkOverTimeClientfrm in 'WorkOverTimeClientfrm.pas' {WorkOverTimeClient},
+  DemandClientfrm in 'DemandClientfrm.pas' {DemandClientDlg};
 
 {$R *.res}
 {$R resource.res}

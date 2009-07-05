@@ -1,7 +1,7 @@
 inherited BugManageDlg: TBugManageDlg
-  Left = 52
-  Top = 87
-  Width = 1171
+  Left = 76
+  Top = 271
+  Width = 1040
   Height = 692
   Caption = #38169#35823#31649#29702
   OldCreateOrder = True
@@ -10,7 +10,7 @@ inherited BugManageDlg: TBugManageDlg
   object plCenter: TPanel
     Left = 0
     Top = 95
-    Width = 1163
+    Width = 1032
     Height = 563
     Align = alClient
     BevelOuter = bvNone
@@ -24,7 +24,7 @@ inherited BugManageDlg: TBugManageDlg
     object pcBug: TPageControl
       Left = 0
       Top = 0
-      Width = 1163
+      Width = 1032
       Height = 563
       ActivePage = tsBugItem
       Align = alClient
@@ -60,7 +60,7 @@ inherited BugManageDlg: TBugManageDlg
         object plBugList: TPanel
           Left = 199
           Top = 0
-          Width = 956
+          Width = 825
           Height = 533
           Align = alClient
           BevelOuter = bvNone
@@ -69,7 +69,7 @@ inherited BugManageDlg: TBugManageDlg
           object lbProjectName: TLabel
             Left = 0
             Top = 40
-            Width = 956
+            Width = 825
             Height = 15
             Align = alTop
             Caption = 'lbProjectName'
@@ -85,7 +85,7 @@ inherited BugManageDlg: TBugManageDlg
           object dgBugItem: TDBGrid
             Left = 0
             Top = 55
-            Width = 956
+            Width = 825
             Height = 438
             Align = alClient
             DataSource = dsBugItem
@@ -183,7 +183,7 @@ inherited BugManageDlg: TBugManageDlg
           object plBugTop: TPanel
             Left = 0
             Top = 0
-            Width = 956
+            Width = 825
             Height = 40
             Align = alTop
             BevelOuter = bvNone
@@ -198,7 +198,7 @@ inherited BugManageDlg: TBugManageDlg
               TabOrder = 0
             end
             object BitBtn15: TBitBtn
-              Left = 115
+              Left = 219
               Top = 8
               Width = 100
               Height = 25
@@ -216,7 +216,7 @@ inherited BugManageDlg: TBugManageDlg
                 EEE00EEEEEEEEEEEEEE00EEEEEEEEEEEEEE00000000000000000}
             end
             object BitBtn16: TBitBtn
-              Left = 219
+              Left = 323
               Top = 8
               Width = 100
               Height = 25
@@ -260,7 +260,7 @@ inherited BugManageDlg: TBugManageDlg
                 FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00}
             end
             object BitBtn17: TBitBtn
-              Left = 323
+              Left = 427
               Top = 8
               Width = 100
               Height = 25
@@ -304,8 +304,8 @@ inherited BugManageDlg: TBugManageDlg
                 FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00}
             end
             object cbSort: TComboBox
-              Left = 531
-              Top = 9
+              Left = 635
+              Top = 8
               Width = 81
               Height = 23
               Hint = #25353#20160#20040#25490#24207
@@ -321,7 +321,7 @@ inherited BugManageDlg: TBugManageDlg
                 #26368#21518#20462#25913#26102#38388)
             end
             object btnBug_HighQuery: TBitBtn
-              Left = 427
+              Left = 531
               Top = 8
               Width = 100
               Height = 25
@@ -330,8 +330,8 @@ inherited BugManageDlg: TBugManageDlg
               TabOrder = 5
             end
             object cbbTag: TComboBox
-              Left = 616
-              Top = 9
+              Left = 720
+              Top = 8
               Width = 80
               Height = 23
               Hint = #36873#25321#26631#31614#25110#21024#38500#26631#31614
@@ -348,17 +348,26 @@ inherited BugManageDlg: TBugManageDlg
               TabOrder = 6
               OnChange = cbbTagChange
             end
+            object btnBud_AddByDemand: TBitBtn
+              Left = 115
+              Top = 8
+              Width = 100
+              Height = 25
+              Action = actBud_AddByDemand
+              Caption = #29992#38656#27714#24314#38382#39064
+              TabOrder = 7
+            end
           end
           object plBugItemBottom: TPanel
             Left = 0
             Top = 493
-            Width = 956
+            Width = 825
             Height = 40
             Align = alBottom
             BevelOuter = bvNone
             TabOrder = 2
             object lbPageCount: TLabel
-              Left = 550
+              Left = 650
               Top = 13
               Width = 88
               Height = 15
@@ -415,6 +424,15 @@ inherited BugManageDlg: TBugManageDlg
               Caption = #21047#26032#25968#25454
               TabOrder = 4
             end
+            object btnAllData: TBitBtn
+              Left = 539
+              Top = 8
+              Width = 100
+              Height = 25
+              Action = act_AllData
+              Caption = #20840#37096#25968#25454
+              TabOrder = 5
+            end
           end
         end
       end
@@ -424,7 +442,7 @@ inherited BugManageDlg: TBugManageDlg
         object Splitter2: TSplitter
           Left = 0
           Top = 208
-          Width = 1155
+          Width = 1024
           Height = 10
           Cursor = crVSplit
           Align = alTop
@@ -434,7 +452,7 @@ inherited BugManageDlg: TBugManageDlg
         object plBugHistory: TPanel
           Left = 0
           Top = 218
-          Width = 1155
+          Width = 1024
           Height = 315
           Align = alClient
           BevelOuter = bvNone
@@ -442,14 +460,14 @@ inherited BugManageDlg: TBugManageDlg
           object plBugHistoryTop: TPanel
             Left = 0
             Top = 0
-            Width = 1155
+            Width = 1024
             Height = 40
             Align = alTop
             BevelOuter = bvNone
             Color = clGray
             TabOrder = 0
             DesignSize = (
-              1155
+              1024
               40)
             object Label13: TLabel
               Left = 15
@@ -517,7 +535,7 @@ inherited BugManageDlg: TBugManageDlg
               TabOrder = 4
             end
             object DBNavigator1: TDBNavigator
-              Left = 957
+              Left = 826
               Top = 8
               Width = 176
               Height = 25
@@ -530,7 +548,7 @@ inherited BugManageDlg: TBugManageDlg
           object Panel1: TPanel
             Left = 0
             Top = 40
-            Width = 1155
+            Width = 1024
             Height = 275
             Align = alClient
             BevelOuter = bvLowered
@@ -539,14 +557,14 @@ inherited BugManageDlg: TBugManageDlg
             object dbcBugHistory: TDBCtrlGrid
               Left = 1
               Top = 1
-              Width = 1153
+              Width = 1022
               Height = 273
               Align = alClient
               AllowDelete = False
               AllowInsert = False
               DataSource = dsBugBugHistory
               PanelHeight = 91
-              PanelWidth = 1136
+              PanelWidth = 1005
               TabOrder = 0
               SelectedColor = clMoneyGreen
               object DBText1: TDBText
@@ -653,7 +671,7 @@ inherited BugManageDlg: TBugManageDlg
                 Transparent = True
               end
               object DBText5: TDBText
-                Left = 1100
+                Left = 969
                 Top = 3
                 Width = 25
                 Height = 16
@@ -671,7 +689,7 @@ inherited BugManageDlg: TBugManageDlg
                 ParentFont = False
               end
               object dbtxtZFILESAVE: TDBText
-                Left = 992
+                Left = 861
                 Top = 68
                 Width = 89
                 Height = 17
@@ -691,7 +709,7 @@ inherited BugManageDlg: TBugManageDlg
               object DBMemo1: TDBMemo
                 Left = 7
                 Top = 22
-                Width = 1118
+                Width = 987
                 Height = 41
                 Anchors = [akLeft, akTop, akRight, akBottom]
                 DataField = 'ZCONTEXT'
@@ -706,7 +724,7 @@ inherited BugManageDlg: TBugManageDlg
         object pnlContextTop: TPanel
           Left = 0
           Top = 0
-          Width = 1155
+          Width = 1024
           Height = 18
           Align = alTop
           BevelOuter = bvNone
@@ -714,8 +732,8 @@ inherited BugManageDlg: TBugManageDlg
           object lbBugCaption: TLabel
             Left = 0
             Top = 0
-            Width = 880
-            Height = 18
+            Width = 96
+            Height = 15
             Align = alClient
             Caption = 'lbBugCaption'
             Color = clGray
@@ -728,7 +746,7 @@ inherited BugManageDlg: TBugManageDlg
             ParentFont = False
           end
           object DBText6: TDBText
-            Left = 1003
+            Left = 872
             Top = 0
             Width = 152
             Height = 18
@@ -746,7 +764,7 @@ inherited BugManageDlg: TBugManageDlg
             ParentFont = False
           end
           object dbtxtZTAGNAME: TDBText
-            Left = 880
+            Left = 749
             Top = 0
             Width = 123
             Height = 18
@@ -767,7 +785,7 @@ inherited BugManageDlg: TBugManageDlg
         object scrlbx1: TScrollBox
           Left = 0
           Top = 18
-          Width = 1155
+          Width = 1024
           Height = 190
           Align = alTop
           Color = clBtnFace
@@ -1065,8 +1083,8 @@ inherited BugManageDlg: TBugManageDlg
           end
           object dbedtZRESOLVEDDATE: TDBEdit
             Left = 565
-            Top = 152
-            Width = 126
+            Top = 151
+            Width = 128
             Height = 23
             Color = clScrollBar
             DataField = 'ZRESOLVEDDATE'
@@ -1097,6 +1115,24 @@ inherited BugManageDlg: TBugManageDlg
             ImeName = #26497#21697#20116#31508#36755#20837#27861
             TabOrder = 18
           end
+          object btnBug_GotoDemand: TBitBtn
+            Left = 728
+            Top = 134
+            Width = 100
+            Height = 25
+            Action = actBug_GotoDemand
+            Caption = #36339#21040#30456#20851#38656#27714
+            TabOrder = 19
+          end
+          object dbedtZDEMAND_ID: TDBEdit
+            Left = 834
+            Top = 135
+            Width = 60
+            Height = 23
+            DataField = 'ZDEMAND_ID'
+            DataSource = dsBugItem
+            TabOrder = 20
+          end
         end
       end
     end
@@ -1104,7 +1140,7 @@ inherited BugManageDlg: TBugManageDlg
   object plnovisible: TPanel
     Left = 0
     Top = 0
-    Width = 1163
+    Width = 1032
     Height = 95
     Align = alTop
     Alignment = taRightJustify
@@ -1277,6 +1313,22 @@ inherited BugManageDlg: TBugManageDlg
       Category = #38382#39064#21015#34920
       Caption = #23548#20986#21040'Excel'
       OnExecute = actBug_ExportExcelExecute
+    end
+    object actBud_AddByDemand: TAction
+      Category = #38382#39064#21015#34920
+      Caption = #29992#38656#27714#24314#38382#39064
+      OnExecute = actBud_AddByDemandExecute
+    end
+    object actBug_GotoDemand: TAction
+      Category = #38382#39064#21015#34920
+      Caption = #36339#21040#30456#20851#38656#27714
+      OnExecute = actBug_GotoDemandExecute
+      OnUpdate = actBug_GotoDemandUpdate
+    end
+    object act_AllData: TAction
+      Category = #38382#39064#21015#34920
+      Caption = #20840#37096#25968#25454
+      OnExecute = act_AllDataExecute
     end
   end
   object pmBugTree: TPopupMenu

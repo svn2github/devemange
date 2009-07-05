@@ -35,6 +35,8 @@ type
     procedure ShowStatusBarText(Aindex:integer;AStr:String);
     //取出发送邮件的地址
     function GetMailAdder(AUserNames:string):string;
+    //发送到邮箱
+    procedure SendMail(AEmailto:String;AMailType:Integer;AZID:Integer);
 
     //显示进度窗口
     procedure ShowProgress(const Title: string;ACount:integer);
@@ -156,6 +158,16 @@ begin
   CreateGUID(aGuid);
   result:=GUIDToString(aGuid);
   result:=Copy(result, 2, 36);
+end;
+
+procedure TBaseChildDlg.SendMail(AEmailto: String;
+  AMailType:Integer;AZID:Integer);
+var
+  mystr : string;
+begin
+  mystr := GetMailAdder(AEmailto);
+  if mystr <> '' then
+    ClientSystem.fDbOpr.MailTo(AMailType,myStr,AZID);
 end;
 
 procedure TBaseChildDlg.Showfrm;

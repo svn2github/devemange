@@ -177,6 +177,13 @@ type
     dblkcbbZTERMNAME: TDBLookupComboBox;
     actBug_ExportExcel: TAction;
     Excel1: TMenuItem;
+    btnBud_AddByDemand: TBitBtn;
+    actBud_AddByDemand: TAction;
+    actBug_GotoDemand: TAction;
+    btnBug_GotoDemand: TBitBtn;
+    act_AllData: TAction;
+    btnAllData: TBitBtn;
+    dbedtZDEMAND_ID: TDBEdit;
     procedure actBug_AddDirExecute(Sender: TObject);
     procedure tvProjectExpanding(Sender: TObject; Node: TTreeNode;
       var AllowExpansion: Boolean);
@@ -240,6 +247,10 @@ type
     procedure dbtxtZFILESAVEClick(Sender: TObject);
     procedure cbbTagChange(Sender: TObject);
     procedure actBug_ExportExcelExecute(Sender: TObject);
+    procedure actBud_AddByDemandExecute(Sender: TObject);
+    procedure actBug_GotoDemandUpdate(Sender: TObject);
+    procedure act_AllDataExecute(Sender: TObject);
+    procedure actBug_GotoDemandExecute(Sender: TObject);
   private
     fPageType : TPageTypeRec; //分页处理
     fHighQuery : TBugHighQueryDlg;
@@ -634,7 +645,7 @@ const
   glSQL = 'exec pt_SplitPage ''TB_BUG_ITEM'',' +
           '''ZPRO_ID,ZID,ZTYPE,ZTITLE,ZOPENEDBY,ZOPENEDDATE,ZASSIGNEDTO,ZRESOLVEDBY,' +
           'ZRESOLUTION,ZRESOLVEDDATE,ZOS,ZLEVEL,ZSTATUS,ZMAILTO,ZOPENVER, ' +
-          'ZRESOLVEDVER,ZTREEPATH,ZTREE_ID,ZASSIGNEDTO,ZASSIGNEDDATE,ZTAGNAME,ZTERM'',' +
+          'ZRESOLVEDVER,ZTREEPATH,ZTREE_ID,ZASSIGNEDTO,ZASSIGNEDDATE,ZTAGNAME,ZTERM,ZDEMAND_ID'',' +
           '''%s'',20,%d,%d,1,''%s''';
   //                                             页码,以总数=1, 条件where
 begin
@@ -1140,6 +1151,7 @@ begin
   DataSet.FieldByName('ZISNEW').AsBoolean := True;
   DataSet.FieldByName('ZRESOLUTION').AsInteger := -1; //解决方案
   DataSet.FieldByName('ZMAILTO').AsString := Format('%s(%d)',[ClientSystem.fEditer,ClientSystem.fEditer_id]);
+  DataSet.FieldByName('ZDEMAND_ID').AsInteger := -1;
 end;
 
 procedure TBugManageDlg.actBug_AddBugExecute(Sender: TObject);
@@ -1192,9 +1204,9 @@ const
   glSQL2  = 'insert TB_BUG_ITEM (ZID,ZTREE_ID,ZPRO_ID,ZTREEPATH,ZTITLE,' +
              ' ZOS,ZTYPE,ZLEVEL,ZSTATUS,ZMAILTO,ZOPENEDBY, ' +
              ' ZOPENEDDATE,ZOPENVER,ZASSIGNEDTO,ZASSIGNEDDATE,ZRESOLUTION,' +
-             ' ZLASTEDITEDBY,ZLASTEDITEDDATE,ZTAGNAME) ' +
+             ' ZLASTEDITEDBY,ZLASTEDITEDDATE,ZTAGNAME,ZDEMAND_ID) ' +
              'values(%d,%d,%d,''%s'',''%s'',%d,%d,%d,%d,''%s'',%d,' +
-             ' %s,%d,%d,%s,%d,%d,%s,''%s'')' ;
+             ' %s,%d,%d,%s,%d,%d,%s,''%s'',%d)' ;
              
   glSQL3  = 'update TB_BUG_ITEM set ' +
             'ZTITLE=''%s'', ' +
@@ -1207,6 +1219,7 @@ const
             'ZASSIGNEDDATE=%s, '+
             'ZLASTEDITEDBY=%d , ' +
             'ZLASTEDITEDDATE=getdate(),' +
+            'ZDEMAND_ID=%d, '  +
             'ZTAGNAME=''%s'' ' +
             'where ZID=%d';
 begin
@@ -1230,6 +1243,7 @@ begin
       DataSet.FieldByName('ZASSIGNEDTO').AsInteger,
       myAssingdate,
       ClientSystem.fEditer_id,
+      DataSet.FieldByName('ZDEMAND_ID').AsInteger,
       DataSet.FieldByName('ZTAGNAME').AsString,
       DataSet.FieldByName('ZID').AsInteger]);
 
@@ -1266,7 +1280,9 @@ begin
       DataSet.FieldByName('ZRESOLUTION').AsInteger,
       DataSet.FieldByName('ZOPENEDBY').AsInteger,
       'getdate()',
-      DataSet.FieldByName('ZTAGNAME').AsString]);
+      DataSet.FieldByName('ZTAGNAME').AsString,
+      DataSet.FieldByName('ZDEMAND_ID').AsInteger]);
+      
     ClientSystem.fDbOpr.BeginTrans;
     try
       ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
@@ -2539,6 +2555,123 @@ begin
 
   eclapp.cells[n+1,1] := '记录的总数为：'+inttostr(cdsBugItem.RecordCount)+'条';
 
+end;
+
+procedure TBugManageDlg.actBud_AddByDemandExecute(Sender: TObject);
+var
+  mystr : string;
+  myBugid : Integer;
+  mycds : TClientDataSet;
+const
+  glSQL = 'select * from TB_DEMAND where ZID=%d';
+begin
+  //
+  if not InputQuery('输入需求编号','需求编号',mystr) then Exit;
+
+  myBugid := StrToIntdef(mystr,0);
+  if myBugid = 0 then
+  begin
+    MessageBox(Handle,'无效的需求号','提示',MB_ICONWARNING+MB_OK);
+    Exit;
+  end;
+
+  mycds := TClientDataSet.Create(nil);
+  try
+    mycds.Data := ClientSystem.fDbOpr.ReadDataSet(PChar(format(glSQL,[myBugid])));
+    if mycds.RecordCount = 0 then
+    begin
+      MessageBox(Handle,pChar('查找无需求号 D'+inttostr(myBugid)),'提示',
+        MB_ICONWARNING+MB_OK);
+      Exit;
+    end;
+
+
+    if cdsBugItem.State in [dsEdit,dsInsert] then
+      cdsBugItem.Post;
+
+    cdsBugItem.First;
+    cdsBugItem.Insert;
+    cdsBugItem.FieldByName('ZTITLE').AsString := mycds.fieldByName('ZNAME').AsString;
+    cdsBugItem.FieldByName('ZTYPE').AsInteger := 3; //新增功能
+    cdsBugItem.FieldByName('ZDEMAND_ID').AsString := IntToStr(myBugid);
+    cdsBugItem.FieldByName('ZMAILTO').AsString := mycds.FieldByName('ZMAILTO').asstring;
+    cdsBugItem.FieldByName('ZPRO_ID').AsInteger := mycds.fieldByName('ZPRO_ID').AsInteger;
+
+    LoadBugHistory(cdsBugItem.FieldByName('ZID').Asinteger);
+    pcBug.ActivePageIndex := 1;
+  finally
+    mycds.Free;
+  end;
+
+end;
+
+procedure TBugManageDlg.actBug_GotoDemandUpdate(Sender: TObject);
+begin
+  (Sender as TAction).Enabled := (cdsBugItem.RecordCount > 0) and
+  (cdsBugItem.FieldByName('ZDEMAND_ID').AsInteger>0);
+end;
+
+procedure TBugManageDlg.act_AllDataExecute(Sender: TObject);
+
+  function GetwhereStr() : string;
+  var
+    myNode : TTreeNode;
+    mystr : string;
+    myBugData : PBugTreeNode;
+  begin
+    myNode := tvProject.TopItem;
+    while Assigned(myNode) do
+    begin
+      if Assigned(myNode.Data) then
+      begin
+        myBugData := myNode.Data;
+        if mystr = '' then
+          mystr := format('(ZTREE_ID=%d)',[myBugData^.fID])
+        else
+          mystr := mystr + 'or ' + format('(ZTREE_ID=%d)',[myBugData^.fID]);
+
+      end;
+
+      myNode := myNode.GetNext;
+    end;
+    Result := mystr;
+  end;
+
+var
+  mywhere : string;
+begin
+  //
+  // '(ZTREE_ID=1)'
+  // 注意目录的权限
+  //
+  Application.ProcessMessages;
+  ShowProgress('读取数据...',0);
+  try
+    mywhere := GetwhereStr();
+    fPageType.fType := ptQuery;
+    fPageType.fWhereStr := mywhere;
+    fPageType.fIndex := 1;
+    fPageType.fName := '高级查询';
+
+    fPageType.fIndexCount := GetBugItemPageCount(1,myWhere);
+    LoadBugItem(1,myWhere);
+    lbPageCount.Caption := format('%d/%d',[
+      fPageType.fIndex,
+      fPageType.fIndexCount]);
+    lbProjectName.Caption := format('%s  =>第%d共%d页',[
+    fPageType.fName,fPageType.fIndex,fPageType.fIndexCount]);
+  finally
+    HideProgress;
+  end;
+end;
+
+procedure TBugManageDlg.actBug_GotoDemandExecute(Sender: TObject);
+var
+  myZId : Integer;
+begin
+  myZId := cdsBugItem.FieldByName('ZDEMAND_ID').AsInteger;
+  if myZId = -1 then Exit;
+  SendMessage(Application.MainForm.Handle,gcMSG_GetDemandItem,myZId,0);
 end;
 
 end.

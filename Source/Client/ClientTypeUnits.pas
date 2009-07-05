@@ -33,7 +33,7 @@ type
 
 
   //文件管理内类型
-  TFileStype = (fsFile,fsBug,fsDoc);
+  TFileStype = (fsFile,fsBug,fsDoc,fsDemand); //增加需求管理附件
 
   //BUG的状态
   TBugStatus = (bgsAction,bgsDeath,bgsReAction,bgsClose,bgsSubmi); //活动的，已修改的,被激活,关闭,提交测试
@@ -133,6 +133,7 @@ const
   gcMSG_GetReleaseItem = $0400+4;       //同上
   gcMSG_GetTestItemByCode=$0400+5;      //发送到test ，条件是多个 $123;$234
   gcMSG_GetPlanItem = $0400+6;          //发送到子任务，显示内容
+  gcMSG_GetDemandItem = $0400+7;        //发送到需求管理,显示内容
   gcLogDir = 'Log'; //日志目录
   gcTagNewName = '新标签...';
 

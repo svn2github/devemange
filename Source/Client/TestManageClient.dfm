@@ -1,6 +1,6 @@
 inherited TestManageChildfrm: TTestManageChildfrm
-  Left = 87
-  Top = 33
+  Left = 49
+  Top = 101
   Width = 1139
   Height = 713
   Caption = #27979#35797#31649#29702
@@ -206,7 +206,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
         Align = alBottom
         TabOrder = 2
         object lblPage: TLabel
-          Left = 552
+          Left = 645
           Top = 13
           Width = 56
           Height = 15
@@ -256,6 +256,15 @@ inherited TestManageChildfrm: TTestManageChildfrm
           Action = act_RefreshData
           Caption = #21047#26032#25968#25454
           TabOrder = 4
+        end
+        object btnAddData: TBitBtn
+          Left = 536
+          Top = 8
+          Width = 100
+          Height = 25
+          Action = act_AddData
+          Caption = #20840#37096#25968#25454
+          TabOrder = 5
         end
       end
     end
@@ -530,7 +539,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
         end
         object Label10: TLabel
           Left = 8
-          Top = 96
+          Top = 97
           Width = 62
           Height = 15
           Caption = #30456#20851'BUG:'
@@ -543,7 +552,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
           Caption = #31435#39033#39033#30446':'
         end
         object Label6: TLabel
-          Left = 11
+          Left = 8
           Top = 212
           Width = 60
           Height = 15
@@ -579,7 +588,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
         end
         object Label11: TLabel
           Left = 240
-          Top = 98
+          Top = 97
           Width = 70
           Height = 15
           Caption = #30456#20851'TASK:'
@@ -599,7 +608,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
           Caption = #27979#35797#26041#27861#65306
         end
         object Label14: TLabel
-          Left = 479
+          Left = 478
           Top = 124
           Width = 62
           Height = 15
@@ -620,7 +629,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
           Caption = #27979#35797#32467#26524':'
         end
         object lbl2: TLabel
-          Left = 11
+          Left = 8
           Top = 181
           Width = 45
           Height = 15
@@ -640,6 +649,13 @@ inherited TestManageChildfrm: TTestManageChildfrm
           Width = 60
           Height = 15
           Caption = #25552#20132#20154#65306
+        end
+        object lbl4: TLabel
+          Left = 478
+          Top = 97
+          Width = 70
+          Height = 15
+          Caption = #30456#20851#38656#27714#65306
         end
         object dbedtZNAME: TDBEdit
           Left = 84
@@ -918,6 +934,24 @@ inherited TestManageChildfrm: TTestManageChildfrm
           Caption = #36339#21040#30456#20851#20219#21153
           TabOrder = 25
         end
+        object dbedtZDEMAND_ID: TDBEdit
+          Left = 551
+          Top = 92
+          Width = 150
+          Height = 23
+          DataField = 'ZDEMAND_ID'
+          DataSource = dsTestItem
+          TabOrder = 26
+        end
+        object btnGetPlanItem: TBitBtn
+          Left = 717
+          Top = 194
+          Width = 100
+          Height = 25
+          Action = act_gotoDemand
+          Caption = #36339#21040#30456#20851#38656#27714
+          TabOrder = 27
+        end
       end
       object pnlTitle: TPanel
         Left = 0
@@ -1134,6 +1168,17 @@ inherited TestManageChildfrm: TTestManageChildfrm
       Caption = #36339#21040#30456#20851#20219#21153
       OnExecute = act_GetPlanItemExecute
       OnUpdate = act_GetPlanItemUpdate
+    end
+    object act_AddData: TAction
+      Category = #21015#34920
+      Caption = #20840#37096#25968#25454
+      OnExecute = act_AddDataExecute
+    end
+    object act_gotoDemand: TAction
+      Category = #21015#34920
+      Caption = #36339#21040#30456#20851#38656#27714
+      OnExecute = act_gotoDemandExecute
+      OnUpdate = act_gotoDemandUpdate
     end
   end
   object cdsProject: TClientDataSet
