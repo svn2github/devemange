@@ -595,7 +595,24 @@ begin
             myContext := spExce.Parameters[2].Value;
           myMailTo :=  AMails;
           mySubject := Format('&%d %s',[AContextID,myTitle]);
-        end
+        end;
+      4:{需求管理}
+        begin
+          spExce.Close;
+          spExce.ProcedureName:='pt_MaintoByDemand';
+          spExce.Parameters.Clear;
+          spExce.Parameters.CreateParameter('ZID',ftInteger,pdInput,1,1);
+          spExce.Parameters.CreateParameter('mailtitle',ftString,pdoutput,200,1);
+          spExce.Parameters.CreateParameter('mailtext ',ftString,pdoutput,4000,1);
+          spExce.Parameters[0].Value := AContextID;
+          spExce.ExecProc;
+          if not VarIsNull(spExce.Parameters[1].Value) then
+            myTitle   := spExce.Parameters[1].Value;
+          if not VarIsNull(spExce.Parameters[2].Value) then
+            myContext := spExce.Parameters[2].Value;
+          myMailTo :=  AMails;
+          mySubject := Format('D%d %s',[AContextID,myTitle]);
+        end;
       else
         Exit;    
     end;
@@ -605,7 +622,7 @@ begin
       IdMessage1.Clear;
       IdMessage1.ContentType := 'text/html';
       IdMessage1.MessageParts.Clear;
-      IdMessage1.CharSet := 'BIG5';
+      IdMessage1.CharSet := 'GB2312';//'BIG5';
       IdMessage1.Encoding := (meUU);
       IdMessage1.ClearBody;
       IdMessage1.Body.Add(myContext);
