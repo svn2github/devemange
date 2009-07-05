@@ -115,11 +115,15 @@ insert into TB_STATE (ZID,ZSTATECODE) values(0,0);
 
 /*加班单状态*/
 insert into TB_WORKOVERTIME_PARAMS (ZTYPE,ZID,ZNAME) values(0,0,'申请');
-insert into TB_WORKOVERTIME_PARAMS (ZTYPE,ZID,ZNAME) values(0,1,'成功');
-insert into TB_WORKOVERTIME_PARAMS (ZTYPE,ZID,ZNAME) values(0,2,'失败');
+insert into TB_WORKOVERTIME_PARAMS (ZTYPE,ZID,ZNAME) values(0,1,'同意');
+insert into TB_WORKOVERTIME_PARAMS (ZTYPE,ZID,ZNAME) values(0,2,'不同意');
 insert into TB_WORKOVERTIME_PARAMS (ZTYPE,ZID,ZNAME) values(0,3,'取消');
 
-
+/*需用状态*/
+insert into TB_DEMAND_PARAMS (ZTYPE,ZID,ZNAME) values(0,0,'制单');
+insert into TB_DEMAND_PARAMS (ZTYPE,ZID,ZNAME) values(0,1,'接受');
+insert into TB_DEMAND_PARAMS (ZTYPE,ZID,ZNAME) values(0,2,'拒绝');
+insert into TB_DEMAND_PARAMS (ZTYPE,ZID,ZNAME) values(0,3,'已变更');
 
 
 GO

@@ -339,6 +339,7 @@ create table TB_BUG_ITEM(
 	ZOVERFRACTION  bit not null default 0 ,                   /*=True表示已记过分了*/ 
 	ZTAGNAME       varchar(100),                              /*标签 多个标签采用;号分开 */ 
 	ZTERM          int ,                                      /*要求期限(6)*/
+	ZDEMAND_ID     int default -1,                            /*需求ID号*/  
 	
 	constraint PK_TB_BUG_ITEM primary key(ZID desc,ZTREE_ID)   
 )
@@ -455,6 +456,7 @@ create table TB_TEST_ITEM(
 	ZCLOSESTATUS int ,                                          /*0=高 1=中 2=一般 3=无效 4=扣分*/
 	ZCLOSESOCRE  int not null default 0,                        /*分值,主要给创建人*/
 	ZTAGNAME       varchar(100),                                /*标签 多个标签采用;号分开 */
+	ZDEMAND_ID     int default -1,                              /*需求ID号*/  
 	
 
 	constraint PK_TB_TEST_ITEM primary key(ZID)  
@@ -775,6 +777,50 @@ create table TB_WORKOVERTIME_PARAMS(
 	constraint PK_TB_WORKOVERTIME_PARAMS primary key(ZTYPE,ZID)  
 )
 go
+
+/*需求管理*/
+if exists (select * from dbo.sysobjects
+  where id = object_id(N'[dbo].[TB_DEMAND]')
+  and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+drop table [dbo].[TB_DEMAND]
+go
+
+create table TB_DEMAND(
+	ZID            int  not null,              /*需求ID*/
+	ZNAME         varchar(100),                /*需求名称*/    
+	ZUSER_ID      int,                         /*需求填写人*/
+	ZBUILDDATE    datetime,                    /*制单时间*/
+	ZCONTENT      text,                        /*需用描述*/
+	ZNEEDDATE     datetime,                    /*要求时间*/
+	ZISRESET      bit,                         /*是否已变更了*/    
+	ZPRO_ID       int,                         /*属于如个项目*/
+	ZCUSTOMER     text,                        /*客户信息*/
+	ZANNEXFILE_ID  int,                        /*附件内容，可能是图片这个更直接*/
+	ZANNEXFILENAME varchar(50),                /*附件名称*/
+	ZSTATUS        int not null,               /*状态=0 制单 1=接受 2=拒绝 3=已变更*/
+	ZCHECK_USER_ID int ,                       /*审核人*/
+	ZMAILTO        varchar(200),               /*邮件给别人,用#13#10分开*/
+	ZREMARK        text,                       /*备注*/
+	
+	constraint PK_TB_DEMAND primary key(ZID)
+)
+go
+
+/*需求管理参数表*/
+if exists (select * from dbo.sysobjects
+  where id = object_id(N'[dbo].[TB_DEMAND_PARAMS]')
+  and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+drop table [dbo].[TB_DEMAND_PARAMS]
+go
+
+create table TB_DEMAND_PARAMS(
+	ZTYPE 	     int not null,                                   /*类型*/
+	ZID          int not null,                                   /*ID值*/
+	ZNAME        varchar(200)                                    /*值*/
+	constraint PK_TB_DEMAND_PARAMS primary key(ZTYPE,ZID)  
+)
+go
+
 
 
 
