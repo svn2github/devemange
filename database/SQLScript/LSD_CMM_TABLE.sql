@@ -758,6 +758,7 @@ create table TB_WORKOVERTIME(
 	ZSTATUS        int not null,               /*状态=0 申请 1=同意 2=不同意 3=废单*/
 	ZWEEKEND       bit default 0,              /*是否是周末或节假日加班*/
 	ZBUILDDATE    datetime,                    /*制单时间*/
+	ZRATE         float,                       /*系数*/
 	
 	constraint PK_TB_WORKOVERTIME primary key(ZID)
 )
