@@ -464,7 +464,8 @@ begin
   myday:= DayOf(mydatetime);
 
   //我今天加班了
-  cdsWrokList.Append;
+  cdsWrokList.First;
+  cdsWrokList.Insert;
   cdsWrokList.FieldByName('ZDATE').AsString := formatdatetime('yyyy-mm-dd',mydatetime);
   cdsWrokList.FieldByName('ZDATETIME').AsDateTime := StrToDateTime(Format('%d-%d-%d 18:00',
     [myy,mymo,myday]));
@@ -491,6 +492,7 @@ const
                'ZRATE=%f, '            +
                'ZCHECK_USER_ID=%d where ZID=%d ';
   gl_SQLTXT3 = 'select ZID from TB_WORKOVERTIME where ZDATE=''%s'' and ZUSER_ID=%d ';
+  gl_SQLTXT4 = 'select isNull(max(ZID),1) from TB_WORKOVERTIME';
 begin
   //
   if fLoading then Exit;
@@ -528,6 +530,7 @@ begin
       ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
       ClientSystem.fDbOpr.CommitTrans;
       DataSet.FieldByName('ZISNEW').AsBoolean := False;
+      DataSet.FieldByName('ZMYID').AsInteger := ClientSystem.fDbOpr.ReadInt(PChar(gl_SQLTXT4));
     except
       ClientSystem.fDbOpr.RollbackTrans;
     end;
@@ -545,7 +548,7 @@ begin
       DataSet.FieldByName('ZBUILDDATE').AsString,
       DataSet.FieldByName('ZRATE').AsFloat,
       DataSet.FieldByName('ZCHECK_USER_ID').AsInteger,
-      DataSet.FieldByName('ZID').AsInteger]);
+      DataSet.FieldByName('ZMYID').AsInteger]);
 
     ClientSystem.fDbOpr.BeginTrans;
     try
@@ -599,7 +602,9 @@ end;
 
 procedure TWorkOverTimeClient.act_AddToYesterdayExecute(Sender: TObject);
 begin
-  cdsWrokList.Append;
+  cdsWrokList.First;
+  cdsWrokList.Insert;
+
   pgc1.ActivePageIndex := 1;
 end;
 

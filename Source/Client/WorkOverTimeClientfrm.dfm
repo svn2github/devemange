@@ -352,7 +352,7 @@ inherited WorkOverTimeClient: TWorkOverTimeClient
         object lbl13: TLabel
           Left = 472
           Top = 39
-          Width = 40
+          Width = 45
           Height = 15
           Caption = #31995#25968#65306
         end

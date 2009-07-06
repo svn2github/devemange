@@ -1,6 +1,6 @@
 inherited BugManageDlg: TBugManageDlg
-  Left = 76
-  Top = 271
+  Left = 70
+  Top = -1
   Width = 1040
   Height = 692
   Caption = #38169#35823#31649#29702

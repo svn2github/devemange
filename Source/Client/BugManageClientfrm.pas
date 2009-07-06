@@ -2615,26 +2615,31 @@ procedure TBugManageDlg.act_AllDataExecute(Sender: TObject);
 
   function GetwhereStr() : string;
   var
-    myNode : TTreeNode;
     mystr : string;
-    myBugData : PBugTreeNode;
+  const
+    glSQL  = 'select ZID,ZNAME,ZPRO_ID from TB_BUG_TREE Order by ZSORT';
   begin
-    myNode := tvProject.TopItem;
-    while Assigned(myNode) do
+    cdstemp.Data := ClientSystem.fDbOpr.ReadDataSet(PChar(glSQL));
+    cdstemp.First;
+    while not cdstemp.Eof do
     begin
-      if Assigned(myNode.Data) then
+      //х╗оч
+      if not HasModuleAction(Ord(bsBugTree),
+        cdstemp.FieldByName('ZID').AsInteger,atView) then
       begin
-        myBugData := myNode.Data;
-        if mystr = '' then
-          mystr := format('(ZTREE_ID=%d)',[myBugData^.fID])
-        else
-          mystr := mystr + 'or ' + format('(ZTREE_ID=%d)',[myBugData^.fID]);
-
+        cdstemp.Next;
+        Continue;
       end;
+      if mystr = '' then
+        mystr := format('ZTREE_ID=%d',[cdstemp.FieldByName('ZPRO_ID').AsInteger])
+      else
+        mystr := mystr + ' or ' + format('ZTREE_ID=%d',[cdstemp.FieldByName('ZPRO_ID').AsInteger]);
 
-      myNode := myNode.GetNext;
+      cdstemp.Next;
     end;
-    Result := mystr;
+
+
+    Result := '(' + mystr + ')';
   end;
 
 var
