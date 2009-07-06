@@ -95,6 +95,8 @@ type
     act_OtherWork: TAction;
     act_All: TAction;
     btnAll: TBitBtn;
+    lbl13: TLabel;
+    dbedtZRATE: TDBEdit;
     procedure act_AddLoadExecute(Sender: TObject);
     procedure cdsWrokListCalcFields(DataSet: TDataSet);
     procedure act_firstPageExecute(Sender: TObject);
@@ -148,6 +150,10 @@ uses
   DateUtils,
   ClinetSystemUnits, DmUints;
 
+const
+  gc_Rate = 1.5;
+  gc_weekRate = 2.0;  //周末加班系数
+
 {$R *.dfm}
 
 { TWorkOverTimeClient }
@@ -190,7 +196,7 @@ var
 const
   glSQL = 'exec pt_SplitPage ''TB_WORKOVERTIME'',' +
           '''ZID,ZUSER_ID,ZDATETIME,ZLASTDATETIME,ZADDRESS,ZCONTENT,ZCHECK_USER_ID, ' +
-          'ZDATE,ZSTATUS,ZWEEKEND,ZBUILDDATE,ZMINUTE'',' +
+          'ZDATE,ZSTATUS,ZWEEKEND,ZBUILDDATE,ZMINUTE,ZRATE'',' +
           '''%s'',20,%d,%d,1,''%s''';
           // 页码,以总数=1, 条件where
 begin
@@ -472,7 +478,7 @@ var
   mySQL : string;
 const
   gl_SQLTXT = 'insert TB_WORKOVERTIME (ZUSER_ID,ZDATE,ZDATETIME,ZLASTDATETIME, ' +
-    'ZADDRESS,ZCONTENT,ZMINUTE,ZSTATUS,ZWEEKEND,ZBUILDDATE) values(%d,''%s'',''%s'',''%s'',''%s'',''%s'',%d,%d,%d,''%s'')';
+    'ZADDRESS,ZCONTENT,ZMINUTE,ZSTATUS,ZWEEKEND,ZBUILDDATE,ZRATE) values(%d,''%s'',''%s'',''%s'',''%s'',''%s'',%d,%d,%d,''%s'',%f)';
   gl_SQLTXT2 = 'update TB_WORKOVERTIME set ' +
                'ZDATETIME=''%s'',     ' +
                'ZLASTDATETIME=''%s'', ' +
@@ -482,6 +488,7 @@ const
                'ZSTATUS=%d , '     +
                'ZWEEKEND=%d, '     +
                'ZBUILDDATE=''%s'', '   +
+               'ZRATE=%f, '            +
                'ZCHECK_USER_ID=%d where ZID=%d ';
   gl_SQLTXT3 = 'select ZID from TB_WORKOVERTIME where ZDATE=''%s'' and ZUSER_ID=%d ';
 begin
@@ -513,7 +520,8 @@ begin
       DataSet.FieldByName('ZMINUTE').AsInteger,
       DataSet.FieldByName('ZSTATUS').AsInteger,
       Ord(DataSet.FieldByName('ZWEEKEND').AsBoolean),
-      DataSet.FieldByName('ZBUILDDATE').AsString]);
+      DataSet.FieldByName('ZBUILDDATE').AsString,
+      DataSet.FieldByName('ZRATE').AsFloat]);
 
     ClientSystem.fDbOpr.BeginTrans;
     try
@@ -535,6 +543,7 @@ begin
       DataSet.FieldByName('ZSTATUS').AsInteger,
       Ord(DataSet.FieldByName('ZWEEKEND').AsBoolean),
       DataSet.FieldByName('ZBUILDDATE').AsString,
+      DataSet.FieldByName('ZRATE').AsFloat,
       DataSet.FieldByName('ZCHECK_USER_ID').AsInteger,
       DataSet.FieldByName('ZID').AsInteger]);
 
@@ -620,6 +629,7 @@ begin
   cdsWrokList.FieldByName('ZUSER_ID').AsInteger := ClientSystem.fEditer_id;
   cdsWrokList.FieldByName('ZCHECK_USER_ID').AsInteger := -1;
   cdsWrokList.FieldByName('ZWEEKEND').AsBoolean := False;
+  cdsWrokList.FieldByName('ZRATE').AsFloat := gc_Rate;
   cdsWrokList.FieldByName('ZBUILDDATE').AsDateTime := ClientSystem.fDbOpr.GetSysDateTime;
 end;
 
@@ -708,9 +718,14 @@ begin
     cdsWrokList.Edit;
 
   if dbchkZWEEKEND.Checked then
-    cdsWrokList.FieldByName('ZMINUTE').AsInteger := myMinute*2
-  else
-    cdsWrokList.FieldByName('ZMINUTE').AsInteger := myMinute;  //
+  begin
+    cdsWrokList.FieldByName('ZMINUTE').AsInteger := myMinute;
+    cdsWrokList.FieldByName('ZRATE').AsFloat := gc_weekRate;
+  end
+  else begin
+    cdsWrokList.FieldByName('ZMINUTE').AsInteger := myMinute;
+    cdsWrokList.FieldByName('ZRATE').AsFloat := gc_Rate;
+  end;
 
 end;
 

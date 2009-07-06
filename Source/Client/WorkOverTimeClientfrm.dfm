@@ -315,8 +315,8 @@ inherited WorkOverTimeClient: TWorkOverTimeClient
           Caption = #23457' '#26680' '#20154#65306
         end
         object lbl6: TLabel
-          Left = 312
-          Top = 37
+          Left = 301
+          Top = 38
           Width = 68
           Height = 15
           Caption = #21152#29677#20998#38047':'
@@ -348,6 +348,13 @@ inherited WorkOverTimeClient: TWorkOverTimeClient
           Width = 45
           Height = 15
           Caption = #29366#24577#65306
+        end
+        object lbl13: TLabel
+          Left = 472
+          Top = 39
+          Width = 40
+          Height = 15
+          Caption = #31995#25968#65306
         end
         object dbedtZCHECKNAME: TDBEdit
           Left = 90
@@ -386,9 +393,9 @@ inherited WorkOverTimeClient: TWorkOverTimeClient
           TabOrder = 3
         end
         object dbedtZMINUTE: TDBEdit
-          Left = 389
+          Left = 373
           Top = 34
-          Width = 164
+          Width = 94
           Height = 23
           Color = clBtnFace
           DataField = 'ZMINUTE'
@@ -492,6 +499,17 @@ inherited WorkOverTimeClient: TWorkOverTimeClient
           Action = act_CancellBill
           Caption = #21462#28040'\'#30003#35831#21152#29677#21333
           TabOrder = 14
+        end
+        object dbedtZRATE: TDBEdit
+          Left = 511
+          Top = 35
+          Width = 42
+          Height = 23
+          Color = clBtnFace
+          DataField = 'ZRATE'
+          DataSource = dsWorkList
+          ReadOnly = True
+          TabOrder = 15
         end
       end
       object btnAgree: TBitBtn
