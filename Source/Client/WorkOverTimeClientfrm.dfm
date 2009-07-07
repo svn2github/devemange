@@ -455,8 +455,10 @@ inherited WorkOverTimeClient: TWorkOverTimeClient
           Top = 64
           Width = 202
           Height = 23
+          Color = clBtnFace
           DataField = 'ZDATE'
           DataSource = dsWorkList
+          ReadOnly = True
           TabOrder = 10
         end
         object dtp1: TDateTimePicker
