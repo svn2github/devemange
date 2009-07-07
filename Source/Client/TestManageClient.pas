@@ -578,6 +578,8 @@ begin
   DataSet.FieldByName('ZTESTMETHOD').AsInteger := 0;
   DataSet.FieldByName('ZTYPE').AsInteger := 0;
   DataSet.FieldByName('ZDEMAND_ID').AsInteger := -1;
+  DataSet.FieldByName('ZMAILTO').AsString := Format('%s(%d)',[
+    ClientSystem.fEditer,ClientSystem.fEditer_id]);
 
   if cdsResult.Active and (not cdsResult.IsEmpty) then
     while cdsResult.Eof do
