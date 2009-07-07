@@ -462,14 +462,16 @@ begin
   myy  := YearOf(mydatetime);
   mymo := MonthOf(mydatetime);
   myday:= DayOf(mydatetime);
+  
 
   //我今天加班了
   cdsWrokList.First;
   cdsWrokList.Insert;
   cdsWrokList.FieldByName('ZDATE').AsString := formatdatetime('yyyy-mm-dd',mydatetime);
-  cdsWrokList.FieldByName('ZDATETIME').AsDateTime := StrToDateTime(Format('%d-%d-%d 18:00',
+  cdsWrokList.FieldByName('ZDATETIME').AsDateTime := StrToDateTime(Format('%d-%d-%d 17:00',
     [myy,mymo,myday]));
   cdsWrokList.FieldByName('ZLASTDATETIME').AsDateTime := mydatetime; //固定一个时间
+  dtp1.DateTime := mydatetime;
 
   pgc1.ActivePageIndex := 1;
 end;
@@ -496,7 +498,6 @@ const
 begin
   //
   if fLoading then Exit;
-  
 
   CalcMinute();
   if DataSet.FieldByName('ZISNEW').AsBoolean then
@@ -508,6 +509,15 @@ begin
     if ClientSystem.fDbOpr.ReadRecordCount(PChar(mySQL)) > 0 then
     begin
       MessageBox(Handle,'你的加班单已填过了','提示',MB_ICONWARNING+MB_OK);
+      DataSet.Cancel;
+      Exit;
+    end;
+
+    //只要真超过6点才能算时间
+    if  not dbchkZWEEKEND.Checked and
+        (HourOf(DataSet.FieldByName('ZLASTDATETIME').AsDateTime) < 18) then
+    begin
+      MessageBox(Handle,'你的加班单必须在下班6点之后才能填写','提示',MB_ICONWARNING+MB_OK);
       DataSet.Cancel;
       Exit;
     end;
@@ -537,6 +547,25 @@ begin
 
   end
   else begin
+
+    if (DataSet.FieldByName('ZUSER_ID').AsInteger <>
+       ClientSystem.fEditer_id) and (not ClientSystem.fEditer_CheckTask) then
+    begin
+      MessageBox(Handle,'不是你的加班单，不能修改','提示',MB_ICONWARNING+MB_OK);
+      DataSet.Cancel;
+      Exit;
+    end;
+
+
+    //只要真超过6点才能算时间
+    if  not dbchkZWEEKEND.Checked and
+        (HourOf(DataSet.FieldByName('ZLASTDATETIME').AsDateTime) < 18) then
+    begin
+      MessageBox(Handle,'你的加班单必须在下班6点之后才能填写','提示',MB_ICONWARNING+MB_OK);
+      DataSet.Cancel;
+      Exit;
+    end;
+
     mySQL := Format(gl_SQLTXT2,[
       DataSet.FieldByName('ZDATETIME').AsString,
       DataSet.FieldByName('ZLASTDATETIME').AsString,
@@ -619,10 +648,14 @@ begin
   mymo := MonthOf(mydatetime);
   myday:= DayOf(mydatetime);
 
+  if not (cdsWrokList.State in [dsEdit,dsInsert]) then
+    cdsWrokList.Edit;
+    
   cdsWrokList.FieldByName('ZDATE').AsString := formatdatetime('yyyy-mm-dd',mydatetime);
-  cdsWrokList.FieldByName('ZDATETIME').AsDateTime := StrToDateTime(Format('%d-%d-%d 18:00',
+  cdsWrokList.FieldByName('ZDATETIME').AsDateTime := StrToDateTime(Format('%d-%d-%d 17:00',
     [myy,mymo,myday]));
-  cdsWrokList.FieldByName('ZLASTDATETIME').AsDateTime := mydatetime; //固定一个时间
+  cdsWrokList.FieldByName('ZLASTDATETIME').AsDateTime := StrToDateTime(Format('%d-%d-%d 17:00',
+    [myy,mymo,myday]));; //固定一个时间
 
 end;
 
