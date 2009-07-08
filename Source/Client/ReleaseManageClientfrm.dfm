@@ -412,6 +412,7 @@ inherited ReleaseManageClientDlg: TReleaseManageClientDlg
           Height = 23
           DataField = 'ZASSIGNEDTONAME'
           DataSource = dsRelease
+          DropDownRows = 25
           ImeName = #26497#21697#20116#31508#36755#20837#27861
           TabOrder = 7
         end
@@ -446,6 +447,7 @@ inherited ReleaseManageClientDlg: TReleaseManageClientDlg
           Height = 23
           DataField = 'ZOPENEDBYNAME'
           DataSource = dsRelease
+          DropDownRows = 25
           ImeName = #26497#21697#20116#31508#36755#20837#27861
           TabOrder = 10
         end
@@ -474,7 +476,7 @@ inherited ReleaseManageClientDlg: TReleaseManageClientDlg
           Top = 117
           Width = 147
           Height = 23
-          DropDownRows = 30
+          DropDownRows = 25
           ImeName = #26497#21697#20116#31508#36755#20837#27861
           KeyField = 'ZID'
           ListField = 'ZNAME'
@@ -497,7 +499,7 @@ inherited ReleaseManageClientDlg: TReleaseManageClientDlg
           Top = 177
           Width = 145
           Height = 23
-          DropDownRows = 30
+          DropDownRows = 25
           ImeName = #26497#21697#20116#31508#36755#20837#27861
           KeyField = 'ZID'
           ListField = 'ZNAME'

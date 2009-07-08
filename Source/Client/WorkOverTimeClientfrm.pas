@@ -668,6 +668,7 @@ begin
   cdsWrokList.FieldByName('ZCHECK_USER_ID').AsInteger := -1;
   cdsWrokList.FieldByName('ZWEEKEND').AsBoolean := False;
   cdsWrokList.FieldByName('ZRATE').AsFloat := gc_Rate;
+  cdsWrokList.FieldByName('ZADDRESS').AsString := '开发办公室';
   cdsWrokList.FieldByName('ZBUILDDATE').AsDateTime := ClientSystem.fDbOpr.GetSysDateTime;
 end;
 
