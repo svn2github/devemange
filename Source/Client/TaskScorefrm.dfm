@@ -3,7 +3,7 @@ inherited TaskScoreDlg: TTaskScoreDlg
   Top = 132
   BorderStyle = bsDialog
   Caption = #20219#21153#35780#20998
-  ClientHeight = 487
+  ClientHeight = 527
   OldCreateOrder = True
   Position = poMainFormCenter
   PixelsPerInch = 96
@@ -34,7 +34,7 @@ inherited TaskScoreDlg: TTaskScoreDlg
     ParentColor = False
   end
   object Label4: TLabel
-    Left = 18
+    Left = 15
     Top = 371
     Width = 45
     Height = 15
@@ -121,9 +121,16 @@ inherited TaskScoreDlg: TTaskScoreDlg
     Height = 15
     Caption = '%'
   end
+  object lbl2: TLabel
+    Left = 15
+    Top = 448
+    Width = 73
+    Height = 15
+    Caption = #35780#20998#26102#38388#65306
+  end
   object BitBtn1: TBitBtn
-    Left = 402
-    Top = 452
+    Left = 394
+    Top = 492
     Width = 100
     Height = 25
     TabOrder = 3
@@ -131,7 +138,7 @@ inherited TaskScoreDlg: TTaskScoreDlg
   end
   object BitBtn2: TBitBtn
     Left = 290
-    Top = 452
+    Top = 492
     Width = 100
     Height = 25
     TabOrder = 4
@@ -311,5 +318,14 @@ inherited TaskScoreDlg: TTaskScoreDlg
     Height = 23
     TabOrder = 18
     Text = '15'
+  end
+  object dtpDate: TDateTimePicker
+    Left = 88
+    Top = 445
+    Width = 186
+    Height = 23
+    Date = 40028.372069224540000000
+    Time = 40028.372069224540000000
+    TabOrder = 19
   end
 end

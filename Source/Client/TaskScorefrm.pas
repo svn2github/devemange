@@ -4,7 +4,8 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, BaseDialogfrm, StdCtrls, Buttons, Mask, DBCtrls, ExtCtrls,DB;
+  Dialogs, BaseDialogfrm, StdCtrls, Buttons, Mask, DBCtrls, ExtCtrls,DB,
+  ComCtrls;
 
 type
   TTaskScoreDlg = class(TBaseDialog)
@@ -42,6 +43,8 @@ type
     Label7: TLabel;
     Label10: TLabel;
     Label11: TLabel;
+    lbl2: TLabel;
+    dtpDate: TDateTimePicker;
     procedure btnCalcClick(Sender: TObject);
   private
     { Private declarations }

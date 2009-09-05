@@ -25,7 +25,8 @@ uses
   ReleaseManageClientfrm in 'ReleaseManageClientfrm.pas' {ReleaseManageClientDlg},
   GetSVNVerfrm in 'GetSVNVerfrm.pas' {GetSVNVerDlg},
   WorkOverTimeClientfrm in 'WorkOverTimeClientfrm.pas' {WorkOverTimeClient},
-  DemandClientfrm in 'DemandClientfrm.pas' {DemandClientDlg};
+  DemandClientfrm in 'DemandClientfrm.pas' {DemandClientDlg},
+  TickDateTimefrm in 'TickDateTimefrm.pas' {TickDateTimeDlg};
 
 {$R *.res}
 {$R resource.res}

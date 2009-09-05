@@ -25,6 +25,13 @@ inherited DemandClientDlg: TDemandClientDlg
         Align = alTop
         BevelOuter = bvNone
         TabOrder = 0
+        object lbl12: TLabel
+          Left = 656
+          Top = 12
+          Width = 272
+          Height = 15
+          Caption = #29992#25143#25552#20986#30340#24314#35758', '#21508#22320#26041#30340#25919#31574#24615#35201#27714#12290' '
+        end
         object btnAddDemand: TBitBtn
           Left = 12
           Top = 8
@@ -35,7 +42,7 @@ inherited DemandClientDlg: TDemandClientDlg
           TabOrder = 0
         end
         object btntoMe: TBitBtn
-          Left = 118
+          Left = 119
           Top = 8
           Width = 100
           Height = 25

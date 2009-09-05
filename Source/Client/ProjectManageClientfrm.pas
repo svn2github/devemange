@@ -220,6 +220,8 @@ type
     dsUser: TDataSource;
     btnTask_FindWho: TBitBtn;
     actTask_FindWho: TAction;
+    lbl4: TLabel;
+    dbtxtZCLOSEDATE: TDBText;
     procedure actPro_AddExecute(Sender: TObject);
     procedure cbEditProItemClick(Sender: TObject);
     procedure actPro_AddUpdate(Sender: TObject);
@@ -319,7 +321,8 @@ uses
   ClinetSystemUnits,
   DmUints,
   TaskScorefrm,               {评分}
-  SelectUsersfrm,             {选择用户}  
+  SelectUsersfrm,             {选择用户}
+  TickDateTimefrm,            {选择日期}
   NewTaskfrm                  {新建任务单}
   ;
 
@@ -1576,6 +1579,7 @@ begin
     MB_ICONQUESTION+MB_YESNO)=IDNO then
     Exit;
   mycds := TClientDataSet.Create(nil);
+
   try
     mycds.CloneCursor(cdsTask,False);
     if mycds.Locate('ZCHECKNAME',ClientSystem.fEditer_id,[loPartialKey]) then
@@ -1683,15 +1687,16 @@ begin
           cdsTaskUser.FieldByName('ZRATE').AsFloat := 2 //现在加班的系统变为2
         else
           cdsTaskUser.FieldByName('ZRATE').AsFloat := 1;
-
+        myfrom.dtpDate.Date := ClientSystem.SysNow;
         if myfrom.ShowModal() = mrOK then
         begin
           cdsTaskUser.FieldByName('ZTASKSCORE').AsFloat := myfrom.fTaskScore;
           cdsTaskUser.FieldByName('ZSCORE').AsFloat :=
             myfrom.fTaskScore{cdsTaskUser.FieldByName('ZTASKSCORE').AsFloat} * cdsTaskUser.FieldByName('ZRATE').AsFloat;
-          cdsTaskUser.FieldByName('ZSCOREDATE').AsDateTime := ClientSystem.SysNow;
+          cdsTaskUser.FieldByName('ZSCOREDATE').AsDateTime := myfrom.dtpDate.Date;//ClientSystem.SysNow;
           cdsTaskUser.FieldByName('ZREMASK').AsString := cdsTaskUser.FieldByName('ZREMASK').AsString + #13#10 +
             myfrom.fScoreStr;
+
           cdsTaskUser.Post;
         end
         else

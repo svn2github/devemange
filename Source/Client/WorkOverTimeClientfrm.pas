@@ -630,9 +630,23 @@ begin
 end;
 
 procedure TWorkOverTimeClient.act_AddToYesterdayExecute(Sender: TObject);
+var
+  mydatetime : TDateTime;
+  myy,mymo,myday : Word;
 begin
+  mydatetime := ClientSystem.fDbOpr.GetSysDateTime;
+  myy  := YearOf(mydatetime);
+  mymo := MonthOf(mydatetime);
+  myday:= DayOf(mydatetime);
+
   cdsWrokList.First;
   cdsWrokList.Insert;
+
+  cdsWrokList.FieldByName('ZDATE').AsString := formatdatetime('yyyy-mm-dd',mydatetime-1);
+  cdsWrokList.FieldByName('ZDATETIME').AsDateTime := StrToDateTime(Format('%d-%d-%d 17:00',
+    [myy,mymo,myday-1]));
+  cdsWrokList.FieldByName('ZLASTDATETIME').AsDateTime := mydatetime-1; //固定一个时间
+  dtp1.DateTime := mydatetime;
 
   pgc1.ActivePageIndex := 1;
 end;
@@ -682,7 +696,7 @@ begin
       cdsWrokList.Edit;
     cdsWrokList.FieldByName('ZCHECK_USER_ID').AsInteger := ClientSystem.fEditer_id;  
     cdsWrokList.FieldByName('ZSTATUS').AsInteger := 1;
-    
+    cdsWrokList.Post;
   end
   else
     MessageBox(Handle,'你没有权限','提示',MB_ICONWARNING+MB_OK);
@@ -698,8 +712,8 @@ begin
     if not (cdsWrokList.State in [dsEdit,dsInsert]) then
       cdsWrokList.Edit;
     cdsWrokList.FieldByName('ZCHECK_USER_ID').AsInteger := ClientSystem.fEditer_id;
-    cdsWrokList.FieldByName('ZSTATUS').AsInteger := 2
-    
+    cdsWrokList.FieldByName('ZSTATUS').AsInteger := 2;
+    cdsWrokList.Post;
   end
   else
     MessageBox(Handle,'你没有权限','提示',MB_ICONWARNING+MB_OK);

@@ -93,6 +93,7 @@ type
     btnAllData: TBitBtn;
     lbl11: TLabel;
     dtp1: TDateTimePicker;
+    lbl12: TLabel;
     procedure act_FirstPageUpdate(Sender: TObject);
     procedure act_FirstPageExecute(Sender: TObject);
     procedure act_PrivPageUpdate(Sender: TObject);
