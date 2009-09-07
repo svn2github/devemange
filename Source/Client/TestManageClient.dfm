@@ -293,7 +293,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
           Left = 0
           Top = 40
           Width = 1123
-          Height = 280
+          Height = 279
           Align = alClient
           AllowDelete = False
           AllowInsert = False
@@ -653,7 +653,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
         object lbl4: TLabel
           Left = 478
           Top = 97
-          Width = 70
+          Width = 75
           Height = 15
           Caption = #30456#20851#38656#27714#65306
         end
@@ -965,7 +965,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
         object lblTitle: TLabel
           Left = 0
           Top = 0
-          Width = 992
+          Width = 64
           Height = 15
           Align = alClient
           Caption = 'lblTitle'

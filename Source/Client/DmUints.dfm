@@ -986,4 +986,15 @@ object DM: TDM
     Left = 136
     Top = 192
   end
+  object cdsUserAll: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 216
+    Top = 144
+  end
+  object dsUserAll: TDataSource
+    DataSet = cdsUserAll
+    Left = 216
+    Top = 198
+  end
 end

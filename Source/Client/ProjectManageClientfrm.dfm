@@ -108,7 +108,6 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
           Height = 408
           Align = alClient
           DataSource = dsProjectItem
-          ImeName = #26497#21697#20116#31508#36755#20837#27861
           Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
           TabOrder = 1
           TitleFont.Charset = GB2312_CHARSET
@@ -284,7 +283,6 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
           Align = alBottom
           DataField = 'ZCONTEXT'
           DataSource = dsProVersion
-          ImeName = #26497#21697#20116#31508#36755#20837#27861
           ReadOnly = True
           ScrollBars = ssVertical
           TabOrder = 1
@@ -296,7 +294,6 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
           Height = 40
           Align = alClient
           DataSource = dsProVersion
-          ImeName = #26497#21697#20116#31508#36755#20837#27861
           Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
           TabOrder = 2
           TitleFont.Charset = GB2312_CHARSET
@@ -551,7 +548,6 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
             Height = 346
             Align = alClient
             DataSource = dsTask
-            ImeName = #26497#21697#20116#31508#36755#20837#27861
             Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
             ReadOnly = True
             TabOrder = 0
@@ -660,7 +656,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
             Top = 0
             Width = 682
             Height = 386
-            ActivePage = tsUser
+            ActivePage = tsDesign
             Align = alClient
             TabOrder = 0
             TabPosition = tpBottom
@@ -821,7 +817,6 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
                 Height = 358
                 Align = alLeft
                 DataSource = dsTaskUser
-                ImeName = #26497#21697#20116#31508#36755#20837#27861
                 Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
                 ReadOnly = True
                 TabOrder = 0
@@ -999,7 +994,6 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
                     Height = 23
                     DataField = 'ZPERFACT'
                     DataSource = dsTaskUser
-                    ImeName = #26497#21697#20116#31508#36755#20837#27861
                     TabOrder = 0
                   end
                   object DBEdit2: TDBEdit
@@ -1057,7 +1051,6 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
                     Height = 23
                     DataField = 'ZSELFSCORE'
                     DataSource = dsTaskUser
-                    ImeName = #26497#21697#20116#31508#36755#20837#27861
                     TabOrder = 5
                   end
                   object dbmmoZREMASK: TDBMemo
@@ -1067,7 +1060,6 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
                     Height = 156
                     DataField = 'ZREMASK'
                     DataSource = dsTaskUser
-                    ImeName = #26497#21697#20116#31508#36755#20837#27861
                     ScrollBars = ssVertical
                     TabOrder = 6
                   end

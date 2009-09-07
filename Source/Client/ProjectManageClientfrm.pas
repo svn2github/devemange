@@ -385,7 +385,7 @@ begin
       begin
         FieldKind := fkLookup;
         KeyFields := 'ZUSER_ID';
-        LookupDataSet := DM.cdsUser;
+        LookupDataSet := DM.cdsUserAll;
         LookupKeyFields := 'ZID';
         LookupResultField := 'ZNAME';
       end;
@@ -423,7 +423,7 @@ begin
       begin
         FieldKind := fkLookup;
         KeyFields := 'ZUSER_ID';
-        LookupDataSet := DM.cdsUser;
+        LookupDataSet := DM.cdsUserAll;
         LookupKeyFields := 'ZID';
         LookupResultField := 'ZNAME';
       end;
@@ -960,7 +960,7 @@ begin
         begin
           FieldKind := fkLookup;
           KeyFields := 'ZMANAGERID';
-          LookupDataSet := DM.cdsUser;
+          LookupDataSet := DM.cdsUserAll;
           LookupKeyFields := 'ZID';
           LookupResultField := 'ZNAME';
         end;
@@ -1832,7 +1832,7 @@ begin
         begin
           FieldKind         := fkLookup;
           KeyFields         := 'ZUSER_ID';
-          LookupDataSet     := dm.cdsUser;
+          LookupDataSet     := dm.cdsUserAll;
           LookupKeyFields   := 'ZID';
           LookupResultField := 'ZNAME';
         end;

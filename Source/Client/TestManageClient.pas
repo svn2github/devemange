@@ -362,7 +362,7 @@ begin
       begin
         FieldKind := fkLookup;
         KeyFields := 'ZOPENEDBY';
-        LookupDataSet := DM.cdsUser;
+        LookupDataSet := DM.cdsUserAll;
         LookupKeyFields := 'ZID';
         LookupResultField := 'ZNAME';
       end;
@@ -376,7 +376,7 @@ begin
       begin
         FieldKind := fkLookup;
         KeyFields := 'ZASSIGNEDTO';
-        LookupDataSet := DM.cdsUser;
+        LookupDataSet := DM.cdsUserAll;
         LookupKeyFields := 'ZID';
         LookupResultField := 'ZNAME';
       end;
@@ -390,7 +390,7 @@ begin
       begin
         FieldKind := fkLookup;
         KeyFields := 'ZTESTRESULTBY';
-        LookupDataSet := DM.cdsUser;
+        LookupDataSet := DM.cdsUserAll;
         LookupKeyFields := 'ZID';
         LookupResultField := 'ZNAME';
       end;
@@ -404,7 +404,7 @@ begin
       begin
         FieldKind := fkLookup;
         KeyFields := 'ZSUBMISBY';
-        LookupDataSet := DM.cdsUser;
+        LookupDataSet := DM.cdsUserAll;
         LookupKeyFields := 'ZID';
         LookupResultField := 'ZNAME';
       end;

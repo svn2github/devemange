@@ -45,7 +45,6 @@ inherited UserManageClientDlg: TUserManageClientDlg
           Height = 628
           Align = alClient
           DataSource = dsUsers
-          ImeName = #26497#21697#20116#31508#36755#20837#27861
           Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
           TabOrder = 0
           TitleFont.Charset = GB2312_CHARSET
@@ -279,7 +278,6 @@ inherited UserManageClientDlg: TUserManageClientDlg
           Height = 413
           Align = alClient
           DataSource = dsUserPriv
-          ImeName = #26497#21697#20116#31508#36755#20837#27861
           Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
           TabOrder = 1
           TitleFont.Charset = GB2312_CHARSET
