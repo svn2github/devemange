@@ -452,8 +452,19 @@ begin
         LookupResultField := 'ZNAME';
       end;
 
-
-
+      //立项项目
+      myField := AddFieldDef;
+      myField.Name := 'ZPRONAME';
+      myField.DataType := ftString;
+      myField.Size := 30;
+      with myfield.CreateField(cdsTestItem) do
+      begin
+        FieldKind := fkLookup;
+        KeyFields := 'ZPRO_ID';
+        LookupDataSet := cdsProject;
+        LookupKeyFields := 'ZID';
+        LookupResultField := 'ZNAME';
+      end;
 
      cdsTestItem.FieldByName('ZID').Alignment := taLeftJustify;
      cdsTestItem.FieldByName('ZCLOSESTATUSNAME').Alignment :=taCenter;

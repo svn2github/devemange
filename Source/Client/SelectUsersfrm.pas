@@ -25,8 +25,7 @@ type
     { Public declarations }
   end;
 
-var
-  SelectUsersDlg: TSelectUsersDlg;
+
 
 implementation
 
@@ -38,10 +37,10 @@ procedure TSelectUsersDlg.btbnAddClick(Sender: TObject);
 begin
   with DM do
   begin
-    if cdsUser.IsEmpty then Exit;
-    if lbUsers.Items.IndexOf(cdsUser.FieldByName('ZNAME').AsString) >=0 Then Exit;
-    lbUsers.Items.Add(cdsUser.FieldByName('ZNAME').AsString);
-    lbUserCode.Items.Add(cdsUser.FieldByName('ZID').AsString);
+    if cdsUserAll.IsEmpty then Exit;
+    if lbUsers.Items.IndexOf(cdsUserAll.FieldByName('ZNAME').AsString) >=0 Then Exit;
+    lbUsers.Items.Add(cdsUserAll.FieldByName('ZNAME').AsString);
+    lbUserCode.Items.Add(cdsUserAll.FieldByName('ZID').AsString);
   end;
 end;
 

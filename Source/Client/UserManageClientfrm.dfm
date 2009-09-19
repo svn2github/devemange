@@ -1,6 +1,6 @@
 inherited UserManageClientDlg: TUserManageClientDlg
-  Left = 235
-  Top = 67
+  Left = 247
+  Top = 98
   Height = 798
   Caption = #29992#25143#31649#29702
   OldCreateOrder = True
@@ -133,7 +133,7 @@ inherited UserManageClientDlg: TUserManageClientDlg
           TabOrder = 1
           object cbEditUser: TCheckBox
             Left = 8
-            Top = 12
+            Top = 11
             Width = 57
             Height = 17
             Caption = #32534#36753
@@ -141,8 +141,8 @@ inherited UserManageClientDlg: TUserManageClientDlg
             OnClick = cbEditUserClick
           end
           object BitBtn1: TBitBtn
-            Left = 80
-            Top = 8
+            Left = 70
+            Top = 7
             Width = 100
             Height = 25
             Action = actUser_Add
@@ -150,8 +150,8 @@ inherited UserManageClientDlg: TUserManageClientDlg
             TabOrder = 1
           end
           object BitBtn2: TBitBtn
-            Left = 184
-            Top = 8
+            Left = 174
+            Top = 7
             Width = 100
             Height = 25
             Action = actUser_Del
@@ -159,8 +159,8 @@ inherited UserManageClientDlg: TUserManageClientDlg
             TabOrder = 2
           end
           object BitBtn3: TBitBtn
-            Left = 288
-            Top = 8
+            Left = 278
+            Top = 7
             Width = 100
             Height = 25
             Action = actUser_Save
@@ -168,8 +168,8 @@ inherited UserManageClientDlg: TUserManageClientDlg
             TabOrder = 3
           end
           object BitBtn4: TBitBtn
-            Left = 392
-            Top = 8
+            Left = 382
+            Top = 7
             Width = 100
             Height = 25
             Action = actUser_Cancel
@@ -177,8 +177,8 @@ inherited UserManageClientDlg: TUserManageClientDlg
             TabOrder = 4
           end
           object BitBtn9: TBitBtn
-            Left = 496
-            Top = 8
+            Left = 486
+            Top = 7
             Width = 100
             Height = 25
             Action = actUser_RefreshData
@@ -227,7 +227,7 @@ inherited UserManageClientDlg: TUserManageClientDlg
           TabOrder = 0
           object ckEditUserPriv: TCheckBox
             Left = 8
-            Top = 16
+            Top = 12
             Width = 65
             Height = 17
             Caption = #32534#36753
@@ -235,7 +235,7 @@ inherited UserManageClientDlg: TUserManageClientDlg
             OnClick = ckEditUserPrivClick
           end
           object BitBtn5: TBitBtn
-            Left = 82
+            Left = 68
             Top = 8
             Width = 100
             Height = 25
@@ -244,7 +244,7 @@ inherited UserManageClientDlg: TUserManageClientDlg
             TabOrder = 1
           end
           object BitBtn6: TBitBtn
-            Left = 186
+            Left = 172
             Top = 7
             Width = 100
             Height = 25
@@ -253,7 +253,7 @@ inherited UserManageClientDlg: TUserManageClientDlg
             TabOrder = 2
           end
           object BitBtn7: TBitBtn
-            Left = 290
+            Left = 276
             Top = 7
             Width = 100
             Height = 25
@@ -262,13 +262,21 @@ inherited UserManageClientDlg: TUserManageClientDlg
             TabOrder = 3
           end
           object BitBtn8: TBitBtn
-            Left = 394
+            Left = 380
             Top = 7
             Width = 100
             Height = 25
             Action = actPriv_Cancel
             Caption = #21462#28040
             TabOrder = 4
+          end
+          object Button1: TButton
+            Left = 484
+            Top = 7
+            Width = 149
+            Height = 25
+            Action = actPriv_CopyByName
+            TabOrder = 5
           end
         end
         object dgUserPriv: TDBGrid
@@ -597,6 +605,12 @@ inherited UserManageClientDlg: TUserManageClientDlg
       Category = #29992#25143
       Caption = #21047#26032#25968#25454
       OnExecute = actUser_RefreshDataExecute
+    end
+    object actPriv_CopyByName: TAction
+      Category = #26435#38480
+      Caption = #19982#26576#20154#30340#26435#38480#19968#26679
+      OnExecute = actPriv_CopyByNameExecute
+      OnUpdate = actPriv_CopyByNameUpdate
     end
   end
 end

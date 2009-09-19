@@ -70,6 +70,8 @@ type
     Splitter1: TSplitter;
     Label5: TLabel;
     Label6: TLabel;
+    Button1: TButton;
+    actPriv_CopyByName: TAction;
     procedure cbEditUserClick(Sender: TObject);
     procedure actUser_AddUpdate(Sender: TObject);
     procedure actUser_DelUpdate(Sender: TObject);
@@ -99,6 +101,8 @@ type
     procedure PageControl1Changing(Sender: TObject;
       var AllowChange: Boolean);
     procedure actUser_RefreshDataExecute(Sender: TObject);
+    procedure actPriv_CopyByNameExecute(Sender: TObject);
+    procedure actPriv_CopyByNameUpdate(Sender: TObject);
   private
     { Private declarations }
   public
@@ -114,6 +118,7 @@ var
 implementation
 uses
   ClinetSystemUnits,
+  SelectUsersfrm,
   ClientTypeUnits;
 
 {$R *.dfm}
@@ -542,5 +547,64 @@ begin
   end;
 end;
 
+
+procedure TUserManageClientDlg.actPriv_CopyByNameExecute(Sender: TObject);
+var
+  myDataSet : TClientDataSet;
+  myStr : string;
+const
+  glSQLTXT  = 'select * from TB_USER_PRIVILEGE where ZUSER_ID=%d';
+  glSQLTXT2 = 'Delete TB_USER_PRIVILEGE where ZUSER_ID=%d';
+begin
+  with TSelectUsersDlg.Create(nil) do
+  try
+    if ShowModal= mrok then
+    begin
+      if lbUserCode.Count > 0 then
+      begin
+        //ClientSystem.fDbOpr.BeginTrans;
+        try
+          myStr := Format(glSQLTXT,[StrToInt(lbUserCode.Items[0])]);
+          myDataSet := TClientDataSet.Create(nil);
+          myDataSet.Data := ClientSystem.fDbOpr.ReadDataSet(PChar(myStr));
+          if myDataSet.IsEmpty then Exit;
+
+          //先删除所有的
+          //myStr := Format(glSQLTXT2,[cdsUsers.FieldByName('ZID').AsInteger]);
+          //ClientSystem.fDbOpr.ExeSQL(PChar(myStr));
+          cdsUserPriv.First;
+          while cdsUserPriv.RecordCount >0 do
+            cdsUserPriv.Delete;
+
+
+          myDataSet.First;
+          while not myDataSet.Eof do
+          begin
+            cdsUserPriv.Append;
+            cdsUserPriv.FieldByName('ZSTYLE').AsInteger     := myDataSet.FieldByName('ZSTYLE').AsInteger;
+            cdsUserPriv.FieldByName('ZSUBSTYLE').AsInteger  := myDataSet.FieldByName('ZSUBSTYLE').AsInteger;
+            cdsUserPriv.FieldByName('ZMODULEID').AsInteger  := myDataSet.FieldByName('ZMODULEID').AsInteger;
+            cdsUserPriv.FieldByName('ZRIGHTMASK').AsInteger := myDataSet.FieldByName('ZRIGHTMASK').AsInteger;
+            cdsUserPriv.Post;
+            myDataSet.Next;
+          end;
+          myDataSet.Free;
+
+          //ClientSystem.fDbOpr.CommitTrans;
+        except
+          //ClientSystem.fDbOpr.RollbackTrans;
+        end;
+      end;
+    end;
+  finally
+    Free;
+  end;
+end;
+
+procedure TUserManageClientDlg.actPriv_CopyByNameUpdate(Sender: TObject);
+begin
+  (Sender As TAction).Enabled := ckEditUserPriv.Checked and
+   (not cdsUsers.IsEmpty);
+end;
 
 end.

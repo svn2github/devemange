@@ -1,6 +1,6 @@
 inherited TestManageChildfrm: TTestManageChildfrm
-  Left = 49
-  Top = 101
+  Left = 56
+  Top = 77
   Width = 1139
   Height = 713
   Caption = #27979#35797#31649#29702
@@ -48,8 +48,8 @@ inherited TestManageChildfrm: TTestManageChildfrm
             Expanded = False
             FieldName = 'ZID'
             Title.Alignment = taCenter
-            Title.Caption = #32534#21495
-            Width = 70
+            Title.Caption = '$'#32534#21495
+            Width = 60
             Visible = True
           end
           item
@@ -57,7 +57,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
             FieldName = 'ZNAME'
             Title.Alignment = taCenter
             Title.Caption = #21517#31216
-            Width = 350
+            Width = 400
             Visible = True
           end
           item
@@ -65,7 +65,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
             FieldName = 'ZSUBMISBYNAME'
             Title.Alignment = taCenter
             Title.Caption = #25552#20132#20154
-            Width = 80
+            Width = 60
             Visible = True
           end
           item
@@ -73,7 +73,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
             FieldName = 'ZASSIGNEDTONAME'
             Title.Alignment = taCenter
             Title.Caption = #25351#27966#32473
-            Width = 80
+            Width = 60
             Visible = True
           end
           item
@@ -82,7 +82,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
             FieldName = 'ZLEVELNAME'
             Title.Alignment = taCenter
             Title.Caption = #31561#32423
-            Width = 60
+            Width = 40
             Visible = True
           end
           item
@@ -90,7 +90,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
             FieldName = 'ZTESTRESULTBYNAME'
             Title.Alignment = taCenter
             Title.Caption = #27979#35797#20154
-            Width = 80
+            Width = 60
             Visible = True
           end
           item
@@ -98,7 +98,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
             FieldName = 'ZSTATUSNAME'
             Title.Alignment = taCenter
             Title.Caption = #27979#35797#32467#26524
-            Width = 85
+            Width = 65
             Visible = True
           end
           item
@@ -106,7 +106,15 @@ inherited TestManageChildfrm: TTestManageChildfrm
             FieldName = 'ZCLOSESTATUSNAME'
             Title.Alignment = taCenter
             Title.Caption = #35780#23457
-            Width = 60
+            Width = 40
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'ZPRONAME'
+            Title.Alignment = taCenter
+            Title.Caption = #31435#39033#39033#30446
+            Width = 100
             Visible = True
           end
           item
@@ -293,7 +301,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
           Left = 0
           Top = 40
           Width = 1123
-          Height = 279
+          Height = 280
           Align = alClient
           AllowDelete = False
           AllowInsert = False
@@ -824,7 +832,6 @@ inherited TestManageChildfrm: TTestManageChildfrm
           DataField = 'ZPRO_ID'
           DataSource = dsTestItem
           DropDownRows = 30
-          ImeName = #26497#21697#20116#31508#36755#20837#27861
           KeyField = 'ZID'
           ListField = 'ZNAME'
           ListSource = dsProject
@@ -965,7 +972,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
         object lblTitle: TLabel
           Left = 0
           Top = 0
-          Width = 64
+          Width = 992
           Height = 15
           Align = alClient
           Caption = 'lblTitle'

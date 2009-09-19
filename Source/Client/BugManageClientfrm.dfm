@@ -103,7 +103,7 @@ inherited BugManageDlg: TBugManageDlg
                 Expanded = False
                 FieldName = 'ZID'
                 Title.Alignment = taCenter
-                Title.Caption = #32534#21495
+                Title.Caption = '#'#32534#21495
                 Width = 65
                 Visible = True
               end

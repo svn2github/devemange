@@ -14,7 +14,7 @@ inherited SelectUsersDlg: TSelectUsersDlg
     Top = 8
     Width = 217
     Height = 353
-    DataSource = DM.dsUsers
+    DataSource = DM.dsUserAll
     Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
     ReadOnly = True
     TabOrder = 0
