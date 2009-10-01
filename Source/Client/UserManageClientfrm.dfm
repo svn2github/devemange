@@ -1,6 +1,6 @@
 inherited UserManageClientDlg: TUserManageClientDlg
-  Left = 247
-  Top = 98
+  Left = 167
+  Top = 2
   Height = 798
   Caption = #29992#25143#31649#29702
   OldCreateOrder = True
@@ -52,6 +52,7 @@ inherited UserManageClientDlg: TUserManageClientDlg
           TitleFont.Height = -15
           TitleFont.Name = #23435#20307
           TitleFont.Style = []
+          OnDrawColumnCell = dgUsersDrawColumnCell
           Columns = <
             item
               Color = clBtnFace
@@ -59,6 +60,7 @@ inherited UserManageClientDlg: TUserManageClientDlg
               FieldName = 'ZID'
               Title.Alignment = taCenter
               Title.Caption = #29992#25143'ID'
+              Width = 50
               Visible = True
             end
             item
@@ -74,7 +76,7 @@ inherited UserManageClientDlg: TUserManageClientDlg
               FieldName = 'ZPASS'
               Title.Alignment = taCenter
               Title.Caption = #23494#30721
-              Width = 150
+              Width = 100
               Visible = True
             end
             item
@@ -82,7 +84,7 @@ inherited UserManageClientDlg: TUserManageClientDlg
               FieldName = 'ZSTOP'
               Title.Alignment = taCenter
               Title.Caption = #31105#29992
-              Width = 80
+              Width = 50
               Visible = True
             end
             item
@@ -91,7 +93,7 @@ inherited UserManageClientDlg: TUserManageClientDlg
               FieldName = 'ZTYPE'
               Title.Alignment = taCenter
               Title.Caption = #31867#22411'(0='#31995#32479#29992#25143'1='#24320#21457#20154#21592' 2='#27979#35797#20154#21592',3='#20854#20182#20154#21592',4='#23458#26381#20154#21592')'
-              Width = 150
+              Width = 59
               Visible = True
             end
             item
@@ -99,6 +101,7 @@ inherited UserManageClientDlg: TUserManageClientDlg
               FieldName = 'ZEMAIL'
               Title.Alignment = taCenter
               Title.Caption = #37038#31665
+              Width = 200
               Visible = True
             end
             item
@@ -120,6 +123,14 @@ inherited UserManageClientDlg: TUserManageClientDlg
               FieldName = 'ZCHECKTASK'
               Title.Alignment = taCenter
               Title.Caption = #20219#21153#21333#23457#26680
+              Width = 80
+              Visible = True
+            end
+            item
+              Expanded = False
+              FieldName = 'ZSVNNAME'
+              Title.Alignment = taCenter
+              Title.Caption = 'SVN'#36134#21495
               Visible = True
             end>
         end
@@ -293,6 +304,7 @@ inherited UserManageClientDlg: TUserManageClientDlg
           TitleFont.Height = -15
           TitleFont.Name = #23435#20307
           TitleFont.Style = []
+          OnDrawColumnCell = dgUserPrivDrawColumnCell
           Columns = <
             item
               Expanded = False

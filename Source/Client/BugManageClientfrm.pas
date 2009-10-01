@@ -670,6 +670,7 @@ begin
   myb := fLoading;
   fLoading := True;
   myDataSet := TClientDataSet.Create(nil);
+  ShowProgress('读取数据...',0);
   try
     myDataSet.Data := ClientSystem.fDbOpr.ReadDataSet(PChar(mySQL));
     if cdsBugItem.Fields.Count=0 then
@@ -802,6 +803,7 @@ begin
     myDataSet.Free;
     fLoading :=myb;
     ClientSystem.EndTickCount;
+    HideProgress;
   end;
 end;
 
@@ -1905,7 +1907,7 @@ var
   myPageIndex:integer;
   mywhere : String;
 begin
-  ShowProgress('读取数据...',0);
+
   try
     fPageType.fType := ptMe;
     fPageType.fWhereStr := 'ZOPENEDBY=%d';
@@ -1921,7 +1923,7 @@ begin
     lbProjectName.Caption := format('%s  =>第%d共%d页',[
       fPageType.fName,fPageType.fIndex,fPageType.fIndexCount]);
   finally
-    Self.HideProgress;
+
   end;
 end;
 
@@ -1930,7 +1932,7 @@ var
   myPageIndex:integer;
   mywhere : String;
 begin
-  ShowProgress('读取数据...',0);
+
   try
     fPageType.fType := ptMe;
     fPageType.fWhereStr := 'ZASSIGNEDTO=%d';
@@ -1946,7 +1948,7 @@ begin
     lbProjectName.Caption := format('%s  =>第%d共%d页',[
       fPageType.fName,fPageType.fIndex,fPageType.fIndexCount]);
   finally
-    Self.HideProgress;
+
   end;
 end;
 
@@ -1955,7 +1957,7 @@ var
   myPageIndex:integer;
   mywhere : String;
 begin
-  ShowProgress('读取数据...',0);
+
   try
     fPageType.fType := ptMe;
     fPageType.fWhereStr := 'ZRESOLVEDBY=%d';
@@ -1972,7 +1974,7 @@ begin
     lbProjectName.Caption := format('%s  =>第%d共%d页',[
       fPageType.fName,fPageType.fIndex,fPageType.fIndexCount]);
   finally
-    Self.HideProgress;
+
   end;
 end;
 
@@ -2027,7 +2029,7 @@ var
   myPageindex : integer;
   mywhere : String;
 begin
-  ShowProgress('读取数据...',0);
+
   try
     if fPageType.fType = ptMe then
     begin
@@ -2066,7 +2068,7 @@ begin
         myBugData^.fName,myBugData^.fPageIndex,myBugData^.fPageCount]);
     end;
   finally
-    Self.HideProgress;
+
   end;
 end;
 
@@ -2224,7 +2226,6 @@ begin
     begin
       fHighQuery.Hide;
       Application.ProcessMessages;
-      ShowProgress('读取数据...',0);
       try
         mywhere := GetwhereStr();
         fPageType.fType := ptQuery;
@@ -2240,7 +2241,7 @@ begin
         lbProjectName.Caption := format('%s  =>第%d共%d页',[
         fPageType.fName,fPageType.fIndex,fPageType.fIndexCount]);
       finally
-        HideProgress;
+
       end;
     end;
 
@@ -2650,7 +2651,7 @@ begin
   // 注意目录的权限
   //
   Application.ProcessMessages;
-  ShowProgress('读取数据...',0);
+
   try
     mywhere := GetwhereStr();
     fPageType.fType := ptQuery;
@@ -2666,7 +2667,7 @@ begin
     lbProjectName.Caption := format('%s  =>第%d共%d页',[
     fPageType.fName,fPageType.fIndex,fPageType.fIndexCount]);
   finally
-    HideProgress;
+
   end;
 end;
 

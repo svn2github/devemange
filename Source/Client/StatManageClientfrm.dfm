@@ -1,7 +1,7 @@
 inherited StatManageClientDlg: TStatManageClientDlg
-  Left = 215
-  Top = 194
-  Width = 918
+  Left = 143
+  Top = 179
+  Width = 971
   Height = 467
   Caption = #32479#35745#27719#24635
   OldCreateOrder = True
@@ -10,7 +10,7 @@ inherited StatManageClientDlg: TStatManageClientDlg
   object pnlTool: TPanel
     Left = 0
     Top = 0
-    Width = 910
+    Width = 963
     Height = 40
     Align = alTop
     TabOrder = 0
@@ -49,7 +49,7 @@ inherited StatManageClientDlg: TStatManageClientDlg
       TabOrder = 1
     end
     object btnStat: TBitBtn
-      Left = 327
+      Left = 322
       Top = 9
       Width = 100
       Height = 25
@@ -58,7 +58,7 @@ inherited StatManageClientDlg: TStatManageClientDlg
       TabOrder = 2
     end
     object btnExportExcel: TBitBtn
-      Left = 763
+      Left = 738
       Top = 9
       Width = 100
       Height = 25
@@ -67,7 +67,7 @@ inherited StatManageClientDlg: TStatManageClientDlg
       TabOrder = 3
     end
     object btnUpMother: TBitBtn
-      Left = 437
+      Left = 426
       Top = 9
       Width = 100
       Height = 25
@@ -76,7 +76,7 @@ inherited StatManageClientDlg: TStatManageClientDlg
       TabOrder = 4
     end
     object btnDownMother: TBitBtn
-      Left = 546
+      Left = 530
       Top = 9
       Width = 100
       Height = 25
@@ -85,7 +85,7 @@ inherited StatManageClientDlg: TStatManageClientDlg
       TabOrder = 5
     end
     object btnCurrMother: TBitBtn
-      Left = 655
+      Left = 634
       Top = 9
       Width = 100
       Height = 25
@@ -93,11 +93,20 @@ inherited StatManageClientDlg: TStatManageClientDlg
       Caption = #24403#21069#26376#20221
       TabOrder = 6
     end
+    object btn1: TBitBtn
+      Left = 842
+      Top = 9
+      Width = 100
+      Height = 25
+      Action = actChart
+      Caption = #22270#34920#23545#27604
+      TabOrder = 7
+    end
   end
   object tbc1: TTabControl
     Left = 0
     Top = 40
-    Width = 910
+    Width = 963
     Height = 393
     Align = alClient
     TabOrder = 1
@@ -109,7 +118,7 @@ inherited StatManageClientDlg: TStatManageClientDlg
     object dbgrdData: TDBGrid
       Left = 4
       Top = 26
-      Width = 902
+      Width = 955
       Height = 363
       Align = alClient
       DataSource = dsData
@@ -157,6 +166,11 @@ inherited StatManageClientDlg: TStatManageClientDlg
     object actCurrMother: TAction
       Caption = #24403#21069#26376#20221
       OnExecute = actCurrMotherExecute
+    end
+    object actChart: TAction
+      Caption = #22270#34920#23545#27604
+      OnExecute = actChartExecute
+      OnUpdate = actChartUpdate
     end
   end
   object dlgSave1: TSaveDialog

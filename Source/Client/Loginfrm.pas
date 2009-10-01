@@ -17,17 +17,17 @@ uses
 
 type
   TLoginDlg = class(TForm)
+    lbStutas: TLabel;
+    Panel1: TPanel;
     Label1: TLabel;
     cbServerIP: TComboBox;
+    Label4: TLabel;
+    edName: TEdit;
     Label2: TLabel;
     Label3: TLabel;
-    edName: TEdit;
     edPass: TEdit;
     btOK: TBitBtn;
     btCancel: TBitBtn;
-    Label4: TLabel;
-    lbStutas: TLabel;
-    lbl1: TLabel;
     procedure btOKClick(Sender: TObject);
   private
     { Private declarations }

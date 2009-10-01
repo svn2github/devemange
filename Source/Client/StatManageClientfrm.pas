@@ -30,6 +30,8 @@ type
     dbgrdData: TDBGrid;
     btnCurrMother: TBitBtn;
     actCurrMother: TAction;
+    actChart: TAction;
+    btn1: TBitBtn;
     procedure actStatExecute(Sender: TObject);
     procedure actExportExcelExecute(Sender: TObject);
     procedure actExportExcelUpdate(Sender: TObject);
@@ -37,6 +39,8 @@ type
     procedure actDownMotherExecute(Sender: TObject);
     procedure tbc1Changing(Sender: TObject; var AllowChange: Boolean);
     procedure actCurrMotherExecute(Sender: TObject);
+    procedure actChartExecute(Sender: TObject);
+    procedure actChartUpdate(Sender: TObject);
   private
     { Private declarations }
   public
@@ -47,7 +51,10 @@ type
 implementation
 
 
-uses ClinetSystemUnits,ComObj;
+uses
+  ClinetSystemUnits,
+  StatChartfrm,
+  ComObj;
 
 const
   gcMotheday : array[1..12] of Integer = (31,28,31,30,31,30,31,31,30,31,30,31);
@@ -223,6 +230,27 @@ begin
   dtp1.Date := strtodatetime(format('%d-%d-1',[y,m]));
   dtp2.Date := strtodatetime(format('%d-%d-%d',[y,m,gcMotheday[m]]));
   actStat.Execute;
+end;
+
+procedure TStatManageClientDlg.actChartExecute(Sender: TObject);
+begin
+  with TStatChartDlg.Create(nil) do
+  try
+    cds1.Data := cdsData.Data;
+
+    dbcht1.Foot.Text.Add(format('统计期间:%s 到 %s',[datetostr(dtp1.Date),
+    datetostr(dtp2.Date)]));
+
+    ShowModal;
+  finally
+    Free;
+  end;
+end;
+
+procedure TStatManageClientDlg.actChartUpdate(Sender: TObject);
+begin
+  (Sender as TAction).Enabled := cdsData.Active and
+  (cdsData.RecordCount > 0);
 end;
 
 end.

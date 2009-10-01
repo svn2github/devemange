@@ -103,6 +103,10 @@ type
     procedure actUser_RefreshDataExecute(Sender: TObject);
     procedure actPriv_CopyByNameExecute(Sender: TObject);
     procedure actPriv_CopyByNameUpdate(Sender: TObject);
+    procedure dgUsersDrawColumnCell(Sender: TObject; const Rect: TRect;
+      DataCol: Integer; Column: TColumn; State: TGridDrawState);
+    procedure dgUserPrivDrawColumnCell(Sender: TObject; const Rect: TRect;
+      DataCol: Integer; Column: TColumn; State: TGridDrawState);
   private
     { Private declarations }
   public
@@ -187,11 +191,11 @@ var
   mySQL : string;
 const
   glSQL  = 'update TB_USER_ITEM set ZNAME=''%s'',ZPASS=''%s'',ZSTOP=%d,ZTYPE=%d,'+
-           'ZEMAIL=''%s'',ZGROUP_ID=%d,ZPRIVGROUP=%d,ZCHECKTASK=%d ' +
+           'ZEMAIL=''%s'',ZGROUP_ID=%d,ZPRIVGROUP=%d,ZCHECKTASK=%d,ZSVNNAME=''%s'' ' +
            'where ZID=%d';
   glSQL2 = 'insert TB_USER_ITEM(ZNAME,ZPASS,ZSTOP,ZTYPE,ZEMAIL,ZGROUP_ID,'+
-           'ZPRIVGROUP,ZCHECKTASK) ' +
-           'values(''%s'',''%s'',%d,%d,''%s'',%d,%d,%d)';
+           'ZPRIVGROUP,ZCHECKTASK,ZSVNNAME) ' +
+           'values(''%s'',''%s'',%d,%d,''%s'',%d,%d,%d,''%s'')';
 begin
   if fLoading then Exit;
   if not DataSet.FieldByName('ZISNEW').AsBoolean then
@@ -205,6 +209,7 @@ begin
       DataSet.FieldByName('ZGROUP_ID').AsInteger,
       DataSet.FieldByName('ZPRIVGROUP').AsInteger,
       Ord(DataSet.FieldByName('ZCHECKTASK').AsBoolean),
+      DataSet.FieldByName('ZSVNNAME').AsString,
       DataSet.FieldByName('ZID').Asinteger]);
     ClientSystem.fDbOpr.BeginTrans;
     try
@@ -223,7 +228,8 @@ begin
       DataSet.FieldByName('ZEMAIL').AsString,
       DataSet.FieldByName('ZGROUP_ID').AsInteger,
       DataSet.FieldByName('ZPRIVGROUP').AsInteger,
-      Ord(DataSet.FieldByName('ZCHECKTASK').AsBoolean)]);
+      Ord(DataSet.FieldByName('ZCHECKTASK').AsBoolean),
+      DataSet.FieldByName('ZSVNNAME').AsString]);
     ClientSystem.fDbOpr.BeginTrans;
     try
       ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
@@ -605,6 +611,32 @@ procedure TUserManageClientDlg.actPriv_CopyByNameUpdate(Sender: TObject);
 begin
   (Sender As TAction).Enabled := ckEditUserPriv.Checked and
    (not cdsUsers.IsEmpty);
+end;
+
+procedure TUserManageClientDlg.dgUsersDrawColumnCell(Sender: TObject;
+  const Rect: TRect; DataCol: Integer; Column: TColumn;
+  State: TGridDrawState);
+begin
+  if (cdsUsers.RecNo mod 2  = 0) and not ( gdSelected in State)  then
+    dgUsers.Canvas.Brush.Color := clSilver;
+
+  if (cdsUsers.FieldByName('ZSTOP').AsBoolean) then
+  begin
+    dgUsers.Canvas.Font.Color := clred;
+    dgUsers.Canvas.Font.Style := [fsStrikeOut];
+  end;
+  dgUsers.DefaultDrawColumnCell(Rect,DataCol,Column,State);
+end;
+
+procedure TUserManageClientDlg.dgUserPrivDrawColumnCell(Sender: TObject;
+  const Rect: TRect; DataCol: Integer; Column: TColumn;
+  State: TGridDrawState);
+begin
+  if (cdsUserPriv.RecNo mod 2  = 0) and not (gdSelected in State)  then
+    dgUserPriv.Canvas.Brush.Color := clSilver;
+
+  dgUserPriv.DefaultDrawColumnCell(Rect,DataCol,Column,State);
+
 end;
 
 end.

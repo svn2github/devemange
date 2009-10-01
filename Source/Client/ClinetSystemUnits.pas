@@ -14,10 +14,10 @@ unit ClinetSystemUnits;
 
 interface
 uses
-  Classes,SysUtils,Windows, {EncdDecd{base64串},}
+  Classes,SysUtils,Windows,
   ClientTypeUnits,Gauges,
   DBApiIntf,DBClient;
-
+ //{EncdDecd{base64串}
 type
 
   TEditerType = (etAdmin,etDeve,etTest,etUser,etServer);  //用户类型 ,etServer 为服务人员
