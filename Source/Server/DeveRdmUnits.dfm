@@ -2,8 +2,8 @@ object BFSSRDM: TBFSSRDM
   OldCreateOrder = False
   OnCreate = RemoteDataModuleCreate
   OnDestroy = RemoteDataModuleDestroy
-  Left = 350
-  Top = 185
+  Left = 356
+  Top = 333
   Height = 422
   Width = 509
   object adsSQL: TADODataSet
@@ -76,25 +76,6 @@ object BFSSRDM: TBFSSRDM
     Left = 192
     Top = 16
   end
-  object SMTP: TIdSMTP
-    MaxLineAction = maException
-    ReadTimeout = 0
-    Port = 25
-    AuthenticationType = atNone
-    Left = 272
-    Top = 320
-  end
-  object IdMessage1: TIdMessage
-    AttachmentEncoding = 'MIME'
-    BccList = <>
-    CCList = <>
-    Encoding = meMIME
-    Priority = mpHigh
-    Recipients = <>
-    ReplyTo = <>
-    Left = 322
-    Top = 319
-  end
   object spExce: TADOStoredProc
     Parameters = <>
     Left = 56
@@ -116,5 +97,24 @@ object BFSSRDM: TBFSSRDM
     ProviderName = 'dspDataSet'
     Left = 32
     Top = 320
+  end
+  object SMTP: TIdSMTP
+    MaxLineAction = maException
+    ReadTimeout = 0
+    Port = 25
+    AuthenticationType = atNone
+    Left = 104
+    Top = 214
+  end
+  object IdMessage1: TIdMessage
+    AttachmentEncoding = 'MIME'
+    BccList = <>
+    CCList = <>
+    Encoding = meMIME
+    Priority = mpHigh
+    Recipients = <>
+    ReplyTo = <>
+    Left = 170
+    Top = 213
   end
 end

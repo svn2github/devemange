@@ -28,7 +28,7 @@ uses
   DBClient, BFSS_TLB, StdVcl, DB, ADODB,
 
   BFSSClassUnits, Provider, IdBaseComponent, IdComponent, IdTCPConnection,
-  IdTCPClient, IdMessageClient, IdSMTP, IdMessage;
+   IdMessageClient, IdSMTP, IdMessage, IdTCPClient;
 
 type
 
@@ -53,12 +53,12 @@ type
     dspQueryEx4: TDataSetProvider;
     dspCommand: TDataSetProvider;
     ADOQuery: TADOQuery;
-    SMTP: TIdSMTP;
-    IdMessage1: TIdMessage;
     spExce: TADOStoredProc;
     spDataSet: TADOStoredProc;
     dspDataSet: TDataSetProvider;
     cdsDataSet: TClientDataSet;
+    SMTP: TIdSMTP;
+    IdMessage1: TIdMessage;
     procedure RemoteDataModuleCreate(Sender: TObject);
     procedure RemoteDataModuleDestroy(Sender: TObject);
     function dspCommandDataRequest(Sender: TObject;
@@ -85,6 +85,11 @@ type
   public
     { Public declarations }
   end;
+
+  TBFSSRDM2 = class(TBFSSRDM, IBFSSRDM2) end;
+  TBFSSRDM3 = class(TBFSSRDM, IBFSSRDM3) end;
+  TBFSSRDM4 = class(TBFSSRDM, IBFSSRDM4) end;
+  TBFSSRDM5 = class(TBFSSRDM, IBFSSRDM5) end;
 
 implementation
 
@@ -133,7 +138,7 @@ begin
 end;
 
 procedure TBFSSRDM.RemoteDataModuleCreate(Sender: TObject);
-var
+{ar
   myDataBase : String;
 const
   glconnstr = 'Provider=Microsoft.Jet.OLEDB.4.0;Data Source=%s;'
@@ -141,7 +146,7 @@ const
 
   glconnstrmssql2000 = 'Provider=SQLOLEDB.1;Persist Security Info=False;'+
    'User ID=sa;Password=%s;Initial Catalog=%s;Data Source=%s';
-                                   //库名         //服务器
+}                                  //库名         //服务器
 begin
   fLoggedIn := False;
   fUserID   := 0;
@@ -177,44 +182,48 @@ begin
   spDataSet.Connection   := gConn;
 
   // 连接数据库
+  // 如已连接上了，就不连了
   //
   //Aeecss
   //
-  if CurrBFSSSystem.fDataBase.fType = dbt_Access then
+  {f not gConn.Connected and (CurrBFSSSystem.fDataBase.fType = dbt_Access) then
   begin
     myDataBase := Format('%s\%s',[CurrBFSSSystem.fAppDir,
              CurrBFSSSystem.fDataBase.fDBName]);
     if not FileExists(myDataBase) then Exit;
-    if  gConn.Connected then
-      gConn.Connected := False;
+    //if  gConn.Connected then
+    //  gConn.Connected := False;
     gConn.ConnectionString := format(glconnstr,[myDataBase]);
 
   end
   // MSSQL2000
-  else begin
-    if gConn.Connected then
-      gConn.Connected := False;
+  else if not gConn.Connected then
+  begin
+    //if gConn.Connected then
+    //  gConn.Connected := False;
     gConn.ConnectionString := format(glconnstrmssql2000,[
       CurrBFSSSystem.fDataBase.fasPass,
       CurrBFSSSystem.fDataBase.fDBName,
       CurrBFSSSystem.fDataBase.fDBServer]);
-    gConn.Open;
+    //gConn.Open;
   end;
-
+}
 end;
 
 procedure TBFSSRDM.RemoteDataModuleDestroy(Sender: TObject);
 begin
+  {
   if fLoggedIn then
   begin
     CurrBFSSSystem.fUsers.Delete(fUserID);
   end;
+  }
   if SMTP.Connected then SMTP.Disconnect;
 end;
 
 function TBFSSRDM.Login(const AName, APass: WideString):Integer;
-var
-  myItem : PUserRec;
+//var
+  //myItem : PUserRec;
 const
   glSQL  = 'select * from TB_USER_ITEM where ZNAME=''%s'' and ZPASS=''%s''';
   glSQL2 = 'select * from TB_USER_PRIVILEGE where ZUSER_ID=%d';
@@ -233,14 +242,14 @@ begin
       Exit;
     end;
 
-    fLoggedIn := True;
+    // := True;
     fUserID := adsSQL.FieldByName('ZID').AsInteger;
-    new(myItem);
-    myItem^.fID := fUserID;
-    myItem^.fName := AName;
-    myItem^.fLoginDateTime := Now();
-    myItem^.fPrivi := THashedStringList.Create;
-    CurrBFSSSystem.fUsers.Add(myItem);
+    //new(myItem);
+    //myItem^.fID := fUserID;
+    //myItem^.fName := AName;
+    //myItem^.fLoginDateTime := Now();
+    //myItem^.fPrivi := THashedStringList.Create;
+    //CurrBFSSSystem.fUsers.Add(myItem);
 
     //查找权限
     {
@@ -496,8 +505,9 @@ const
 begin
   if not CurrBFSSSystem.fSMTPParams.fAction then Exit;
 
-  if not SMTP.Connected then
+  if not SMTP.Connected  then
   begin
+
     SMTP.AuthenticationType := atLogin;
     SMTP.Host     := CurrBFSSSystem.fSMTPParams.fHost;
     SMTP.Port     := CurrBFSSSystem.fSMTPParams.fPort;
@@ -614,7 +624,7 @@ begin
           mySubject := Format('D%d %s',[AContextID,myTitle]);
         end;
       else
-        Exit;    
+        Exit;
     end;
 
     //发送内容:
@@ -644,7 +654,7 @@ begin
 
   if SMTP.Connected then
     SMTP.Disconnect;
-
+ 
 end;
 
 
@@ -707,9 +717,10 @@ begin
     end;
   end;
 
+
   if SMTP.Connected then
     SMTP.Disconnect;
-
+  
 end;
 
 
@@ -717,5 +728,16 @@ initialization
   TComponentFactory.Create(ComServer, TBFSSRDM,
     Class_BFSSRDM, ciMultiInstance, tmApartment);
 
+  TComponentFactory.Create(ComServer, TBFSSRDM2,
+    Class_BFSSRDM2, ciMultiInstance, tmApartment);
+
+  TComponentFactory.Create(ComServer, TBFSSRDM3,
+    Class_BFSSRDM3, ciMultiInstance, tmApartment);
+
+  TComponentFactory.Create(ComServer, TBFSSRDM4,
+    Class_BFSSRDM4, ciMultiInstance, tmApartment);
+
+  TComponentFactory.Create(ComServer, TBFSSRDM5,
+    Class_BFSSRDM5, ciMultiInstance, tmApartment);
 
 end.
