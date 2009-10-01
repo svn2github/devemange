@@ -53,7 +53,7 @@ implementation
 
 uses
   ClinetSystemUnits,
-  StatChartfrm,
+  StatChartExfrm,
   ComObj;
 
 const

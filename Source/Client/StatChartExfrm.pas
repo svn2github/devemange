@@ -1,0 +1,148 @@
+///////////////////////////////////////////////////////////////////////////////
+//
+//  作者:龙仕云  创建时间: 2009-10-01 中国建国60周年 
+//  功能描述: 统计分析的图表
+//
+//  修改历史记录:
+//       编号  作者     修改日期   修改内容
+//
+//
+///////////////////////////////////////////////////////////////////////////////
+unit StatChartExfrm;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, BaseDialogfrm, ExtCtrls, TeeProcs, TeEngine, Chart, DbChart,
+  Series, TeeFunci, DB, DBClient, Grids, DBGrids, StdCtrls, Buttons;
+
+type
+  TStatChartDlg = class(TBaseDialog)
+    pnlTool: TPanel;
+    cds1: TClientDataSet;
+    strngfldcds1ZUSERNAME: TStringField;
+    intgrfldcds1ZAnswerBugCount: TIntegerField;
+    intgrfldcds1ZSubmitBugCount: TIntegerField;
+    intgrfldcds1ZReplyBugCount: TIntegerField;
+    intgrfldcds1ZReActionBug: TIntegerField;
+    intgrfldcds1ZBugFraction: TIntegerField;
+    intgrfldcds1ZTaskCount: TIntegerField;
+    intgrfldcds1ZTaskFraction: TIntegerField;
+    intgrfldcds1ZWorkOverTime: TIntegerField;
+    intgrfldcds1ZBuildTestCount: TIntegerField;
+    intgrfldcds1ZAnswerTestCount: TIntegerField;
+    intgrfldcds1ZSOCRE: TIntegerField;
+    intgrfldcds1ZTotal: TIntegerField;
+    dbcht1: TDBChart;
+    brsrsSeries1: TBarSeries;
+    ds1: TDataSource;
+    brsrsWorkOverTime: TBarSeries;
+    fltfldcds1calcHour: TFloatField;
+    brsrsSubmitBugCount: TBarSeries;
+    brsrsAnswerBugCount: TBarSeries;
+    brsrsBuildTestCount: TBarSeries;
+    brsrsAnswerTestCount: TBarSeries;
+    chkTotal: TCheckBox;
+    chkSubmitBugCount: TCheckBox;
+    chkAnswerBugCount: TCheckBox;
+    chkBuildTestCount: TCheckBox;
+    chkAnswerTestCount: TCheckBox;
+    chkWorkOverTime: TCheckBox;
+    Button1: TButton;
+    BitBtn1: TBitBtn;
+    procedure cds1CalcFields(DataSet: TDataSet);
+    procedure chkSubmitBugCountClick(Sender: TObject);
+    procedure chkTotalClick(Sender: TObject);
+    procedure chkAnswerBugCountClick(Sender: TObject);
+    procedure chkBuildTestCountClick(Sender: TObject);
+    procedure chkAnswerTestCountClick(Sender: TObject);
+    procedure chkWorkOverTimeClick(Sender: TObject);
+    procedure Button1Click(Sender: TObject);
+    procedure BitBtn1Click(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+
+  end;
+
+
+implementation
+
+{$R *.dfm}
+
+{ TStatChartDlg }
+
+procedure TStatChartDlg.cds1CalcFields(DataSet: TDataSet);
+begin
+  DataSet.FieldByName('calcHour').AsFloat :=
+    DataSet.FieldByName('ZWorkOverTime').AsInteger / 60;
+end;
+
+procedure TStatChartDlg.chkSubmitBugCountClick(Sender: TObject);
+begin
+  brsrsSubmitBugCount.Active := chkSubmitBugCount.Checked;
+end;
+
+procedure TStatChartDlg.chkTotalClick(Sender: TObject);
+begin
+  brsrsSeries1.Active := chkTotal.Checked;
+
+end;
+
+procedure TStatChartDlg.chkAnswerBugCountClick(Sender: TObject);
+begin
+  brsrsAnswerBugCount.Active := chkAnswerBugCount.Checked;
+end;
+
+procedure TStatChartDlg.chkBuildTestCountClick(Sender: TObject);
+begin
+  brsrsBuildTestCount.Active := chkBuildTestCount.Checked;
+end;
+
+procedure TStatChartDlg.chkAnswerTestCountClick(Sender: TObject);
+begin
+  brsrsAnswerTestCount.Active := chkAnswerTestCount.Checked;
+
+end;
+
+procedure TStatChartDlg.chkWorkOverTimeClick(Sender: TObject);
+begin
+  brsrsWorkOverTime.Active := chkWorkOverTime.Checked;
+end;
+
+procedure TStatChartDlg.Button1Click(Sender: TObject);
+begin
+  //删除得分为0
+  cds1.First;
+  while not cds1.Eof  do
+  begin
+    if cds1.FieldByName('ZTotal').AsInteger =0 then
+      cds1.Delete
+    else
+      cds1.Next;
+  end;
+
+  dbcht1.RefreshData;
+
+end;
+
+procedure TStatChartDlg.BitBtn1Click(Sender: TObject);
+begin
+
+  //删除得分为0
+  cds1.First;
+  while not cds1.Eof  do
+  begin
+    if cds1.FieldByName('ZWorkOverTime').AsInteger =0 then
+      cds1.Delete
+    else
+      cds1.Next;
+  end;
+
+  dbcht1.RefreshData;
+
+end;
+
+end.

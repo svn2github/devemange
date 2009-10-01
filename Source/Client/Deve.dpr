@@ -27,8 +27,7 @@ uses
   WorkOverTimeClientfrm in 'WorkOverTimeClientfrm.pas' {WorkOverTimeClient},
   DemandClientfrm in 'DemandClientfrm.pas' {DemandClientDlg},
   TickDateTimefrm in 'TickDateTimefrm.pas' {TickDateTimeDlg},
-  WebHostEditfrm in 'WebHostEditfrm.pas' {WebHostEditDlg},
-  StatChartfrm in 'StatChartfrm.pas' {StatChartDlg};
+  WebHostEditfrm in 'WebHostEditfrm.pas' {WebHostEditDlg};
 
 {$R *.res}
 {$R resource.res}
