@@ -14,7 +14,7 @@ unit ClinetSystemUnits;
 
 interface
 uses
-  Classes,SysUtils,Windows,
+  Classes,SysUtils,Windows, {EncdDecd{base64串},}
   ClientTypeUnits,Gauges,
   DBApiIntf,DBClient;
 
@@ -76,11 +76,10 @@ type
     property SysNow : TDateTime read GetSysNow;  //取出系统的时间
   end;
 
-
-
-
 var
   ClientSystem : TClinetSystem;
+
+  function CreateBfssDBOpr():IDbOperator; stdcall; external 'lgDB.api';
 
 implementation
 uses
@@ -88,7 +87,7 @@ uses
   Variants,
   ZLibEx;
 
-  function CreateBfssDBOpr():IDbOperator; stdcall;  external 'lgDB.api';
+
   
 type
    TByteArray = array of byte;

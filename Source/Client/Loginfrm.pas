@@ -13,7 +13,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, Buttons;
+  Dialogs, StdCtrls, Buttons, ExtCtrls;
 
 type
   TLoginDlg = class(TForm)
@@ -26,13 +26,9 @@ type
     btOK: TBitBtn;
     btCancel: TBitBtn;
     Label4: TLabel;
-    rbLocal: TRadioButton;
-    rbRemoate: TRadioButton;
     lbStutas: TLabel;
     lbl1: TLabel;
     procedure btOKClick(Sender: TObject);
-    procedure rbLocalClick(Sender: TObject);
-    procedure rbRemoateClick(Sender: TObject);
   private
     { Private declarations }
     procedure LoadContextByReg();
@@ -97,16 +93,10 @@ begin
     begin
       myhost := Copy(cbServerIP.Text,1,Pos(':',cbServerIP.Text)-1);
       myPost := strtoint(Copy(cbServerIP.Text,Pos(':',cbServerIP.Text)+1,Maxint));
-      if rbLocal.Checked then
-        ClientSystem.fDbOpr.Connect(0,PChar(myhost),myPost)
-      else
-        ClientSystem.fDbOpr.Connect(1,PChar(myhost),myPost);
+      ClientSystem.fDbOpr.Connect(1,PChar(myhost),myPost);
     end
     else
-      if rbLocal.Checked then
-        ClientSystem.fDbOpr.Connect(0,PChar(cbServerIP.Text),211)
-      else
-        ClientSystem.fDbOpr.Connect(1,PChar(cbServerIP.Text),211);
+      ClientSystem.fDbOpr.Connect(1,PChar(cbServerIP.Text),211);
 
     if ClientSystem.fDbOpr.Connected then
     begin
@@ -122,10 +112,7 @@ begin
         ClientSystem.fEditerType := TEditerType(
           mycds.FieldByName('ZTYPE').AsInteger);
         mycds.Free;
-        if rbLocal.Checked then
-          ClientSystem.fHost     := '本地连接'
-        else
-          ClientSystem.fHost       := cbServerIP.Text;
+        ClientSystem.fHost       := cbServerIP.Text;
         ClientSystem.GetUserPriv; //取出用户的权限
         ModalResult := mrOK;
       end
@@ -164,11 +151,8 @@ begin
     begin
       if mysl.Names[i] = 'connection' then
       begin
-        if mysl.Values['connection'] = '0' then
-          rbLocal.Checked := True
-        else
-          rbRemoate.Checked := True;
-        rbLocalClick(nil);
+        //cbServerIP.Color   := clWindow
+
       end
       else if mysl.Names[i] = 'user' then
       begin
@@ -197,32 +181,11 @@ begin
     mysl.Move(mysl.IndexOf(cbServerIP.Text),0);
   end;
 
-  if rbLocal.Checked then
-    mysl.Add('connection=0')
-  else
-    mysl.Add('connection=1');
+  mysl.Add('connection=1');
   mysl.Add(format('user=%s',[edName.Text]));
 
   mysl.SaveToFile(myfilename);
   mysl.Free;
-end;
-
-procedure TLoginDlg.rbLocalClick(Sender: TObject);
-begin
-  cbServerIP.Enabled := rbRemoate.Checked;
-  if rbRemoate.Checked then
-    cbServerIP.Color   := clWindow
-  else
-    cbServerIP.Color   := clBtnFace;
-end;
-
-procedure TLoginDlg.rbRemoateClick(Sender: TObject);
-begin
-  cbServerIP.Enabled := rbRemoate.Checked;
-  if rbRemoate.Checked then
-    cbServerIP.Color   := clWindow
-  else
-    cbServerIP.Color   := clBtnFace;
 end;
 
 end.

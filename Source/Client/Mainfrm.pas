@@ -130,6 +130,7 @@ type
     procedure actPw_GetPwExecute(Sender: TObject);
     procedure actwork_overtimeExecute(Sender: TObject);
     procedure actMod_DemandExecute(Sender: TObject);
+    procedure ApplicationEvents1Minimize(Sender: TObject);
   private
     fChildform : TList; //所有子窗口的对象
     fCurrentChildform : TBaseChildDlg;
@@ -853,6 +854,12 @@ begin
     SendMessage(myBaseform.Handle,gcMSG_GetDemandItem,msg.WParam,msg.LParam);
   end;
 
+end;
+
+procedure TMainDlg.ApplicationEvents1Minimize(Sender: TObject);
+begin
+  //校验服务器的图片
+  
 end;
 
 end.

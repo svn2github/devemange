@@ -10,6 +10,7 @@
 //  3.增加 GetSysDateTime的方法(); 2008-3-24 by mrlong
 //  4.修改 ReadVariant()方法一直没有写实现 2008-5-13
 //  5.修改 fSocketServer.SupportCallbacks := False 不支持回调 by mrlong 2008-5-31 ver=1.0.2
+//  6.删除掉Dcom的连接，不要了..... ver=1.0.5
 //
 //
 //
@@ -21,7 +22,19 @@ uses
   Classes,DBClient,SysUtils,DB,
   MConnect,SConnect,
   DBSocketConnection,
+  ExtCtrls,
   DbApiIntf;
+
+
+
+const
+  gcTimeOut = 5000*1; //5分钟
+  gc_Class_GUID : array[0..4] of string =
+  ('{B4AA6BE1-5DEF-431A-AFA0-F1262EDB4C5A}',
+   '{7B1AA46A-8C7D-4C89-BC7C-04129CC66D2A}',
+   '{24D5C599-7790-44F1-ACBF-EAD2E8192205}',
+   '{588580BC-AB3A-4B4A-BD53-9AF64C7ADA3B}',
+   '{F1B0B88B-327F-4C78-9C11-B7A98B1086C1}');
 
 type
 
@@ -31,14 +44,16 @@ type
 
     fHost : String;     //SocketServer Host
     fPort : Integer;
-
+    fTimer : TTimer;
     function GetRemoteServer: TCustomRemoteServer;
     procedure SendData(const Data: IDataBlock);
     procedure ReceiveData(const Data: IDataBlock);
     procedure WriteLog(AStr:String);
+    procedure OnTimer(Sender: TObject);
+    procedure ReSetTimer(ATime:Integer=gcTimeOut); //重新开始计时;
+    function ConnectBySocket():Boolean;
 
   private
-    fDOMServer    : TDCOMConnection;
     fSocketServer : TBffsSocketConnection;
     fcdsQuery     : TClientDataSet;
     fConnectStype : TConnectStype;
@@ -93,6 +108,7 @@ var
 
   function CreateBfssDBOpr(): IDbOperator; stdcall;
 
+
 implementation
 uses
   Variants;
@@ -104,9 +120,7 @@ uses
     Result := CurrentDBOpr;
   end;
 
-  //写日志
-
-
+//写日志
 
 { TBfssDBOpr }
 
@@ -118,67 +132,83 @@ end;
 
 procedure TBfssDBOpr.BeginTrans;
 begin
+  //为是如连接中断会产生出错,所以放大
+  ReSetTimer;
   if RemoteServer.Connected then
     RemoteServer.AppServer.BeginTrans;
 end;
 
 procedure TBfssDBOpr.CommitTrans;
 begin
+  ReSetTimer;
   if RemoteServer.Connected then
     RemoteServer.AppServer.CommitTrans;
 end;
 
 function TBfssDBOpr.Connect(AConnStype:word;const AHost: PChar; const APort: Word): Boolean;
 begin
+  Result := False;
   fConnectStype := TConnectStype(AConnStype);
   if RemoteServer.Connected then
     RemoteServer.Connected := False;
 
   fHost := AHost;
-  fPort := APort;  
-  if Self.fConnectStype = csDCOM then
+  fPort := APort;
+  if Self.fConnectStype = csSocket then
   begin
-    with  RemoteServer as TDCOMConnection do
-    begin
-      ServerName :=  AHost;
-      ServerGUID := '{B4AA6BE1-5DEF-431A-AFA0-F1262EDB4C5A}';
-      ServerName := 'BFSS.BFSSRDM';
-      try
-        Connected  := True;
-      except
-        WriteLog('DCOM 连接失败。');
-        Result := False;
-        Exit;
-      end;
-      if Connected then
-        WriteLog('DCOM 连接成功。')
-      else
-        WriteLog('DCOM 连接失败。');
-    end;
-  end
-  else begin
     with RemoteServer as TBffsSocketConnection do
     begin
-      Host := AHost;
-      Port := APort;
-      ServerGUID    := '{B4AA6BE1-5DEF-431A-AFA0-F1262EDB4C5A}';
-
-      try
-        Connected  := True;
-      except
-        Result := False;
-        WriteLog('Sokcet 连接失败。');
-        Exit;
-      end;
-
-      if Connected then
+      Host  := AHost;
+      Port  := APort;
+      Result := ConnectBySocket();
+      if Result then
         WriteLog('Sokcet 连接成功。')
       else
         WriteLog('Sokcet 连接失败。');
     end;
   end;
+
   fcdsQuery.RemoteServer := RemoteServer;
-  Result := RemoteServer.Connected;
+  if Result then
+    fTimer.Enabled := True;
+end;
+
+function TBfssDBOpr.ConnectBySocket: Boolean;
+var
+  mysl : TStringList;
+  mystr : string;
+  i : Integer;
+begin
+  mysl  := TStringList.Create;
+  try
+    mystr := gc_Class_GUID[Random(5)];
+    try
+      fSocketServer.ServerGUID  := mystr;
+      fSocketServer.Connected  := True;
+    except
+      WriteLog('Sokcet -first 连接失败。');
+    end;
+    mysl.Add(mystr);
+
+    for i:=0 to 4 do
+    begin
+      mystr := gc_Class_GUID[i];
+      if mysl.IndexOf(mystr) >=0 then Continue;
+      try
+        fSocketServer.ServerGUID  := mystr;
+        fSocketServer.Connected   := True;
+        if fSocketServer.Connected then Break;
+      except
+        mysl.Add(mystr);
+        WriteLog(Format('Sokcet -%d -%s 连接失败。',[i,mystr]));
+      end;
+    end;
+
+    Result := fSocketServer.Connected;
+
+  finally
+    mysl.free;
+  end;
 end;
 
 function TBfssDBOpr.Connected: Boolean;
@@ -197,7 +227,11 @@ constructor TBfssDBOpr.Create();
 var
   mylogfile : string;
 begin
-  fDOMServer    := TDCOMConnection.Create(nil);
+  fTimer := TTimer.Create(nil);
+  fTimer.Interval := gcTimeOut;
+  fTimer.Enabled  := False;
+  fTimer.OnTimer  := OnTimer;
+
   fSocketServer := TBffsSocketConnection.Create(nil);
   fSocketServer.SupportCallbacks := False; //不支持回调 by mrlong 2008-5-31
   fSocketServer.SendDataEvent := SendData;
@@ -232,9 +266,10 @@ begin
   fcdsQuery.Free;
   if RemoteServer.Connected then
     RemoteServer.Connected := False;
-  fDOMServer.Free;
+
   fSocketServer.Free;
   Closefile(fLogFile);  //关闭日志
+  fTimer.Free;
   inherited;
 end;
 
@@ -242,15 +277,18 @@ function TBfssDBOpr.DisConnect: Boolean;
 begin
   RemoteServer.Connected := False;
   Result := not RemoteServer.Connected;
+  fTimer.Enabled := False;
 end;
 
 procedure TBfssDBOpr.DoExecute(ASqlStr:WideString;AParams: OleVariant);
 var
   OwnerData: OleVariant;
 begin
+  if not RemoteServer.Connected then ReConnect;
   if not RemoteServer.Connected then Exit;
   with  RemoteServer do
   begin
+    //ReSetTimer;
     AppServer.AS_Execute(AppServer.GetDSPName,
       ASqlStr,AParams, OwnerData);
   end;
@@ -259,7 +297,9 @@ end;
 function TBfssDBOpr.ExeSQL(const SqlStr: PChar): Boolean;
 begin
   Result := False;
-  if not RemoteServer.Connected then Exit;
+  if not RemoteServer.Connected then ReConnect;
+  if not RemoteServer.Connected then  Exit;
+  //ReSetTimer;
   try
     fcdsQuery.Close;
     fcdsQuery.ProviderName := RemoteServer.AppServer.GetDSPName;
@@ -275,9 +315,8 @@ end;
 
 function TBfssDBOpr.GetRemoteServer: TCustomRemoteServer;
 begin
-  if fConnectStype = csDCOM then
-    Result := fDOMServer
-  else
+  Result := nil;
+  if fConnectStype = csSocket then
     Result := fSocketServer;
 end;
 
@@ -304,6 +343,18 @@ begin
   RemoteServer.AppServer.MailToEx(AMails,ATitle,AContent);
 end;
 
+procedure TBfssDBOpr.OnTimer(Sender: TObject);
+begin
+  //
+  if Self.fConnectStype = csSocket then
+  begin
+    if fSocketServer.Connected then
+      fSocketServer.Connected := False;
+  end;
+  fTimer.Enabled := False;
+  WriteLog('没有使用超过规定的时间，断开连接'+DateTimeToStr(Now));
+end;
+
 function TBfssDBOpr.ReadBlob(const SqlStr: PChar; var Buf;
   Len: Integer): Integer;
 begin
@@ -312,7 +363,9 @@ end;
 
 function TBfssDBOpr.ReadDataSet(const SqlStr: PChar): OleVariant;
 begin
+  if not RemoteServer.Connected then ReConnect;
   if not RemoteServer.Connected then Exit;
+  ReSetTimer;
   fcdsQuery.Close;
   fcdsQuery.ProviderName := RemoteServer.AppServer.GetDSPName;
   WriteLog(fcdsQuery.ProviderName);
@@ -328,7 +381,9 @@ end;
 function TBfssDBOpr.ReadInt(const SqlStr: PChar): Integer;
 begin
   Result := -1;
+  if not RemoteServer.Connected then ReConnect;
   if not RemoteServer.Connected then Exit;
+  //ReSetTimer;
   fcdsQuery.Close;
   fcdsQuery.ProviderName := RemoteServer.AppServer.GetDSPName;
   fcdsQuery.CommandText := SqlStr;
@@ -346,7 +401,9 @@ end;
 function TBfssDBOpr.ReadRecordCount(const SqlStr: PChar): Integer;
 begin
   Result := 0;
+  if not RemoteServer.Connected then ReConnect;
   if not RemoteServer.Connected then Exit;
+  //ReSetTimer;
   fcdsQuery.Close;
   fcdsQuery.ProviderName := RemoteServer.AppServer.GetDSPName;
   fcdsQuery.CommandText := SqlStr;
@@ -357,7 +414,9 @@ end;
 
 function TBfssDBOpr.ReadVariant(const SqlStr: PChar): OleVariant;
 begin
+  if not RemoteServer.Connected then ReConnect;
   if not RemoteServer.Connected then Exit;
+  //ReSetTimer;
   fcdsQuery.Close;
   fcdsQuery.ProviderName := RemoteServer.AppServer.GetDSPName;
   fcdsQuery.CommandText := SqlStr;
@@ -381,9 +440,26 @@ begin
     (RemoteServer as TBffsSocketConnection).Host := fHost;
     (RemoteServer as TBffsSocketConnection).Port := fPort;
   end;
-  RemoteServer.Connected := True;
 
-  Result := RemoteServer.Connected;
+  if RemoteServer is TDCOMConnection then
+  begin
+    try
+      RemoteServer.Connected := True;
+      Result := RemoteServer.Connected;
+    except
+      Result := False;
+      WriteLog('Sokcet -1 连接失败。');
+      Exit;
+    end;
+  end
+  else
+    Result := ConnectBySocket;
+
+  if Result then
+  begin
+    fTimer.Enabled := True;
+    WriteLog('没有使用超过规定的时间后又重新连接'+DateTimeToStr(Now));
+  end;
 end;
 
 function TBfssDBOpr.RefreshData(const AData: TClientDataSet;
@@ -392,8 +468,17 @@ begin
    Result := False;
 end;
 
+procedure TBfssDBOpr.ReSetTimer(ATime:Integer);
+begin
+  if not fTimer.Enabled then Exit;
+  fTimer.Enabled  := False;
+  fTimer.Interval := ATime;
+  fTimer.Enabled  := True;
+end;
+
 procedure TBfssDBOpr.RollbackTrans;
 begin
+  ReSetTimer();
   if RemoteServer.Connected then
     RemoteServer.AppServer.RollbackTrans;
 end;

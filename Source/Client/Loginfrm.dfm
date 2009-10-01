@@ -79,19 +79,17 @@ object LoginDlg: TLoginDlg
     ParentFont = False
   end
   object cbServerIP: TComboBox
-    Left = 128
+    Left = 127
     Top = 73
-    Width = 308
+    Width = 310
     Height = 24
-    Color = clBtnFace
-    Enabled = False
-    ImeName = #26497#21697#20116#31508#36755#20837#27861
+    Color = clWhite
     ItemHeight = 16
     TabOrder = 1
     Text = 'localhost'
   end
   object edName: TEdit
-    Left = 126
+    Left = 127
     Top = 125
     Width = 309
     Height = 24
@@ -144,25 +142,5 @@ object LoginDlg: TLoginDlg
     Caption = #21462#28040
     TabOrder = 4
     Kind = bkCancel
-  end
-  object rbLocal: TRadioButton
-    Left = 74
-    Top = 31
-    Width = 113
-    Height = 17
-    Caption = #26412#22320#36830#25509
-    Checked = True
-    TabOrder = 5
-    TabStop = True
-    OnClick = rbLocalClick
-  end
-  object rbRemoate: TRadioButton
-    Left = 265
-    Top = 31
-    Width = 113
-    Height = 17
-    Caption = #36828#31243#36830#25509
-    TabOrder = 6
-    OnClick = rbRemoateClick
   end
 end

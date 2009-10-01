@@ -26,7 +26,8 @@ uses
   GetSVNVerfrm in 'GetSVNVerfrm.pas' {GetSVNVerDlg},
   WorkOverTimeClientfrm in 'WorkOverTimeClientfrm.pas' {WorkOverTimeClient},
   DemandClientfrm in 'DemandClientfrm.pas' {DemandClientDlg},
-  TickDateTimefrm in 'TickDateTimefrm.pas' {TickDateTimeDlg};
+  TickDateTimefrm in 'TickDateTimefrm.pas' {TickDateTimeDlg},
+  WebHostEditfrm in 'WebHostEditfrm.pas' {WebHostEditDlg};
 
 {$R *.res}
 {$R resource.res}

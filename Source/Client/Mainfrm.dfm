@@ -1,6 +1,6 @@
 object MainDlg: TMainDlg
-  Left = 217
-  Top = 129
+  Left = 202
+  Top = 114
   Width = 870
   Height = 640
   Caption = 'DeveManage'
@@ -1120,6 +1120,7 @@ object MainDlg: TMainDlg
   object ApplicationEvents1: TApplicationEvents
     OnHint = ApplicationEvents1Hint
     OnMessage = ApplicationEvents1Message
+    OnMinimize = ApplicationEvents1Minimize
     Left = 152
     Top = 56
   end

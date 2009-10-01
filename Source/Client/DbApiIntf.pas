@@ -45,6 +45,7 @@ type
   TConnectStype = (csDCOM,csSocket); 
 
   IDbOperator = interface
+    ['{D6C3AF62-934A-40A9-99C8-D31143F428A0}']
     //1.连接数据库
     function Connect(AConnStype:word;const AHost: PChar;const APort: Word = 0): Boolean; stdcall;
     function DisConnect(): Boolean; stdcall;
