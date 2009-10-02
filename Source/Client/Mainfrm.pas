@@ -77,11 +77,9 @@ type
     N13: TMenuItem;
     actMod_Test: TAction;
     btnMod_Test: TToolButton;
-    actCalendar: TAction;
     actMod_PLAN: TAction;
     btnMod_PLAN: TToolButton;
     N14: TMenuItem;
-    N15: TMenuItem;
     actMod_Ant: TAction;
     N16: TMenuItem;
     btnMod_Ant: TToolButton;
@@ -97,6 +95,11 @@ type
     actwork_overtime: TAction;
     N20: TMenuItem;
     actMod_Demand: TAction;
+    N15: TMenuItem;
+    MiExtendWeb: TMenuItem;
+    actExtend_Manage: TAction;
+    N21: TMenuItem;
+    N22: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure actmod_FilesExecute(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -121,7 +124,6 @@ type
     procedure ApplicationEvents1Message(var Msg: tagMSG;
       var Handled: Boolean);
     procedure actMod_TestExecute(Sender: TObject);
-    procedure actCalendarExecute(Sender: TObject);
     procedure actMod_PLANExecute(Sender: TObject);
     procedure actMod_AntExecute(Sender: TObject);
     procedure actMod_DayworktableExecute(Sender: TObject);
@@ -131,6 +133,7 @@ type
     procedure actwork_overtimeExecute(Sender: TObject);
     procedure actMod_DemandExecute(Sender: TObject);
     procedure ApplicationEvents1Minimize(Sender: TObject);
+    procedure actExtend_ManageExecute(Sender: TObject);
   private
     fChildform : TList; //所有子窗口的对象
     fCurrentChildform : TBaseChildDlg;
@@ -139,6 +142,9 @@ type
     procedure freeform;
     procedure DoChangeClient(NewClient: TBaseChildClass);
     procedure ShowStatusBarText(AStr:String);
+
+    procedure ExtedWebClick(Sender: TObject);  //扩展应用调用
+
     procedure DelTempfile(); //删除临时文件
     procedure WMTickCount (var Msg: TMessage); message gcMSG_TickCount;
     procedure WMShowBugItem(var msg:TMessage); message gcMSG_GetBugItem;
@@ -173,7 +179,6 @@ uses
   WriteToDaySayfrm,        {每日一句}
   ChangPasswdfrm,          {修改密码}
   CnProgressFrm ,
-  CalendarChildfrm,        {开发计划表}
   TestManageClient,        {测试管理}
   PlanManageClientfrm,     {项目计划}
   AntManageClientfrm,      {自动构建}
@@ -181,9 +186,10 @@ uses
   ReleaseManageClientfrm,  {发布管理}
   WorkOverTimeClientfrm,   {加班单}
   DemandClientfrm,         {需求管理}
-  WebClientfrm
-
-  , SetSysParamsfrm;
+  WebClientfrm,
+  ExtendWebClientfrm,      {web扩展应用}
+  ExtendWebManagefrm       {扩展应用管理}
+   , SetSysParamsfrm;
 
 {$R *.dfm}
 
@@ -261,9 +267,12 @@ end;
 procedure TMainDlg.iniform;
 var
   mycds : TClientDataSet;
+  myItem : TMenuItem;
+  c : Integer;
 const
   glSQL = 'select ZNAME from TB_TODAYSAY ' +
           'where ZID=(select max(ZID) from TB_TODAYSAY where ZSTOP=0)';
+  gl_SQLTXT2 = 'select ZID,ZNAME from TB_EXTENDWEB order by ZSORT ';
 begin
   if ClientSystem.fDbOpr.Version < cnCurDbOprVersion then
   begin
@@ -274,14 +283,42 @@ begin
   fChildform := TList.Create;
   StatusBarMain.Panels[1].Text := ' 用户=' + ClientSystem.fEditer;
 
-  //每日一句
+
   mycds := TClientDataSet.Create(nil);
   try
+
+    //每日一句
     mycds.Data := ClientSystem.fDbOpr.ReadDataSet(PChar(glSQL));
     if mycds.RecordCount > 0 then
       plForm.Caption := mycds.FieldByName('ZNAME').AsString
     else
       plForm.Caption := '';
+
+    //加载扩展应用
+    mycds.Data := ClientSystem.fDbOpr.ReadDataSet(PChar(gl_SQLTXT2));
+    MiExtendWeb.Clear;
+    mycds.First;
+    c := 1;
+    while not mycds.Eof do
+    begin
+      myItem := TMenuItem.Create(MiExtendWeb);
+      myItem.Caption := Format('%d.%s',[c,mycds.FieldByName('ZNAME').AsString]);
+      myItem.Tag     := mycds.FieldByName('ZID').AsInteger;
+      myItem.OnClick := ExtedWebClick;
+      MiExtendWeb.Add(myItem);
+      Inc(c);
+      mycds.Next;
+    end;
+    if not mycds.IsEmpty then
+    begin
+      myItem := TMenuItem.Create(MiExtendWeb);
+      myItem.Caption := '-';
+      MiExtendWeb.Add(myItem);
+    end;
+    myItem := TMenuItem.Create(MiExtendWeb);
+    myItem.Action :=  actExtend_Manage;
+    MiExtendWeb.Add(myItem);
+
 
   finally
     mycds.Free;
@@ -290,6 +327,9 @@ begin
   with ClientSystem do
     Caption := Format('%s 版本=%d.%d.%d(build%d)',
         [Application.Title,fVer[0],fVer[1],fVer[2],fVer[3]]);
+
+
+          
 
   //版本检查
 
@@ -662,11 +702,6 @@ begin
 
 end;
 
-procedure TMainDlg.actCalendarExecute(Sender: TObject);
-begin
-  DoChangeClient(TCalendarChildDlg);
-end;
-
 procedure TMainDlg.actMod_PLANExecute(Sender: TObject);
 begin
   if ClientSystem.fEditerType in [etAdmin,etDeve,etTest] then
@@ -860,6 +895,81 @@ procedure TMainDlg.ApplicationEvents1Minimize(Sender: TObject);
 begin
   //校验服务器的图片
   
+end;
+
+procedure TMainDlg.actExtend_ManageExecute(Sender: TObject);
+begin
+  if ClientSystem.fEditerType <> etAdmin then
+  begin
+    MessageBox(Handle,'你没有权限','提示',MB_ICONWARNING+MB_OK);
+    Exit;
+  end;
+  
+  with TExtendWebManageDlg.Create(nil) do
+  try
+    initform;
+    ShowModal;
+  finally
+    Free;
+  end;
+end;
+
+procedure TMainDlg.ExtedWebClick(Sender: TObject);
+var
+  myTag : Integer;
+  myItem : TMenuItem;
+  i : Integer;
+  myoldform : TBaseChildDlg;
+  myBaseform,myform : TBaseChildDlg;
+begin
+  myItem := (Sender as TMenuItem);
+  myTag := myItem.Tag;
+
+  myBaseform := nil;
+  //1.是否已存在了
+  for i:=0 to fChildform.Count -1 do
+  begin
+    myform := fChildform.items[i];
+    if (myform is TExtendWebClientDlg) and
+       (myform.Tag=myTag) then
+    begin
+      myBaseform :=fChildform.items[i];
+      break;
+    end;
+  end;
+
+  myBaseform.ShowProgress('打开...',0);
+
+  if not Assigned(myBaseform) then
+  begin
+    myBaseform := TExtendWebClientDlg.Create(nil);
+    myBaseform.Tag := myTag;
+    myBaseform.Caption := myItem.Caption;
+    myBaseform.initBase;
+    fChildform.Add(myBaseform);
+  end;
+
+  try
+    myoldform := fCurrentChildform;
+    fCurrentChildform := myBaseform;
+    fCurrentChildform.BorderStyle := bsNone;
+    fCurrentChildform.Align := alClient;
+    fCurrentChildform.Parent := plForm;
+    fCurrentChildform.Show;
+    myBaseform.Showfrm;
+    with ClientSystem do
+      Caption := Format('%s 版本=%d.%d.%d(build%d) IP=%s -%s',
+        [Application.Title,fVer[0],fVer[1],fVer[2],fVer[3],ClientSystem.fHost,
+        fCurrentChildform.Caption]);
+
+    if Assigned(myoldform) then
+      myoldform.Closefrm;
+  finally
+    myBaseform.HideProgress;
+  end;
+
+  //改变输入焦点
+  ActiveControl := FindNextControl(ActiveControl, True, True, False);
 end;
 
 end.

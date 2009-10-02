@@ -16,7 +16,6 @@ uses
   StatManageClientfrm in 'StatManageClientfrm.pas' {StatManageClientDlg},
   ProductDownLoadClientfrm in 'ProductDownLoadClientfrm.pas' {ProductDownLoadClientDlg},
   TestManageClient in 'TestManageClient.pas' {TestManageChildfrm},
-  CalendarChildfrm in 'CalendarChildfrm.pas' {CalendarChildDlg},
   TestCaseSOCREfrm in 'TestCaseSOCREfrm.pas' {TestCaseSOCREDlg},
   PlanManageClientfrm in 'PlanManageClientfrm.pas' {PlanManageClientDlg},
   AntManageClientfrm in 'AntManageClientfrm.pas' {AntManageClientDlg},
@@ -27,7 +26,9 @@ uses
   WorkOverTimeClientfrm in 'WorkOverTimeClientfrm.pas' {WorkOverTimeClient},
   DemandClientfrm in 'DemandClientfrm.pas' {DemandClientDlg},
   TickDateTimefrm in 'TickDateTimefrm.pas' {TickDateTimeDlg},
-  WebHostEditfrm in 'WebHostEditfrm.pas' {WebHostEditDlg};
+  WebHostEditfrm in 'WebHostEditfrm.pas' {WebHostEditDlg},
+  ExtendWebClientfrm in 'ExtendWebClientfrm.pas' {ExtendWebClientDlg},
+  ExtendWebManagefrm in 'ExtendWebManagefrm.pas' {ExtendWebManageDlg};
 
 {$R *.res}
 {$R resource.res}

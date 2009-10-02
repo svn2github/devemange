@@ -1,5 +1,5 @@
-inherited CalendarChildDlg: TCalendarChildDlg
-  Caption = #35745#21010#26085#31243
+inherited ExtendWebClientDlg: TExtendWebClientDlg
+  Caption = 'ExtendWebClientDlg'
   PixelsPerInch = 96
   TextHeight = 15
   inherited wbwiki: TWebBrowser
@@ -9,5 +9,11 @@ inherited CalendarChildDlg: TCalendarChildDlg
       2B2E126208000000000000004C0000000114020000000000C000000000000046
       8000000000000000000000000000000000000000000000000000000000000000
       00000000000000000100000000000000000000000000000000000000}
+  end
+  object cdsData: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 152
+    Top = 56
   end
 end

@@ -28,7 +28,7 @@ uses
 
 
 const
-  gcTimeOut = 5000*5;//5∑÷÷”
+  gcTimeOut = 5000*10;//5∑÷÷”
   gc_Class_GUID : array[0..4] of string =
   ('{B4AA6BE1-5DEF-431A-AFA0-F1262EDB4C5A}',
    '{7B1AA46A-8C7D-4C89-BC7C-04129CC66D2A}',

@@ -264,7 +264,6 @@ object MainDlg: TMainDlg
     object actManage_User: TAction
       Category = #19994#21153
       Caption = #29992#25143#31649#29702
-      ImageIndex = 3
       OnExecute = actManage_UserExecute
     end
     object actMod_ProDoc: TAction
@@ -322,12 +321,6 @@ object MainDlg: TMainDlg
       ImageIndex = 8
       OnExecute = actMod_TestExecute
     end
-    object actCalendar: TAction
-      Category = #19994#21153
-      Caption = #35745#21010#26085#31243
-      ImageIndex = 9
-      OnExecute = actCalendarExecute
-    end
     object actMod_PLAN: TAction
       Category = #19994#21153
       Caption = #39033#30446#35745#21010
@@ -367,6 +360,11 @@ object MainDlg: TMainDlg
       Caption = #38656#27714#31649#29702
       ImageIndex = 15
       OnExecute = actMod_DemandExecute
+    end
+    object actExtend_Manage: TAction
+      Category = #25193#23637#24212#29992
+      Caption = #25193#23637#24212#29992#31649#29702'...'
+      OnExecute = actExtend_ManageExecute
     end
   end
   object ImageList1: TImageList
@@ -1042,6 +1040,7 @@ object MainDlg: TMainDlg
   end
   object MainMenu1: TMainMenu
     AutoHotkeys = maManual
+    Images = ImageList1
     Left = 48
     Top = 56
     object f1: TMenuItem
@@ -1061,26 +1060,23 @@ object MainDlg: TMainDlg
     end
     object N1: TMenuItem
       Caption = #19994#21153'(&B)'
-      object N2: TMenuItem
-        Action = actmod_Files
-      end
-      object Bug1: TMenuItem
-        Action = actMod_Bug
+      object N17: TMenuItem
+        Action = actMod_Dayworktable
       end
       object N3: TMenuItem
         Action = actMod_Project
       end
-      object N15: TMenuItem
-        Action = actCalendar
-      end
       object N14: TMenuItem
         Action = actMod_PLAN
       end
-      object N5: TMenuItem
-        Action = actMod_ProDoc
+      object Bug1: TMenuItem
+        Action = actMod_Bug
       end
-      object N4: TMenuItem
-        Action = actManage_User
+      object N16: TMenuItem
+        Action = actMod_Ant
+      end
+      object N2: TMenuItem
+        Action = actmod_Files
       end
       object Wiki1: TMenuItem
         Action = actMod_WebBrowes
@@ -1088,17 +1084,29 @@ object MainDlg: TMainDlg
       object N13: TMenuItem
         Action = actMod_ProductDown
       end
+      object N18: TMenuItem
+        Action = actMod_Release
+      end
+      object N15: TMenuItem
+        Caption = '-'
+      end
+      object N5: TMenuItem
+        Action = actMod_ProDoc
+      end
+      object N4: TMenuItem
+        Action = actManage_User
+      end
       object N10: TMenuItem
         Action = actMod_Stat
       end
-      object N16: TMenuItem
-        Action = actMod_Ant
+    end
+    object MiExtendWeb: TMenuItem
+      Caption = #25193#23637#24212#29992'(&P)'
+      object N22: TMenuItem
+        Caption = '-'
       end
-      object N17: TMenuItem
-        Action = actMod_Dayworktable
-      end
-      object N18: TMenuItem
-        Action = actMod_Release
+      object N21: TMenuItem
+        Action = actExtend_Manage
       end
     end
     object N11: TMenuItem
