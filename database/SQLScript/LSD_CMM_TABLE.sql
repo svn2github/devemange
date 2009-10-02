@@ -21,6 +21,7 @@
 *       8.增加问题管理内的期限 作者:龙仕云 2008-12-20
 *       9.增加发布管理功能 作者：龙仕云 20080-12-20
 *      10.增加加班单的功能 作者: 龙仕云 2009-7-3 
+*      11.增加在用户表内的svn账号名 作者:龙仕云 2009-9-30
 *
 ******************************************************************************/
 
@@ -110,6 +111,7 @@ create table TB_USER_ITEM(
 	ZGROUP_ID  int,                                  /*组ID*/
 	ZPRIVGROUP int,                                  /*权限组*/
 	ZCHECKTASK bit default 0,                        /*审核任务单* 2008-8-2*/
+	ZSVNNAME   varchar(20),                          /*SVN的账号名 2009-9-30*/
 	constraint PK_TB_USER_ITEM primary key(ZID)       
 )
 go
@@ -821,6 +823,25 @@ create table TB_DEMAND_PARAMS(
 	constraint PK_TB_DEMAND_PARAMS primary key(ZTYPE,ZID)  
 )
 go
+
+
+/*web host */
+if exists (select * from dbo.sysobjects
+  where id = object_id(N'[dbo].[TB_WEBHOST]')
+  and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+drop table [dbo].[TB_WEBHOST]
+go
+
+create table TB_WEBHOST(
+	ZTYPE 	     int not null,                                   /*类型 0=rul 1=html*/
+	ZID          int IDENTITY (1, 1) not null,                   /*ID值*/
+	ZNAME        varchar(50),                                    /*名称*/
+	ZVALUE       text,                                           /*值*/  
+	ZSORT        int,                                            /*排序号*/
+	constraint PK_TB_WEBHOST primary key(ZID)  
+)
+go
+
 
 
 
