@@ -23,7 +23,7 @@ inherited StatChartDlg: TStatChartDlg
       Shape = bsLeftLine
     end
     object chkTotal: TCheckBox
-      Left = 362
+      Left = 346
       Top = 33
       Width = 66
       Height = 17
@@ -78,7 +78,7 @@ inherited StatChartDlg: TStatChartDlg
       OnClick = chkAnswerTestCountClick
     end
     object chkWorkOverTime: TCheckBox
-      Left = 362
+      Left = 346
       Top = 8
       Width = 125
       Height = 17
@@ -107,7 +107,7 @@ inherited StatChartDlg: TStatChartDlg
       OnClick = BitBtn1Click
     end
     object chkTaskFraction: TCheckBox
-      Left = 240
+      Left = 237
       Top = 8
       Width = 97
       Height = 17
@@ -160,6 +160,17 @@ inherited StatChartDlg: TStatChartDlg
       TabOrder = 13
       OnClick = BitBtn3Click
     end
+    object chkZSvnSubimtCount: TCheckBox
+      Left = 237
+      Top = 32
+      Width = 97
+      Height = 18
+      Caption = 'SVN'#25552#20132#25968
+      Checked = True
+      State = cbChecked
+      TabOrder = 14
+      OnClick = chkZSvnSubimtCountClick
+    end
   end
   object dbcht1: TDBChart
     Left = 0
@@ -170,7 +181,7 @@ inherited StatChartDlg: TStatChartDlg
     BackWall.Brush.Style = bsClear
     BackWall.Color = 8454016
     BackWall.Pen.Visible = False
-    BottomWall.Color = clRed
+    BottomWall.Color = clSilver
     Foot.Font.Charset = DEFAULT_CHARSET
     Foot.Font.Color = clRed
     Foot.Font.Height = -15
@@ -292,6 +303,7 @@ inherited StatChartDlg: TStatChartDlg
     object brsrsZTaskFraction: TBarSeries
       Active = False
       Marks.ArrowLength = 20
+      Marks.Style = smsValue
       Marks.Visible = True
       DataSource = cds1
       SeriesColor = clGray
@@ -325,6 +337,24 @@ inherited StatChartDlg: TStatChartDlg
       YValues.Order = loNone
       YValues.ValueSource = 'calcHour'
     end
+    object brsrsZSvnSubimtCount: TBarSeries
+      Marks.ArrowLength = 20
+      Marks.Style = smsValue
+      Marks.Visible = True
+      DataSource = cds1
+      SeriesColor = clFuchsia
+      Title = 'SVN'#25552#20132#25968
+      XLabelsSource = 'ZUSERNAME'
+      XValues.DateTime = False
+      XValues.Name = 'X'
+      XValues.Multiplier = 1.000000000000000000
+      XValues.Order = loAscending
+      YValues.DateTime = False
+      YValues.Name = 'Bar'
+      YValues.Multiplier = 1.000000000000000000
+      YValues.Order = loNone
+      YValues.ValueSource = 'ZSvnSubimtCount'
+    end
     object brsrsSeries1: TBarSeries
       Marks.ArrowLength = 20
       Marks.Style = smsValue
@@ -345,23 +375,11 @@ inherited StatChartDlg: TStatChartDlg
     end
   end
   object cds1: TClientDataSet
-    Active = True
     Aggregates = <>
     Params = <>
     OnCalcFields = cds1CalcFields
     Left = 160
     Top = 72
-    Data = {
-      370100009619E0BD01000000180000000D0000000000030000003701095A5553
-      45524E414D4501004900000001000557494454480200020014000F5A416E7377
-      6572427567436F756E7404000100000000000F5A5375626D6974427567436F75
-      6E7404000100000000000E5A5265706C79427567436F756E7404000100000000
-      000C5A5265416374696F6E42756704000100000000000C5A4275674672616374
-      696F6E04000100000000000A5A5461736B436F756E7404000100000000000D5A
-      5461736B4672616374696F6E04000100000000000D5A576F726B4F7665725469
-      6D6504000100000000000F5A4275696C6454657374436F756E74040001000000
-      0000105A416E7377657254657374436F756E740400010000000000065A534F43
-      52450400010000000000065A546F74616C04000100000000000000}
     object strngfldcds1ZUSERNAME: TStringField
       FieldName = 'ZUSERNAME'
     end
@@ -405,6 +423,9 @@ inherited StatChartDlg: TStatChartDlg
       FieldKind = fkCalculated
       FieldName = 'calcHour'
       Calculated = True
+    end
+    object intgrfldcds1ZSvnSubimtCount: TIntegerField
+      FieldName = 'ZSvnSubimtCount'
     end
   end
   object ds1: TDataSource

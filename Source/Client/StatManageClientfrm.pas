@@ -41,6 +41,8 @@ type
     procedure actCurrMotherExecute(Sender: TObject);
     procedure actChartExecute(Sender: TObject);
     procedure actChartUpdate(Sender: TObject);
+    procedure dbgrdDataDrawColumnCell(Sender: TObject; const Rect: TRect;
+      DataCol: Integer; Column: TColumn; State: TGridDrawState);
   private
     { Private declarations }
   public
@@ -90,12 +92,24 @@ begin
           6:cdsData.Fields[i].DisplayLabel  := '完成任务';
           7:cdsData.Fields[i].DisplayLabel  := '任务得分';
           8:cdsData.Fields[i].DisplayLabel  := '加班分钟';
-          9:cdsData.Fields[i].DisplayLabel  := '提交测试数';
-          10:cdsData.Fields[i].DisplayLabel := '完成测试数';
-          11:cdsData.Fields[i].DisplayLabel := '测试得分' ;
-          12:cdsData.Fields[i].DisplayLabel := '总分';
+          9:cdsData.Fields[i].DisplayLabel  := 'SVN提交数';
+          10:cdsData.Fields[i].DisplayLabel := '提交测试数';
+          11:cdsData.Fields[i].DisplayLabel := '完成测试数';
+          12:cdsData.Fields[i].DisplayLabel := '测试得分' ;
+          13:cdsData.Fields[i].DisplayLabel := '总分';
         end;
         cdsData.Fields[i].DisplayWidth := 10;
+
+        if cdsData.Fields[i].DataType in [ftInteger] then
+        begin
+          (cdsData.Fields[i] as TIntegerField).DisplayFormat := '#';
+        end;
+
+        if cdsData.Fields[i].DataType in [ftFloat] then
+        begin
+          (cdsData.Fields[i] as TFloatField).DisplayFormat := '#.###';
+        end;
+
       end;
     end
     else begin  //按项目
@@ -115,6 +129,17 @@ begin
           2:cdsData.Fields[i].DisplayLabel := '已处理的问题';
           3:cdsData.Fields[i].DisplayLabel := '没有处理问题';
         end;
+
+        if cdsData.Fields[i].DataType in [ftInteger] then
+        begin
+          (cdsData.Fields[i] as TIntegerField).DisplayFormat := '#';
+        end;
+
+        if cdsData.Fields[i].DataType in [ftFloat] then
+        begin
+          (cdsData.Fields[i] as TFloatField).DisplayFormat := '#.###';
+        end;
+
       end;
     end;
   finally
@@ -250,7 +275,18 @@ end;
 procedure TStatManageClientDlg.actChartUpdate(Sender: TObject);
 begin
   (Sender as TAction).Enabled := cdsData.Active and
-  (cdsData.RecordCount > 0);
+  (cdsData.RecordCount > 0) and (tbc1.TabIndex=0);
+end;
+
+procedure TStatManageClientDlg.dbgrdDataDrawColumnCell(Sender: TObject;
+  const Rect: TRect; DataCol: Integer; Column: TColumn;
+  State: TGridDrawState);
+begin
+  if (cdsData.RecNo mod 2  = 0) and not ( gdSelected in State)  then
+    dbgrdData.Canvas.Brush.Color := clSilver;
+
+  dbgrdData.DefaultDrawColumnCell(Rect,DataCol,Column,State);
+
 end;
 
 end.

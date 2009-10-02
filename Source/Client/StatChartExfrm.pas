@@ -59,6 +59,9 @@ type
     edt2: TEdit;
     BitBtn2: TBitBtn;
     BitBtn3: TBitBtn;
+    intgrfldcds1ZSvnSubimtCount: TIntegerField;
+    brsrsZSvnSubimtCount: TBarSeries;
+    chkZSvnSubimtCount: TCheckBox;
     procedure cds1CalcFields(DataSet: TDataSet);
     procedure chkSubmitBugCountClick(Sender: TObject);
     procedure chkTotalClick(Sender: TObject);
@@ -74,6 +77,7 @@ type
       Y: Integer);
     procedure BitBtn2Click(Sender: TObject);
     procedure BitBtn3Click(Sender: TObject);
+    procedure chkZSvnSubimtCountClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -199,6 +203,11 @@ end;
 procedure TStatChartDlg.BitBtn3Click(Sender: TObject);
 begin
   ChartPreview(Self,dbcht1);
+end;
+
+procedure TStatChartDlg.chkZSvnSubimtCountClick(Sender: TObject);
+begin
+  brsrsZSvnSubimtCount.Active := chkZSvnSubimtCount.Checked;
 end;
 
 end.

@@ -130,6 +130,7 @@ inherited StatManageClientDlg: TStatManageClientDlg
       TitleFont.Height = -15
       TitleFont.Name = #23435#20307
       TitleFont.Style = []
+      OnDrawColumnCell = dbgrdDataDrawColumnCell
     end
   end
   object cdsData: TClientDataSet
