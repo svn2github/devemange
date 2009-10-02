@@ -51,6 +51,14 @@ type
     chkWorkOverTime: TCheckBox;
     Button1: TButton;
     BitBtn1: TBitBtn;
+    brsrsZTaskFraction: TBarSeries;
+    chkTaskFraction: TCheckBox;
+    bvl1: TBevel;
+    chk3D: TCheckBox;
+    edt1: TEdit;
+    edt2: TEdit;
+    BitBtn2: TBitBtn;
+    BitBtn3: TBitBtn;
     procedure cds1CalcFields(DataSet: TDataSet);
     procedure chkSubmitBugCountClick(Sender: TObject);
     procedure chkTotalClick(Sender: TObject);
@@ -60,6 +68,12 @@ type
     procedure chkWorkOverTimeClick(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure BitBtn1Click(Sender: TObject);
+    procedure chkTaskFractionClick(Sender: TObject);
+    procedure chk3DClick(Sender: TObject);
+    procedure dbcht1MouseMove(Sender: TObject; Shift: TShiftState; X,
+      Y: Integer);
+    procedure BitBtn2Click(Sender: TObject);
+    procedure BitBtn3Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -69,6 +83,8 @@ type
 
 
 implementation
+uses
+ TeePrevi;
 
 {$R *.dfm}
 
@@ -143,6 +159,46 @@ begin
 
   dbcht1.RefreshData;
 
+end;
+
+procedure TStatChartDlg.chkTaskFractionClick(Sender: TObject);
+begin
+  brsrsZTaskFraction.Active := chkTaskFraction.Checked;
+end;
+
+procedure TStatChartDlg.chk3DClick(Sender: TObject);
+begin
+  dbcht1.View3D:=chk3D.Checked;
+end;
+
+procedure TStatChartDlg.dbcht1MouseMove(Sender: TObject;
+  Shift: TShiftState; X, Y: Integer);
+var
+  tmpTask:Longint;
+  i : Integer;
+begin
+  edt1.Text := '';
+  edt2.Text := '';
+  for i:=0 to dbcht1.SeriesCount -1 do
+  begin
+    tmpTask:= dbcht1.Series[i].Clicked(x,y);
+    if tmpTask<>-1 then
+    begin
+      edt1.Text := dbcht1.Series[i].XLabel[tmpTask];
+      edt2.Text := FloatToStr(dbcht1.Series[i].YValues[tmpTask])+' '+dbcht1.Series[i].Title;
+      Break;
+    end;
+  end;
+end;
+
+procedure TStatChartDlg.BitBtn2Click(Sender: TObject);
+begin
+  dbcht1.CopyToClipboardMetafile(True);
+end;
+
+procedure TStatChartDlg.BitBtn3Click(Sender: TObject);
+begin
+  ChartPreview(Self,dbcht1);
 end;
 
 end.

@@ -1,7 +1,7 @@
 inherited StatChartDlg: TStatChartDlg
-  Left = 134
-  Top = 173
-  Width = 891
+  Left = 46
+  Top = 147
+  Width = 1008
   Height = 579
   Caption = #22270#34920
   OldCreateOrder = True
@@ -11,13 +11,20 @@ inherited StatChartDlg: TStatChartDlg
   object pnlTool: TPanel
     Left = 0
     Top = 0
-    Width = 883
+    Width = 1000
     Height = 68
     Align = alTop
     TabOrder = 0
+    object bvl1: TBevel
+      Left = 512
+      Top = 3
+      Width = 17
+      Height = 65
+      Shape = bsLeftLine
+    end
     object chkTotal: TCheckBox
-      Left = 241
-      Top = 31
+      Left = 362
+      Top = 33
       Width = 66
       Height = 17
       Caption = #24635#20998
@@ -71,7 +78,7 @@ inherited StatChartDlg: TStatChartDlg
       OnClick = chkAnswerTestCountClick
     end
     object chkWorkOverTime: TCheckBox
-      Left = 240
+      Left = 362
       Top = 8
       Width = 125
       Height = 17
@@ -82,7 +89,7 @@ inherited StatChartDlg: TStatChartDlg
       OnClick = chkWorkOverTimeClick
     end
     object Button1: TButton
-      Left = 624
+      Left = 742
       Top = 6
       Width = 100
       Height = 25
@@ -91,7 +98,7 @@ inherited StatChartDlg: TStatChartDlg
       OnClick = Button1Click
     end
     object BitBtn1: TBitBtn
-      Left = 624
+      Left = 742
       Top = 35
       Width = 100
       Height = 25
@@ -99,13 +106,66 @@ inherited StatChartDlg: TStatChartDlg
       TabOrder = 7
       OnClick = BitBtn1Click
     end
+    object chkTaskFraction: TCheckBox
+      Left = 240
+      Top = 8
+      Width = 97
+      Height = 17
+      Caption = #20219#21153#21333#24471#20998
+      TabOrder = 8
+      OnClick = chkTaskFractionClick
+    end
+    object chk3D: TCheckBox
+      Left = 521
+      Top = 8
+      Width = 50
+      Height = 17
+      Caption = '3D'
+      Checked = True
+      State = cbChecked
+      TabOrder = 9
+      OnClick = chk3DClick
+    end
+    object edt1: TEdit
+      Left = 517
+      Top = 40
+      Width = 81
+      Height = 23
+      ReadOnly = True
+      TabOrder = 10
+    end
+    object edt2: TEdit
+      Left = 603
+      Top = 40
+      Width = 131
+      Height = 23
+      ReadOnly = True
+      TabOrder = 11
+    end
+    object BitBtn2: TBitBtn
+      Left = 846
+      Top = 5
+      Width = 100
+      Height = 25
+      Caption = #25335#36125#21040#21098#20999#26495
+      TabOrder = 12
+      OnClick = BitBtn2Click
+    end
+    object BitBtn3: TBitBtn
+      Left = 846
+      Top = 35
+      Width = 100
+      Height = 25
+      Caption = #25171#21360#39044#35272
+      TabOrder = 13
+      OnClick = BitBtn3Click
+    end
   end
   object dbcht1: TDBChart
     Left = 0
     Top = 68
-    Width = 883
+    Width = 1000
     Height = 477
-    Hint = 'Click on a Bar to see an example of event handling.'
     BackWall.Brush.Color = clWhite
     BackWall.Brush.Style = bsClear
     BackWall.Color = 8454016
@@ -119,6 +179,7 @@ inherited StatChartDlg: TStatChartDlg
     Foot.Frame.Color = clScrollBar
     LeftWall.Brush.Color = clWhite
     LeftWall.Color = 16777088
+    PrintProportional = False
     Title.Brush.Color = clWhite
     Title.Brush.Style = bsClear
     Title.Color = 16777088
@@ -131,29 +192,32 @@ inherited StatChartDlg: TStatChartDlg
     Title.Frame.Width = 4
     Title.Text.Strings = (
       #20154#21592#24471#20998#23545#27604#34920)
+    Title.Visible = False
     BackColor = 8454016
     BottomAxis.Grid.Color = clScrollBar
     Chart3DPercent = 40
     ClipPoints = False
     Frame.Visible = False
     LeftAxis.Grid.Color = clScrollBar
+    Legend.Alignment = laTop
     Legend.Color = clAqua
-    Legend.Font.Charset = DEFAULT_CHARSET
+    Legend.ColorWidth = 15
+    Legend.Font.Charset = ANSI_CHARSET
     Legend.Font.Color = clBlack
-    Legend.Font.Height = -16
-    Legend.Font.Name = 'Arial'
-    Legend.Font.Style = [fsBold, fsItalic]
+    Legend.Font.Height = -14
+    Legend.Font.Name = #26032#23435#20307
+    Legend.Font.Style = []
     Legend.Frame.Color = clTeal
     Legend.Frame.Width = 4
-    Legend.ShadowSize = 11
     Legend.TextStyle = ltsRightValue
-    Legend.TopPos = 5
+    Legend.TopPos = 0
     RightAxis.Grid.Color = clScrollBar
     TopAxis.Grid.Color = clScrollBar
     Align = alClient
     ParentShowHint = False
     ShowHint = True
     TabOrder = 1
+    OnMouseMove = dbcht1MouseMove
     object brsrsSubmitBugCount: TBarSeries
       Marks.ArrowLength = 20
       Marks.Style = smsValue
@@ -224,6 +288,24 @@ inherited StatChartDlg: TStatChartDlg
       YValues.Multiplier = 1.000000000000000000
       YValues.Order = loNone
       YValues.ValueSource = 'ZAnswerTestCount'
+    end
+    object brsrsZTaskFraction: TBarSeries
+      Active = False
+      Marks.ArrowLength = 20
+      Marks.Visible = True
+      DataSource = cds1
+      SeriesColor = clGray
+      Title = #20219#21153#21333#24471#20998
+      XLabelsSource = 'ZUSERNAME'
+      XValues.DateTime = False
+      XValues.Name = 'X'
+      XValues.Multiplier = 1.000000000000000000
+      XValues.Order = loAscending
+      YValues.DateTime = False
+      YValues.Name = 'Bar'
+      YValues.Multiplier = 1.000000000000000000
+      YValues.Order = loNone
+      YValues.ValueSource = 'ZTaskFraction'
     end
     object brsrsWorkOverTime: TBarSeries
       Marks.ArrowLength = 20
