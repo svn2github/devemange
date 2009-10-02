@@ -824,21 +824,20 @@ create table TB_DEMAND_PARAMS(
 )
 go
 
-
-/*web host */
+/*扩展web应用 */
 if exists (select * from dbo.sysobjects
-  where id = object_id(N'[dbo].[TB_WEBHOST]')
+  where id = object_id(N'[dbo].[TB_EXTENDWEB]')
   and OBJECTPROPERTY(id, N'IsUserTable') = 1)
-drop table [dbo].[TB_WEBHOST]
+drop table [dbo].[TB_EXTENDWEB]
 go
 
-create table TB_WEBHOST(
+create table TB_EXTENDWEB(
 	ZTYPE 	     int not null,                                   /*类型 0=rul 1=html*/
 	ZID          int IDENTITY (1, 1) not null,                   /*ID值*/
 	ZNAME        varchar(50),                                    /*名称*/
 	ZVALUE       text,                                           /*值*/  
 	ZSORT        int,                                            /*排序号*/
-	constraint PK_TB_WEBHOST primary key(ZID)  
+	constraint PK_TB_EXTENDWEB primary key(ZID)  
 )
 go
 
