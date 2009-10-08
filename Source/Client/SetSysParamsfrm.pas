@@ -13,12 +13,9 @@ type
     dsParams: TDataSource;
     dbgrdParams: TDBGrid;
     dbmmoZVALUE: TDBMemo;
-    pnlTool: TPanel;
     Splitter1: TSplitter;
-    btnView: TBitBtn;
     procedure FormShow(Sender: TObject);
     procedure cdsParamsBeforePost(DataSet: TDataSet);
-    procedure btnViewClick(Sender: TObject);
   private
     { Private declarations }
     fLoading : Boolean;
@@ -29,7 +26,7 @@ type
 
 implementation
 
-uses ClinetSystemUnits,EncdDecd;
+uses ClinetSystemUnits;
 
 {$R *.dfm}
 
@@ -95,14 +92,10 @@ var
 const
   glSQL2 = 'update TB_SYSPARAMS set ZVALUE=''%s'' where ZNAME=''%s''';
 begin
-
-  //
-  //采用base64字符串来处理
-  //
   if fLoading then Exit;
   ClientSystem.fDbOpr.BeginTrans;
   try
-    mystr := EncodeString(DataSet.FieldByName('ZVALUE').AsString);
+    mystr := DataSet.FieldByName('ZVALUE').AsString;
     mysql := format(glSQL2,[
         mystr,
         DataSet.FieldByName('ZNAME').AsString]);
@@ -112,15 +105,6 @@ begin
   except
     ClientSystem.fDbOpr.RollbackTrans;
   end;
-end;
-
-procedure TSetParamsDlg.btnViewClick(Sender: TObject);
-var
-  mystr : string;
-begin
-  if cdsParams.IsEmpty then Exit;
-  mystr := DecodeString(cdsParams.FieldByName('ZVALUE').AsString);
-  ShowMessage(mystr);
 end;
 
 end.

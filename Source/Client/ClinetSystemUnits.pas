@@ -34,6 +34,11 @@ type
     fTickCount : word;
     function GetSysNow: TDateTime;
     procedure GetExeVer;
+    function GetLoginImageFileName: string;
+
+    procedure Savetoini();
+    procedure Loadfromini();
+
   public
     fAppDir : String;
     fTempDir : String;            //临时目录
@@ -49,7 +54,8 @@ type
     fDeleteFiles : TStringList;   //浏览文件时要删除的内容
     fCancelUpFile : Boolean;      //终止上传或下载文件
     fVersion : TVersion;          //这个是版本
-    fVer : array[0..3] of  Integer; 
+    fVer : array[0..3] of  Integer;
+    fLoginImageIndex : Integer;   //=-1 表示没有图片了
 
     constructor Create;
     destructor Destroy; override;
@@ -61,6 +67,7 @@ type
     //操作权限
     function HasModuleAction(AStype:integer;ASubStype:integer;
       AID:integer;AAction:TActionType):Boolean;
+      
     //文件的上传与下载
     function UpFile(AFile_ID,AVer:integer;AfileName:String):Boolean;overload; //上传文件
     function UpFile(ATreeStyle:TFileStype;ATree_ID:integer;AFileName:String;var AFileID:integer;AVer:integer=1):Boolean;overload;
@@ -74,6 +81,7 @@ type
     procedure SplitStr(AStr:String;ASl:TStringList;AChar:Char=';');  //折分字符
 
     property SysNow : TDateTime read GetSysNow;  //取出系统的时间
+    property LoginImageFileName : string read GetLoginImageFileName;
   end;
 
 var
@@ -85,6 +93,7 @@ implementation
 uses
   DB,Forms,
   Variants,
+  IniFiles,
   ZLibEx;
 
 
@@ -148,10 +157,13 @@ begin
     CreateDir(fAppDir + '\' + gcLogDir);
   GetExeVer();
   fEditer_CheckTask := False;
+  fLoginImageIndex := -1;
+  Loadfromini;
 end;
 
 destructor TClinetSystem.Destroy;
 begin
+  Savetoini;
   fDeleteFiles.Free;
   fcdsUsePriv.Free;
   fDbOpr := nil;
@@ -301,6 +313,12 @@ begin
    Result := 0;
 end;
 
+function TClinetSystem.GetLoginImageFileName: string;
+begin
+  Result := Format('%s/img%d.jpg',[fAppDir,
+      fLoginImageIndex]);
+end;
+
 function TClinetSystem.GetSysNow: TDateTime;
 var
   mystr : String;
@@ -373,6 +391,18 @@ begin
   end;
 end;
 
+procedure TClinetSystem.Loadfromini;
+var
+  myinifile : TIniFile;
+begin
+  myinifile := TIniFile.Create(fAppDir+ '\deve.ini' );
+  try
+    fLoginImageIndex := myinifile.ReadInteger('data','LoginImageIndex',-1);
+  finally
+    myinifile.Free;
+  end;
+end;
+
 procedure TClinetSystem.OleVariantToStream(var Input: OleVariant;
   Stream: TStream);
 var
@@ -384,6 +414,18 @@ begin
 end;
 
 
+
+procedure TClinetSystem.Savetoini;
+var
+  myinifile : TIniFile;
+begin
+  myinifile := TIniFile.Create(fAppDir+ '\deve.ini' );
+  try
+    myinifile.WriteInteger('data','LoginImageIndex',fLoginImageIndex);
+  finally
+    myinifile.Free;
+  end;
+end;
 
 procedure TClinetSystem.SplitStr(AStr: String; ASl: TStringList;
   AChar: Char);

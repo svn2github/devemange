@@ -13,7 +13,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, Buttons, ExtCtrls;
+  Dialogs, StdCtrls, Buttons, ExtCtrls, jpeg;
 
 type
   TLoginDlg = class(TForm)
@@ -28,11 +28,16 @@ type
     edPass: TEdit;
     btOK: TBitBtn;
     btCancel: TBitBtn;
+    pnlImage: TPanel;
+    imgLogin: TImage;
+    imgDef: TImage;
     procedure btOKClick(Sender: TObject);
   private
     { Private declarations }
     procedure LoadContextByReg();
     procedure SaveContextToReg();
+    procedure LoadLoginImage();    //加载启动的图片
+
   public
     { Public declarations }
   end;
@@ -42,7 +47,7 @@ type
 implementation
 
 uses
-  ClinetSystemUnits,DBClient;
+  ClinetSystemUnits,DBClient,IniFiles;
 
 {$R *.dfm}
 
@@ -54,6 +59,7 @@ uses
         Caption := Format('登录 版本=%d.%d.%d(build%d)',
         [fVer[0],fVer[1],fVer[2],fVer[3]]);
       LoadContextByReg;
+      LoadLoginImage;
 
       Result := ShowModal = mrOK;
       if Result then  SaveContextToReg;
@@ -137,43 +143,64 @@ end;
 
 procedure TLoginDlg.LoadContextByReg;
 var
+  myini : TIniFile;
   mysl : TStringList;
   myfilename : String;
   i : integer;
 begin
-  myfilename := ExtractFileDir(System.ParamStr(0)) + '\host.txt';
-  mysl := TStringList.Create;
+  myfilename := ClientSystem.fAppDir + '\deve.ini';
+
+  myini := TIniFile.Create(myfilename);
+  mysl  := TStringList.Create;
   if FileExists(myfilename) then
   begin
-    mysl.LoadFromFile(myfilename);
-
+    myini.ReadSection('login',mysl);
     for i:=0 to mysl.Count -1 do
     begin
-      if mysl.Names[i] = 'connection' then
-      begin
-        //cbServerIP.Color   := clWindow
-
-      end
-      else if mysl.Names[i] = 'user' then
-      begin
-        edName.Text := mysl.Values['user'];
-      end
-      else
+      if mysl.Strings[i] <> 'user' then
         cbServerIP.Items.Add(mysl[i]);
     end;
     if cbServerIP.Items.Count > 0 then
       cbServerIP.ItemIndex := 0;
+    edName.Text := myini.ReadString('login','user','');
   end;
   mysl.Free;
+  myini.Free;
+end;
+
+procedure TLoginDlg.LoadLoginImage;
+var
+  myfilename : string;
+begin
+  //1.没有，则去掉图片
+  if ClientSystem.fLoginImageIndex = -1 then
+  begin
+    imgLogin.Picture.Assign(imgDef.Picture);
+  end
+  else begin
+    myfilename := ClientSystem.LoginImageFileName;
+    if FileExists(myfilename) then
+      imgLogin.Picture.LoadFromFile(myfilename)
+    else
+      imgLogin.Picture.Assign(imgDef.Picture);
+  end;
 end;
 
 procedure TLoginDlg.SaveContextToReg;
 var
   mysl : TStringList;
+  myini : TIniFile;
   myfilename : String;
+  i : Integer;
 begin
-  myfilename := ExtractFileDir(System.ParamStr(0)) + '\host.txt';
+  myfilename := ClientSystem.fAppDir + '\deve.ini';
   mysl := TStringList.Create;
+  myini := TIniFile.Create(myfilename);
+
+  myini.ReadSection('login',mysl);
+  for i:=0 to mysl.Count -1 do
+    myini.DeleteKey('login',mysl.Strings[i]);
+
   mysl.Assign(cbServerIP.Items);
   if mysl.IndexOf(cbServerIP.Text)<0 then
     mysl.Insert(0,cbServerIP.Text)
@@ -181,10 +208,12 @@ begin
     mysl.Move(mysl.IndexOf(cbServerIP.Text),0);
   end;
 
-  mysl.Add('connection=1');
-  mysl.Add(format('user=%s',[edName.Text]));
+  for i:=0 to mysl.Count -1 do
+    myini.WriteString('login',mysl.Strings[i],'');
 
-  mysl.SaveToFile(myfilename);
+  myini.WriteString('login','user',edName.Text);
+
+  myini.Free;
   mysl.Free;
 end;
 

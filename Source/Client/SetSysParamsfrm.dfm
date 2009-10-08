@@ -10,7 +10,7 @@ inherited SetParamsDlg: TSetParamsDlg
   TextHeight = 15
   object Splitter1: TSplitter
     Left = 0
-    Top = 219
+    Top = 259
     Width = 633
     Height = 3
     Cursor = crVSplit
@@ -20,7 +20,7 @@ inherited SetParamsDlg: TSetParamsDlg
     Left = 0
     Top = 0
     Width = 633
-    Height = 219
+    Height = 259
     Align = alClient
     DataSource = dsParams
     TabOrder = 0
@@ -56,31 +56,13 @@ inherited SetParamsDlg: TSetParamsDlg
   end
   object dbmmoZVALUE: TDBMemo
     Left = 0
-    Top = 222
+    Top = 262
     Width = 633
     Height = 108
     Align = alBottom
     DataField = 'ZVALUE'
     DataSource = dsParams
     TabOrder = 1
-  end
-  object pnlTool: TPanel
-    Left = 0
-    Top = 330
-    Width = 633
-    Height = 40
-    Align = alBottom
-    BevelOuter = bvNone
-    TabOrder = 2
-    object btnView: TBitBtn
-      Left = 509
-      Top = 8
-      Width = 100
-      Height = 25
-      Caption = #26597#30475#20869#23481
-      TabOrder = 0
-      OnClick = btnViewClick
-    end
   end
   object cdsParams: TClientDataSet
     Aggregates = <>

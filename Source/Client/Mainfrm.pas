@@ -100,6 +100,7 @@ type
     actExtend_Manage: TAction;
     N21: TMenuItem;
     N22: TMenuItem;
+    tmrBack: TTimer;
     procedure FormCreate(Sender: TObject);
     procedure actmod_FilesExecute(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -134,6 +135,7 @@ type
     procedure actMod_DemandExecute(Sender: TObject);
     procedure ApplicationEvents1Minimize(Sender: TObject);
     procedure actExtend_ManageExecute(Sender: TObject);
+    procedure tmrBackTimer(Sender: TObject);
   private
     fChildform : TList; //所有子窗口的对象
     fCurrentChildform : TBaseChildDlg;
@@ -156,6 +158,13 @@ type
 
   public
     property CurrentChildform : TBaseChildDlg read fCurrentChildform;
+  end;
+
+  TBackThread = class(TThread)
+  public
+    constructor Create();
+  protected
+    procedure Execute;override;
   end;
 
 
@@ -970,6 +979,41 @@ begin
 
   //改变输入焦点
   ActiveControl := FindNextControl(ActiveControl, True, True, False);
+end;
+
+{ TBackThread }
+
+constructor TBackThread.Create;
+begin
+  inherited Create(false);
+  Self.Priority := tpNormal;
+  Self.FreeOnTerminate := True;
+end;
+
+procedure TBackThread.Execute;
+var
+  myv : Integer;
+  myfilename,mytempfile : string;
+const
+  gl_SQLTXT = 'select ZVALUE from TB_SYSPARAMS where  ZNAME=''LoginImageIndex'' ';
+begin
+  myv := ClientSystem.fDbOpr.ReadInt(PChar(gl_SQLTXT));
+  if myv <> ClientSystem.fLoginImageIndex then
+  begin
+    DeleteFile(ClientSystem.LoginImageFileName); //删除原来的文件
+    ClientSystem.fLoginImageIndex := myv;
+    myfilename := ClientSystem.LoginImageFileName;
+    if myv = -1 then Exit; 
+    mytempfile := 'login.tmp';
+    if ClientSystem.DonwFileToFileName(myv,mytempfile) then
+      CopyFile(PChar(mytempfile),PChar(myfilename),True);
+  end;
+end;
+
+procedure TMainDlg.tmrBackTimer(Sender: TObject);
+begin
+  TBackThread.Create;
+  tmrBack.Enabled := False;
 end;
 
 end.

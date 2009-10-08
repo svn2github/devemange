@@ -1132,4 +1132,10 @@ object MainDlg: TMainDlg
     Left = 152
     Top = 56
   end
+  object tmrBack: TTimer
+    Interval = 5000
+    OnTimer = tmrBackTimer
+    Left = 192
+    Top = 58
+  end
 end

@@ -26,7 +26,6 @@ uses
   WorkOverTimeClientfrm in 'WorkOverTimeClientfrm.pas' {WorkOverTimeClient},
   DemandClientfrm in 'DemandClientfrm.pas' {DemandClientDlg},
   TickDateTimefrm in 'TickDateTimefrm.pas' {TickDateTimeDlg},
-  WebHostEditfrm in 'WebHostEditfrm.pas' {WebHostEditDlg},
   ExtendWebClientfrm in 'ExtendWebClientfrm.pas' {ExtendWebClientDlg},
   ExtendWebManagefrm in 'ExtendWebManagefrm.pas' {ExtendWebManageDlg};
 
