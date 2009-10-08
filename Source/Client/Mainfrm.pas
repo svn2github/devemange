@@ -161,7 +161,11 @@ type
   end;
 
   TBackThread = class(TThread)
+  private
+    fFileId : Integer;
   public
+    procedure CheckLoginImage();
+    procedure DownFile();
     constructor Create();
   protected
     procedure Execute;override;
@@ -983,6 +987,13 @@ end;
 
 { TBackThread }
 
+procedure TBackThread.CheckLoginImage;
+const
+  gl_SQLTXT = 'select ZVALUE from TB_SYSPARAMS where  ZNAME=''LoginImageIndex'' ';
+begin
+  fFileId := ClientSystem.fDbOpr.ReadInt(PChar(gl_SQLTXT));
+end;
+
 constructor TBackThread.Create;
 begin
   inherited Create(false);
@@ -990,23 +1001,25 @@ begin
   Self.FreeOnTerminate := True;
 end;
 
-procedure TBackThread.Execute;
+procedure TBackThread.DownFile;
 var
-  myv : Integer;
-  myfilename,mytempfile : string;
-const
-  gl_SQLTXT = 'select ZVALUE from TB_SYSPARAMS where  ZNAME=''LoginImageIndex'' ';
+  mytempfile,myfilename : string;
 begin
-  myv := ClientSystem.fDbOpr.ReadInt(PChar(gl_SQLTXT));
-  if myv <> ClientSystem.fLoginImageIndex then
+  mytempfile := 'login.tmp';
+  myfilename := ClientSystem.LoginImageFileName;
+  if ClientSystem.DonwFileToFileName(fFileId,mytempfile) then
+    CopyFile(PChar(mytempfile),PChar(myfilename),True);
+end;
+
+procedure TBackThread.Execute;
+begin
+   Synchronize(CheckLoginImage);
+  if fFileId <> ClientSystem.fLoginImageIndex then
   begin
     DeleteFile(ClientSystem.LoginImageFileName); //删除原来的文件
-    ClientSystem.fLoginImageIndex := myv;
-    myfilename := ClientSystem.LoginImageFileName;
-    if myv = -1 then Exit; 
-    mytempfile := 'login.tmp';
-    if ClientSystem.DonwFileToFileName(myv,mytempfile) then
-      CopyFile(PChar(mytempfile),PChar(myfilename),True);
+    ClientSystem.fLoginImageIndex := fFileId;
+    if fFileId = -1 then Exit;
+    Synchronize(DownFile);
   end;
 end;
 
