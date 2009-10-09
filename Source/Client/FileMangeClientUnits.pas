@@ -240,8 +240,7 @@ function TFileManageDlg.HasNodeChild(AParentID: integer):Boolean;
 const
   glSQL = 'select count(*) as mycount from TB_FILE_TREE where ZPID=%d';
 begin
-  Result := False;
-  if not ClientSystem.fDBOpr.Connected then Exit;
+  //if not ClientSystem.fDBOpr.Connected then Exit;
   Result := ClientSystem.fDBOpr.ReadInt(PChar(Format(glSQL,[AParentID])))>0;
 end;
 
@@ -298,7 +297,7 @@ var
 const
   glSQL = 'select * from TB_FILE_TREE where ZPID=%d';
 begin
-  if not ClientSystem.fDBOpr.Connected then Exit;
+  //if not ClientSystem.fDBOpr.Connected then Exit;
 
   cdsQuery.Data := ClientSystem.fDBOpr.ReadDataSet(PChar(format(glSQL,[APID])));
 
@@ -366,7 +365,7 @@ end;
 
 procedure TFileManageDlg.ExecSQL(ASQL: String);
 begin
-  if not ClientSystem.fDBOpr.Connected then Exit;
+  //if not ClientSystem.fDBOpr.Connected then Exit;
   ClientSystem.fDBOpr.ExeSQL(PChar(ASQL));
 end;
 
@@ -402,7 +401,7 @@ begin
   lvFileItem.Items.BeginUpdate;
   try
     ClearItem;
-    if not ClientSystem.fDBOpr.Connected then Exit;
+    //if not ClientSystem.fDBOpr.Connected then Exit;
 
     cdsQuery.Data := ClientSystem.fDBOpr.ReadDataSet(PChar(format(glSQL,[ATreeID,
       Ord(fsFile)])));
@@ -530,7 +529,7 @@ end;
 procedure TFileManageDlg.FormShow(Sender: TObject);
 begin
   Application.ProcessMessages;
-  if ClientSystem.fDBOpr.Connected then
+  //if ClientSystem.fDBOpr.Connected then
     LoadFileTreeNode(nil,-1);
 end;
 

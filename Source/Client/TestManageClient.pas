@@ -1065,6 +1065,7 @@ begin
   if not (cdsTestItem.State in [dsEdit,dsinsert]) then
     cdsTestItem.Edit;
   cdsTestItem.FieldByName('ZSTATUS').AsInteger := Ord(bgsReAction);
+  cdsTestItem.FieldByName('ZPRO_SVN').AsInteger := 0;
   cdsTestItem.Post;
 end;
 
