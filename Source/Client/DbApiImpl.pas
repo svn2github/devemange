@@ -11,7 +11,7 @@
 //  4.修改 ReadVariant()方法一直没有写实现 2008-5-13
 //  5.修改 fSocketServer.SupportCallbacks := False 不支持回调 by mrlong 2008-5-31 ver=1.0.2
 //  6.删除掉Dcom的连接，不要了..... ver=1.0.5
-//
+//  7.更新zlib的版本 ver=1.0.7
 //
 //
 ///////////////////////////////////////////////////////////////////////////////
@@ -28,7 +28,7 @@ uses
 
 
 const
-  gcTimeOut = 5000*10;//5分钟
+  gcTimeOut = 1000*10*10*5;//5分钟
   gc_Class_GUID : array[0..4] of string =
   ('{B4AA6BE1-5DEF-431A-AFA0-F1262EDB4C5A}',
    '{7B1AA46A-8C7D-4C89-BC7C-04129CC66D2A}',
@@ -126,6 +126,7 @@ uses
 
 function TBfssDBOpr.AppServer: Variant;
 begin
+  if not RemoteServer.Connected then ReConnect;
   if RemoteServer.Connected then
     Result := RemoteServer.AppServer;
 end;
@@ -219,6 +220,7 @@ end;
 function TBfssDBOpr.CopyFile(AFile_ID, AVer, ATree_ID: Integer): Integer;
 begin
   Result := -1;
+  if not RemoteServer.Connected then ReConnect;
   if RemoteServer.Connected then
     Result := RemoteServer.AppServer.CopyFile(AFile_ID,AVer,ATree_ID);
 end;
@@ -255,6 +257,7 @@ end;
 function TBfssDBOpr.DeleteFile(AFile_ID: Integer): Integer;
 begin
   Result := -1;
+  if not RemoteServer.Connected then ReConnect;
   if RemoteServer.Connected then
     Result := RemoteServer.AppServer.DeleteFile(AFile_ID);
 end;
@@ -322,24 +325,32 @@ end;
 
 function TBfssDBOpr.GetSysDateTime: OleVariant;
 begin
+  if not RemoteServer.Connected then ReConnect;
   if RemoteServer.Connected then
     Result := RemoteServer.AppServer.GetSysDateTime;
 end;
 
 function TBfssDBOpr.Login(const AName, APass: WideString):integer;
 begin
+  Result := -1;
+  if not RemoteServer.Connected then ReConnect;
+  if not RemoteServer.Connected then Exit;
   Result := RemoteServer.AppServer.Login(AName,APass);
 end;
 
 procedure TBfssDBOpr.MailTo(AStyle: Integer; const AMails: WideString;
   AContextID: Integer);
 begin
+  if not RemoteServer.Connected then ReConnect;
+  if not RemoteServer.Connected then Exit;
   RemoteServer.AppServer.MailTo(AStyle,AMails,AContextID);
 end;
 
 procedure TBfssDBOpr.MailToEx(const AMails: WideString; ATitle,
   AContent: WideString);
 begin
+  if not RemoteServer.Connected then ReConnect;
+  if not RemoteServer.Connected then Exit;
   RemoteServer.AppServer.MailToEx(AMails,ATitle,AContent);
 end;
 
@@ -492,6 +503,7 @@ function TBfssDBOpr.UpFileChunk(AFile_ID, AVer, AGroupID: Integer;
   AStream: OleVariant): Integer;
 begin
   Result := -1;
+  if not RemoteServer.Connected then ReConnect;
   if RemoteServer.Connected then
     Result := RemoteServer.AppServer.UpFileChunk(AFile_ID,AVer,AGroupID,AStream);
 end;
