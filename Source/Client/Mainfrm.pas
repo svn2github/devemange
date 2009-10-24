@@ -101,6 +101,7 @@ type
     N21: TMenuItem;
     N22: TMenuItem;
     tmrBack: TTimer;
+    chkShowCancel: TCheckBox;
     procedure FormCreate(Sender: TObject);
     procedure actmod_FilesExecute(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -136,6 +137,7 @@ type
     procedure ApplicationEvents1Minimize(Sender: TObject);
     procedure actExtend_ManageExecute(Sender: TObject);
     procedure tmrBackTimer(Sender: TObject);
+    procedure chkShowCancelClick(Sender: TObject);
   private
     fChildform : TList; //所有子窗口的对象
     fCurrentChildform : TBaseChildDlg;
@@ -146,6 +148,7 @@ type
     procedure ShowStatusBarText(AStr:String);
 
     procedure ExtedWebClick(Sender: TObject);  //扩展应用调用
+    procedure ShowCelander(AShow:Boolean);
 
     procedure DelTempfile(); //删除临时文件
     procedure WMTickCount (var Msg: TMessage); message gcMSG_TickCount;
@@ -201,7 +204,8 @@ uses
   DemandClientfrm,         {需求管理}
   WebClientfrm,
   ExtendWebClientfrm,      {web扩展应用}
-  ExtendWebManagefrm       {扩展应用管理}
+  ExtendWebManagefrm,       {扩展应用管理}
+  DeveCalendarfrm           {工作日程} 
    , SetSysParamsfrm;
 
 {$R *.dfm}
@@ -236,7 +240,7 @@ begin
     myBaseform.initBase;
     fChildform.Add(myBaseform);
   end;
-
+  LockWindowUpdate(Handle);
   try
     myoldform := fCurrentChildform;
     fCurrentChildform := myBaseform;
@@ -251,8 +255,13 @@ begin
         fCurrentChildform.Caption]);
     if Assigned(myoldform) then
       myoldform.Closefrm;
+      
+    ShowCelander(chkShowCancel.Checked);
+    if myBaseform.CanFocus then
+      myBaseform.SetFocus;
   finally
     myBaseform.HideProgress;
+    LockWindowUpdate(0)
   end;
 
   //改变输入焦点
@@ -345,7 +354,6 @@ begin
           
 
   //版本检查
-
   
 
 end;
@@ -405,10 +413,17 @@ end;
 procedure TMainDlg.StatusBarMainDrawPanel(StatusBar: TStatusBar;
   Panel: TStatusPanel; const Rect: TRect);
 begin
-  with btbnCancelUp do
+  with chkShowCancel do
   begin
     Parent   :=   StatusBar;
     Left     :=   Rect.Right-width;
+    Top      :=   Rect.Top ;
+    Height   :=   Rect.Bottom - Rect.Top ;
+  end;
+  with btbnCancelUp do
+  begin
+    Parent   :=   StatusBar;
+    Left     :=   Rect.Right-width-chkShowCancel.Width ;
     Top      :=   Rect.Top ;
     Height   :=   Rect.Bottom - Rect.Top ;
     Visible  :=   True;
@@ -418,7 +433,7 @@ begin
     Parent   :=   StatusBar;
     Left     :=   Rect.Left;
     Top      :=   Rect.Top ;
-    Width    :=   Panel.Width-btbnCancelUp.Width;
+    Width    :=   Panel.Width-btbnCancelUp.Width-chkShowCancel.Width;
     Height   :=   Rect.Bottom - Rect.Top ;
     Visible  :=   True;
   end;
@@ -857,6 +872,7 @@ begin
     actFile_ChangPasswd.Execute;
     inc(c);
   end;
+  ShowCelander(True);
 end;
 
 procedure TMainDlg.actPw_GetPwExecute(Sender: TObject);
@@ -985,6 +1001,20 @@ begin
   ActiveControl := FindNextControl(ActiveControl, True, True, False);
 end;
 
+procedure TMainDlg.ShowCelander(AShow:Boolean);
+begin
+  if AShow then
+  begin
+    DeveCalendarDlg.Parent := plForm;
+    //位置
+    DeveCalendarDlg.Left := plForm.Width - DeveCalendarDlg.Width-3;
+    DeveCalendarDlg.Top  := plForm.Height - DeveCalendarDlg.Height-3;
+    DeveCalendarDlg.Show;
+  end
+  else
+    DeveCalendarDlg.Hide;
+end;
+
 { TBackThread }
 
 procedure TBackThread.CheckLoginImage;
@@ -1027,6 +1057,12 @@ procedure TMainDlg.tmrBackTimer(Sender: TObject);
 begin
   TBackThread.Create;
   tmrBack.Enabled := False;
+end;
+
+
+procedure TMainDlg.chkShowCancelClick(Sender: TObject);
+begin
+  ShowCelander(chkShowCancel.Checked);
 end;
 
 end.

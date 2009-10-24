@@ -100,6 +100,23 @@ object MainDlg: TMainDlg
         OnClick = btbnNoUpgradeClick
       end
     end
+    object chkShowCancel: TCheckBox
+      Left = 104
+      Top = 424
+      Width = 35
+      Height = 17
+      Caption = #9312
+      Checked = True
+      Font.Charset = GB2312_CHARSET
+      Font.Color = clBlack
+      Font.Height = -14
+      Font.Name = #23435#20307
+      Font.Style = []
+      ParentFont = False
+      State = cbChecked
+      TabOrder = 1
+      OnClick = chkShowCancelClick
+    end
   end
   object CoolBar1: TCoolBar
     Left = 0

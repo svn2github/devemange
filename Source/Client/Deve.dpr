@@ -27,7 +27,8 @@ uses
   DemandClientfrm in 'DemandClientfrm.pas' {DemandClientDlg},
   TickDateTimefrm in 'TickDateTimefrm.pas' {TickDateTimeDlg},
   ExtendWebClientfrm in 'ExtendWebClientfrm.pas' {ExtendWebClientDlg},
-  ExtendWebManagefrm in 'ExtendWebManagefrm.pas' {ExtendWebManageDlg};
+  ExtendWebManagefrm in 'ExtendWebManagefrm.pas' {ExtendWebManageDlg},
+  DeveCalendarfrm in 'DeveCalendarfrm.pas' {DeveCalendarDlg};
 
 {$R *.res}
 {$R resource.res}
@@ -38,5 +39,6 @@ begin
   Application.Title := 'DeveManage';
   Application.CreateForm(TMainDlg, MainDlg);
   Application.CreateForm(TDM, DM);
+  Application.CreateForm(TDeveCalendarDlg, DeveCalendarDlg);
   Application.Run;
 end.
