@@ -73,7 +73,6 @@ type
     dbedtZVERSION: TDBEdit;
     lbl8: TLabel;
     dbedtZSVN: TDBEdit;
-    lblError: TLabel;
     lstResult: TListBox;
     ani1: TAnimate;
     act_Svnlog: TAction;
@@ -115,6 +114,8 @@ type
     cdsCloneAntList: TClientDataSet;
     act_ApplyBuild: TAction;
     btnApplyBuild: TBitBtn;
+    lstErrors: TListBox;
+    spl4: TSplitter;
     procedure act_ProAddExecute(Sender: TObject);
     procedure cdsAntListNewRecord(DataSet: TDataSet);
     procedure act_ProSaveUpdate(Sender: TObject);
@@ -156,6 +157,7 @@ type
     procedure act_ReLoadAntExecute(Sender: TObject);
     procedure act_ApplyBuildUpdate(Sender: TObject);
     procedure act_ApplyBuildExecute(Sender: TObject);
+    procedure lstErrorsClick(Sender: TObject);
   private
     { Private declarations }
     fSVNCommitPageRec :TSVNCommitPageRec;
@@ -462,6 +464,7 @@ var
   myverstr,mys : string;
   myver : Integer;
   mySQL : string;
+  myUStr : string;
 const
   gl_SQLTXT = 'update TB_STATE set ZSTATECODE=%d where ZID=%d';
 begin
@@ -478,8 +481,7 @@ begin
   ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
 
   lstResult.Items.Clear;
-  lblError.Caption := '';
-  lblError.Visible := False;
+  lstErrors.Clear;
   ClientSystem.fGauge.MaxValue := count;
   ClientSystem.fGauge.MinValue := 0;
   ClientSystem.fGauge.Progress := 0;
@@ -490,11 +492,12 @@ begin
   for i:=0 to count -1 do
   begin
     mystr := idtcpclnt1.ReadLn(); //取出编译的信息
-    if (Pos('FATA',UpperCase(mystr)) + Pos('ERROR',UpperCase(mystr)) > 0)  then
+    myUStr := UpperCase(mystr);
+    if ((Pos('FATA',myUStr) + Pos('ERROR',myUStr)) > 0) and
+       (Pos('CLEARERRORS',myUStr)=0) and
+       (Pos('IFERRORS',myUStr)=0) then
     begin
-      lblError.Visible := True;
-      lblError.Caption := Format('编译出错。第%d行',[i+1]);
-      lblError.Hint := mystr;
+      lstErrors.Items.Add(Format('%d行-%s',[i+1,mystr]));
       linenum := i;
     end
     else if Pos('[<Revision kind=number',mystr) > 0 then
@@ -1112,6 +1115,23 @@ begin
   finally
     mycds.Free;
   end;
+end;
+
+procedure TAntManageClientDlg.lstErrorsClick(Sender: TObject);
+var
+  myindex : Integer;
+  mystr : string;
+begin
+  if lstErrors.ItemIndex >=0 then
+  begin
+    mystr := lstErrors.Items[lstErrors.ItemIndex];
+    myindex := StrToIntDef(Copy(mystr,1,Pos('行',mystr)-1),-1);
+    if myindex >=0 then
+    begin
+      lstResult.ItemIndex := myindex-1;
+    end;
+  end;
+
 end;
 
 end.

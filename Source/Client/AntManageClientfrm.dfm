@@ -165,6 +165,14 @@ inherited AntManageClientDlg: TAntManageClientDlg
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 0
+        object spl4: TSplitter
+          Left = 0
+          Top = 93
+          Width = 948
+          Height = 3
+          Cursor = crVSplit
+          Align = alBottom
+        end
         object pnl3: TPanel
           Left = 0
           Top = 0
@@ -174,22 +182,6 @@ inherited AntManageClientDlg: TAntManageClientDlg
           BevelOuter = bvNone
           Color = clGreen
           TabOrder = 0
-          object lblError: TLabel
-            Left = 484
-            Top = 12
-            Width = 64
-            Height = 15
-            Caption = 'lblError'
-            Font.Charset = GB2312_CHARSET
-            Font.Color = clRed
-            Font.Height = -15
-            Font.Name = #23435#20307
-            Font.Style = []
-            ParentFont = False
-            ParentShowHint = False
-            ShowHint = True
-            Visible = False
-          end
           object btnBuildProject: TBitBtn
             Left = 224
             Top = 8
@@ -231,7 +223,7 @@ inherited AntManageClientDlg: TAntManageClientDlg
           Left = 0
           Top = 40
           Width = 948
-          Height = 118
+          Height = 53
           Style = lbOwnerDrawFixed
           Align = alClient
           ImeName = #26497#21697#20116#31508#36755#20837#27861
@@ -241,12 +233,28 @@ inherited AntManageClientDlg: TAntManageClientDlg
         end
         object ani1: TAnimate
           Left = 3
-          Top = 42
+          Top = 44
           Width = 100
           Height = 80
           Color = clWhite
           ParentColor = False
           Visible = False
+        end
+        object lstErrors: TListBox
+          Left = 0
+          Top = 96
+          Width = 948
+          Height = 62
+          Align = alBottom
+          Font.Charset = GB2312_CHARSET
+          Font.Color = clRed
+          Font.Height = -15
+          Font.Name = #23435#20307
+          Font.Style = []
+          ItemHeight = 15
+          ParentFont = False
+          TabOrder = 3
+          OnClick = lstErrorsClick
         end
       end
       object scrlbx1: TScrollBox
