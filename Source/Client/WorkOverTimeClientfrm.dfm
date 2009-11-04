@@ -1,6 +1,6 @@
 inherited WorkOverTimeClient: TWorkOverTimeClient
-  Left = 225
-  Top = 57
+  Left = 258
+  Top = 54
   Height = 679
   Caption = #21152#29677#21333
   OldCreateOrder = True
@@ -263,16 +263,42 @@ inherited WorkOverTimeClient: TWorkOverTimeClient
       end
       object lbl12: TLabel
         Left = 16
-        Top = 186
+        Top = 219
         Width = 77
         Height = 15
         Caption = #20107'    '#30001#65306
       end
+      object lbl14: TLabel
+        Left = 17
+        Top = 186
+        Width = 75
+        Height = 15
+        Caption = #25187#20943#26102#38388#65306
+        Font.Charset = GB2312_CHARSET
+        Font.Color = clRed
+        Font.Height = -15
+        Font.Name = #23435#20307
+        Font.Style = []
+        ParentFont = False
+      end
+      object lbl15: TLabel
+        Left = 299
+        Top = 186
+        Width = 263
+        Height = 15
+        Caption = #65288#25928#29575#19981#39640#21152#29677#32773' '#21333#20301#20998#38047#31995#25968#20043#21069#65289
+        Font.Charset = GB2312_CHARSET
+        Font.Color = clRed
+        Font.Height = -15
+        Font.Name = #23435#20307
+        Font.Style = []
+        ParentFont = False
+      end
       object dbmmoZCONTENT: TDBMemo
         Left = 90
-        Top = 186
+        Top = 219
         Width = 462
-        Height = 291
+        Height = 263
         DataField = 'ZCONTENT'
         DataSource = dsWorkList
         ScrollBars = ssBoth
@@ -531,6 +557,21 @@ inherited WorkOverTimeClient: TWorkOverTimeClient
         Action = act_NoAgree
         Caption = #19981#21516#24847
         TabOrder = 3
+      end
+      object dbedtZDECTIME: TDBEdit
+        Left = 91
+        Top = 182
+        Width = 200
+        Height = 23
+        DataField = 'ZDECTIME'
+        DataSource = dsWorkList
+        Font.Charset = GB2312_CHARSET
+        Font.Color = clRed
+        Font.Height = -15
+        Font.Name = #23435#20307
+        Font.Style = []
+        ParentFont = False
+        TabOrder = 4
       end
     end
   end

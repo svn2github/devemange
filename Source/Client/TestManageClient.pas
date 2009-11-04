@@ -266,6 +266,7 @@ implementation
 
 uses
   TestCaseSOCREfrm, {测试打分}
+  Activationfrm,    {激活处量}
   GetSVNVerfrm,     {选择SVN的版本号}
   DmUints,BugHistoryfrm;
 
@@ -1061,12 +1062,33 @@ begin
 end;
 
 procedure TTestManageChildfrm.act_ActionExecute(Sender: TObject);
+var
+  myform : TActivationDlg;
+  mySQL : string;
 begin
   if not (cdsTestItem.State in [dsEdit,dsinsert]) then
     cdsTestItem.Edit;
   cdsTestItem.FieldByName('ZSTATUS').AsInteger := Ord(bgsReAction);
   cdsTestItem.FieldByName('ZPRO_SVN').AsInteger := 0;
   cdsTestItem.Post;
+
+  //保存到今日贡献内
+  myform := TActivationDlg.Create(nil);
+  try
+    myform.edtID.Text   := inttostr(cdsTestItem.FieldByName('ZID').AsInteger);
+    myform.edtName.Text := cdsTestItem.FieldByName('ZNAME').AsString;
+    if myform.ShowModal = mrOk then
+    begin
+      //写入库内
+      myform.fType := 0;
+      myform.fAcivate_UserID := cdsTestItem.FieldByName('ZSUBMISBY').AsInteger;
+      myform.PostData;
+    end;
+  finally
+    myform.Free;
+  end;
+
+
 end;
 
 procedure TTestManageChildfrm.act_ColseUpdate(Sender: TObject);

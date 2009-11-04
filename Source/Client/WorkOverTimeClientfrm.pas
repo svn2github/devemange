@@ -97,6 +97,9 @@ type
     btnAll: TBitBtn;
     lbl13: TLabel;
     dbedtZRATE: TDBEdit;
+    lbl14: TLabel;
+    dbedtZDECTIME: TDBEdit;
+    lbl15: TLabel;
     procedure act_AddLoadExecute(Sender: TObject);
     procedure cdsWrokListCalcFields(DataSet: TDataSet);
     procedure act_firstPageExecute(Sender: TObject);
@@ -196,7 +199,7 @@ var
 const
   glSQL = 'exec pt_SplitPage ''TB_WORKOVERTIME'',' +
           '''ZID,ZUSER_ID,ZDATETIME,ZLASTDATETIME,ZADDRESS,ZCONTENT,ZCHECK_USER_ID, ' +
-          'ZDATE,ZSTATUS,ZWEEKEND,ZBUILDDATE,ZMINUTE,ZRATE'',' +
+          'ZDATE,ZSTATUS,ZWEEKEND,ZBUILDDATE,ZMINUTE,ZRATE,ZDECTIME'',' +
           '''%s'',20,%d,%d,1,''%s''';
           // 页码,以总数=1, 条件where
 begin
@@ -481,7 +484,7 @@ var
   mySQL : string;
 const
   gl_SQLTXT = 'insert TB_WORKOVERTIME (ZUSER_ID,ZDATE,ZDATETIME,ZLASTDATETIME, ' +
-    'ZADDRESS,ZCONTENT,ZMINUTE,ZSTATUS,ZWEEKEND,ZBUILDDATE,ZRATE) values(%d,''%s'',''%s'',''%s'',''%s'',''%s'',%d,%d,%d,''%s'',%f)';
+    'ZADDRESS,ZCONTENT,ZMINUTE,ZSTATUS,ZWEEKEND,ZBUILDDATE,ZRATE,ZDECTIME) values(%d,''%s'',''%s'',''%s'',''%s'',''%s'',%d,%d,%d,''%s'',%f,%d)';
   gl_SQLTXT2 = 'update TB_WORKOVERTIME set ' +
                'ZDATETIME=''%s'',     ' +
                'ZLASTDATETIME=''%s'', ' +
@@ -492,6 +495,7 @@ const
                'ZWEEKEND=%d, '     +
                'ZBUILDDATE=''%s'', '   +
                'ZRATE=%f, '            +
+               'ZDECTIME=%d,'          +
                'ZCHECK_USER_ID=%d where ZID=%d ';
   gl_SQLTXT3 = 'select ZID from TB_WORKOVERTIME where ZDATE=''%s'' and ZUSER_ID=%d ';
   gl_SQLTXT4 = 'select isNull(max(ZID),1) from TB_WORKOVERTIME';
@@ -533,7 +537,8 @@ begin
       DataSet.FieldByName('ZSTATUS').AsInteger,
       Ord(DataSet.FieldByName('ZWEEKEND').AsBoolean),
       DataSet.FieldByName('ZBUILDDATE').AsString,
-      DataSet.FieldByName('ZRATE').AsFloat]);
+      DataSet.FieldByName('ZRATE').AsFloat,
+      DataSet.FieldByName('ZDECTIME').AsInteger]);
 
     ClientSystem.fDbOpr.BeginTrans;
     try
@@ -576,16 +581,11 @@ begin
       Ord(DataSet.FieldByName('ZWEEKEND').AsBoolean),
       DataSet.FieldByName('ZBUILDDATE').AsString,
       DataSet.FieldByName('ZRATE').AsFloat,
+      DataSet.FieldByName('ZDECTIME').AsInteger,
       DataSet.FieldByName('ZCHECK_USER_ID').AsInteger,
       DataSet.FieldByName('ZMYID').AsInteger]);
 
-    ClientSystem.fDbOpr.BeginTrans;
-    try
       ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
-      ClientSystem.fDbOpr.CommitTrans;
-    except
-      ClientSystem.fDbOpr.RollbackTrans;
-    end;
   end;
 end;
 
@@ -766,6 +766,9 @@ begin
   HourOf(cdsWrokList.FieldByName('ZDATETIME').AsDateTime))*60 +
   MinuteOf(cdsWrokList.FieldByName('ZLASTDATETIME').AsDateTime)-
   MinuteOf(cdsWrokList.FieldByName('ZDATETIME').AsDateTime);
+
+  //扣减
+  myMinute := myMinute - cdsWrokList.FieldByName('ZDECTIME').AsInteger;
 
   if not (cdsWrokList.State in [dsEdit,dsInsert]) then
     cdsWrokList.Edit;

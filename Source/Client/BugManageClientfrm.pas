@@ -254,6 +254,7 @@ type
   private
     fPageType : TPageTypeRec; //分页处理
     fHighQuery : TBugHighQueryDlg;
+    fZRESOLVEDBY : Integer; //保存起来为激活用
 
     procedure ClearNode(AParent:TTreeNode);
     function  GetBugItemPageCount(APageIndex:integer;AWhereStr:String):integer; //取出页总数
@@ -280,6 +281,7 @@ uses
   ShellAPI,
   AddBugTreeNodefrm,          {增加BUG项目}
   ClinetSystemUnits,
+  Activationfrm,              {激活窗口}
   SelectBugStatusfrm,
   BugAeplyfrm,
   ComObj,
@@ -1201,6 +1203,7 @@ var
   myZID : integer;
   myBugData : PBugTreeNode;
   myAssingdate : string; //指派的时间，哪是没有指派，则是null
+  myform : TActivationDlg;
 const
   glSQL   = 'select isNull(max(ZID),0)+1 from TB_BUG_ITEM';
   glSQL2  = 'insert TB_BUG_ITEM (ZID,ZTREE_ID,ZPRO_ID,ZTREEPATH,ZTITLE,' +
@@ -1252,6 +1255,28 @@ begin
     ClientSystem.fDbOpr.BeginTrans;
     try
       ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
+
+      //是激活时 2009-11-04
+      if DataSet.FieldByName('ZSTATUS').AsInteger = Ord(bgsReAction) then
+      begin
+        myform := TActivationDlg.Create(nil);
+        try
+          myform.edtID.Text := IntToStr(cdsBugItem.FieldByName('ZID').AsInteger);
+          myform.edtName.Text := DataSet.FieldByName('ZTITLE').AsString;
+          if myform.ShowModal = mrok then
+          begin
+            myform.fType := 1;
+            if  DataSet.FieldByName('ZRESOLVEDBY').AsInteger = -1 then
+              myform.fAcivate_UserID := fZRESOLVEDBY
+            else
+              myform.fAcivate_UserID := DataSet.FieldByName('ZRESOLVEDBY').AsInteger;
+            myform.PostData;
+          end;
+        finally
+          myform.Free;
+        end;
+      end;
+
       ClientSystem.fDbOpr.CommitTrans;
     except
       ClientSystem.fDbOpr.RollbackTrans;
@@ -1290,6 +1315,7 @@ begin
       ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
       DataSet.FieldByName('ZID').AsInteger := myZID;
       DataSet.FieldByName('ZISNEW').AsBoolean := False;
+
       ClientSystem.fDbOpr.CommitTrans;
       //邮件通知
       ShowProgress('邮件通知...',0);
@@ -1556,6 +1582,7 @@ var
 begin
   if MessageBox(Handle,'你是不真要激活问题吗,如有疑问先与问题处理人联系.',
     '激活问题',MB_ICONQUESTION+MB_YESNO)=IDNO then Exit;
+
   cdsBugHistory.DisableControls;
   try
     myRecNo := cdsBugHistory.RecNo;
@@ -1777,6 +1804,7 @@ begin
         if cdsBugItem.State in [dsEdit,dsInsert] then
           cdsBugItem.Post;
         cdsBugItem.Edit;
+        fZRESOLVEDBY := cdsBugItem.FieldByName('ZRESOLVEDBY').AsInteger;
         cdsBugItem.FieldByName('ZRESOLVEDBY').AsInteger    := -1;
         cdsBugItem.FieldByName('ZRESOLUTION').AsInteger    := -1;
         cdsBugItem.FieldByName('ZRESOLVEDVER').AsInteger   := -1;

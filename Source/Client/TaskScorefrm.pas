@@ -23,7 +23,6 @@ type
     dbmmoZREMASK: TDBMemo;
     Label1: TLabel;
     dbtxtZPERFACT: TDBText;
-    mmo1: TMemo;
     chkAmount: TCheckBox;
     cbEasy: TCheckBox;
     CheckUnitsDeiged: TCheckBox;
@@ -45,6 +44,12 @@ type
     Label11: TLabel;
     lbl2: TLabel;
     dtpDate: TDateTimePicker;
+    lbl3: TLabel;
+    lbl4: TLabel;
+    lbl5: TLabel;
+    lbl6: TLabel;
+    lbl7: TLabel;
+    lbl8: TLabel;
     procedure btnCalcClick(Sender: TObject);
   private
     { Private declarations }
@@ -115,7 +120,7 @@ begin
   begin
     v := myTotal * strtofloatdef(edtOtherRate.Text,0)/100;
     myv := myv + v;
-    mystr := mystr +#13#10 +format('其他情况占 %s =%f',[edtOtherRate.Text+'%',v]);
+    mystr := mystr +#13#10 +format('有无成果占 %s =%f',[edtOtherRate.Text+'%',v]);
   end;
   fScoreStr := mystr;
 

@@ -75,6 +75,7 @@ procedure TCalendarThread.BeginAnimate;
 begin
   fani.Active := True;
   fani.Visible := True;
+  fwb.Visible := False;
 end;
 
 constructor TCalendarThread.Create(Awb: TWebBrowser; Aani: TAnimate);
@@ -90,6 +91,7 @@ procedure TCalendarThread.EndAnimate;
 begin
   fani.Active  := False;
   fani.Visible := False;
+  fwb.Visible := True;
 end;
 
 procedure TCalendarThread.Execute;

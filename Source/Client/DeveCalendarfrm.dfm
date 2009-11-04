@@ -24,8 +24,8 @@ inherited DeveCalendarDlg: TDeveCalendarDlg
       00000000000000000100000000000000000000000000000000000000}
   end
   object ani1: TAnimate
-    Left = 142
-    Top = 85
+    Left = 6
+    Top = 4
     Width = 80
     Height = 50
     Color = clBtnFace

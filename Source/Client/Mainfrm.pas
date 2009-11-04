@@ -205,7 +205,7 @@ uses
   WebClientfrm,
   ExtendWebClientfrm,      {web扩展应用}
   ExtendWebManagefrm,       {扩展应用管理}
-  DeveCalendarfrm           {工作日程} 
+  DeveCalendarfrm           {工作日程}
    , SetSysParamsfrm;
 
 {$R *.dfm}
