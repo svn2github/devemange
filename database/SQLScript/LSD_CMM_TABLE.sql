@@ -760,6 +760,7 @@ create table TB_WORKOVERTIME(
 	ZSTATUS        int not null,               /*状态=0 申请 1=同意 2=不同意 3=废单*/
 	ZWEEKEND       bit default 0,              /*是否是周末或节假日加班*/
 	ZBUILDDATE    datetime,                    /*制单时间*/
+	ZDECTIME      int default 0,               /*减去分钟 因工作效率问题 */
 	ZRATE         float,                       /*系数*/
 	
 	constraint PK_TB_WORKOVERTIME primary key(ZID)
@@ -841,6 +842,28 @@ create table TB_EXTENDWEB(
 )
 go
 
+
+/*今日贡献*/
+if exists (select * from dbo.sysobjects
+  where id = object_id(N'[dbo].[TB_TODAYRESULT]')
+  and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+drop table [dbo].[TB_TODAYRESULT]
+go
+
+create table TB_TODAYRESULT(
+	ZID          int IDENTITY (1, 1) not null,                   /*主键*/
+	ZTYPE 	     int not null,                                   /*类型 0=测试用例 1=bug 2=svn 3=报功 4=举报 */
+	ZUSER_ID     int not null,                                   /*谁的贡献*/
+	ZDATETIME    datetime,                                       /*贡献时间*/
+	ZCONTENTID   int,                                            /*如是测试用列则写ID,bug则写bug*/
+	ZCONTENT     varchar(200),                                   /*内容*/
+	ZNOTE        text,                                           /*原因*/
+	ZWRITER      int,                                            /*空则系统写*/
+	ZACTION      int,                                            /*=0 表示是激活的 1=另外加分的*/
+	
+	constraint PK_TB_TODAYRESULT primary key(ZID)  
+)
+go
 
 
 

@@ -61,6 +61,8 @@ insert into TB_TASK_PARAMS (ZTYPE,ZID,ZNAME) values(2,1,'变更功能');
 insert into TB_SYSPARAMS (ZNAME,ZVALUE) values('wiki','');
 insert into TB_SYSPARAMS (ZNAME,ZVALUE) values('ProductDownload','');
 insert into TB_SYSPARAMS (ZNAME,ZVALUE) values('LoginImageIndex','-1');    /*登录的图片文件号*/
+insert into TB_SYSPARAMS (ZNAME,ZVALUE) values('Calendar',''); 
+
 
 /*测试参数*/
 insert into TB_TEST_PARAMS (ZTYPE,ZID,ZNAME) values(0,0,'一级');
