@@ -26,12 +26,6 @@ type
     rtOther);
   TWorkColumn=(wcNo,wcTitle,wcLeve,wcID);
 
-  TPageTypeRec = record
-    fIndex : Integer;
-    fIndexCount : Integer;
-    fWhereStr : string; //分页的where条件
-  end;
-
   TDayWorktableManageClientDlg = class(TBaseChildDlg)
     pnlnovisible: TPanel;
     actlst1: TActionList;
@@ -67,12 +61,10 @@ type
     intgrfldcds1ZID: TIntegerField;
     strngfldcds1ZNAME: TStringField;
     pnlTool: TPanel;
-    lbl1: TLabel;
     BtnReader: TBitBtn;
     dtp1: TDateTimePicker;
     BtnMeWrite: TBitBtn;
     dbgrdResult: TDBGrid;
-    pnl2: TPanel;
     dbedtZCONTENTID: TDBEdit;
     lbl2: TLabel;
     lbl3: TLabel;
@@ -96,24 +88,28 @@ type
     act_OtherResultToDay: TAction;
     lblName1: TLabel;
     BtnOtherResultToDay: TBitBtn;
-    act_FirstPage: TAction;
-    act_ProPage: TAction;
-    act_NextPage: TAction;
-    act_LastPage: TAction;
-    lblPageCount: TLabel;
-    act_RefreshData: TAction;
-    act_AllData: TAction;
-    BtnFirstPage: TBitBtn;
-    BtnProPage: TBitBtn;
-    BtnNextPage: TBitBtn;
-    BtnLastPage: TBitBtn;
-    BtnRefreshData: TBitBtn;
-    BtnAllData: TBitBtn;
     dblkcbbZTYPENAME: TDBLookupComboBox;
     dsType: TDataSource;
     act_GotoContent: TAction;
     BtnGotoContent: TBitBtn;
     dbtxtZROWNAME: TDBText;
+    act1_Readyesterday: TAction;
+    Btn1_Readyesterday: TBitBtn;
+    act_ReadAll: TAction;
+    BtnReadAll: TBitBtn;
+    pnl1: TPanel;
+    dbtxtZCONTENT: TDBText;
+    pnl2: TPanel;
+    lbl1: TLabel;
+    lbl10: TLabel;
+    lbl11: TLabel;
+    lbl12: TLabel;
+    lbl13: TLabel;
+    lbl14: TLabel;
+    lbl15: TLabel;
+    lbl16: TLabel;
+    lbl17: TLabel;
+    lbl18: TLabel;
     procedure act_meworkExecute(Sender: TObject);
     procedure dbgrdworkDrawColumnCell(Sender: TObject; const Rect: TRect;
       DataCol: Integer; Column: TColumn; State: TGridDrawState);
@@ -140,20 +136,11 @@ type
     procedure dbgrdResultDrawColumnCell(Sender: TObject; const Rect: TRect;
       DataCol: Integer; Column: TColumn; State: TGridDrawState);
     procedure act_OtherResultToDayExecute(Sender: TObject);
-    procedure act_FirstPageUpdate(Sender: TObject);
-    procedure act_FirstPageExecute(Sender: TObject);
-    procedure act_ProPageUpdate(Sender: TObject);
-    procedure act_ProPageExecute(Sender: TObject);
-    procedure act_NextPageUpdate(Sender: TObject);
-    procedure act_NextPageExecute(Sender: TObject);
-    procedure act_LastPageUpdate(Sender: TObject);
-    procedure act_LastPageExecute(Sender: TObject);
-    procedure act_RefreshDataExecute(Sender: TObject);
-    procedure act_AllDataExecute(Sender: TObject);
     procedure act_GotoContentExecute(Sender: TObject);
+    procedure act1_ReadyesterdayExecute(Sender: TObject);
+    procedure act_ReadAllExecute(Sender: TObject);
   private
     { Private declarations }
-    fPageType : TPageTypeRec;
     procedure LoadWork(AUseID:Integer;AUseType:Integer);
 
   public
@@ -163,8 +150,8 @@ type
     procedure Showfrm ; override;  //显示后发生的事件
     procedure Closefrm; override;  //关闭显示发生的事件
 
-    function  GetToDayResultPageCount(AWhereStr:String):integer;
-    procedure LoadToDayResult(APageIndex:integer;AWhereStr:String);
+    procedure LoadToDayResult(APageIndex:integer;AWhereStr:String;
+      AAll:Boolean;AUserID:Integer);
 
     class function GetModuleID : integer;override; //取出模块ID
   end;
@@ -402,34 +389,8 @@ begin
   lblName.Caption := cdsUser.FieldByName('ZNAME').AsString;
 end;
 
-function TDayWorktableManageClientDlg.GetToDayResultPageCount(
-  AWhereStr: String): integer;
-var
-  mySQL  : string;
-  myRowCount : integer;
-  mywhere : string;
-const
-  glSQL = 'exec pt_SplitPage ''TB_TODAYRESULT'',''' +
-         'ZID'', ''%s'',20,%d,%d,1,''%s''';
-  //                                             页码,以总数=1, 条件where
-begin
-  mywhere := AWhereStr;
-
-  mySQL := format(glSQL,[
-    'ZID',
-    1,
-    1, //不是取总数
-    mywhere]);
-
-  myRowCount := ClientSystem.fDbOpr.ReadInt(PChar(mySQL));
-  Result := myRowCount div 20;
-  if (myRowCount mod 20) > 0 then
-    Result := Result + 1;
-end;
-
-
 procedure TDayWorktableManageClientDlg.LoadToDayResult(APageIndex: integer;
-  AWhereStr: String);
+  AWhereStr: String;AAll:Boolean;AUserID:Integer);
 var
   mySQL  : string;
   i : integer;
@@ -437,12 +398,17 @@ var
   myDataSet : TClientDataSet;
   myb : Boolean;
   mywhere : String;
+  mykind : Integer;
+
+  mycount14,mycount15,mycount16,mycount17,mycount18 : Integer;
+
 const
   glSQL = 'exec pt_SplitPage ''TB_TODAYRESULT'',' +
           '''ZID,ZTYPE,ZUSER_ID,ZDATETIME,ZCONTENTID,ZCONTENT,ZNOTE, ' +
           'ZWRITER,ZACTION'',' +
-          '''%s'',20,%d,%d,1,''%s''';
+          '''%s'',200,%d,%d,1,''%s''';
           // 页码,以总数=1, 条件where
+  glSQL2 = 'exec pt_ToDayResult %d,%d,''%s''';
 begin
 
   if fLoading then Exit;
@@ -542,6 +508,7 @@ begin
       end;
     end;
 
+    //统计各内容
     cdsToDayResult.DisableControls;
     try
       myDataSet.First;
@@ -561,6 +528,80 @@ begin
         cdsToDayResult.Post;
         myDataSet.Next;
       end;
+
+      //
+      // 执行
+      //
+      if AAll then mykind := 0 else mykind := 1;
+      mySQL := Format(glSQL2,[AUserID,
+        mykind,
+        DateToStr(dtp1.DateTime)]);
+
+      myDataSet.Data := ClientSystem.fDbOpr.ReadDataSet(pchar(mySQL));
+      myDataSet.First;
+      while not myDataSet.Eof do
+      begin
+        cdsToDayResult.Append;
+        cdsToDayResult.FieldByName('ZISNEW').AsBoolean := False;
+        cdsToDayResult.FieldByName('ZMYID').asInteger := -1;
+        cdsToDayResult.FieldByName('ZWRITER').AsInteger := -1;
+        cdsToDayResult.FieldByName('ZTYPE').AsInteger := myDataSet.FieldByName('ZTYPE').AsInteger;
+        //类型 0=测试用例 1=bug 2=svn 3=报功 4=举报
+        case myDataSet.FieldByName('ZTYPE').AsInteger of
+          0:
+            if ClientSystem.fEditerType in [etAdmin,etDeve] then
+              cdsToDayResult.FieldByName('ZUSER_ID').AsInteger := myDataSet.FieldByName('ZOPEN_USER_ID').AsInteger
+            else
+              cdsToDayResult.FieldByName('ZUSER_ID').AsInteger := myDataSet.FieldByName('ZCLOSE_USER_ID').AsInteger;
+          1:
+           if ClientSystem.fEditerType in [etAdmin,etDeve] then
+              cdsToDayResult.FieldByName('ZUSER_ID').AsInteger := myDataSet.FieldByName('ZCLOSE_USER_ID').AsInteger
+            else
+              cdsToDayResult.FieldByName('ZUSER_ID').AsInteger := myDataSet.FieldByName('ZOPEN_USER_ID').AsInteger;
+          2:cdsToDayResult.FieldByName('ZUSER_ID').AsInteger := myDataSet.FieldByName('ZOPEN_USER_ID').AsInteger;
+        end;
+
+        cdsToDayResult.FieldByName('ZCONTENTID').AsInteger := myDataSet.FieldByName('ZCONTENTID').AsInteger;
+        cdsToDayResult.FieldByName('ZCONTENT').AsString := myDataSet.FieldByName('ZCONTENT').AsString;
+        cdsToDayResult.FieldByName('ZACTION').AsInteger := myDataSet.FieldByName('ZACTION').AsInteger;
+        cdsToDayResult.FieldByName('ZDATETIME').AsDateTime := dtp1.Date;
+
+        if cdsToDayResult.FieldByName('ZUSER_ID').AsInteger >=0 then
+          cdsToDayResult.Post
+        else
+          cdsToDayResult.Cancel;
+        myDataSet.Next;
+      end;
+
+      //统计
+      mycount14 := 0;mycount15:=0;mycount16:=0;mycount17:=0;mycount18:=0;
+      cdsToDayResult.First;
+      while not cdsToDayResult.Eof do
+      begin
+        if cdsToDayResult.FieldByName('ZACTION').AsInteger = 0 then
+        begin
+          if cdsToDayResult.FieldByName('ZTYPE').AsInteger = 0 then  //用例
+            inc(mycount15)
+          else
+            inc(mycount16);
+        end
+        else begin
+          //0=测试用例 1=bug 2=svn 3=报功 4=举报
+          case cdsToDayResult.FieldByName('ZTYPE').AsInteger of
+            0: Inc(mycount14);
+            1: Inc(mycount17);
+            2: Inc(mycount18);
+          end;
+        end;
+        cdsToDayResult.Next;
+      end;
+      
+      lbl14.Caption := IntToStr(mycount14);
+      lbl15.Caption := IntToStr(mycount15);
+      lbl16.Caption := IntToStr(mycount16);
+      lbl17.Caption := IntToStr(mycount17);
+      lbl18.Caption := IntToStr(mycount18);
+
       cdsToDayResult.First;
     finally
       cdsToDayResult.EnableControls;
@@ -580,16 +621,10 @@ var
   mywhere : string;
   mydatetime : TDateTime;
 begin
-  mydatetime := dtp1.DateTime;
-  fPageType.fIndex := 1;
+  mydatetime := ClientSystem.fDbOpr.GetSysDateTime;
   mywhere := Format('ZUSER_ID=%d and ZDATETIME=''''%s''''',
     [ClientSystem.fEditer_id,DateToStr(mydatetime)]);
-  fPageType.fIndexCount := GetToDayResultPageCount(mywhere);
-  fPageType.fWhereStr := mywhere;
-  LoadToDayResult(fPageType.fIndex,fPageType.fWhereStr);
-  lblPageCount.Caption := format('%d/%d',[
-      fPageType.fIndex,
-      fPageType.fIndexCount]);
+  LoadToDayResult(1,mywhere,False,ClientSystem.fEditer_id);
 end;
 
 procedure TDayWorktableManageClientDlg.act_CancelExecute(Sender: TObject);
@@ -748,6 +783,7 @@ begin
   DataSet.FieldByName('ZISNEW').AsBoolean := True;
   DataSet.FieldByName('ZDATETIME').AsDateTime := ClientSystem.fDbOpr.GetSysDateTime;
   DataSet.FieldByName('ZTYPE').AsInteger := 3;
+  DataSet.FieldByName('ZCONTENTID').AsInteger := -1;
   DataSet.FieldByName('ZACTION').AsInteger := 1;
 end;
 
@@ -764,9 +800,10 @@ begin
   if (cdsToDayResult.RecNo mod 2  = 0) and not ( gdSelected in State)  then
     dbgrdResult.Canvas.Brush.Color := clSilver;
 
-  if (cdsToDayResult.FieldByName('ZACTION').AsInteger=1) then
+  if (cdsToDayResult.FieldByName('ZACTION').AsInteger=0) and
+     not (gdSelected in State) then
   begin
-    dbgrdResult.Canvas.Font.Color := clBlue;
+    dbgrdResult.Canvas.Font.Color := clred;
   end;
   dbgrdResult.DefaultDrawColumnCell(Rect,DataCol,Column,State);
 
@@ -779,99 +816,21 @@ var
   mydatetime : TDateTime;
 begin
   mydatetime := dtp1.DateTime;
-  fPageType.fIndex := 1;
   mywhere := Format('ZUSER_ID=%d and ZDATETIME=''''%s''''',
     [cdsUser.FieldByName('ZID').AsInteger,
      DateToStr(mydatetime)]);
-  fPageType.fIndexCount := GetToDayResultPageCount(mywhere);
-  fPageType.fWhereStr := mywhere;
-  LoadToDayResult(fPageType.fIndex,fPageType.fWhereStr);
+
+  LoadToDayResult(1,mywhere,False,cdsUser.FieldByName('ZID').AsInteger);
   lblName1.Caption := cdsUser.FieldByName('ZNAME').AsString;
-end;
-
-procedure TDayWorktableManageClientDlg.act_FirstPageUpdate(
-  Sender: TObject);
-begin
-  (Sender as TAction).Enabled := (fPageType.fIndex <> 1) and
-  (fPageType.fIndexCount > 1);
-end;
-
-procedure TDayWorktableManageClientDlg.act_FirstPageExecute(
-  Sender: TObject);
-begin
-  fPageType.fIndex := 1;
-  LoadToDayResult(fPageType.fIndex,fPageType.fWhereStr);
-  lblPageCount.Caption := format('%d/%d',[
-      1,
-      fPageType.fIndexCount]);
-end;
-
-procedure TDayWorktableManageClientDlg.act_ProPageUpdate(Sender: TObject);
-begin
-  (Sender as TAction).Enabled := (fPageType.fIndex > 1) ;
-end;
-
-procedure TDayWorktableManageClientDlg.act_ProPageExecute(Sender: TObject);
-begin
-  fPageType.fIndex := fPageType.fIndex -1;
-  LoadToDayResult(fPageType.fIndex,fPageType.fWhereStr);
-  lblPageCount.Caption := format('%d/%d',[
-      fPageType.fIndex,
-      fPageType.fIndexCount]);
-end;
-
-procedure TDayWorktableManageClientDlg.act_NextPageUpdate(Sender: TObject);
-begin
-  (Sender as TAction).Enabled := (fPageType.fIndex<fPageType.fIndexCount);
-end;
-
-procedure TDayWorktableManageClientDlg.act_NextPageExecute(
-  Sender: TObject);
-begin
-  fPageType.fIndex := fPageType.fIndex +1;
-  LoadToDayResult(fPageType.fIndex,fPageType.fWhereStr);
-  lblPageCount.Caption := format('%d/%d',[
-      fPageType.fIndex,
-      fPageType.fIndexCount]);
-end;
-
-procedure TDayWorktableManageClientDlg.act_LastPageUpdate(Sender: TObject);
-begin
-  (Sender as TAction).Enabled := (fPageType.fIndex<fPageType.fIndexCount);
-end;
-
-procedure TDayWorktableManageClientDlg.act_LastPageExecute(
-  Sender: TObject);
-begin
-  fPageType.fIndex := fPageType.fIndexCount;
-  LoadToDayResult(fPageType.fIndex,fPageType.fWhereStr);
-  lblPageCount.Caption := format('%d/%d',[
-      fPageType.fIndex,
-      fPageType.fIndexCount]);
-end;
-
-procedure TDayWorktableManageClientDlg.act_RefreshDataExecute(
-  Sender: TObject);
-begin
-  LoadToDayResult(fPageType.fIndex,fPageType.fWhereStr);
-  lblPageCount.Caption := format('%d/%d',[
-      fPageType.fIndex,
-      fPageType.fIndexCount]);
-end;
-
-procedure TDayWorktableManageClientDlg.act_AllDataExecute(Sender: TObject);
-begin
-  fPageType.fIndex := 1;
-  fPageType.fIndexCount := GetToDayResultPageCount('');
-  LoadToDayResult(1,'');
-  lblPageCount.Caption := format('%d/%d',[
-        fPageType.fIndex,
-        fPageType.fIndexCount]);
 end;
 
 procedure TDayWorktableManageClientDlg.act_GotoContentExecute(
   Sender: TObject);
 begin
+  if cdsToDayResult.IsEmpty then Exit;
+  if  cdsToDayResult.FieldByName('ZCONTENTID').AsInteger < 0 then
+    Exit;
+  
   //测试用例
   if cdsToDayResult.FieldByName('ZTYPE').AsInteger  = 0 then
   begin
@@ -888,6 +847,31 @@ begin
     Exit;
   end;
 
+end;
+
+procedure TDayWorktableManageClientDlg.act1_ReadyesterdayExecute(
+  Sender: TObject);
+var
+  mywhere : string;
+  mydatetime : TDateTime;
+begin
+  mydatetime := ClientSystem.fDbOpr.GetSysDateTime;
+  mydatetime := mydatetime -1;
+  mywhere := Format('ZUSER_ID=%d and ZDATETIME=''''%s''''',
+    [ClientSystem.fEditer_id,DateToStr(mydatetime)]);
+  LoadToDayResult(1,mywhere,False,ClientSystem.fEditer_id);
+end;
+
+procedure TDayWorktableManageClientDlg.act_ReadAllExecute(Sender: TObject);
+var
+  mywhere : string;
+  mydatetime : TDateTime;
+begin
+  mydatetime := dtp1.DateTime;
+  mywhere := Format('ZDATETIME=''''%s''''',
+    [DateToStr(mydatetime)]);
+  LoadToDayResult(1,mywhere,True,cdsUser.FieldByName('ZID').AsInteger);
+  lblName1.Caption := '团队';
 end;
 
 end.

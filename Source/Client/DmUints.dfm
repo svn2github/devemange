@@ -997,4 +997,10 @@ object DM: TDM
     Left = 216
     Top = 198
   end
+  object cdsSysParams: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 32
+    Top = 262
+  end
 end

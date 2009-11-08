@@ -10,11 +10,11 @@ uses
 type
   TProductDownLoadClientDlg = class(TWebClientDlg)
     lbl1: TLabel;
+    procedure btnHomeClick(Sender: TObject);
   private
     { Private declarations }
   public
-    { Public declarations }
-      procedure initBase; override;
+
   end;
 
 var
@@ -22,18 +22,20 @@ var
 
 implementation
 
-uses ClinetSystemUnits;
+uses  DmUints,DB;
 
 {$R *.dfm}
 
 { TProductDownLoadClientDlg }
 
-procedure TProductDownLoadClientDlg.initBase;
-const
-  glSQL = 'select ZVALUE from TB_SYSPARAMS where ZNAME=''ProductDownload''';
+
+procedure TProductDownLoadClientDlg.btnHomeClick(Sender: TObject);
 begin
-  HomeURL := ClientSystem.fDbOpr.ReadVariant(glSQL);
-  inherited;
+  if DM.cdsSysParams.Locate('ZNAME','ProductDownload',[loPartialKey]) then
+  begin
+    HomeURL := DM.cdsSysParams.FieldByName('ZVALUE').AsString;
+    wbwiki.Navigate(HomeURL);
+  end;
 end;
 
 end.

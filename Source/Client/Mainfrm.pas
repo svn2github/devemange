@@ -181,6 +181,7 @@ var
 implementation
 uses
   ActiveX,
+  DmUints,
   TimeEncrypt,
   ClinetSystemUnits,
   DelTempFilefrm,          {删除临时文件}
@@ -204,9 +205,8 @@ uses
   DemandClientfrm,         {需求管理}
   WebClientfrm,
   ExtendWebClientfrm,      {web扩展应用}
-  ExtendWebManagefrm,       {扩展应用管理}
-  DeveCalendarfrm           {工作日程}
-   , SetSysParamsfrm;
+  ExtendWebManagefrm      {扩展应用管理}
+   , SetSysParamsfrm, DeveCalendarfrm;
 
 {$R *.dfm}
 
@@ -1018,10 +1018,12 @@ end;
 { TBackThread }
 
 procedure TBackThread.CheckLoginImage;
-const
-  gl_SQLTXT = 'select ZVALUE from TB_SYSPARAMS where  ZNAME=''LoginImageIndex'' ';
 begin
-  fFileId := ClientSystem.fDbOpr.ReadInt(PChar(gl_SQLTXT));
+  if DM.cdsSysParams.Locate('ZNAME','LoginImageIndex',[loPartialKey]) then
+  begin
+    fFileId := StrToIntDef(DM.cdsSysParams.FieldByName('ZVALUE').AsString,
+      ClientSystem.fLoginImageIndex);
+  end;
 end;
 
 constructor TBackThread.Create;
@@ -1043,7 +1045,7 @@ end;
 
 procedure TBackThread.Execute;
 begin
-   Synchronize(CheckLoginImage);
+  Synchronize(CheckLoginImage);
   if fFileId <> ClientSystem.fLoginImageIndex then
   begin
     DeleteFile(ClientSystem.LoginImageFileName); //删除原来的文件

@@ -55,19 +55,17 @@ type
 
 implementation
 
-uses ClinetSystemUnits;
+uses DmUints,DB;
 
 {$R *.dfm}
 
 procedure TWebClientDlg.btnHomeClick(Sender: TObject);
-var
-  myurl : string;
-const
-  glSQL = 'select ZVALUE from TB_SYSPARAMS where ZNAME=''wiki''';
 begin
-  myurl := ClientSystem.fDbOpr.ReadVariant(glSQL);
-  
-  wbwiki.Navigate(fHomeURL);
+  if DM.cdsSysParams.Locate('ZNAME','wiki',[loPartialKey]) then
+  begin
+    fHomeURL := DM.cdsSysParams.FieldByName('ZVALUE').AsString;
+    wbwiki.Navigate(fHomeURL);
+  end;
 end;
 
 procedure TWebClientDlg.btnBackClick(Sender: TObject);

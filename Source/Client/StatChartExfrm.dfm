@@ -93,7 +93,7 @@ inherited StatChartDlg: TStatChartDlg
       Top = 6
       Width = 100
       Height = 25
-      Caption = #24635#20998#20026#38646#21024#38500
+      Caption = #24635#20998#20026#38646#19981#26174#31034
       TabOrder = 6
       OnClick = Button1Click
     end
@@ -102,7 +102,7 @@ inherited StatChartDlg: TStatChartDlg
       Top = 35
       Width = 100
       Height = 25
-      Caption = #21152#29677#20026#38646
+      Caption = #21152#29677#20026#38646#19981#26174#31034
       TabOrder = 7
       OnClick = BitBtn1Click
     end

@@ -37,9 +37,11 @@ type
     fResultStr : string;
     fwb: TWebBrowser;
     fani : TAnimate;
+    fhtmlfilename : string;
 
     procedure BeginAnimate();
     procedure EndAnimate();
+    procedure LoadHtml();
   public
     constructor Create(Awb:TWebBrowser;Aani: TAnimate);
   protected
@@ -52,7 +54,7 @@ var
 
 implementation
 uses
-  ClinetSystemUnits;
+  DmUints,DB,ClinetSystemUnits;
 
 
 {$R *.dfm}
@@ -97,9 +99,6 @@ end;
 procedure TCalendarThread.Execute;
 var
   mysl : TStringList;
-  myfilename : string;
-const
-  glSQL = 'select ZVALUE from TB_SYSPARAMS where ZNAME=''Calendar''';
 begin
   if Terminated then Exit;
   mysl := TStringList.Create;
@@ -108,11 +107,14 @@ begin
     Synchronize(BeginAnimate);
     //¶ÁÈ¡ÄÚÈÝ
     try
-      fResultStr := ClientSystem.fDbOpr.ReadVariant(glSQL);
-      mysl.Text := fResultStr;
-      myfilename := ClientSystem.fAppDir + '/c.html';
-      mysl.SaveToFile(myfilename);
-      fwb.Navigate(myfilename);
+      if DM.cdsSysParams.Locate('ZNAME','Calendar',[loPartialKey]) then
+      begin
+        fResultStr := DM.cdsSysParams.FieldByName('ZVALUE').AsString;
+        mysl.Text := fResultStr;
+        fhtmlfilename := ClientSystem.fAppDir + '\c.html';
+        mysl.SaveToFile(fhtmlfilename);
+        Synchronize(LoadHtml);
+      end;
     finally
     end;
   finally
@@ -133,6 +135,12 @@ end;
 procedure TDeveCalendarDlg.FormCreate(Sender: TObject);
 begin
   fhasopen := False;
+  wb1.FullScreen := True;
+end;
+
+procedure TCalendarThread.LoadHtml;
+begin
+  fwb.Navigate(fhtmlfilename);
 end;
 
 end.

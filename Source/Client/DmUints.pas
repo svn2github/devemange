@@ -17,6 +17,7 @@ type
     dstag: TDataSource;
     cdsUserAll: TClientDataSet;
     dsUserAll: TDataSource;
+    cdsSysParams: TClientDataSet;
     procedure DataModuleCreate(Sender: TObject);
     procedure cdsTagNewRecord(DataSet: TDataSet);
     procedure cdsTagBeforePost(DataSet: TDataSet);
@@ -46,6 +47,7 @@ const
   glSQL2 = 'select ZID,ZNAME from TB_BUG_PARAMS where ZTYPE=%d';
   glSQL3 = 'select ZNAME,ZCOLOR,ZID from TB_TAG order by ZID desc ';
   glSQL4 = 'select ZID,ZNAME,ZEMAIL,ZCHECKTASK,ZTYPE from TB_USER_ITEM';
+  glSQL5 = 'select ZNAME,ZVALUE from TB_SYSPARAMS ';
 
 begin
   fLoading := True;
@@ -57,6 +59,8 @@ begin
       cdsOS.Data   := ReadDataSet(PChar(format(glSQL2,[3])));
     if cdsUserAll.IsEmpty then
       cdsUserAll.Data := ReadDataSet(PChar(glSQL4));
+    if cdsSysParams.IsEmpty then
+      cdsSysParams.Data := ReadDataSet(PChar(glSQL5));
       
     if cdsTag.IsEmpty then
     begin

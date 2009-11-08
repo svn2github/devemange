@@ -1,6 +1,7 @@
 inherited DayWorktableManageClientDlg: TDayWorktableManageClientDlg
-  Left = 214
-  Top = 122
+  Left = 183
+  Top = 51
+  Width = 971
   Caption = #25105#30340#24037#20316#21488
   OldCreateOrder = True
   PixelsPerInch = 96
@@ -8,7 +9,7 @@ inherited DayWorktableManageClientDlg: TDayWorktableManageClientDlg
   object pnlnovisible: TPanel
     Left = 0
     Top = 0
-    Width = 862
+    Width = 963
     Height = 74
     Align = alTop
     TabOrder = 0
@@ -17,9 +18,9 @@ inherited DayWorktableManageClientDlg: TDayWorktableManageClientDlg
   object pgc1: TPageControl
     Left = 0
     Top = 74
-    Width = 862
+    Width = 963
     Height = 532
-    ActivePage = ts1
+    ActivePage = ts2
     Align = alClient
     TabOrder = 1
     OnChange = pgc1Change
@@ -28,9 +29,9 @@ inherited DayWorktableManageClientDlg: TDayWorktableManageClientDlg
       Caption = #24037#20316#21488
       object dbtxtZROWNAME: TDBText
         Left = 0
-        Top = 485
-        Width = 854
-        Height = 17
+        Top = 484
+        Width = 955
+        Height = 18
         Align = alBottom
         DataField = 'ZROWNAME'
         DataSource = dswork
@@ -38,7 +39,7 @@ inherited DayWorktableManageClientDlg: TDayWorktableManageClientDlg
       object pnlworkTop: TPanel
         Left = 0
         Top = 0
-        Width = 854
+        Width = 955
         Height = 40
         Align = alTop
         BevelOuter = bvNone
@@ -107,8 +108,8 @@ inherited DayWorktableManageClientDlg: TDayWorktableManageClientDlg
       object dbgrdwork: TDBGrid
         Left = 0
         Top = 40
-        Width = 854
-        Height = 445
+        Width = 955
+        Height = 444
         Align = alClient
         DataSource = dswork
         Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
@@ -162,20 +163,13 @@ inherited DayWorktableManageClientDlg: TDayWorktableManageClientDlg
       object pnlTool: TPanel
         Left = 0
         Top = 0
-        Width = 854
+        Width = 955
         Height = 40
         Align = alTop
         BevelOuter = bvNone
         TabOrder = 0
-        object lbl1: TLabel
-          Left = 116
-          Top = 14
-          Width = 68
-          Height = 15
-          Caption = #36129#29486#26102#38388':'
-        end
         object lblName1: TLabel
-          Left = 811
+          Left = 927
           Top = 14
           Width = 30
           Height = 15
@@ -188,26 +182,26 @@ inherited DayWorktableManageClientDlg: TDayWorktableManageClientDlg
           ParentFont = False
         end
         object BtnReader: TBitBtn
-          Left = 11
+          Left = 112
           Top = 8
           Width = 100
           Height = 25
           Action = act1_ReadToDay
-          Caption = #20170#26085#36129#29486#22810#23569
+          Caption = #20170#26085#36129#29486
           TabOrder = 0
         end
         object dtp1: TDateTimePicker
-          Left = 187
-          Top = 10
-          Width = 130
+          Left = 222
+          Top = 9
+          Width = 120
           Height = 23
           Date = 40121.434358171300000000
           Time = 40121.434358171300000000
           TabOrder = 1
         end
         object BtnMeWrite: TBitBtn
-          Left = 679
-          Top = 8
+          Left = 782
+          Top = 7
           Width = 100
           Height = 25
           Action = act_MeWrite
@@ -215,9 +209,9 @@ inherited DayWorktableManageClientDlg: TDayWorktableManageClientDlg
           TabOrder = 2
         end
         object dblkcbb2: TDBLookupComboBox
-          Left = 425
-          Top = 10
-          Width = 145
+          Left = 346
+          Top = 9
+          Width = 120
           Height = 23
           DropDownRows = 30
           KeyField = 'ZID'
@@ -226,8 +220,8 @@ inherited DayWorktableManageClientDlg: TDayWorktableManageClientDlg
           TabOrder = 3
         end
         object BtnOtherResultToDay: TBitBtn
-          Left = 575
-          Top = 8
+          Left = 470
+          Top = 7
           Width = 100
           Height = 25
           Action = act_OtherResultToDay
@@ -235,20 +229,38 @@ inherited DayWorktableManageClientDlg: TDayWorktableManageClientDlg
           TabOrder = 4
         end
         object BtnGotoContent: TBitBtn
-          Left = 321
-          Top = 8
+          Left = 678
+          Top = 7
           Width = 100
           Height = 25
           Action = act_GotoContent
           Caption = #25171#24320#20869#23481
           TabOrder = 5
         end
+        object Btn1_Readyesterday: TBitBtn
+          Left = 8
+          Top = 8
+          Width = 100
+          Height = 25
+          Action = act1_Readyesterday
+          Caption = #26152#26085#25112#26524
+          TabOrder = 6
+        end
+        object BtnReadAll: TBitBtn
+          Left = 574
+          Top = 7
+          Width = 100
+          Height = 25
+          Action = act_ReadAll
+          Caption = #22242#38431#25104#26524
+          TabOrder = 7
+        end
       end
       object dbgrdResult: TDBGrid
         Left = 0
         Top = 40
-        Width = 854
-        Height = 422
+        Width = 955
+        Height = 337
         Align = alClient
         DataSource = dsToDayResult
         Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
@@ -326,73 +338,126 @@ inherited DayWorktableManageClientDlg: TDayWorktableManageClientDlg
             Visible = True
           end>
       end
-      object pnl2: TPanel
+      object pnl1: TPanel
         Left = 0
-        Top = 462
-        Width = 854
-        Height = 40
+        Top = 377
+        Width = 955
+        Height = 125
         Align = alBottom
+        BevelOuter = bvLowered
+        Caption = 'pnl1'
         TabOrder = 2
-        object lblPageCount: TLabel
-          Left = 640
-          Top = 13
-          Width = 96
-          Height = 15
-          Caption = 'lblPageCount'
+        object dbtxtZCONTENT: TDBText
+          Left = 1
+          Top = 1
+          Width = 615
+          Height = 123
+          Align = alClient
+          DataField = 'ZCONTENT'
+          DataSource = dsToDayResult
+          WordWrap = True
         end
-        object BtnFirstPage: TBitBtn
-          Left = 8
-          Top = 8
-          Width = 100
-          Height = 25
-          Action = act_FirstPage
-          Caption = #31532#19968#39029
+        object pnl2: TPanel
+          Left = 616
+          Top = 1
+          Width = 338
+          Height = 123
+          Align = alRight
           TabOrder = 0
-        end
-        object BtnProPage: TBitBtn
-          Left = 112
-          Top = 8
-          Width = 100
-          Height = 25
-          Action = act_ProPage
-          Caption = #19978#19968#39029
-          TabOrder = 1
-        end
-        object BtnNextPage: TBitBtn
-          Left = 216
-          Top = 8
-          Width = 100
-          Height = 25
-          Action = act_NextPage
-          Caption = #19979#19968#39029
-          TabOrder = 2
-        end
-        object BtnLastPage: TBitBtn
-          Left = 320
-          Top = 8
-          Width = 100
-          Height = 25
-          Action = act_LastPage
-          Caption = #26368#21518#19968#39029
-          TabOrder = 3
-        end
-        object BtnRefreshData: TBitBtn
-          Left = 424
-          Top = 8
-          Width = 100
-          Height = 25
-          Action = act_RefreshData
-          Caption = #21047#26032#25968#25454
-          TabOrder = 4
-        end
-        object BtnAllData: TBitBtn
-          Left = 528
-          Top = 8
-          Width = 100
-          Height = 25
-          Action = act_AllData
-          Caption = #20840#37096#25968#25454
-          TabOrder = 5
+          object lbl1: TLabel
+            Left = 14
+            Top = 9
+            Width = 113
+            Height = 15
+            Caption = #25552#20132#27979#35797#29992#20363#25968':'
+          end
+          object lbl10: TLabel
+            Left = 14
+            Top = 32
+            Width = 128
+            Height = 15
+            Caption = #25552#20132#29992#20363#34987#28608#27963#25968':'
+            Font.Charset = GB2312_CHARSET
+            Font.Color = clRed
+            Font.Height = -15
+            Font.Name = #23435#20307
+            Font.Style = []
+            ParentFont = False
+          end
+          object lbl11: TLabel
+            Left = 14
+            Top = 54
+            Width = 122
+            Height = 15
+            Caption = #20851#38381'BUG'#34987#28608#27963#25968':'
+            Font.Charset = GB2312_CHARSET
+            Font.Color = clRed
+            Font.Height = -15
+            Font.Name = #23435#20307
+            Font.Style = []
+            ParentFont = False
+          end
+          object lbl12: TLabel
+            Left = 14
+            Top = 80
+            Width = 77
+            Height = 15
+            Caption = #25552#20132'BUG'#25968':'
+          end
+          object lbl13: TLabel
+            Left = 14
+            Top = 104
+            Width = 77
+            Height = 15
+            Caption = 'SVN'#25552#20132#25968':'
+          end
+          object lbl14: TLabel
+            Left = 166
+            Top = 9
+            Width = 40
+            Height = 15
+            Caption = 'lbl14'
+          end
+          object lbl15: TLabel
+            Left = 166
+            Top = 32
+            Width = 40
+            Height = 15
+            Caption = 'lbl15'
+            Font.Charset = GB2312_CHARSET
+            Font.Color = clRed
+            Font.Height = -15
+            Font.Name = #23435#20307
+            Font.Style = []
+            ParentFont = False
+          end
+          object lbl16: TLabel
+            Left = 166
+            Top = 54
+            Width = 40
+            Height = 15
+            Caption = 'lbl16'
+            Font.Charset = GB2312_CHARSET
+            Font.Color = clRed
+            Font.Height = -15
+            Font.Name = #23435#20307
+            Font.Style = []
+            ParentFont = False
+          end
+          object lbl17: TLabel
+            Left = 166
+            Top = 80
+            Width = 40
+            Height = 15
+            Caption = 'lbl17'
+          end
+          object lbl18: TLabel
+            Left = 166
+            Top = 104
+            Width = 40
+            Height = 15
+            Caption = 'lbl18'
+          end
         end
       end
     end
@@ -478,8 +543,8 @@ inherited DayWorktableManageClientDlg: TDayWorktableManageClientDlg
         Top = 114
         Width = 180
         Height = 23
-        Date = 40121.483783634260000000
-        Time = 40121.483783634260000000
+        Date = 40121.483783634270000000
+        Time = 40121.483783634270000000
         TabOrder = 2
         OnChange = dtp2Change
       end
@@ -617,74 +682,58 @@ inherited DayWorktableManageClientDlg: TDayWorktableManageClientDlg
     Left = 192
     Top = 9
     object act1_ReadToDay: TAction
-      Caption = #20170#26085#36129#29486#22810#23569
+      Category = #20170#26085#36129#29486
+      Caption = #20170#26085#36129#29486
       OnExecute = act1_ReadToDayExecute
     end
     object act_MeWrite: TAction
+      Category = #20170#26085#36129#29486
       Caption = #25105#25253#21151
       OnExecute = act_MeWriteExecute
     end
     object act_Save: TAction
+      Category = #20170#26085#36129#29486
       Caption = #20445#23384
       OnExecute = act_SaveExecute
       OnUpdate = act_SaveUpdate
     end
     object act_Cancel: TAction
+      Category = #20170#26085#36129#29486
       Caption = #21462#28040
       OnExecute = act_CancelExecute
       OnUpdate = act_CancelUpdate
     end
     object act_NextRow: TAction
+      Category = #20170#26085#36129#29486
       Caption = #19979#19968#20010
       OnExecute = act_NextRowExecute
       OnUpdate = act_NextRowUpdate
     end
     object act_ProRow: TAction
+      Category = #20170#26085#36129#29486
       Caption = #19978#19968#20010
       OnExecute = act_ProRowExecute
       OnUpdate = act_ProRowUpdate
     end
     object act_OtherResultToDay: TAction
+      Category = #20170#26085#36129#29486
       Caption = #20182#20154#36129#29486
       OnExecute = act_OtherResultToDayExecute
     end
-    object act_FirstPage: TAction
-      Category = #39029#38754
-      Caption = #31532#19968#39029
-      OnExecute = act_FirstPageExecute
-      OnUpdate = act_FirstPageUpdate
-    end
-    object act_ProPage: TAction
-      Category = #39029#38754
-      Caption = #19978#19968#39029
-      OnExecute = act_ProPageExecute
-      OnUpdate = act_ProPageUpdate
-    end
-    object act_NextPage: TAction
-      Category = #39029#38754
-      Caption = #19979#19968#39029
-      OnExecute = act_NextPageExecute
-      OnUpdate = act_NextPageUpdate
-    end
-    object act_LastPage: TAction
-      Category = #39029#38754
-      Caption = #26368#21518#19968#39029
-      OnExecute = act_LastPageExecute
-      OnUpdate = act_LastPageUpdate
-    end
-    object act_RefreshData: TAction
-      Category = #39029#38754
-      Caption = #21047#26032#25968#25454
-      OnExecute = act_RefreshDataExecute
-    end
-    object act_AllData: TAction
-      Category = #39029#38754
-      Caption = #20840#37096#25968#25454
-      OnExecute = act_AllDataExecute
-    end
     object act_GotoContent: TAction
+      Category = #20170#26085#36129#29486
       Caption = #25171#24320#20869#23481
       OnExecute = act_GotoContentExecute
+    end
+    object act1_Readyesterday: TAction
+      Category = #20170#26085#36129#29486
+      Caption = #26152#26085#25112#26524
+      OnExecute = act1_ReadyesterdayExecute
+    end
+    object act_ReadAll: TAction
+      Category = #20170#26085#36129#29486
+      Caption = #22242#38431#25104#26524
+      OnExecute = act_ReadAllExecute
     end
   end
   object cdsToDayResult: TClientDataSet
