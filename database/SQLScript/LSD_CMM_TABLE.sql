@@ -447,6 +447,7 @@ create table TB_TEST_ITEM(
 	ZCASETASK    varchar(50),                                   /*相关任务单*/
 	ZMAILTO      varchar(100),                                  /*邮件通知*/
 	ZSUBMISBY    int,                                           /*提交人*/
+	ZTESTNOTE    text,                                          /*测试后结果说明*/
 	
 	--测试的项目	
 	ZPRO_ID      int,                                           /*项目ID*/
@@ -615,6 +616,7 @@ create table TB_ANT(
 	ZVERSION varchar(20),            --版本号(编译版本号)
 	ZSVN_URL varchar(200),           --显示SVN日志的脚本 URL
 	ZSVN_LATEST_VERSION int,         --SVN服务器上的版本号
+	ZCOMPILETEXT text,               --最近的编译信息
 
 	
 	constraint PK_TB_ANT primary key(ZGUID)  
