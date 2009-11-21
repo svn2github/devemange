@@ -7,6 +7,7 @@
 //
 // 修改:
 //   增加svn  的日志显示功能 作者:龙仕云 2009-1-18
+//   修改编译时可以指定要编译的版本号 作者:龙仕云 2009-11-19
 //
 //
 //
@@ -116,6 +117,13 @@ type
     btnApplyBuild: TBitBtn;
     lstErrors: TListBox;
     spl4: TSplitter;
+    lbl11: TLabel;
+    pnl6: TPanel;
+    bvl1: TBevel;
+    BtnSaveCompileText: TBitBtn;
+    BtnShowCompileText: TBitBtn;
+    act_SaveCompileText: TAction;
+    act_ShowCompileText: TAction;
     procedure act_ProAddExecute(Sender: TObject);
     procedure cdsAntListNewRecord(DataSet: TDataSet);
     procedure act_ProSaveUpdate(Sender: TObject);
@@ -158,6 +166,8 @@ type
     procedure act_ApplyBuildUpdate(Sender: TObject);
     procedure act_ApplyBuildExecute(Sender: TObject);
     procedure lstErrorsClick(Sender: TObject);
+    procedure act_SaveCompileTextExecute(Sender: TObject);
+    procedure act_ShowCompileTextExecute(Sender: TObject);
   private
     { Private declarations }
     fSVNCommitPageRec :TSVNCommitPageRec;
@@ -185,6 +195,7 @@ type
     fMemo: TListBox;
     fIdTCP : TIdTCPClient;
     PyFileName : string;
+    ComplieVer : Integer; //要编译的版本
     fAction : TAction;
 
     procedure BeginAnimate();
@@ -821,6 +832,7 @@ begin
   fMemo.Items.Add(#13#10);
   fMemo.Items.Add('  正在编译中...');
   PyFileName := Format('C%s',[fcds.FieldByName('ZPYFILE').AsString]);
+  ComplieVer := fcds.FieldByName('ZSVN').AsInteger;
   fAction.ImageIndex := 12;
   Application.ProcessMessages;
 end;
@@ -853,12 +865,16 @@ begin
 end;
 
 procedure TPySvnThread.Execute;
+var
+  mystr : string;
 begin
   if Terminated then Exit;
   try
     fResultStr := '';
     Synchronize(BeginAnimate);
-    fIdTCP.WriteLn(PyFileName);
+    mystr := Format('%s %d',[PyFileName,ComplieVer]);
+    //fIdTCP.WriteLn(PyFileName);
+    fIdTCP.WriteLn(mystr);
     fResultStr := fIdTCP.ReadLn();
   finally
     Synchronize(EndAnimate);
@@ -1132,6 +1148,69 @@ begin
     end;
   end;
 
+end;
+
+procedure TAntManageClientDlg.act_SaveCompileTextExecute(Sender: TObject);
+var
+  mySQL : string;
+const
+  glSQL = 'update TB_ANT set ' +
+          'ZCOMPILETEXT=''%s'' ' +
+          'where ZGUID=''%s''';
+begin
+  //保存结果
+  ShowProgress('保存中...',0);
+  try
+    mySQL := Format(glSQL,[lstResult.Items.Text,
+      cdsAntList.FieldByName('ZGUID').AsString]);
+    ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
+  finally
+    HideProgress;
+  end;
+end;
+
+procedure TAntManageClientDlg.act_ShowCompileTextExecute(Sender: TObject);
+var
+  mySQL : string;
+  mysl : TStringList;
+  myVarint : Variant;
+  i : Integer;
+  myUStr,mystr : string;
+const
+  glSQL = 'select ZCOMPILETEXT from TB_ANT where ZGUID=''%s''';
+begin
+  mySQL := Format(glSQL,[cdsAntList.FieldByName('ZGUID').AsString]);
+  mysl := TStringList.Create;
+  ShowProgress('读取...',0);
+  try
+    myVarint := ClientSystem.fDbOpr.ReadVariant(PChar(mySQL));
+    if VarIsNull(myVarint) then
+    begin
+      MessageBox(Handle,'无结果内容','提示',MB_ICONWARNING+MB_OK);
+      Exit;
+    end;
+    mysl.Text := myVarint;
+
+    lstErrors.Clear;
+    lstResult.Clear;
+
+    for i:=0 to mysl.Count -1 do
+    begin
+      mystr := mysl.Strings[i];
+      myUStr := UpperCase(mystr);
+      if ((Pos('FATA',myUStr) + Pos('ERROR',myUStr)) > 0) and
+         (Pos('CLEARERRORS',myUStr)=0) and
+         (Pos('IFERRORS',myUStr)=0) then
+      begin
+        lstErrors.Items.Add(Format('%d行-%s',[i+1,mystr]));
+      end;
+      lstResult.Items.Add(mystr);
+    end;
+
+  finally
+    mysl.Free;
+    HideProgress;
+  end;
 end;
 
 end.

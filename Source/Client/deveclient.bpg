@@ -9,7 +9,7 @@ MAKE = $(ROOT)\bin\make.exe -$(MAKEFLAGS) -f$**
 DCC = $(ROOT)\bin\dcc32.exe $**
 BRCC = $(ROOT)\bin\brcc32.exe $**
 #------------------------------------------------------------------------------
-PROJECTS = Deve.exe lgDB.api
+PROJECTS = Deve.exe lgDB.api Project1.exe
 #------------------------------------------------------------------------------
 default: $(PROJECTS)
 #------------------------------------------------------------------------------
@@ -18,6 +18,9 @@ Deve.exe: Deve.dpr
   $(DCC)
 
 lgDB.api: lgDB.dpr
+  $(DCC)
+
+Project1.exe: ..\..\winsock2\Project1.dpr
   $(DCC)
 
 

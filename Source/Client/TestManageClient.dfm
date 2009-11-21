@@ -1,6 +1,6 @@
 inherited TestManageChildfrm: TTestManageChildfrm
-  Left = 56
-  Top = 77
+  Left = 46
+  Top = 126
   Width = 1139
   Height = 713
   Caption = #27979#35797#31649#29702
@@ -281,7 +281,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
       ImageIndex = 1
       object spl1: TSplitter
         Left = 0
-        Top = 251
+        Top = 250
         Width = 1123
         Height = 10
         Cursor = crVSplit
@@ -291,9 +291,9 @@ inherited TestManageChildfrm: TTestManageChildfrm
       end
       object pnlTestClient: TPanel
         Left = 0
-        Top = 261
+        Top = 260
         Width = 1123
-        Height = 320
+        Height = 321
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 0
@@ -301,7 +301,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
           Left = 0
           Top = 40
           Width = 1123
-          Height = 280
+          Height = 281
           Align = alClient
           AllowDelete = False
           AllowInsert = False
@@ -515,451 +515,6 @@ inherited TestManageChildfrm: TTestManageChildfrm
           end
         end
       end
-      object scrlbx1: TScrollBox
-        Left = 0
-        Top = 15
-        Width = 1123
-        Height = 236
-        Align = alTop
-        ParentShowHint = False
-        ShowHint = True
-        TabOrder = 1
-        object Label2: TLabel
-          Left = 8
-          Top = 10
-          Width = 45
-          Height = 15
-          Caption = #21517#31216#65306
-        end
-        object Label4: TLabel
-          Left = 8
-          Top = 41
-          Width = 75
-          Height = 15
-          Caption = #27979#35797#31867#22411#65306
-        end
-        object Label5: TLabel
-          Left = 8
-          Top = 70
-          Width = 60
-          Height = 15
-          Caption = #25351#27966#32473#65306
-        end
-        object Label10: TLabel
-          Left = 8
-          Top = 97
-          Width = 62
-          Height = 15
-          Caption = #30456#20851'BUG:'
-        end
-        object Label12: TLabel
-          Left = 8
-          Top = 126
-          Width = 68
-          Height = 15
-          Caption = #31435#39033#39033#30446':'
-        end
-        object Label6: TLabel
-          Left = 8
-          Top = 212
-          Width = 60
-          Height = 15
-          Caption = #27979#35797#20154#65306
-        end
-        object Label1: TLabel
-          Left = 8
-          Top = 153
-          Width = 75
-          Height = 15
-          Caption = #37038#20214#36890#30693#65306
-        end
-        object Label19: TLabel
-          Left = 524
-          Top = 154
-          Width = 24
-          Height = 15
-          Caption = '<<<'
-        end
-        object Label7: TLabel
-          Left = 238
-          Top = 210
-          Width = 75
-          Height = 15
-          Caption = #27979#35797#26102#38388#65306
-        end
-        object Label13: TLabel
-          Left = 240
-          Top = 126
-          Width = 68
-          Height = 15
-          Caption = #39033#30446#29256#26412':'
-        end
-        object Label11: TLabel
-          Left = 240
-          Top = 97
-          Width = 70
-          Height = 15
-          Caption = #30456#20851'TASK:'
-        end
-        object Label15: TLabel
-          Left = 478
-          Top = 68
-          Width = 75
-          Height = 15
-          Caption = #21019#24314#26102#38388#65306
-        end
-        object Label9: TLabel
-          Left = 240
-          Top = 39
-          Width = 75
-          Height = 15
-          Caption = #27979#35797#26041#27861#65306
-        end
-        object Label14: TLabel
-          Left = 478
-          Top = 124
-          Width = 62
-          Height = 15
-          Caption = 'SVN'#29256#26412':'
-        end
-        object Label3: TLabel
-          Left = 478
-          Top = 41
-          Width = 60
-          Height = 15
-          Caption = #20248#20808#32423#65306
-        end
-        object lbl1: TLabel
-          Left = 472
-          Top = 211
-          Width = 68
-          Height = 15
-          Caption = #27979#35797#32467#26524':'
-        end
-        object lbl2: TLabel
-          Left = 8
-          Top = 181
-          Width = 45
-          Height = 15
-          Caption = #22791#27880#65306
-        end
-        object btnResult_AddSVNVer: TSpeedButton
-          Left = 675
-          Top = 121
-          Width = 23
-          Height = 23
-          Action = actResult_AddSVNVer
-          Caption = 'G'
-        end
-        object lbl3: TLabel
-          Left = 240
-          Top = 68
-          Width = 60
-          Height = 15
-          Caption = #25552#20132#20154#65306
-        end
-        object lbl4: TLabel
-          Left = 478
-          Top = 97
-          Width = 75
-          Height = 15
-          Caption = #30456#20851#38656#27714#65306
-        end
-        object dbedtZNAME: TDBEdit
-          Left = 84
-          Top = 6
-          Width = 618
-          Height = 23
-          DataField = 'ZNAME'
-          DataSource = dsTestItem
-          TabOrder = 0
-        end
-        object dblkcbbZTYPE: TDBLookupComboBox
-          Left = 84
-          Top = 36
-          Width = 150
-          Height = 23
-          DataField = 'ZTYPE'
-          DataSource = dsTestItem
-          ImeName = #26497#21697#20116#31508#36755#20837#27861
-          KeyField = 'ZID'
-          ListField = 'ZNAME'
-          ListSource = dsTestType
-          TabOrder = 1
-        end
-        object dblkcbbZASSIGNEDTO: TDBLookupComboBox
-          Left = 84
-          Top = 66
-          Width = 150
-          Height = 23
-          DataField = 'ZASSIGNEDTONAME'
-          DataSource = dsTestItem
-          DropDownRows = 20
-          TabOrder = 2
-        end
-        object dbedtZCASEBUG: TDBEdit
-          Left = 84
-          Top = 95
-          Width = 148
-          Height = 23
-          DataField = 'ZCASEBUG'
-          DataSource = dsTestItem
-          ImeName = #26497#21697#20116#31508#36755#20837#27861
-          TabOrder = 3
-        end
-        object dbedtZMAILTO: TDBEdit
-          Left = 84
-          Top = 151
-          Width = 432
-          Height = 23
-          DataField = 'ZMAILTO'
-          DataSource = dsTestItem
-          TabOrder = 4
-        end
-        object dblcSelectUsermail: TDBLookupComboBox
-          Left = 551
-          Top = 149
-          Width = 150
-          Height = 23
-          DropDownRows = 20
-          KeyField = 'ZID'
-          ListField = 'ZNAME'
-          ListSource = DM.dsUsers
-          TabOrder = 5
-          OnCloseUp = dblcSelectUsermailCloseUp
-        end
-        object dbedtZRESULTDATE: TDBEdit
-          Left = 304
-          Top = 206
-          Width = 161
-          Height = 23
-          Color = clScrollBar
-          DataField = 'ZRESULTDATE'
-          DataSource = dsTestItem
-          ImeName = #26497#21697#20116#31508#36755#20837#27861
-          ReadOnly = True
-          TabOrder = 6
-        end
-        object dblkcbbZTESTMETHOD: TDBLookupComboBox
-          Left = 314
-          Top = 35
-          Width = 150
-          Height = 23
-          DataField = 'ZTESTMETHOD'
-          DataSource = dsTestItem
-          ImeName = #26497#21697#20116#31508#36755#20837#27861
-          KeyField = 'ZID'
-          ListField = 'ZNAME'
-          ListSource = dsmethod
-          TabOrder = 7
-        end
-        object dbedtZOPENEDDATE: TDBEdit
-          Left = 551
-          Top = 65
-          Width = 150
-          Height = 23
-          DataField = 'ZOPENEDDATE'
-          DataSource = dsTestItem
-          ImeName = #26497#21697#20116#31508#36755#20837#27861
-          TabOrder = 8
-        end
-        object dbedtZCASETASK: TDBEdit
-          Left = 315
-          Top = 94
-          Width = 150
-          Height = 23
-          DataField = 'ZCASETASK'
-          DataSource = dsTestItem
-          ImeName = #26497#21697#20116#31508#36755#20837#27861
-          TabOrder = 9
-        end
-        object btnGetVer: TBitBtn
-          Left = 445
-          Top = 119
-          Width = 19
-          Height = 24
-          Caption = 'G'
-          TabOrder = 10
-          OnClick = btnGetVerClick
-        end
-        object dbedtZPRO_SVN: TDBEdit
-          Left = 551
-          Top = 121
-          Width = 125
-          Height = 23
-          DataField = 'ZPRO_SVN'
-          DataSource = dsTestItem
-          ImeName = #26497#21697#20116#31508#36755#20837#27861
-          TabOrder = 11
-        end
-        object dblkcbbZLEVEL: TDBLookupComboBox
-          Left = 551
-          Top = 36
-          Width = 150
-          Height = 23
-          Hint = #19968#32423#20026#39532#19978#35201#27979#23436#30340#65292#24182#24456#37325#35201#12290#21521#19979#31867#25512#12290
-          DataField = 'ZLEVEL'
-          DataSource = dsTestItem
-          ImeName = #26497#21697#20116#31508#36755#20837#27861
-          KeyField = 'ZID'
-          ListField = 'ZNAME'
-          ListSource = dsLevel
-          TabOrder = 12
-        end
-        object btnCancel: TBitBtn
-          Left = 716
-          Top = 35
-          Width = 100
-          Height = 25
-          Action = act_Cancel
-          Caption = #21462#28040
-          TabOrder = 13
-        end
-        object btnSave: TBitBtn
-          Left = 716
-          Top = 6
-          Width = 100
-          Height = 25
-          Action = act_Save
-          Caption = #20445#23384
-          TabOrder = 14
-        end
-        object dblkcbbZPRO_ID: TDBLookupComboBox
-          Left = 85
-          Top = 121
-          Width = 150
-          Height = 23
-          DataField = 'ZPRO_ID'
-          DataSource = dsTestItem
-          DropDownRows = 30
-          KeyField = 'ZID'
-          ListField = 'ZNAME'
-          ListSource = dsProject
-          TabOrder = 15
-        end
-        object dblkcbbZPRO_VER: TDBLookupComboBox
-          Left = 316
-          Top = 121
-          Width = 127
-          Height = 23
-          Hint = #22914#27809#26377#20869#23481#65292#21017#28857'[G]'#12290
-          DataField = 'ZPRO_VER'
-          DataSource = dsTestItem
-          ImeName = #26497#21697#20116#31508#36755#20837#27861
-          KeyField = 'ZID'
-          ListField = 'ZVER'
-          ListSource = dsProVer
-          TabOrder = 16
-        end
-        object btnNext: TBitBtn
-          Left = 716
-          Top = 93
-          Width = 100
-          Height = 25
-          Action = act_Next
-          Caption = #19979#19968#20010
-          TabOrder = 17
-        end
-        object btnProv: TBitBtn
-          Left = 716
-          Top = 64
-          Width = 100
-          Height = 25
-          Action = act_Prov
-          Caption = #19978#19968#20010
-          TabOrder = 18
-        end
-        object dbedtZSTATUSNAME: TDBEdit
-          Left = 541
-          Top = 206
-          Width = 110
-          Height = 23
-          Color = clScrollBar
-          DataField = 'ZSTATUSNAME'
-          DataSource = dsTestItem
-          ImeName = #26497#21697#20116#31508#36755#20837#27861
-          ReadOnly = True
-          TabOrder = 19
-        end
-        object dbedtZREMORK: TDBEdit
-          Left = 85
-          Top = 179
-          Width = 617
-          Height = 23
-          DataField = 'ZREMORK'
-          DataSource = dsTestItem
-          TabOrder = 20
-        end
-        object dbedtdbgrdTest: TDBEdit
-          Left = 85
-          Top = 206
-          Width = 150
-          Height = 23
-          Color = clScrollBar
-          DataField = 'ZTESTRESULTBYNAME'
-          DataSource = dsTestItem
-          ImeName = #26497#21697#20116#31508#36755#20837#27861
-          ReadOnly = True
-          TabOrder = 21
-        end
-        object btnGetBugItem: TBitBtn
-          Left = 717
-          Top = 136
-          Width = 100
-          Height = 25
-          Action = act_GetBugItem
-          Caption = #36339#21040#30456#20851'BUG'
-          TabOrder = 22
-        end
-        object dbedtZCLOSESTATUSNAME: TDBEdit
-          Left = 657
-          Top = 206
-          Width = 44
-          Height = 23
-          Color = clScrollBar
-          DataField = 'ZCLOSESTATUSNAME'
-          DataSource = dsTestItem
-          ImeName = #26497#21697#20116#31508#36755#20837#27861
-          TabOrder = 23
-        end
-        object dbedtZSUBMISBYNAME: TDBEdit
-          Left = 314
-          Top = 64
-          Width = 150
-          Height = 23
-          DataField = 'ZSUBMISBYNAME'
-          DataSource = dsTestItem
-          ImeName = #26497#21697#20116#31508#36755#20837#27861
-          TabOrder = 24
-        end
-        object btnGetBugItem1: TBitBtn
-          Left = 717
-          Top = 165
-          Width = 100
-          Height = 25
-          Action = act_GetPlanItem
-          Caption = #36339#21040#30456#20851#20219#21153
-          TabOrder = 25
-        end
-        object dbedtZDEMAND_ID: TDBEdit
-          Left = 551
-          Top = 92
-          Width = 150
-          Height = 23
-          DataField = 'ZDEMAND_ID'
-          DataSource = dsTestItem
-          TabOrder = 26
-        end
-        object btnGetPlanItem: TBitBtn
-          Left = 717
-          Top = 194
-          Width = 100
-          Height = 25
-          Action = act_gotoDemand
-          Caption = #36339#21040#30456#20851#38656#27714
-          TabOrder = 27
-        end
-      end
       object pnlTitle: TPanel
         Left = 0
         Top = 0
@@ -968,7 +523,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
         Align = alTop
         BevelOuter = bvNone
         Caption = 'pnlTitle'
-        TabOrder = 2
+        TabOrder = 1
         object lblTitle: TLabel
           Left = 0
           Top = 0
@@ -1002,6 +557,477 @@ inherited TestManageChildfrm: TTestManageChildfrm
           Font.Style = []
           ParentColor = False
           ParentFont = False
+        end
+      end
+      object pnlTop: TPanel
+        Left = 0
+        Top = 15
+        Width = 1123
+        Height = 235
+        Align = alTop
+        BevelOuter = bvNone
+        Caption = 'pnlTop'
+        TabOrder = 2
+        object spl2: TSplitter
+          Left = 826
+          Top = 0
+          Height = 235
+        end
+        object scrlbx1: TScrollBox
+          Left = 0
+          Top = 0
+          Width = 826
+          Height = 235
+          Align = alLeft
+          ParentShowHint = False
+          ShowHint = True
+          TabOrder = 0
+          object lbl6: TLabel
+            Left = 8
+            Top = 10
+            Width = 45
+            Height = 15
+            Caption = #21517#31216#65306
+          end
+          object lbl7: TLabel
+            Left = 8
+            Top = 41
+            Width = 75
+            Height = 15
+            Caption = #27979#35797#31867#22411#65306
+          end
+          object lbl8: TLabel
+            Left = 8
+            Top = 70
+            Width = 60
+            Height = 15
+            Caption = #25351#27966#32473#65306
+          end
+          object lbl9: TLabel
+            Left = 8
+            Top = 97
+            Width = 62
+            Height = 15
+            Caption = #30456#20851'BUG:'
+          end
+          object lbl10: TLabel
+            Left = 8
+            Top = 126
+            Width = 68
+            Height = 15
+            Caption = #31435#39033#39033#30446':'
+          end
+          object lbl11: TLabel
+            Left = 8
+            Top = 212
+            Width = 60
+            Height = 15
+            Caption = #27979#35797#20154#65306
+          end
+          object lbl12: TLabel
+            Left = 8
+            Top = 153
+            Width = 75
+            Height = 15
+            Caption = #37038#20214#36890#30693#65306
+          end
+          object lbl5: TLabel
+            Left = 524
+            Top = 154
+            Width = 24
+            Height = 15
+            Caption = '<<<'
+          end
+          object lbl13: TLabel
+            Left = 238
+            Top = 210
+            Width = 75
+            Height = 15
+            Caption = #27979#35797#26102#38388#65306
+          end
+          object lbl14: TLabel
+            Left = 240
+            Top = 126
+            Width = 68
+            Height = 15
+            Caption = #39033#30446#29256#26412':'
+          end
+          object lbl15: TLabel
+            Left = 240
+            Top = 97
+            Width = 70
+            Height = 15
+            Caption = #30456#20851'TASK:'
+          end
+          object lbl16: TLabel
+            Left = 478
+            Top = 68
+            Width = 75
+            Height = 15
+            Caption = #21019#24314#26102#38388#65306
+          end
+          object lbl17: TLabel
+            Left = 240
+            Top = 39
+            Width = 75
+            Height = 15
+            Caption = #27979#35797#26041#27861#65306
+          end
+          object lbl18: TLabel
+            Left = 478
+            Top = 124
+            Width = 62
+            Height = 15
+            Caption = 'SVN'#29256#26412':'
+          end
+          object lbl19: TLabel
+            Left = 478
+            Top = 41
+            Width = 60
+            Height = 15
+            Caption = #20248#20808#32423#65306
+          end
+          object lbl1: TLabel
+            Left = 472
+            Top = 211
+            Width = 68
+            Height = 15
+            Caption = #27979#35797#32467#26524':'
+          end
+          object lbl2: TLabel
+            Left = 8
+            Top = 181
+            Width = 45
+            Height = 15
+            Caption = #22791#27880#65306
+          end
+          object btnResult_AddSVNVer: TSpeedButton
+            Left = 675
+            Top = 121
+            Width = 23
+            Height = 23
+            Action = actResult_AddSVNVer
+            Caption = 'G'
+          end
+          object lbl3: TLabel
+            Left = 240
+            Top = 68
+            Width = 60
+            Height = 15
+            Caption = #25552#20132#20154#65306
+          end
+          object lbl4: TLabel
+            Left = 478
+            Top = 97
+            Width = 75
+            Height = 15
+            Caption = #30456#20851#38656#27714#65306
+          end
+          object dbedtZNAME: TDBEdit
+            Left = 84
+            Top = 6
+            Width = 618
+            Height = 23
+            DataField = 'ZNAME'
+            DataSource = dsTestItem
+            TabOrder = 0
+          end
+          object dblkcbbZTYPE: TDBLookupComboBox
+            Left = 84
+            Top = 36
+            Width = 150
+            Height = 23
+            DataField = 'ZTYPE'
+            DataSource = dsTestItem
+            ImeName = #26497#21697#20116#31508#36755#20837#27861
+            KeyField = 'ZID'
+            ListField = 'ZNAME'
+            ListSource = dsTestType
+            TabOrder = 1
+          end
+          object dblkcbbZASSIGNEDTO: TDBLookupComboBox
+            Left = 84
+            Top = 66
+            Width = 150
+            Height = 23
+            DataField = 'ZASSIGNEDTONAME'
+            DataSource = dsTestItem
+            DropDownRows = 20
+            TabOrder = 2
+          end
+          object dbedtZCASEBUG: TDBEdit
+            Left = 84
+            Top = 95
+            Width = 148
+            Height = 23
+            DataField = 'ZCASEBUG'
+            DataSource = dsTestItem
+            ImeName = #26497#21697#20116#31508#36755#20837#27861
+            TabOrder = 3
+          end
+          object dbedtZMAILTO: TDBEdit
+            Left = 84
+            Top = 151
+            Width = 432
+            Height = 23
+            DataField = 'ZMAILTO'
+            DataSource = dsTestItem
+            TabOrder = 4
+          end
+          object dblkcbbSelectUsermail: TDBLookupComboBox
+            Left = 551
+            Top = 149
+            Width = 150
+            Height = 23
+            DropDownRows = 20
+            KeyField = 'ZID'
+            ListField = 'ZNAME'
+            ListSource = DM.dsUsers
+            TabOrder = 5
+            OnCloseUp = dblkcbbSelectUsermailCloseUp
+          end
+          object dbedtZRESULTDATE: TDBEdit
+            Left = 304
+            Top = 206
+            Width = 161
+            Height = 23
+            Color = clScrollBar
+            DataField = 'ZRESULTDATE'
+            DataSource = dsTestItem
+            ImeName = #26497#21697#20116#31508#36755#20837#27861
+            ReadOnly = True
+            TabOrder = 6
+          end
+          object dblkcbbZTESTMETHOD: TDBLookupComboBox
+            Left = 314
+            Top = 35
+            Width = 150
+            Height = 23
+            DataField = 'ZTESTMETHOD'
+            DataSource = dsTestItem
+            ImeName = #26497#21697#20116#31508#36755#20837#27861
+            KeyField = 'ZID'
+            ListField = 'ZNAME'
+            ListSource = dsmethod
+            TabOrder = 7
+          end
+          object dbedtZOPENEDDATE: TDBEdit
+            Left = 551
+            Top = 65
+            Width = 150
+            Height = 23
+            DataField = 'ZOPENEDDATE'
+            DataSource = dsTestItem
+            ImeName = #26497#21697#20116#31508#36755#20837#27861
+            TabOrder = 8
+          end
+          object dbedtZCASETASK: TDBEdit
+            Left = 315
+            Top = 94
+            Width = 150
+            Height = 23
+            DataField = 'ZCASETASK'
+            DataSource = dsTestItem
+            ImeName = #26497#21697#20116#31508#36755#20837#27861
+            TabOrder = 9
+          end
+          object BtnGetVer1: TBitBtn
+            Left = 445
+            Top = 119
+            Width = 19
+            Height = 24
+            Caption = 'G'
+            TabOrder = 10
+            OnClick = BtnGetVer1Click
+          end
+          object dbedtZPRO_SVN: TDBEdit
+            Left = 551
+            Top = 121
+            Width = 125
+            Height = 23
+            DataField = 'ZPRO_SVN'
+            DataSource = dsTestItem
+            ImeName = #26497#21697#20116#31508#36755#20837#27861
+            TabOrder = 11
+          end
+          object dblkcbbZLEVEL: TDBLookupComboBox
+            Left = 551
+            Top = 36
+            Width = 150
+            Height = 23
+            Hint = #19968#32423#20026#39532#19978#35201#27979#23436#30340#65292#24182#24456#37325#35201#12290#21521#19979#31867#25512#12290
+            DataField = 'ZLEVEL'
+            DataSource = dsTestItem
+            ImeName = #26497#21697#20116#31508#36755#20837#27861
+            KeyField = 'ZID'
+            ListField = 'ZNAME'
+            ListSource = dsLevel
+            TabOrder = 12
+          end
+          object BtnCancel1: TBitBtn
+            Left = 716
+            Top = 35
+            Width = 100
+            Height = 25
+            Action = act_Cancel
+            Caption = #21462#28040
+            TabOrder = 13
+          end
+          object BtnSave1: TBitBtn
+            Left = 716
+            Top = 6
+            Width = 100
+            Height = 25
+            Action = act_Save
+            Caption = #20445#23384
+            TabOrder = 14
+          end
+          object dblkcbbZPRO_ID: TDBLookupComboBox
+            Left = 85
+            Top = 121
+            Width = 150
+            Height = 23
+            DataField = 'ZPRO_ID'
+            DataSource = dsTestItem
+            DropDownRows = 30
+            KeyField = 'ZID'
+            ListField = 'ZNAME'
+            ListSource = dsProject
+            TabOrder = 15
+          end
+          object dblkcbbZPRO_VER: TDBLookupComboBox
+            Left = 316
+            Top = 121
+            Width = 127
+            Height = 23
+            Hint = #22914#27809#26377#20869#23481#65292#21017#28857'[G]'#12290
+            DataField = 'ZPRO_VER'
+            DataSource = dsTestItem
+            ImeName = #26497#21697#20116#31508#36755#20837#27861
+            KeyField = 'ZID'
+            ListField = 'ZVER'
+            ListSource = dsProVer
+            TabOrder = 16
+          end
+          object BtnNext1: TBitBtn
+            Left = 716
+            Top = 93
+            Width = 100
+            Height = 25
+            Action = act_Next
+            Caption = #19979#19968#20010
+            TabOrder = 17
+          end
+          object BtnProv1: TBitBtn
+            Left = 716
+            Top = 64
+            Width = 100
+            Height = 25
+            Action = act_Prov
+            Caption = #19978#19968#20010
+            TabOrder = 18
+          end
+          object dbedtZSTATUSNAME: TDBEdit
+            Left = 541
+            Top = 206
+            Width = 110
+            Height = 23
+            Color = clScrollBar
+            DataField = 'ZSTATUSNAME'
+            DataSource = dsTestItem
+            ImeName = #26497#21697#20116#31508#36755#20837#27861
+            ReadOnly = True
+            TabOrder = 19
+          end
+          object dbedtZREMORK: TDBEdit
+            Left = 85
+            Top = 179
+            Width = 617
+            Height = 23
+            DataField = 'ZREMORK'
+            DataSource = dsTestItem
+            TabOrder = 20
+          end
+          object dbedtdbgrdTest: TDBEdit
+            Left = 85
+            Top = 206
+            Width = 150
+            Height = 23
+            Color = clScrollBar
+            DataField = 'ZTESTRESULTBYNAME'
+            DataSource = dsTestItem
+            ImeName = #26497#21697#20116#31508#36755#20837#27861
+            ReadOnly = True
+            TabOrder = 21
+          end
+          object BtnGetBugItem2: TBitBtn
+            Left = 717
+            Top = 136
+            Width = 100
+            Height = 25
+            Action = act_GetBugItem
+            Caption = #36339#21040#30456#20851'BUG'
+            TabOrder = 22
+          end
+          object dbedtZCLOSESTATUSNAME: TDBEdit
+            Left = 657
+            Top = 206
+            Width = 44
+            Height = 23
+            Color = clScrollBar
+            DataField = 'ZCLOSESTATUSNAME'
+            DataSource = dsTestItem
+            ImeName = #26497#21697#20116#31508#36755#20837#27861
+            TabOrder = 23
+          end
+          object dbedtZSUBMISBYNAME: TDBEdit
+            Left = 314
+            Top = 64
+            Width = 150
+            Height = 23
+            DataField = 'ZSUBMISBYNAME'
+            DataSource = dsTestItem
+            ImeName = #26497#21697#20116#31508#36755#20837#27861
+            TabOrder = 24
+          end
+          object BtnGetPlanItem1: TBitBtn
+            Left = 717
+            Top = 165
+            Width = 100
+            Height = 25
+            Action = act_GetPlanItem
+            Caption = #36339#21040#30456#20851#20219#21153
+            TabOrder = 25
+          end
+          object dbedtZDEMAND_ID: TDBEdit
+            Left = 551
+            Top = 92
+            Width = 150
+            Height = 23
+            DataField = 'ZDEMAND_ID'
+            DataSource = dsTestItem
+            TabOrder = 26
+          end
+          object BtngotoDemand: TBitBtn
+            Left = 717
+            Top = 194
+            Width = 100
+            Height = 25
+            Action = act_gotoDemand
+            Caption = #36339#21040#30456#20851#38656#27714
+            TabOrder = 27
+          end
+        end
+        object dbmmoZTESTNOTE: TDBMemo
+          Left = 829
+          Top = 0
+          Width = 294
+          Height = 235
+          Align = alClient
+          DataField = 'ZTESTNOTE'
+          DataSource = dsTestItem
+          ScrollBars = ssBoth
+          TabOrder = 1
         end
       end
     end

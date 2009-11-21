@@ -7,6 +7,7 @@
 //  修改:
 //    1.增加回复人 2009-1-1 元旦快乐
 //    2.修改提交回复进只有开发人员与测试人员,管理员人.作者:龙仕云 2009-2-24
+//    3.增加在测试人员的说明内容.方便开发人员查看。
 //
 //
 //
@@ -62,39 +63,6 @@ type
     dsmethod: TDataSource;
     cdsTestSTATUS: TClientDataSet;
     dsTestSTATUS: TDataSource;
-    scrlbx1: TScrollBox;
-    Label2: TLabel;
-    dbedtZNAME: TDBEdit;
-    Label4: TLabel;
-    dblkcbbZTYPE: TDBLookupComboBox;
-    Label5: TLabel;
-    dblkcbbZASSIGNEDTO: TDBLookupComboBox;
-    Label10: TLabel;
-    dbedtZCASEBUG: TDBEdit;
-    Label12: TLabel;
-    Label6: TLabel;
-    Label1: TLabel;
-    dbedtZMAILTO: TDBEdit;
-    dblcSelectUsermail: TDBLookupComboBox;
-    Label19: TLabel;
-    dbedtZRESULTDATE: TDBEdit;
-    Label7: TLabel;
-    Label13: TLabel;
-    Label11: TLabel;
-    Label15: TLabel;
-    Label9: TLabel;
-    dblkcbbZTESTMETHOD: TDBLookupComboBox;
-    dbedtZOPENEDDATE: TDBEdit;
-    dbedtZCASETASK: TDBEdit;
-    btnGetVer: TBitBtn;
-    Label14: TLabel;
-    dbedtZPRO_SVN: TDBEdit;
-    dblkcbbZLEVEL: TDBLookupComboBox;
-    Label3: TLabel;
-    btnCancel: TBitBtn;
-    btnSave: TBitBtn;
-    dblkcbbZPRO_ID: TDBLookupComboBox;
-    dblkcbbZPRO_VER: TDBLookupComboBox;
     spl1: TSplitter;
     dbctrlgrd1: TDBCtrlGrid;
     Label8: TLabel;
@@ -104,12 +72,8 @@ type
     dbedtZINFACE: TDBEdit;
     act_Next: TAction;
     act_Prov: TAction;
-    btnNext: TBitBtn;
-    btnProv: TBitBtn;
     cdsResult: TClientDataSet;
     dsResult: TDataSource;
-    lbl1: TLabel;
-    dbedtZSTATUSNAME: TDBEdit;
     pnl1: TPanel;
     btnResult_Add: TBitBtn;
     actResult_Add: TAction;
@@ -123,8 +87,6 @@ type
     act_Colse: TAction;
     btnAction: TBitBtn;
     btnColse: TBitBtn;
-    lbl2: TLabel;
-    dbedtZREMORK: TDBEdit;
     act_FirstPage: TAction;
     act_NextPage: TAction;
     act_ProvPage: TAction;
@@ -133,7 +95,6 @@ type
     btnProvPage: TBitBtn;
     btnNextPage: TBitBtn;
     btnLastPage: TBitBtn;
-    dbedtdbgrdTest: TDBEdit;
     act_toMe: TAction;
     btntoMe: TBitBtn;
     act_metest: TAction;
@@ -145,13 +106,11 @@ type
     btnResult_AddByBug: TBitBtn;
     actResult_AddByBug: TAction;
     act_GetBugItem: TAction;
-    btnGetBugItem: TBitBtn;
     dbnvgr1: TDBNavigator;
     act_RefreshData: TAction;
     btnRefreshData: TBitBtn;
     cdsTestCoseSTATUS: TClientDataSet;
     dsTestCoseSTATUS: TDataSource;
-    dbedtZCLOSESTATUSNAME: TDBEdit;
     actHighQuery: TAction;
     btnResult_Add1: TBitBtn;
     dbtxtZUSERNAME: TDBText;
@@ -162,33 +121,78 @@ type
     bvl1: TBevel;
     btnReQuery: TBitBtn;
     act_Subbim: TAction;
-    btnResult_AddSVNVer: TSpeedButton;
     actResult_AddSVNVer: TAction;
-    lbl3: TLabel;
-    dbedtZSUBMISBYNAME: TDBEdit;
     act_newByPlanCode: TAction;
     btnnewByPlanCode: TBitBtn;
     act_GetPlanItem: TAction;
-    btnGetBugItem1: TBitBtn;
     dbchkOK: TDBCheckBox;
     act_AddData: TAction;
     btnAddData: TBitBtn;
-    lbl4: TLabel;
-    dbedtZDEMAND_ID: TDBEdit;
     act_gotoDemand: TAction;
-    btnGetPlanItem: TBitBtn;
+    pnlTop: TPanel;
+    scrlbx1: TScrollBox;
+    lbl6: TLabel;
+    lbl7: TLabel;
+    lbl8: TLabel;
+    lbl9: TLabel;
+    lbl10: TLabel;
+    lbl11: TLabel;
+    lbl12: TLabel;
+    lbl5: TLabel;
+    lbl13: TLabel;
+    lbl14: TLabel;
+    lbl15: TLabel;
+    lbl16: TLabel;
+    lbl17: TLabel;
+    lbl18: TLabel;
+    lbl19: TLabel;
+    lbl1: TLabel;
+    lbl2: TLabel;
+    btnResult_AddSVNVer: TSpeedButton;
+    lbl3: TLabel;
+    lbl4: TLabel;
+    dbedtZNAME: TDBEdit;
+    dblkcbbZTYPE: TDBLookupComboBox;
+    dblkcbbZASSIGNEDTO: TDBLookupComboBox;
+    dbedtZCASEBUG: TDBEdit;
+    dbedtZMAILTO: TDBEdit;
+    dblkcbbSelectUsermail: TDBLookupComboBox;
+    dbedtZRESULTDATE: TDBEdit;
+    dblkcbbZTESTMETHOD: TDBLookupComboBox;
+    dbedtZOPENEDDATE: TDBEdit;
+    dbedtZCASETASK: TDBEdit;
+    BtnGetVer1: TBitBtn;
+    dbedtZPRO_SVN: TDBEdit;
+    dblkcbbZLEVEL: TDBLookupComboBox;
+    BtnCancel1: TBitBtn;
+    BtnSave1: TBitBtn;
+    dblkcbbZPRO_ID: TDBLookupComboBox;
+    dblkcbbZPRO_VER: TDBLookupComboBox;
+    BtnNext1: TBitBtn;
+    BtnProv1: TBitBtn;
+    dbedtZSTATUSNAME: TDBEdit;
+    dbedtZREMORK: TDBEdit;
+    dbedtdbgrdTest: TDBEdit;
+    BtnGetBugItem2: TBitBtn;
+    dbedtZCLOSESTATUSNAME: TDBEdit;
+    dbedtZSUBMISBYNAME: TDBEdit;
+    BtnGetPlanItem1: TBitBtn;
+    dbedtZDEMAND_ID: TDBEdit;
+    BtngotoDemand: TBitBtn;
+    dbmmoZTESTNOTE: TDBMemo;
+    spl2: TSplitter;
     procedure act_NewExecute(Sender: TObject);
     procedure act_CancelUpdate(Sender: TObject);
     procedure act_CancelExecute(Sender: TObject);
     procedure act_SaveUpdate(Sender: TObject);
     procedure cdsTestItemNewRecord(DataSet: TDataSet);
     procedure cdsProjectAfterScroll(DataSet: TDataSet);
-    procedure btnGetVerClick(Sender: TObject);
+    procedure BtnGetVer1Click(Sender: TObject);
     procedure cdsTestItemBeforePost(DataSet: TDataSet);
     procedure pgcTestMainChanging(Sender: TObject;
       var AllowChange: Boolean);
     procedure act_SaveExecute(Sender: TObject);
-    procedure dblcSelectUsermailCloseUp(Sender: TObject);
+    procedure dblkcbbSelectUsermailCloseUp(Sender: TObject);
     procedure act_ProvUpdate(Sender: TObject);
     procedure act_ProvExecute(Sender: TObject);
     procedure act_NextUpdate(Sender: TObject);
@@ -492,7 +496,7 @@ const
     glSQL = 'exec pt_SplitPage ''TB_TEST_ITEM'',' +
           '''ZID,ZNAME,ZSTATUS,ZOPENEDBY,ZOPENEDDATE,ZLEVEL,ZTYPE,ZASSIGNEDTO,' +
           'ZRESULT,ZTESTRESULTBY,ZRESULTDATE,ZTESTMETHOD,ZCASEBUG,'+
-          'ZCASETASK,ZMAILTO,ZPRO_ID,ZPRO_VER,ZPRO_SVN,ZREMORK,ZCLOSESTATUS,ZCLOSESOCRE,ZSUBMISBY,ZDEMAND_ID'', ' +
+          'ZCASETASK,ZMAILTO,ZPRO_ID,ZPRO_VER,ZPRO_SVN,ZREMORK,ZCLOSESTATUS,ZCLOSESOCRE,ZSUBMISBY,ZDEMAND_ID,ZTESTNOTE'', ' +
           '''%s'',20,%d,%d,1,''%s''';
 begin
 
@@ -604,7 +608,7 @@ begin
   cdsProVer.Close;
 end;
 
-procedure TTestManageChildfrm.btnGetVerClick(Sender: TObject);
+procedure TTestManageChildfrm.BtnGetVer1Click(Sender: TObject);
 var
   myPID : Integer;
 const
@@ -622,14 +626,15 @@ var
   myID : Integer;
   mySQL : string;
   myform :TActivationDlg;
+  mydatetime : TDateTime;
 const
   glSQL   = 'select isNull(max(ZID),0)+1 from TB_TEST_ITEM';
   glSQL2  = 'insert TB_TEST_ITEM (ZID,ZNAME,ZSTATUS,ZOPENEDBY,ZOPENEDDATE,'+
             'ZLEVEL,ZTYPE,ZASSIGNEDTO,ZRESULT,ZTESTRESULTBY,ZRESULTDATE,' +
             'ZTESTMETHOD,ZCASEBUG,ZCASETASK,ZMAILTO,ZPRO_ID,'+
-            'ZPRO_VER,ZPRO_SVN,ZREMORK,ZSUBMISBY,ZDEMAND_ID) ' +
+            'ZPRO_VER,ZPRO_SVN,ZREMORK,ZSUBMISBY,ZDEMAND_ID,ZTESTNOTE) ' +
              'values(%d,''%s'',%d,%d,getdate(),%d,%d,%d,%d,%d,''%s'',' +
-             '%d,''%s'',''%s'',''%s'',%d,%d,%d,''%s'',''%s'',%d)' ;
+             '%d,''%s'',''%s'',''%s'',%d,%d,%d,''%s'',''%s'',%d,''%s'')' ;
 
   glSQL3  = 'update TB_TEST_ITEM set ' +
             'ZNAME=''%s'', ' +
@@ -653,7 +658,11 @@ const
             'ZCLOSESTATUS=%d,'+
             'ZCLOSESOCRE=%d,' +
             'ZDEMAND_ID=%d, ' +
-            'ZSUBMISBY=''%s''' +
+            'ZSUBMISBY=''%s'',' +
+            'ZTESTNOTE=''%s''' +
+            'where ZID=%d';
+  mySQL4 = 'update TB_TEST_ITEM set ' +
+            'ZTESTNOTE=''%s'' ' +
             'where ZID=%d';
 begin
   if fLoading then Exit;
@@ -682,8 +691,10 @@ begin
       DataSet.FieldByName('ZCLOSESOCRE').AsInteger,
       DataSet.FieldByName('ZDEMAND_ID').AsInteger,
       DataSet.FieldByName('ZSUBMISBY').AsString,
+      DataSet.FieldByName('ZTESTNOTE').AsString,
       DataSet.FieldByName('ZID').AsInteger
       ]);
+
     ClientSystem.fDbOpr.BeginTrans;
     try
       ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
@@ -701,6 +712,18 @@ begin
             myform.fType := 0;
             myform.fAcivate_UserID := DataSet.FieldByName('ZSUBMISBY').AsInteger;
             myform.PostData;
+
+            if myform.mmoNote.Text <>'' then
+            begin
+              mydatetime := ClientSystem.fDbOpr.GetSysDateTime;
+                DataSet.FieldByName('ZTESTNOTE').AsString :=
+                ClientSystem.fEditer +' '+DateTimeToStr(mydatetime) + #13#10 +
+                myform.mmoNote.Text+#13#10+
+                DataSet.FieldByName('ZTESTNOTE').AsString;
+              mySQL := Format(mySQL4,[DataSet.FieldByName('ZTESTNOTE').AsString,
+                DataSet.FieldByName('ZID').AsInteger]);
+              ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
+            end;
           end;
         finally
           myform.Free;
@@ -740,6 +763,7 @@ begin
       DataSet.FieldByName('ZPRO_SVN').AsInteger,
       DataSet.FieldByName('ZREMORK').AsString,
       DataSet.FieldByName('ZSUBMISBY').AsString,
+      DataSet.FieldByName('ZTESTNOTE').AsString,
       DataSet.FieldByName('ZDEMAND_ID').AsInteger]);
 
     ClientSystem.fDbOpr.BeginTrans;
@@ -775,7 +799,7 @@ begin
     cdsTestItem.Post;
 end;
 
-procedure TTestManageChildfrm.dblcSelectUsermailCloseUp(Sender: TObject);
+procedure TTestManageChildfrm.dblkcbbSelectUsermailCloseUp(Sender: TObject);
 var
   mystr : String;
   myaddstr : string;

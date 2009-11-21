@@ -150,8 +150,8 @@ type
     procedure Showfrm ; override;  //显示后发生的事件
     procedure Closefrm; override;  //关闭显示发生的事件
 
-    procedure LoadToDayResult(APageIndex:integer;AWhereStr:String;
-      AAll:Boolean;AUserID:Integer);
+    procedure LoadToDayResult(APageIndex:integer;AAll:Boolean;AUserID:Integer;
+      ADateTime:TDateTime);
 
     class function GetModuleID : integer;override; //取出模块ID
   end;
@@ -390,7 +390,7 @@ begin
 end;
 
 procedure TDayWorktableManageClientDlg.LoadToDayResult(APageIndex: integer;
-  AWhereStr: String;AAll:Boolean;AUserID:Integer);
+  AAll:Boolean;AUserID:Integer;ADateTime:TDateTime);
 var
   mySQL  : string;
   i : integer;
@@ -399,6 +399,7 @@ var
   myb : Boolean;
   mywhere : String;
   mykind : Integer;
+  myUserType : Integer;
 
   mycount14,mycount15,mycount16,mycount17,mycount18 : Integer;
 
@@ -412,7 +413,11 @@ const
 begin
 
   if fLoading then Exit;
-  mywhere := AWhereStr;
+  if not AAll then
+    mywhere :=  Format('ZUSER_ID=%d and ZDATETIME=''''%s''''',
+      [AUserID,DateToStr(ADateTime)])
+  else
+    mywhere := Format('ZDATETIME=''''%s''''',[DateToStr(ADateTime)]);
   mySQL := format(glSQL,[
       'ZID',
       APageIndex,
@@ -530,12 +535,17 @@ begin
       end;
 
       //
-      // 执行
+      // 执行统计其他贡献
       //
       if AAll then mykind := 0 else mykind := 1;
       mySQL := Format(glSQL2,[AUserID,
         mykind,
-        DateToStr(dtp1.DateTime)]);
+        DateToStr(ADateTime)]);
+
+      if DM.cdsUserAll.Locate('ZID',AUserID,[loPartialKey]) then
+        myUserType := DM.cdsUserAll.FieldByName('ZTYPE').AsInteger
+      else
+        myUserType := 3;
 
       myDataSet.Data := ClientSystem.fDbOpr.ReadDataSet(pchar(mySQL));
       myDataSet.First;
@@ -549,15 +559,16 @@ begin
         //类型 0=测试用例 1=bug 2=svn 3=报功 4=举报
         case myDataSet.FieldByName('ZTYPE').AsInteger of
           0:
-            if ClientSystem.fEditerType in [etAdmin,etDeve] then
+            if TEditerType(myUserType) in [etAdmin,etDeve] then
               cdsToDayResult.FieldByName('ZUSER_ID').AsInteger := myDataSet.FieldByName('ZOPEN_USER_ID').AsInteger
             else
               cdsToDayResult.FieldByName('ZUSER_ID').AsInteger := myDataSet.FieldByName('ZCLOSE_USER_ID').AsInteger;
           1:
-           if ClientSystem.fEditerType in [etAdmin,etDeve] then
+           if TEditerType(myUserType) in [etAdmin,etDeve] then
               cdsToDayResult.FieldByName('ZUSER_ID').AsInteger := myDataSet.FieldByName('ZCLOSE_USER_ID').AsInteger
             else
               cdsToDayResult.FieldByName('ZUSER_ID').AsInteger := myDataSet.FieldByName('ZOPEN_USER_ID').AsInteger;
+
           2:cdsToDayResult.FieldByName('ZUSER_ID').AsInteger := myDataSet.FieldByName('ZOPEN_USER_ID').AsInteger;
         end;
 
@@ -595,12 +606,12 @@ begin
         end;
         cdsToDayResult.Next;
       end;
-      
       lbl14.Caption := IntToStr(mycount14);
       lbl15.Caption := IntToStr(mycount15);
       lbl16.Caption := IntToStr(mycount16);
       lbl17.Caption := IntToStr(mycount17);
       lbl18.Caption := IntToStr(mycount18);
+
 
       cdsToDayResult.First;
     finally
@@ -624,7 +635,7 @@ begin
   mydatetime := ClientSystem.fDbOpr.GetSysDateTime;
   mywhere := Format('ZUSER_ID=%d and ZDATETIME=''''%s''''',
     [ClientSystem.fEditer_id,DateToStr(mydatetime)]);
-  LoadToDayResult(1,mywhere,False,ClientSystem.fEditer_id);
+  LoadToDayResult(1,False,ClientSystem.fEditer_id,mydatetime);
 end;
 
 procedure TDayWorktableManageClientDlg.act_CancelExecute(Sender: TObject);
@@ -800,27 +811,22 @@ begin
   if (cdsToDayResult.RecNo mod 2  = 0) and not ( gdSelected in State)  then
     dbgrdResult.Canvas.Brush.Color := clSilver;
 
-  if (cdsToDayResult.FieldByName('ZACTION').AsInteger=0) and
-     not (gdSelected in State) then
+  if (cdsToDayResult.FieldByName('ZACTION').AsInteger=0) then
   begin
     dbgrdResult.Canvas.Font.Color := clred;
   end;
   dbgrdResult.DefaultDrawColumnCell(Rect,DataCol,Column,State);
-
 end;
 
 procedure TDayWorktableManageClientDlg.act_OtherResultToDayExecute(
   Sender: TObject);
 var
-  mywhere : string;
   mydatetime : TDateTime;
 begin
   mydatetime := dtp1.DateTime;
-  mywhere := Format('ZUSER_ID=%d and ZDATETIME=''''%s''''',
-    [cdsUser.FieldByName('ZID').AsInteger,
-     DateToStr(mydatetime)]);
 
-  LoadToDayResult(1,mywhere,False,cdsUser.FieldByName('ZID').AsInteger);
+  LoadToDayResult(1,False,cdsUser.FieldByName('ZID').AsInteger,
+    mydatetime);
   lblName1.Caption := cdsUser.FieldByName('ZNAME').AsString;
 end;
 
@@ -852,25 +858,20 @@ end;
 procedure TDayWorktableManageClientDlg.act1_ReadyesterdayExecute(
   Sender: TObject);
 var
-  mywhere : string;
   mydatetime : TDateTime;
 begin
   mydatetime := ClientSystem.fDbOpr.GetSysDateTime;
   mydatetime := mydatetime -1;
-  mywhere := Format('ZUSER_ID=%d and ZDATETIME=''''%s''''',
-    [ClientSystem.fEditer_id,DateToStr(mydatetime)]);
-  LoadToDayResult(1,mywhere,False,ClientSystem.fEditer_id);
+  LoadToDayResult(1,False,ClientSystem.fEditer_id,mydatetime);
 end;
 
 procedure TDayWorktableManageClientDlg.act_ReadAllExecute(Sender: TObject);
 var
-  mywhere : string;
   mydatetime : TDateTime;
 begin
   mydatetime := dtp1.DateTime;
-  mywhere := Format('ZDATETIME=''''%s''''',
-    [DateToStr(mydatetime)]);
-  LoadToDayResult(1,mywhere,True,cdsUser.FieldByName('ZID').AsInteger);
+  LoadToDayResult(1,True,cdsUser.FieldByName('ZID').AsInteger,
+    mydatetime);
   lblName1.Caption := '团队';
 end;
 
