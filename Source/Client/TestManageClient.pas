@@ -632,9 +632,9 @@ const
   glSQL2  = 'insert TB_TEST_ITEM (ZID,ZNAME,ZSTATUS,ZOPENEDBY,ZOPENEDDATE,'+
             'ZLEVEL,ZTYPE,ZASSIGNEDTO,ZRESULT,ZTESTRESULTBY,ZRESULTDATE,' +
             'ZTESTMETHOD,ZCASEBUG,ZCASETASK,ZMAILTO,ZPRO_ID,'+
-            'ZPRO_VER,ZPRO_SVN,ZREMORK,ZSUBMISBY,ZDEMAND_ID,ZTESTNOTE) ' +
+            'ZPRO_VER,ZPRO_SVN,ZREMORK,ZSUBMISBY,ZTESTNOTE,ZDEMAND_ID) ' +
              'values(%d,''%s'',%d,%d,getdate(),%d,%d,%d,%d,%d,''%s'',' +
-             '%d,''%s'',''%s'',''%s'',%d,%d,%d,''%s'',''%s'',%d,''%s'')' ;
+             '%d,''%s'',''%s'',''%s'',%d,%d,%d,''%s'',''%s'',''%s'',%d)' ;
 
   glSQL3  = 'update TB_TEST_ITEM set ' +
             'ZNAME=''%s'', ' +

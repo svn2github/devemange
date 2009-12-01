@@ -1,6 +1,6 @@
 inherited GetSVNVerDlg: TGetSVNVerDlg
-  Left = 326
-  Top = 182
+  Left = 261
+  Top = 201
   BorderStyle = bsDialog
   Caption = #21462'SVN'#29256#26412#21495
   ClientHeight = 362
@@ -114,6 +114,22 @@ inherited GetSVNVerDlg: TGetSVNVerDlg
     Width = 71
     Height = 39
     Visible = False
+  end
+  object chk15: TCheckBox
+    Left = 504
+    Top = 14
+    Width = 88
+    Height = 17
+    Caption = #26174#31034'?'#26465'='
+    TabOrder = 7
+  end
+  object edtCount: TEdit
+    Left = 589
+    Top = 11
+    Width = 70
+    Height = 23
+    TabOrder = 8
+    Text = '15'
   end
   object ds1: TDataSource
     DataSet = cds1

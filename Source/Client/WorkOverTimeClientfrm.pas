@@ -503,6 +503,16 @@ begin
   //
   if fLoading then Exit;
 
+  //加班单的结束日期应小于服务器时间
+  if DataSet.FieldByName('ZLASTDATETIME').AsDateTime >
+     ClientSystem.fDbOpr.GetSysDateTime then
+  begin
+    MessageBox(Handle,'你填写的下班时间出错，不能提交加班单','提示',MB_ICONWARNING+
+      MB_OK);
+    DataSet.Cancel;
+    Exit;
+  end;
+
   CalcMinute();
   if DataSet.FieldByName('ZISNEW').AsBoolean then
   begin
@@ -633,18 +643,23 @@ procedure TWorkOverTimeClient.act_AddToYesterdayExecute(Sender: TObject);
 var
   mydatetime : TDateTime;
   myy,mymo,myday : Word;
+  mydatetime2 : TDateTime;
+  myy2,mymo2,myday2 : Word;
 begin
   mydatetime := ClientSystem.fDbOpr.GetSysDateTime;
-  myy  := YearOf(mydatetime);
-  mymo := MonthOf(mydatetime);
-  myday:= DayOf(mydatetime);
-
+  mydatetime2 := mydatetime -1;
+  
   cdsWrokList.First;
   cdsWrokList.Insert;
 
-  cdsWrokList.FieldByName('ZDATE').AsString := formatdatetime('yyyy-mm-dd',mydatetime-1);
+  cdsWrokList.FieldByName('ZDATE').AsString := formatdatetime('yyyy-mm-dd',mydatetime2);
+
+  myy2  := YearOf(mydatetime2);
+  mymo2 := MonthOf(mydatetime2);
+  myday2:= DayOf(mydatetime2);
+
   cdsWrokList.FieldByName('ZDATETIME').AsDateTime := StrToDateTime(Format('%d-%d-%d 17:00',
-    [myy,mymo,myday-1]));
+    [myy2,mymo2,myday2]));
   cdsWrokList.FieldByName('ZLASTDATETIME').AsDateTime := mydatetime-1; //固定一个时间
   dtp1.DateTime := mydatetime;
 

@@ -1,6 +1,6 @@
 inherited TestManageChildfrm: TTestManageChildfrm
-  Left = 46
-  Top = 126
+  Left = 50
+  Top = 92
   Width = 1139
   Height = 713
   Caption = #27979#35797#31649#29702

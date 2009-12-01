@@ -20,7 +20,7 @@ inherited DayWorktableManageClientDlg: TDayWorktableManageClientDlg
     Top = 74
     Width = 963
     Height = 532
-    ActivePage = ts2
+    ActivePage = ts1
     Align = alClient
     TabOrder = 1
     OnChange = pgc1Change

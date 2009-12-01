@@ -19,6 +19,8 @@ type
     btn3: TButton;
     dbmmoZMESSAGE: TDBMemo;
     ani1: TAnimate;
+    chk15: TCheckBox;
+    edtCount: TEdit;
     procedure cds1CalcFields(DataSet: TDataSet);
     procedure btn3Click(Sender: TObject);
     procedure dbgrd1DrawColumnCell(Sender: TObject; const Rect: TRect;
@@ -65,8 +67,9 @@ var
   mycds : TClientDataSet;
   myField : TFieldDef;
   myb : Boolean;
+  mystr : string;
 const
-  gl_SQLTXT = 'select top 6 ZVERSION,ZAUTHOR,ZDATE,ZMESSAGE ' +
+  gl_SQLTXT = 'select top %d ZVERSION,ZAUTHOR,ZDATE,ZMESSAGE ' +
     'from TB_SVN_COMMITS order by ZID DESC';
 begin
 
@@ -78,7 +81,12 @@ begin
     fLoading := True;
     ani1.Active := True;
     Application.ProcessMessages;
-    mycds.Data := ClientSystem.fDbOpr.ReadDataSet(PChar(gl_SQLTXT));
+    if chk15.Checked then
+      mystr := Format(gl_SQLTXT,[StrToIntDef(edtCount.Text,15)])
+    else
+      mystr := Format(gl_SQLTXT,[6]);
+      
+    mycds.Data := ClientSystem.fDbOpr.ReadDataSet(PChar(mystr));
 
     if cds1.Active then
       while not cds1.Eof do cds1.Delete;
