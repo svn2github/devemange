@@ -107,7 +107,7 @@ inherited StatManageClientDlg: TStatManageClientDlg
     Left = 0
     Top = 40
     Width = 963
-    Height = 393
+    Height = 298
     Align = alClient
     TabOrder = 1
     Tabs.Strings = (
@@ -119,7 +119,7 @@ inherited StatManageClientDlg: TStatManageClientDlg
       Left = 4
       Top = 26
       Width = 955
-      Height = 363
+      Height = 268
       Align = alClient
       DataSource = dsData
       Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
@@ -131,6 +131,66 @@ inherited StatManageClientDlg: TStatManageClientDlg
       TitleFont.Name = #23435#20307
       TitleFont.Style = []
       OnDrawColumnCell = dbgrdDataDrawColumnCell
+    end
+  end
+  object pnl1: TPanel
+    Left = 0
+    Top = 338
+    Width = 963
+    Height = 95
+    Align = alBottom
+    TabOrder = 2
+    object lbl3: TLabel
+      Left = 632
+      Top = 20
+      Width = 45
+      Height = 15
+      Caption = #22995#21517#65306
+    end
+    object lbl4: TLabel
+      Left = 633
+      Top = 52
+      Width = 38
+      Height = 15
+      Caption = #24471#20998':'
+    end
+    object rbRule_1: TRadioButton
+      Left = 14
+      Top = 7
+      Width = 486
+      Height = 17
+      Caption = #26041#27861'1('#20170#26085#26085#24535#25171#20998' + '#27979#35797#29992#20363#20998' + SVN'#25552#20132#20998')'
+      TabOrder = 0
+    end
+    object edt1: TEdit
+      Left = 686
+      Top = 16
+      Width = 121
+      Height = 23
+      TabOrder = 1
+    end
+    object edt2: TEdit
+      Left = 686
+      Top = 48
+      Width = 121
+      Height = 23
+      TabOrder = 2
+    end
+    object Button1: TButton
+      Left = 826
+      Top = 15
+      Width = 100
+      Height = 25
+      Action = actCalc_Total
+      TabOrder = 3
+    end
+    object rbRule_2: TRadioButton
+      Left = 14
+      Top = 28
+      Width = 425
+      Height = 17
+      Caption = #26041#27861'2('#20170#26085#26085#24535#25171#20998' + '#20851#38381#27979#35797#29992#20363#25968'+'#21019#24314'Bug'#25968')'
+      TabOrder = 4
     end
   end
   object cdsData: TClientDataSet
@@ -172,6 +232,11 @@ inherited StatManageClientDlg: TStatManageClientDlg
       Caption = #22270#34920#23545#27604
       OnExecute = actChartExecute
       OnUpdate = actChartUpdate
+    end
+    object actCalc_Total: TAction
+      Caption = #35745#31639#24635#24471#20998
+      OnExecute = actCalc_TotalExecute
+      OnUpdate = actCalc_TotalUpdate
     end
   end
   object dlgSave1: TSaveDialog

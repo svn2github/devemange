@@ -217,6 +217,7 @@ const
 implementation
 uses
   DmUints,
+  Base64,
   ClinetSystemUnits, Mainfrm;
 
 {$R *.dfm}
@@ -1157,11 +1158,12 @@ const
   glSQL = 'update TB_ANT set ' +
           'ZCOMPILETEXT=''%s'' ' +
           'where ZGUID=''%s''';
+
 begin
   //保存结果
   ShowProgress('保存中...',0);
   try
-    mySQL := Format(glSQL,[lstResult.Items.Text,
+    mySQL := Format(glSQL,[Encode(lstResult.Items.Text),
       cdsAntList.FieldByName('ZGUID').AsString]);
     ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
   finally
@@ -1182,6 +1184,8 @@ begin
   mySQL := Format(glSQL,[cdsAntList.FieldByName('ZGUID').AsString]);
   mysl := TStringList.Create;
   ShowProgress('读取...',0);
+
+
   try
     myVarint := ClientSystem.fDbOpr.ReadVariant(PChar(mySQL));
     if VarIsNull(myVarint) then
@@ -1189,11 +1193,12 @@ begin
       MessageBox(Handle,'无结果内容','提示',MB_ICONWARNING+MB_OK);
       Exit;
     end;
-    mysl.Text := myVarint;
 
+    mysl.Text := Decode(myVarint);
     lstErrors.Clear;
     lstResult.Clear;
 
+    mysl.BeginUpdate;
     for i:=0 to mysl.Count -1 do
     begin
       mystr := mysl.Strings[i];
@@ -1206,6 +1211,7 @@ begin
       end;
       lstResult.Items.Add(mystr);
     end;
+    mysl.EndUpdate;
 
   finally
     mysl.Free;

@@ -1,6 +1,6 @@
 inherited StatChartDlg: TStatChartDlg
-  Left = 46
-  Top = 147
+  Left = 72
+  Top = 143
   Width = 1008
   Height = 579
   Caption = #22270#34920
@@ -22,17 +22,6 @@ inherited StatChartDlg: TStatChartDlg
       Height = 65
       Shape = bsLeftLine
     end
-    object chkTotal: TCheckBox
-      Left = 346
-      Top = 33
-      Width = 66
-      Height = 17
-      Caption = #24635#20998
-      Checked = True
-      State = cbChecked
-      TabOrder = 0
-      OnClick = chkTotalClick
-    end
     object chkSubmitBugCount: TCheckBox
       Left = 6
       Top = 8
@@ -41,7 +30,7 @@ inherited StatChartDlg: TStatChartDlg
       Caption = #25552#20132'Bug'#25968
       Checked = True
       State = cbChecked
-      TabOrder = 1
+      TabOrder = 0
       OnClick = chkSubmitBugCountClick
     end
     object chkAnswerBugCount: TCheckBox
@@ -52,7 +41,7 @@ inherited StatChartDlg: TStatChartDlg
       Caption = #35299#20915'bug'#25968
       Checked = True
       State = cbChecked
-      TabOrder = 2
+      TabOrder = 1
       OnClick = chkAnswerBugCountClick
     end
     object chkBuildTestCount: TCheckBox
@@ -63,7 +52,7 @@ inherited StatChartDlg: TStatChartDlg
       Caption = #25552#20132#27979#35797#29992#20363
       Checked = True
       State = cbChecked
-      TabOrder = 3
+      TabOrder = 2
       OnClick = chkBuildTestCountClick
     end
     object chkAnswerTestCount: TCheckBox
@@ -74,7 +63,7 @@ inherited StatChartDlg: TStatChartDlg
       Caption = #20851#38381#27979#35797#29992#20363
       Checked = True
       State = cbChecked
-      TabOrder = 4
+      TabOrder = 3
       OnClick = chkAnswerTestCountClick
     end
     object chkWorkOverTime: TCheckBox
@@ -85,25 +74,16 @@ inherited StatChartDlg: TStatChartDlg
       Caption = #21152#29677#26102#38388'('#23567#26102')'
       Checked = True
       State = cbChecked
-      TabOrder = 5
+      TabOrder = 4
       OnClick = chkWorkOverTimeClick
-    end
-    object Button1: TButton
-      Left = 742
-      Top = 6
-      Width = 100
-      Height = 25
-      Caption = #24635#20998#20026#38646#19981#26174#31034
-      TabOrder = 6
-      OnClick = Button1Click
     end
     object BitBtn1: TBitBtn
       Left = 742
-      Top = 35
-      Width = 100
+      Top = 5
+      Width = 120
       Height = 25
       Caption = #21152#29677#20026#38646#19981#26174#31034
-      TabOrder = 7
+      TabOrder = 5
       OnClick = BitBtn1Click
     end
     object chkTaskFraction: TCheckBox
@@ -112,7 +92,7 @@ inherited StatChartDlg: TStatChartDlg
       Width = 97
       Height = 17
       Caption = #20219#21153#21333#24471#20998
-      TabOrder = 8
+      TabOrder = 6
       OnClick = chkTaskFractionClick
     end
     object chk3D: TCheckBox
@@ -123,7 +103,7 @@ inherited StatChartDlg: TStatChartDlg
       Caption = '3D'
       Checked = True
       State = cbChecked
-      TabOrder = 9
+      TabOrder = 7
       OnClick = chk3DClick
     end
     object edt1: TEdit
@@ -132,7 +112,7 @@ inherited StatChartDlg: TStatChartDlg
       Width = 81
       Height = 23
       ReadOnly = True
-      TabOrder = 10
+      TabOrder = 8
     end
     object edt2: TEdit
       Left = 603
@@ -140,24 +120,24 @@ inherited StatChartDlg: TStatChartDlg
       Width = 131
       Height = 23
       ReadOnly = True
-      TabOrder = 11
+      TabOrder = 9
     end
     object BitBtn2: TBitBtn
-      Left = 846
+      Left = 868
       Top = 5
       Width = 100
       Height = 25
       Caption = #25335#36125#21040#21098#20999#26495
-      TabOrder = 12
+      TabOrder = 10
       OnClick = BitBtn2Click
     end
     object BitBtn3: TBitBtn
-      Left = 846
+      Left = 868
       Top = 35
       Width = 100
       Height = 25
       Caption = #25171#21360#39044#35272
-      TabOrder = 13
+      TabOrder = 11
       OnClick = BitBtn3Click
     end
     object chkZSvnSubimtCount: TCheckBox
@@ -168,7 +148,7 @@ inherited StatChartDlg: TStatChartDlg
       Caption = 'SVN'#25552#20132#25968
       Checked = True
       State = cbChecked
-      TabOrder = 14
+      TabOrder = 12
       OnClick = chkZSvnSubimtCountClick
     end
   end
@@ -355,24 +335,6 @@ inherited StatChartDlg: TStatChartDlg
       YValues.Order = loNone
       YValues.ValueSource = 'ZSvnSubimtCount'
     end
-    object brsrsSeries1: TBarSeries
-      Marks.ArrowLength = 20
-      Marks.Style = smsValue
-      Marks.Visible = True
-      DataSource = cds1
-      SeriesColor = clNavy
-      Title = #24635#20998
-      XLabelsSource = 'ZUSERNAME'
-      XValues.DateTime = False
-      XValues.Name = 'X'
-      XValues.Multiplier = 1.000000000000000000
-      XValues.Order = loAscending
-      YValues.DateTime = False
-      YValues.Name = 'Bar'
-      YValues.Multiplier = 1.000000000000000000
-      YValues.Order = loNone
-      YValues.ValueSource = 'ZTotal'
-    end
   end
   object cds1: TClientDataSet
     Aggregates = <>
@@ -416,9 +378,6 @@ inherited StatChartDlg: TStatChartDlg
     object intgrfldcds1ZSOCRE: TIntegerField
       FieldName = 'ZSOCRE'
     end
-    object intgrfldcds1ZTotal: TIntegerField
-      FieldName = 'ZTotal'
-    end
     object fltfldcds1calcHour: TFloatField
       FieldKind = fkCalculated
       FieldName = 'calcHour'
@@ -426,6 +385,15 @@ inherited StatChartDlg: TStatChartDlg
     end
     object intgrfldcds1ZSvnSubimtCount: TIntegerField
       FieldName = 'ZSvnSubimtCount'
+    end
+    object intgrfldcds1ZSvnSubimt_M_Count: TIntegerField
+      FieldName = 'ZSvnSubimt_M_Count'
+    end
+    object intgrfldcds1ZSvnSubimt_D_Count: TIntegerField
+      FieldName = 'ZSvnSubimt_D_Count'
+    end
+    object intgrfldcds1ZSvnSubimt_A_Count: TIntegerField
+      FieldName = 'ZSvnSubimt_A_Count'
     end
   end
   object ds1: TDataSource

@@ -33,9 +33,7 @@ type
     intgrfldcds1ZBuildTestCount: TIntegerField;
     intgrfldcds1ZAnswerTestCount: TIntegerField;
     intgrfldcds1ZSOCRE: TIntegerField;
-    intgrfldcds1ZTotal: TIntegerField;
     dbcht1: TDBChart;
-    brsrsSeries1: TBarSeries;
     ds1: TDataSource;
     brsrsWorkOverTime: TBarSeries;
     fltfldcds1calcHour: TFloatField;
@@ -43,13 +41,11 @@ type
     brsrsAnswerBugCount: TBarSeries;
     brsrsBuildTestCount: TBarSeries;
     brsrsAnswerTestCount: TBarSeries;
-    chkTotal: TCheckBox;
     chkSubmitBugCount: TCheckBox;
     chkAnswerBugCount: TCheckBox;
     chkBuildTestCount: TCheckBox;
     chkAnswerTestCount: TCheckBox;
     chkWorkOverTime: TCheckBox;
-    Button1: TButton;
     BitBtn1: TBitBtn;
     brsrsZTaskFraction: TBarSeries;
     chkTaskFraction: TCheckBox;
@@ -62,14 +58,15 @@ type
     intgrfldcds1ZSvnSubimtCount: TIntegerField;
     brsrsZSvnSubimtCount: TBarSeries;
     chkZSvnSubimtCount: TCheckBox;
+    intgrfldcds1ZSvnSubimt_M_Count: TIntegerField;
+    intgrfldcds1ZSvnSubimt_D_Count: TIntegerField;
+    intgrfldcds1ZSvnSubimt_A_Count: TIntegerField;
     procedure cds1CalcFields(DataSet: TDataSet);
     procedure chkSubmitBugCountClick(Sender: TObject);
-    procedure chkTotalClick(Sender: TObject);
     procedure chkAnswerBugCountClick(Sender: TObject);
     procedure chkBuildTestCountClick(Sender: TObject);
     procedure chkAnswerTestCountClick(Sender: TObject);
     procedure chkWorkOverTimeClick(Sender: TObject);
-    procedure Button1Click(Sender: TObject);
     procedure BitBtn1Click(Sender: TObject);
     procedure chkTaskFractionClick(Sender: TObject);
     procedure chk3DClick(Sender: TObject);
@@ -105,12 +102,6 @@ begin
   brsrsSubmitBugCount.Active := chkSubmitBugCount.Checked;
 end;
 
-procedure TStatChartDlg.chkTotalClick(Sender: TObject);
-begin
-  brsrsSeries1.Active := chkTotal.Checked;
-
-end;
-
 procedure TStatChartDlg.chkAnswerBugCountClick(Sender: TObject);
 begin
   brsrsAnswerBugCount.Active := chkAnswerBugCount.Checked;
@@ -130,22 +121,6 @@ end;
 procedure TStatChartDlg.chkWorkOverTimeClick(Sender: TObject);
 begin
   brsrsWorkOverTime.Active := chkWorkOverTime.Checked;
-end;
-
-procedure TStatChartDlg.Button1Click(Sender: TObject);
-begin
-  //É¾³ýµÃ·ÖÎª0
-  cds1.First;
-  while not cds1.Eof  do
-  begin
-    if cds1.FieldByName('ZTotal').AsInteger =0 then
-      cds1.Delete
-    else
-      cds1.Next;
-  end;
-
-  dbcht1.RefreshData;
-
 end;
 
 procedure TStatChartDlg.BitBtn1Click(Sender: TObject);
