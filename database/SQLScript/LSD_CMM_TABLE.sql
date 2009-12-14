@@ -867,6 +867,24 @@ create table TB_TODAYRESULT(
 )
 go
 
+/*日志表*/
+if exists (select * from dbo.sysobjects
+  where id = object_id(N'[dbo].[TB_LOG]')
+  and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+drop table [dbo].[TB_LOG]
+go
+
+create table TB_LOG(
+	ZID          int IDENTITY (1, 1) not null,                   /*主键*/
+	ZUSER_ID     int not null,                                   /*谁*/
+	ZDATETIME    datetime,                                       /*时间*/
+	ZCONTENT     varchar(200),                                   /*内容*/
+	
+	constraint PK_TB_LOG primary key(ZID)  
+)
+go
+
+
 
 
 
