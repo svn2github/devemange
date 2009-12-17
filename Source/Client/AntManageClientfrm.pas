@@ -8,6 +8,7 @@
 // 修改:
 //   增加svn  的日志显示功能 作者:龙仕云 2009-1-18
 //   修改编译时可以指定要编译的版本号 作者:龙仕云 2009-11-19
+//   修改增加分页处理，因为项目现在多起来了 作者:龙仕云 2009-12-17
 //
 //
 //
@@ -29,6 +30,13 @@ type
     findex,fcount : integer;
     fWhere : string;
   end;
+
+  TPageTypeRec = record
+    fIndex : Integer;
+    fIndexCount : Integer;
+    fWhereStr : string; //分页的where条件
+  end;
+
 
   TAntManageClientDlg = class(TBaseChildDlg)
     actlst1: TActionList;
@@ -110,8 +118,6 @@ type
     actSvnLog_AllProject: TAction;
     btnSvnLog_AllProject: TBitBtn;
     btnEditSVNRUL: TBitBtn;
-    btnReLoadAnt: TBitBtn;
-    act_ReLoadAnt: TAction;
     cdsCloneAntList: TClientDataSet;
     act_ApplyBuild: TAction;
     btnApplyBuild: TBitBtn;
@@ -124,6 +130,18 @@ type
     BtnShowCompileText: TBitBtn;
     act_SaveCompileText: TAction;
     act_ShowCompileText: TAction;
+    pnl7: TPanel;
+    BtnFirstPage: TBitBtn;
+    BtnProPage: TBitBtn;
+    BtnNextPage: TBitBtn;
+    BtnLastPage: TBitBtn;
+    act_FirstPage: TAction;
+    act_ProPage: TAction;
+    act_NextPage: TAction;
+    act_LastPage: TAction;
+    lblPageCount: TLabel;
+    act_RefreshData: TAction;
+    BtnRefreshData: TBitBtn;
     procedure act_ProAddExecute(Sender: TObject);
     procedure cdsAntListNewRecord(DataSet: TDataSet);
     procedure act_ProSaveUpdate(Sender: TObject);
@@ -162,20 +180,33 @@ type
     procedure actSvnLog_NetProjectUpdate(Sender: TObject);
     procedure actSvnLog_AllProjectExecute(Sender: TObject);
     procedure btnEditSVNRULClick(Sender: TObject);
-    procedure act_ReLoadAntExecute(Sender: TObject);
     procedure act_ApplyBuildUpdate(Sender: TObject);
     procedure act_ApplyBuildExecute(Sender: TObject);
     procedure lstErrorsClick(Sender: TObject);
     procedure act_SaveCompileTextExecute(Sender: TObject);
     procedure act_ShowCompileTextExecute(Sender: TObject);
+    procedure act_FirstPageExecute(Sender: TObject);
+    procedure act_FirstPageUpdate(Sender: TObject);
+    procedure act_ProPageExecute(Sender: TObject);
+    procedure act_ProPageUpdate(Sender: TObject);
+    procedure act_NextPageExecute(Sender: TObject);
+    procedure act_NextPageUpdate(Sender: TObject);
+    procedure act_LastPageExecute(Sender: TObject);
+    procedure act_LastPageUpdate(Sender: TObject);
+    procedure act_RefreshDataExecute(Sender: TObject);
   private
     { Private declarations }
     fSVNCommitPageRec :TSVNCommitPageRec;
+    fPageType : TPageTypeRec;
+
     function initconnection():Boolean; //连接服务器
-    procedure LoadAnt();
     procedure LoadSvnCommit(Awhere:string;APageIndex:integer);
     function  GetSvnCommitPageCount(Awhere:string):integer;
     procedure LoadSvnChanges(AAntGUID:string;Aversion:integer);
+
+    function  GetAntPageCount(AWhereStr:String):integer; //取出页总数
+    procedure LoadAntList(APageIndex:integer;AWhereStr:String); //加载某个人的加班单
+    
   public
     { Public declarations }
 
@@ -245,6 +276,7 @@ procedure TAntManageClientDlg.initBase;
 var
   mycds : TClientDataSet;
   myfield : TFieldDef;
+  mywhere : string;
 const
   glSQL1 = 'select * from TB_ANT where 1=0 ';
 begin
@@ -275,8 +307,15 @@ begin
     end;
     cdsAntList.CreateDataSet;
 
-    LoadAnt();
-    
+    //加载第一页内容
+    fPageType.fIndex := 1;
+    mywhere := '1=1';
+    fPageType.fIndexCount := GetAntPageCount(mywhere);
+    fPageType.fWhereStr := mywhere;
+    LoadAntList(fPageType.fIndex,fPageType.fWhereStr);
+    lblPageCount.Caption := format('%d/%d',[1,
+      fPageType.fIndexCount]);
+
   finally
     mycds.Free;
   end;
@@ -352,58 +391,6 @@ begin
   cdsAntList.Cancel;
 end;
 
-procedure TAntManageClientDlg.LoadAnt;
-var
-  i,myc : Integer;
-  myb : Boolean;
-const
-  glSQL = 'select * from TB_ANT order by ZID desc';
-
-begin
-  //
-  myb := fLoading;
-  fLoading := True;
-  cdsAntList.DisableControls;
-  ClientSystem.BeginTickCount;
-  ShowProgress('读取数据...',0);
-  try
-    while not cdsAntList.Eof do
-      cdsAntList.Delete;
-      
-    cdstemp.Data := ClientSystem.fDbOpr.ReadDataSet(PChar(glSQL));
-    cdstemp.First;
-    myc := 1;
-    while not cdstemp.Eof do
-    begin
-      cdsAntList.Append;
-      cdsAntList.FieldByName('ZISNEW').AsBoolean := False;
-      cdsAntList.FieldByName('ZINDEX').AsString := inttostr(myc);Inc(myc);
-      for i:=0 to cdstemp.Fields.Count -1 do
-      begin
-        if  cdstemp.Fields[i].FieldName = 'ZID' then
-        begin
-          cdsAntList.FieldByName('ZAUTOID').AsInteger :=
-            cdstemp.FieldByName('ZID').AsInteger;
-        end
-        else begin
-          cdsAntList.FieldByName(cdstemp.Fields[i].FieldName).AsVariant :=
-            cdstemp.FieldByName(cdstemp.Fields[i].FieldName).AsVariant;
-        end;
-      end;
-      cdstemp.Next;
-      cdsAntList.Post;
-    end;
-
-    cdsAntList.First;
-    cdsCloneAntList.CloneCursor(cdsAntList,True);
-  finally
-    cdsAntList.EnableControls;
-    fLoading := myb;
-    HideProgress;
-    ClientSystem.EndTickCount;
-  end;
-end;
-
 
 procedure TAntManageClientDlg.cdsAntListBeforePost(DataSet: TDataSet);
 var
@@ -415,7 +402,7 @@ const
       'ZREMARK=''%s'',ZDATE=''%s'',ZSVN=%d,ZVERSION=''%s'',ZSVN_URL=''%s'',ZSVN_LATEST_VERSION=%d where ZGUID=''%s''';
 begin
   if fLoading then Exit;
-  
+
   if DataSet.FieldByName('ZISNEW').AsBoolean then
   begin
     mySQL := Format(gl_SQL1,[
@@ -822,6 +809,99 @@ begin
   
 end;
 
+function TAntManageClientDlg.GetAntPageCount(AWhereStr: String): integer;
+var
+  mySQL  : string;
+  myRowCount : integer;
+  mywhere : string;
+const
+  glSQL = 'exec pt_SplitPage ''TB_ANT'',''' +
+         'ZDATE'', ''%s'',20,%d,%d,1,''%s''';
+  //                                             页码,以总数=1, 条件where
+begin
+  mywhere := AWhereStr;
+
+  mySQL := format(glSQL,[
+    'ZDATE',
+    1,
+    1, //不是取总数
+    mywhere]);
+
+
+  myRowCount := ClientSystem.fDbOpr.ReadInt(PChar(mySQL));
+  Result := myRowCount div 20;
+  if (myRowCount mod 20) > 0 then
+    Result := Result + 1;
+
+end;
+
+procedure TAntManageClientDlg.LoadAntList(APageIndex: integer;
+  AWhereStr: String);
+var
+  i,myc : Integer;
+  myb : Boolean;
+  mywhere : string;
+  mySql : string;
+const
+  //glSQL = 'select * from TB_ANT order by ZDATE desc';  //ZID desc
+  glSQL = 'exec pt_SplitPage ''TB_ANT '',' +
+          '''ZGUID,ZID,ZNAME,ZPRO_ID,ZIP,ZPYFILE,ZREMARK, ' +
+          'ZDATE,ZSVN,ZVERSION,ZSVN_URL,ZSVN_LATEST_VERSION,ZCOMPILETEXT'',' +
+          '''%s'',20,%d,%d,1,''%s''';
+
+begin
+  //
+  if fLoading then Exit;
+  mywhere := AWhereStr;
+  mySQL := format(glSQL,[
+      'ZDATE',
+      APageIndex,
+      0, //不是取总数
+      mywhere]);
+
+  myb := fLoading;
+  fLoading := True;
+  cdsAntList.DisableControls;
+  ClientSystem.BeginTickCount;
+  ShowProgress('读取数据...',0);
+  try
+    while not cdsAntList.Eof do
+      cdsAntList.Delete;
+      
+    cdstemp.Data := ClientSystem.fDbOpr.ReadDataSet(PChar(mySQL));
+    cdstemp.First;
+    myc := 1;
+    while not cdstemp.Eof do
+    begin
+      cdsAntList.Append;
+      cdsAntList.FieldByName('ZISNEW').AsBoolean := False;
+      cdsAntList.FieldByName('ZINDEX').AsString := inttostr(myc);Inc(myc);
+      for i:=0 to cdstemp.Fields.Count -1 do
+      begin
+        if  cdstemp.Fields[i].FieldName = 'ZID' then
+        begin
+          cdsAntList.FieldByName('ZAUTOID').AsInteger :=
+            cdstemp.FieldByName('ZID').AsInteger;
+        end
+        else begin
+          cdsAntList.FieldByName(cdstemp.Fields[i].FieldName).AsVariant :=
+            cdstemp.FieldByName(cdstemp.Fields[i].FieldName).AsVariant;
+        end;
+      end;
+      cdstemp.Next;
+      cdsAntList.Post;
+    end;
+
+    cdsAntList.First;
+    cdsCloneAntList.CloneCursor(cdsAntList,True);
+  finally
+    cdsAntList.EnableControls;
+    fLoading := myb;
+    HideProgress;
+    ClientSystem.EndTickCount;
+  end;
+end;
+
 { TPySvnThread }
 
 procedure TPySvnThread.BeginAnimate;
@@ -1055,11 +1135,6 @@ begin
   btnEditSVNRUL.Visible := False;
 end;
 
-procedure TAntManageClientDlg.act_ReLoadAntExecute(Sender: TObject);
-begin
-  LoadAnt();
-end;
-
 procedure TAntManageClientDlg.act_ApplyBuildUpdate(Sender: TObject);
 begin
   (Sender as TAction).Enabled := idtcpclnt1.Connected;
@@ -1217,6 +1292,72 @@ begin
     mysl.Free;
     HideProgress;
   end;
+end;
+
+procedure TAntManageClientDlg.act_FirstPageExecute(Sender: TObject);
+begin
+  fPageType.fIndex := 1;
+  LoadAntList(fPageType.fIndex,fPageType.fWhereStr);
+  lblPageCount.Caption := format('%d/%d',[1,
+  fPageType.fIndexCount]);
+end;
+
+procedure TAntManageClientDlg.act_FirstPageUpdate(Sender: TObject);
+begin
+  (Sender as TAction).Enabled := (fPageType.fIndex <> 1) and
+  (fPageType.fIndexCount > 1);
+end;
+
+procedure TAntManageClientDlg.act_ProPageExecute(Sender: TObject);
+begin
+  fPageType.fIndex := fPageType.fIndex -1;
+  LoadAntList(fPageType.fIndex,fPageType.fWhereStr);
+  lblPageCount.Caption := format('%d/%d',[
+      fPageType.fIndex,
+      fPageType.fIndexCount]);
+end;
+
+procedure TAntManageClientDlg.act_ProPageUpdate(Sender: TObject);
+begin
+  (Sender as TAction).Enabled := (fPageType.fIndex > 1) ;
+end;
+
+procedure TAntManageClientDlg.act_NextPageExecute(Sender: TObject);
+begin
+  fPageType.fIndex := fPageType.fIndex +1;
+  LoadAntList(fPageType.fIndex,fPageType.fWhereStr);
+  lblPageCount.Caption := format('%d/%d',[
+      fPageType.fIndex,
+      fPageType.fIndexCount]);
+
+end;
+
+procedure TAntManageClientDlg.act_NextPageUpdate(Sender: TObject);
+begin
+  (Sender as TAction).Enabled := (fPageType.fIndex<fPageType.fIndexCount);
+end;
+
+procedure TAntManageClientDlg.act_LastPageExecute(Sender: TObject);
+begin
+  fPageType.fIndex := fPageType.fIndexCount;
+  LoadAntList(fPageType.fIndex,fPageType.fWhereStr);
+  lblPageCount.Caption := format('%d/%d',[
+      fPageType.fIndex,
+      fPageType.fIndexCount]);
+
+end;
+
+procedure TAntManageClientDlg.act_LastPageUpdate(Sender: TObject);
+begin
+  (Sender as TAction).Enabled := (fPageType.fIndex<fPageType.fIndexCount);
+end;
+
+procedure TAntManageClientDlg.act_RefreshDataExecute(Sender: TObject);
+begin
+  LoadAntList(fPageType.fIndex,fPageType.fWhereStr);
+  lblPageCount.Caption := format('%d/%d',[
+      fPageType.fIndex,
+      fPageType.fIndexCount]);
 end;
 
 end.

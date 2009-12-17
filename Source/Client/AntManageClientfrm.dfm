@@ -1,6 +1,6 @@
 inherited AntManageClientDlg: TAntManageClientDlg
-  Left = 183
-  Top = 83
+  Left = 182
+  Top = 132
   Width = 964
   Height = 607
   Caption = #32534#35793#37096#32626
@@ -36,21 +36,12 @@ inherited AntManageClientDlg: TAntManageClientDlg
           Caption = #22686#21152#39033#30446
           TabOrder = 0
         end
-        object btnReLoadAnt: TBitBtn
-          Left = 113
-          Top = 8
-          Width = 100
-          Height = 25
-          Action = act_ReLoadAnt
-          Caption = #21047#26032#25968#25454
-          TabOrder = 1
-        end
       end
       object dbgrd1: TDBGrid
         Left = 0
         Top = 40
         Width = 948
-        Height = 434
+        Height = 394
         Align = alClient
         DataSource = dsAntList
         Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
@@ -125,6 +116,66 @@ inherited AntManageClientDlg: TAntManageClientDlg
             Width = 80
             Visible = True
           end>
+      end
+      object pnl7: TPanel
+        Left = 0
+        Top = 434
+        Width = 948
+        Height = 40
+        Align = alBottom
+        TabOrder = 2
+        object lblPageCount: TLabel
+          Left = 538
+          Top = 12
+          Width = 96
+          Height = 15
+          Caption = 'lblPageCount'
+        end
+        object BtnFirstPage: TBitBtn
+          Left = 11
+          Top = 8
+          Width = 100
+          Height = 25
+          Action = act_FirstPage
+          Caption = #31532#19968#39029
+          TabOrder = 0
+        end
+        object BtnProPage: TBitBtn
+          Left = 115
+          Top = 8
+          Width = 100
+          Height = 25
+          Action = act_ProPage
+          Caption = #19978#19968#39029
+          TabOrder = 1
+        end
+        object BtnNextPage: TBitBtn
+          Left = 219
+          Top = 8
+          Width = 100
+          Height = 25
+          Action = act_NextPage
+          Caption = #19979#19968#39029
+          TabOrder = 2
+        end
+        object BtnLastPage: TBitBtn
+          Left = 323
+          Top = 8
+          Width = 100
+          Height = 25
+          Action = act_LastPage
+          Caption = #26368#21518#19968#39029
+          TabOrder = 3
+        end
+        object BtnRefreshData: TBitBtn
+          Left = 427
+          Top = 8
+          Width = 100
+          Height = 25
+          Action = act_RefreshData
+          Caption = #21047#26032#25968#25454
+          TabOrder = 4
+        end
       end
     end
     object ts2: TTabSheet
@@ -765,15 +816,18 @@ inherited AntManageClientDlg: TAntManageClientDlg
       OnExecute = act_BuildProjectExecute
     end
     object act_ProAdd: TAction
+      Category = #39033#30446#37197#32622
       Caption = #22686#21152#39033#30446
       OnExecute = act_ProAddExecute
     end
     object act_ProSave: TAction
+      Category = #39033#30446#37197#32622
       Caption = #20445#23384
       OnExecute = act_ProSaveExecute
       OnUpdate = act_ProSaveUpdate
     end
     object act_ProCancel: TAction
+      Category = #39033#30446#37197#32622
       Caption = #21462#28040
       OnExecute = act_ProCancelExecute
       OnUpdate = act_ProCancelUpdate
@@ -829,10 +883,6 @@ inherited AntManageClientDlg: TAntManageClientDlg
       Caption = #20840#37096#39033#30446
       OnExecute = actSvnLog_AllProjectExecute
     end
-    object act_ReLoadAnt: TAction
-      Caption = #21047#26032#25968#25454
-      OnExecute = act_ReLoadAntExecute
-    end
     object act_ApplyBuild: TAction
       Category = #32534#35793
       Caption = '2.'#25105#30003#35831#32534#35793
@@ -848,6 +898,35 @@ inherited AntManageClientDlg: TAntManageClientDlg
       Category = #32534#35793
       Caption = #26816#26597#32467#26524
       OnExecute = act_ShowCompileTextExecute
+    end
+    object act_FirstPage: TAction
+      Category = #39033#30446#37197#32622
+      Caption = #31532#19968#39029
+      OnExecute = act_FirstPageExecute
+      OnUpdate = act_FirstPageUpdate
+    end
+    object act_ProPage: TAction
+      Category = #39033#30446#37197#32622
+      Caption = #19978#19968#39029
+      OnExecute = act_ProPageExecute
+      OnUpdate = act_ProPageUpdate
+    end
+    object act_NextPage: TAction
+      Category = #39033#30446#37197#32622
+      Caption = #19979#19968#39029
+      OnExecute = act_NextPageExecute
+      OnUpdate = act_NextPageUpdate
+    end
+    object act_LastPage: TAction
+      Category = #39033#30446#37197#32622
+      Caption = #26368#21518#19968#39029
+      OnExecute = act_LastPageExecute
+      OnUpdate = act_LastPageUpdate
+    end
+    object act_RefreshData: TAction
+      Category = #39033#30446#37197#32622
+      Caption = #21047#26032#25968#25454
+      OnExecute = act_RefreshDataExecute
     end
   end
   object idtcpclnt1: TIdTCPClient
