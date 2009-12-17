@@ -1,6 +1,11 @@
 program DeveManage;
 
 uses
+  {$ifdef FASTXX}
+  FastMM4,
+  FastCode,
+  FastMove,
+  {$endif}
   SysUtils,
   Windows,
   WinSvc,
