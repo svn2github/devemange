@@ -120,11 +120,7 @@ object Form1: TForm1
     OnClick = btn1Click
   end
   object idtcpsrvr1: TIdTCPServer
-    Bindings = <
-      item
-        IP = '192.168.1.100'
-        Port = 9876
-      end>
+    Bindings = <>
     CommandHandlers = <>
     DefaultPort = 0
     Greeting.NumericCode = 0
@@ -136,8 +132,8 @@ object Form1: TForm1
     ReplyExceptionCode = 0
     ReplyTexts = <>
     ReplyUnknownCommand.NumericCode = 0
-    Left = 232
-    Top = 24
+    Left = 544
+    Top = 208
   end
   object cltrycn1: TCoolTrayIcon
     CycleInterval = 0
