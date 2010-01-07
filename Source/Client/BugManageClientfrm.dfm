@@ -1,6 +1,6 @@
 inherited BugManageDlg: TBugManageDlg
-  Left = 134
-  Top = 71
+  Left = 125
+  Top = 80
   Width = 1040
   Height = 692
   Caption = #38169#35823#31649#29702
@@ -86,7 +86,7 @@ inherited BugManageDlg: TBugManageDlg
             Left = 0
             Top = 55
             Width = 825
-            Height = 438
+            Height = 375
             Align = alClient
             DataSource = dsBugItem
             Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
@@ -434,6 +434,17 @@ inherited BugManageDlg: TBugManageDlg
               TabOrder = 5
             end
           end
+          object dbmmoZTITLE: TDBMemo
+            Left = 0
+            Top = 430
+            Width = 825
+            Height = 63
+            Align = alBottom
+            DataField = 'ZTITLE'
+            DataSource = dsBugItem
+            ScrollBars = ssVertical
+            TabOrder = 3
+          end
         end
       end
       object tsBugContext: TTabSheet
@@ -732,8 +743,8 @@ inherited BugManageDlg: TBugManageDlg
           object lbBugCaption: TLabel
             Left = 0
             Top = 0
-            Width = 749
-            Height = 18
+            Width = 96
+            Height = 15
             Align = alClient
             Caption = 'lbBugCaption'
             Color = clGray

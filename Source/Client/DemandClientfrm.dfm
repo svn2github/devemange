@@ -1,6 +1,6 @@
 inherited DemandClientDlg: TDemandClientDlg
-  Left = 173
-  Top = 98
+  Left = 151
+  Top = 127
   Width = 979
   Caption = #38656#27714#31649#29702
   OldCreateOrder = True
@@ -28,7 +28,7 @@ inherited DemandClientDlg: TDemandClientDlg
         object lbl12: TLabel
           Left = 656
           Top = 12
-          Width = 272
+          Width = 279
           Height = 15
           Caption = #29992#25143#25552#20986#30340#24314#35758', '#21508#22320#26041#30340#25919#31574#24615#35201#27714#12290' '
         end
@@ -125,7 +125,7 @@ inherited DemandClientDlg: TDemandClientDlg
         Left = 0
         Top = 40
         Width = 963
-        Height = 419
+        Height = 329
         Align = alClient
         DataSource = dsDemandList
         Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
@@ -203,6 +203,17 @@ inherited DemandClientDlg: TDemandClientDlg
             Width = 80
             Visible = True
           end>
+      end
+      object dbmmoZCONTENT1: TDBMemo
+        Left = 0
+        Top = 369
+        Width = 963
+        Height = 90
+        Align = alBottom
+        DataField = 'ZCONTENT'
+        DataSource = dsDemandList
+        ScrollBars = ssVertical
+        TabOrder = 3
       end
     end
     object ts2: TTabSheet

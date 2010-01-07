@@ -642,7 +642,6 @@ end;
 procedure TWorkOverTimeClient.act_AddToYesterdayExecute(Sender: TObject);
 var
   mydatetime : TDateTime;
-  myy,mymo,myday : Word;
   mydatetime2 : TDateTime;
   myy2,mymo2,myday2 : Word;
 begin

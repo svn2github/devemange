@@ -872,7 +872,9 @@ begin
     actFile_ChangPasswd.Execute;
     inc(c);
   end;
-  ShowCelander(True);
+  //先将弹出计划日程去掉 2010-01-07
+  chkShowCancel.Checked := False;
+  ShowCelander(False);
 end;
 
 procedure TMainDlg.actPw_GetPwExecute(Sender: TObject);

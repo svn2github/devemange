@@ -184,6 +184,7 @@ type
     act_AllData: TAction;
     btnAllData: TBitBtn;
     dbedtZDEMAND_ID: TDBEdit;
+    dbmmoZTITLE: TDBMemo;
     procedure actBug_AddDirExecute(Sender: TObject);
     procedure tvProjectExpanding(Sender: TObject; Node: TTreeNode;
       var AllowExpansion: Boolean);

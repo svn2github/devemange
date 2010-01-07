@@ -1,6 +1,6 @@
 inherited TestManageChildfrm: TTestManageChildfrm
-  Left = 50
-  Top = 92
+  Left = -2
+  Top = 30
   Width = 1139
   Height = 713
   Caption = #27979#35797#31649#29702
@@ -32,7 +32,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
         Left = 0
         Top = 40
         Width = 1123
-        Height = 501
+        Height = 438
         Align = alClient
         DataSource = dsTestItem
         Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
@@ -274,6 +274,17 @@ inherited TestManageChildfrm: TTestManageChildfrm
           Caption = #20840#37096#25968#25454
           TabOrder = 5
         end
+      end
+      object dbmmoZNAME: TDBMemo
+        Left = 0
+        Top = 478
+        Width = 1123
+        Height = 63
+        Align = alBottom
+        DataField = 'ZNAME'
+        DataSource = dsTestItem
+        ScrollBars = ssVertical
+        TabOrder = 3
       end
     end
     object tsConTent: TTabSheet
@@ -527,7 +538,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
         object lblTitle: TLabel
           Left = 0
           Top = 0
-          Width = 992
+          Width = 64
           Height = 15
           Align = alClient
           Caption = 'lblTitle'

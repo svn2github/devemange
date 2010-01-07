@@ -181,6 +181,7 @@ type
     BtngotoDemand: TBitBtn;
     dbmmoZTESTNOTE: TDBMemo;
     spl2: TSplitter;
+    dbmmoZNAME: TDBMemo;
     procedure act_NewExecute(Sender: TObject);
     procedure act_CancelUpdate(Sender: TObject);
     procedure act_CancelExecute(Sender: TObject);
