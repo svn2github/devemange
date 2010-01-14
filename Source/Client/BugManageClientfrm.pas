@@ -2296,8 +2296,9 @@ const
 begin
   //
   // 权限,只有创建人,可管理人员才能移动
+  // 或测试人员才能移动
   //
-  if (ClientSystem.fEditerType <> etAdmin) and
+  if not (ClientSystem.fEditerType in [etAdmin,etTest]) and
      (cdsBugItem.FieldByName('ZOPENEDBY').AsInteger<>ClientSystem.fEditer_id) then
   begin
     MessageBox(Handle,'只有问题的创建人或管理人才能移动问题','提示',MB_ICONWARNING+MB_OK);
