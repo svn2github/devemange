@@ -283,6 +283,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
         Align = alBottom
         DataField = 'ZNAME'
         DataSource = dsTestItem
+        ReadOnly = True
         ScrollBars = ssVertical
         TabOrder = 3
       end
@@ -312,7 +313,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
           Left = 0
           Top = 40
           Width = 1123
-          Height = 281
+          Height = 279
           Align = alClient
           AllowDelete = False
           AllowInsert = False

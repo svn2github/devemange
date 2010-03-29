@@ -5,6 +5,7 @@ inherited ExtendWebManageDlg: TExtendWebManageDlg
   Caption = #25193#23637#24212#29992#31649#29702
   ClientHeight = 585
   ClientWidth = 645
+  OldCreateOrder = True
   PixelsPerInch = 96
   TextHeight = 15
   object spl1: TSplitter

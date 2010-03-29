@@ -321,10 +321,12 @@ begin
   //º∆À„πÊ‘Ú1;
   mytask := cdsData.FieldByName('ZTaskFraction').AsInteger;
   myTest := cdsData.FieldByName('ZSOCRE').AsInteger;
-  mySvn  := cdsData.FieldByName('ZSvnSubimtCount').AsInteger +
+  mySvn  := cdsData.FieldByName('ZSvnSubimtCount').AsInteger;
+  { +
             cdsData.FieldByName('ZSvnSubimt_M_Count').AsInteger * 0.1 +
             cdsData.FieldByName('ZSvnSubimt_D_Count').AsInteger * 0.1 +
             cdsData.FieldByName('ZSvnSubimt_A_Count').AsInteger * 0.1 ;
+  }
   edt2.Text := FloatToStr(mytask+myTest+mySvn);
 
 end;

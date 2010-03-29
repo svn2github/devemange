@@ -174,7 +174,6 @@ type
     cdsTerm: TClientDataSet;
     dsTerm: TDataSource;
     lbl15: TLabel;
-    dblkcbbZTERMNAME: TDBLookupComboBox;
     actBug_ExportExcel: TAction;
     Excel1: TMenuItem;
     btnBud_AddByDemand: TBitBtn;
@@ -185,6 +184,14 @@ type
     btnAllData: TBitBtn;
     dbedtZDEMAND_ID: TDBEdit;
     dbmmoZTITLE: TDBMemo;
+    actBug_Verify: TAction;
+    lbl16: TLabel;
+    dbedtZVERIF_NAME: TDBEdit;
+    lbl17: TLabel;
+    dbedtZVERIFYDATE: TDBEdit;
+    BtnBug_Verify: TBitBtn;
+    dbedtZNEDDDATE: TDBEdit;
+    BtnSelectedDataTime: TBitBtn;
     procedure actBug_AddDirExecute(Sender: TObject);
     procedure tvProjectExpanding(Sender: TObject; Node: TTreeNode;
       var AllowExpansion: Boolean);
@@ -252,6 +259,9 @@ type
     procedure actBug_GotoDemandUpdate(Sender: TObject);
     procedure act_AllDataExecute(Sender: TObject);
     procedure actBug_GotoDemandExecute(Sender: TObject);
+    procedure actBug_VerifyExecute(Sender: TObject);
+    procedure actBug_VerifyUpdate(Sender: TObject);
+    procedure BtnSelectedDataTimeClick(Sender: TObject);
   private
     fPageType : TPageTypeRec; //分页处理
     fHighQuery : TBugHighQueryDlg;
@@ -283,6 +293,7 @@ uses
   AddBugTreeNodefrm,          {增加BUG项目}
   ClinetSystemUnits,
   Activationfrm,              {激活窗口}
+  TickDateTimefrm,            {选择窗口}
   SelectBugStatusfrm,
   BugAeplyfrm,
   ComObj,
@@ -648,7 +659,7 @@ const
   glSQL = 'exec pt_SplitPage ''TB_BUG_ITEM'',' +
           '''ZPRO_ID,ZID,ZTYPE,ZTITLE,ZOPENEDBY,ZOPENEDDATE,ZASSIGNEDTO,ZRESOLVEDBY,' +
           'ZRESOLUTION,ZRESOLVEDDATE,ZOS,ZLEVEL,ZSTATUS,ZMAILTO,ZOPENVER, ' +
-          'ZRESOLVEDVER,ZTREEPATH,ZTREE_ID,ZASSIGNEDTO,ZASSIGNEDDATE,ZTAGNAME,ZTERM,ZDEMAND_ID'',' +
+          'ZRESOLVEDVER,ZTREEPATH,ZTREE_ID,ZASSIGNEDTO,ZASSIGNEDDATE,ZTAGNAME,ZTERM,ZDEMAND_ID,ZNEDDDATE,ZVERIFYDATE,ZVERIFYED,ZVERIFNAME'',' +
           '''%s'',20,%d,%d,1,''%s''';
   //                                             页码,以总数=1, 条件where
 begin
@@ -769,6 +780,20 @@ begin
           FieldKind := fkLookup;
           KeyFields := 'ZTERM';
           LookupDataSet := cdsTerm;
+          LookupKeyFields := 'ZID';
+          LookupResultField := 'ZNAME';
+        end;
+
+        //审核人
+        myfield := FieldDefs.AddFieldDef;
+        myfield.Name :='ZVERIF_NAME';
+        myfield.DataType := ftString;
+        myfield.Size := 50;
+        with myfield.CreateField(cdsBugItem) do
+        begin
+          FieldKind := fkLookup;
+          KeyFields := 'ZVERIFNAME';
+          LookupDataSet := DM.cdsUserAll;
           LookupKeyFields := 'ZID';
           LookupResultField := 'ZNAME';
         end;
@@ -1157,6 +1182,7 @@ begin
   DataSet.FieldByName('ZRESOLUTION').AsInteger := -1; //解决方案
   DataSet.FieldByName('ZMAILTO').AsString := Format('%s(%d)',[ClientSystem.fEditer,ClientSystem.fEditer_id]);
   DataSet.FieldByName('ZDEMAND_ID').AsInteger := -1;
+  DataSet.FieldByName('ZNEDDDATE').AsDateTime := ClientSystem.fDbOpr.GetSysDateTime;
 end;
 
 procedure TBugManageDlg.actBug_AddBugExecute(Sender: TObject);
@@ -1226,7 +1252,11 @@ const
             'ZLASTEDITEDBY=%d , ' +
             'ZLASTEDITEDDATE=getdate(),' +
             'ZDEMAND_ID=%d, '  +
-            'ZTAGNAME=''%s'' ' +
+            'ZTAGNAME=''%s'', ' +
+            'ZNEDDDATE=''%s'', ' +
+            'ZVERIFYDATE=''%s'', ' +
+            'ZVERIFYED=%d ,' +
+            'ZVERIFNAME=%d ' +
             'where ZID=%d';
 begin
   //
@@ -1251,6 +1281,11 @@ begin
       ClientSystem.fEditer_id,
       DataSet.FieldByName('ZDEMAND_ID').AsInteger,
       DataSet.FieldByName('ZTAGNAME').AsString,
+      //要求日期
+      DateToStr(StrToDateDef(DataSet.FieldByName('ZNEDDDATE').AsString,StrToDate('2008-1-1'))),
+      DateToStr(StrToDateDef(DataSet.FieldByName('ZVERIFYDATE').AsString,StrToDate('2008-1-1'))),
+      Ord(DataSet.FieldByName('ZVERIFYED').AsBoolean),
+      DataSet.FieldByName('ZVERIFNAME').AsInteger,
       DataSet.FieldByName('ZID').AsInteger]);
 
     ClientSystem.fDbOpr.BeginTrans;
@@ -1339,6 +1374,8 @@ begin
 end;
 
 procedure TBugManageDlg.actBugHistory_AddExecute(Sender: TObject);
+var
+  myfilename : string;
 begin
   cdsBugHistory.DisableControls;
   try
@@ -1355,7 +1392,8 @@ begin
         cdsBugHistory.DisableControls;
         Exit;
       end;
-      cdsBugHistory.FieldByName('ZFILEPATH').AsString := edPath.Text;
+      myfilename := edPath.Text;
+      cdsBugHistory.FieldByName('ZFILEPATH').AsString := myfilename;
     finally
       free;
     end;
@@ -2708,6 +2746,41 @@ begin
   myZId := cdsBugItem.FieldByName('ZDEMAND_ID').AsInteger;
   if myZId = -1 then Exit;
   SendMessage(Application.MainForm.Handle,gcMSG_GetDemandItem,myZId,0);
+end;
+
+procedure TBugManageDlg.actBug_VerifyExecute(Sender: TObject);
+begin
+  if MessageBox(Handle,'审核吗?','提示',MB_ICONQUESTION+MB_YESNO)=IDNO then
+    Exit;
+  if not (cdsBugItem.State in [dsEdit,dsInsert]) then
+    cdsBugItem.Edit;
+  cdsBugItem.FieldByName('ZVERIFYED').AsBoolean := True;
+  cdsBugItem.FieldByName('ZVERIFNAME').AsInteger := ClientSystem.fEditer_id;
+  cdsBugItem.FieldByName('ZVERIFYDATE').AsDateTime := ClientSystem.fDbOpr.GetSysDateTime;
+
+end;
+
+procedure TBugManageDlg.actBug_VerifyUpdate(Sender: TObject);
+begin
+  (Sender as TAction).Enabled :=
+    (cdsBugItem.FieldByName('ZSTATUS').AsInteger = Ord(bgsDeath)) and
+    not cdsBugItem.FieldByName('ZVERIFYED').AsBoolean and
+    not (cdsBugHistory.State in [dsEdit,dsInsert]);
+end;
+
+procedure TBugManageDlg.BtnSelectedDataTimeClick(Sender: TObject);
+var
+  myform : TTickDateTimeDlg;
+begin
+  myform := TTickDateTimeDlg.Create(nil);
+  myform.cal1.Date := Now();
+  if myform.ShowModal = mrOk then
+  begin
+    if not (cdsBugItem.State in [dsEdit,dsInsert]) then
+      cdsBugItem.Edit;
+    cdsBugItem.FieldByName('ZNEDDDATE').AsDateTime := myform.cal1.Date;
+  end;
+  myform.Free;
 end;
 
 end.

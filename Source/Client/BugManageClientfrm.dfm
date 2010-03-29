@@ -1,6 +1,6 @@
 inherited BugManageDlg: TBugManageDlg
-  Left = 125
-  Top = 37
+  Left = 86
+  Top = 99
   Width = 1040
   Height = 692
   Caption = #38169#35823#31649#29702
@@ -157,7 +157,7 @@ inherited BugManageDlg: TBugManageDlg
               end
               item
                 Expanded = False
-                FieldName = 'ZTERMNAME'
+                FieldName = 'ZNEDDDATE'
                 Title.Alignment = taCenter
                 Title.Caption = #35201#27714#26399#38480
                 Width = 70
@@ -442,6 +442,7 @@ inherited BugManageDlg: TBugManageDlg
             Align = alBottom
             DataField = 'ZTITLE'
             DataSource = dsBugItem
+            ReadOnly = True
             ScrollBars = ssVertical
             TabOrder = 3
           end
@@ -452,7 +453,7 @@ inherited BugManageDlg: TBugManageDlg
         ImageIndex = 1
         object Splitter2: TSplitter
           Left = 0
-          Top = 208
+          Top = 229
           Width = 1024
           Height = 10
           Cursor = crVSplit
@@ -462,9 +463,9 @@ inherited BugManageDlg: TBugManageDlg
         end
         object plBugHistory: TPanel
           Left = 0
-          Top = 218
+          Top = 239
           Width = 1024
-          Height = 315
+          Height = 294
           Align = alClient
           BevelOuter = bvNone
           TabOrder = 0
@@ -546,7 +547,7 @@ inherited BugManageDlg: TBugManageDlg
               TabOrder = 4
             end
             object DBNavigator1: TDBNavigator
-              Left = 826
+              Left = 839
               Top = 8
               Width = 176
               Height = 25
@@ -560,7 +561,7 @@ inherited BugManageDlg: TBugManageDlg
             Left = 0
             Top = 40
             Width = 1024
-            Height = 275
+            Height = 254
             Align = alClient
             BevelOuter = bvLowered
             Caption = 'Panel1'
@@ -569,12 +570,12 @@ inherited BugManageDlg: TBugManageDlg
               Left = 1
               Top = 1
               Width = 1022
-              Height = 273
+              Height = 252
               Align = alClient
               AllowDelete = False
               AllowInsert = False
               DataSource = dsBugBugHistory
-              PanelHeight = 91
+              PanelHeight = 84
               PanelWidth = 1005
               TabOrder = 0
               SelectedColor = clMoneyGreen
@@ -628,7 +629,7 @@ inherited BugManageDlg: TBugManageDlg
               end
               object Label11: TLabel
                 Left = 301
-                Top = 68
+                Top = 61
                 Width = 38
                 Height = 15
                 Anchors = [akLeft, akBottom]
@@ -636,7 +637,7 @@ inherited BugManageDlg: TBugManageDlg
               end
               object DBText3: TDBText
                 Left = 343
-                Top = 68
+                Top = 61
                 Width = 476
                 Height = 17
                 Cursor = crHandPoint
@@ -657,7 +658,7 @@ inherited BugManageDlg: TBugManageDlg
               end
               object Label12: TLabel
                 Left = 7
-                Top = 67
+                Top = 60
                 Width = 45
                 Height = 15
                 Anchors = [akLeft, akBottom]
@@ -665,7 +666,7 @@ inherited BugManageDlg: TBugManageDlg
               end
               object DBText4: TDBText
                 Left = 52
-                Top = 67
+                Top = 60
                 Width = 195
                 Height = 17
                 Anchors = [akLeft, akBottom]
@@ -701,7 +702,7 @@ inherited BugManageDlg: TBugManageDlg
               end
               object dbtxtZFILESAVE: TDBText
                 Left = 861
-                Top = 68
+                Top = 61
                 Width = 89
                 Height = 17
                 Cursor = crHandPoint
@@ -721,7 +722,7 @@ inherited BugManageDlg: TBugManageDlg
                 Left = 7
                 Top = 22
                 Width = 987
-                Height = 41
+                Height = 34
                 Anchors = [akLeft, akTop, akRight, akBottom]
                 DataField = 'ZCONTEXT'
                 DataSource = dsBugBugHistory
@@ -743,8 +744,8 @@ inherited BugManageDlg: TBugManageDlg
           object lbBugCaption: TLabel
             Left = 0
             Top = 0
-            Width = 96
-            Height = 15
+            Width = 749
+            Height = 18
             Align = alClient
             Caption = 'lbBugCaption'
             Color = clGray
@@ -797,7 +798,7 @@ inherited BugManageDlg: TBugManageDlg
           Left = 0
           Top = 18
           Width = 1024
-          Height = 190
+          Height = 211
           Align = alTop
           Color = clBtnFace
           ParentColor = False
@@ -907,6 +908,20 @@ inherited BugManageDlg: TBugManageDlg
             Height = 15
             Caption = #35201#27714#26399#38480#65306
           end
+          object lbl16: TLabel
+            Left = 24
+            Top = 184
+            Width = 60
+            Height = 15
+            Caption = #23457#26680#20154#65306
+          end
+          object lbl17: TLabel
+            Left = 210
+            Top = 184
+            Width = 40
+            Height = 15
+            Caption = #26102#38388#65306
+          end
           object dblkcbbZOS: TDBLookupComboBox
             Left = 88
             Top = 70
@@ -935,7 +950,7 @@ inherited BugManageDlg: TBugManageDlg
           object dblkcbbZOPENVER: TDBLookupComboBox
             Left = 547
             Top = 12
-            Width = 145
+            Width = 169
             Height = 23
             DataField = 'ZOPENVER'
             DataSource = dsBugItem
@@ -949,7 +964,7 @@ inherited BugManageDlg: TBugManageDlg
           object dbedtZTITLE: TDBEdit
             Left = 88
             Top = 41
-            Width = 603
+            Width = 626
             Height = 23
             DataField = 'ZTITLE'
             DataSource = dsBugItem
@@ -972,7 +987,7 @@ inherited BugManageDlg: TBugManageDlg
           object dblkcbbZTYPE: TDBLookupComboBox
             Left = 549
             Top = 70
-            Width = 144
+            Width = 167
             Height = 23
             DataField = 'ZTYPE'
             DataSource = dsBugItem
@@ -1095,7 +1110,7 @@ inherited BugManageDlg: TBugManageDlg
           object dbedtZRESOLVEDDATE: TDBEdit
             Left = 565
             Top = 151
-            Width = 128
+            Width = 148
             Height = 23
             Color = clScrollBar
             DataField = 'ZRESOLVEDDATE'
@@ -1107,7 +1122,7 @@ inherited BugManageDlg: TBugManageDlg
           object dblkcbbSelectUsermail: TDBLookupComboBox
             Left = 550
             Top = 124
-            Width = 144
+            Width = 166
             Height = 23
             DropDownRows = 25
             KeyField = 'ZID'
@@ -1116,24 +1131,14 @@ inherited BugManageDlg: TBugManageDlg
             TabOrder = 17
             OnCloseUp = dblkcbbSelectUsermailCloseUp
           end
-          object dblkcbbZTERMNAME: TDBLookupComboBox
-            Left = 549
-            Top = 98
-            Width = 145
-            Height = 23
-            DataField = 'ZTERMNAME'
-            DataSource = dsBugItem
-            ImeName = #26497#21697#20116#31508#36755#20837#27861
-            TabOrder = 18
-          end
           object btnBug_GotoDemand: TBitBtn
             Left = 728
-            Top = 134
+            Top = 126
             Width = 100
             Height = 25
             Action = actBug_GotoDemand
             Caption = #36339#21040#30456#20851#38656#27714
-            TabOrder = 19
+            TabOrder = 18
           end
           object dbedtZDEMAND_ID: TDBEdit
             Left = 834
@@ -1142,7 +1147,52 @@ inherited BugManageDlg: TBugManageDlg
             Height = 23
             DataField = 'ZDEMAND_ID'
             DataSource = dsBugItem
+            TabOrder = 19
+          end
+          object dbedtZVERIF_NAME: TDBEdit
+            Left = 88
+            Top = 181
+            Width = 114
+            Height = 23
+            DataField = 'ZVERIF_NAME'
+            DataSource = dsBugItem
             TabOrder = 20
+          end
+          object dbedtZVERIFYDATE: TDBEdit
+            Left = 252
+            Top = 180
+            Width = 164
+            Height = 23
+            DataField = 'ZVERIFYDATE'
+            DataSource = dsBugItem
+            TabOrder = 21
+          end
+          object BtnBug_Verify: TBitBtn
+            Left = 730
+            Top = 177
+            Width = 100
+            Height = 25
+            Action = actBug_Verify
+            Caption = #25105#26469#23457#26680
+            TabOrder = 22
+          end
+          object dbedtZNEDDDATE: TDBEdit
+            Left = 549
+            Top = 96
+            Width = 142
+            Height = 23
+            DataField = 'ZNEDDDATE'
+            DataSource = dsBugItem
+            TabOrder = 23
+          end
+          object BtnSelectedDataTime: TBitBtn
+            Left = 693
+            Top = 96
+            Width = 21
+            Height = 23
+            Caption = 'D'
+            TabOrder = 24
+            OnClick = BtnSelectedDataTimeClick
           end
         end
       end
@@ -1340,6 +1390,12 @@ inherited BugManageDlg: TBugManageDlg
       Category = #38382#39064#21015#34920
       Caption = #20840#37096#25968#25454
       OnExecute = act_AllDataExecute
+    end
+    object actBug_Verify: TAction
+      Category = #38382#39064#21015#34920
+      Caption = #23457#26680
+      OnExecute = actBug_VerifyExecute
+      OnUpdate = actBug_VerifyUpdate
     end
   end
   object pmBugTree: TPopupMenu

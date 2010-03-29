@@ -212,6 +212,7 @@ inherited DemandClientDlg: TDemandClientDlg
         Align = alBottom
         DataField = 'ZCONTENT'
         DataSource = dsDemandList
+        ReadOnly = True
         ScrollBars = ssVertical
         TabOrder = 3
       end
