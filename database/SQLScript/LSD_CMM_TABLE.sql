@@ -341,7 +341,12 @@ create table TB_BUG_ITEM(
 	ZOVERFRACTION  bit not null default 0 ,                   /*=True表示已记过分了*/ 
 	ZTAGNAME       varchar(100),                              /*标签 多个标签采用;号分开 */ 
 	ZTERM          int ,                                      /*要求期限(6)*/
-	ZDEMAND_ID     int default -1,                            /*需求ID号*/  
+	ZDEMAND_ID     int default -1,                            /*需求ID号*/ 
+	ZNEDDDATE      datetime,                                  /*要求时间 要求期限暂时无用*/
+	ZVERIFYDATE    datetime,                                  /*审核时间*/
+	ZVERIFYED      bit not null default 0 ,                   /*是否已审核过了*/
+	ZVERIFNAME     int,                                       /*审核人*/
+  
 	
 	constraint PK_TB_BUG_ITEM primary key(ZID desc,ZTREE_ID)   
 )
