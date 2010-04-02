@@ -185,13 +185,14 @@ type
     dbedtZDEMAND_ID: TDBEdit;
     dbmmoZTITLE: TDBMemo;
     actBug_Verify: TAction;
+    dbedtZNEDDDATE: TDBEdit;
+    BtnSelectedDataTime: TBitBtn;
+    grp1: TGroupBox;
+    BtnBug_Verify: TBitBtn;
     lbl16: TLabel;
     dbedtZVERIF_NAME: TDBEdit;
     lbl17: TLabel;
     dbedtZVERIFYDATE: TDBEdit;
-    BtnBug_Verify: TBitBtn;
-    dbedtZNEDDDATE: TDBEdit;
-    BtnSelectedDataTime: TBitBtn;
     procedure actBug_AddDirExecute(Sender: TObject);
     procedure tvProjectExpanding(Sender: TObject; Node: TTreeNode;
       var AllowExpansion: Boolean);
@@ -1696,22 +1697,25 @@ begin
     ClientSystem.fDbOpr.BeginTrans;
     ShowProgress('保存...',0);
     try
-      ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
-      mySQL := format(glSQL3,[
-        DataSet.FieldByName('ZUSER_ID').Asinteger,
-        DataSet.FieldByName('ZSTATUS').Asinteger,
-        cdsBugItem.FieldByName('ZRESOLVEDBY').Asinteger,
-        cdsBugItem.FieldByName('ZRESOLUTION').Asinteger,
-        cdsBugItem.FieldByName('ZRESOLVEDVER').Asinteger,
-        DataSet.FieldByName('ZBUG_ID').Asinteger]);
+      try
+        ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
+        mySQL := format(glSQL3,[
+          DataSet.FieldByName('ZUSER_ID').Asinteger,
+          DataSet.FieldByName('ZSTATUS').Asinteger,
+          cdsBugItem.FieldByName('ZRESOLVEDBY').Asinteger,
+          cdsBugItem.FieldByName('ZRESOLUTION').Asinteger,
+          cdsBugItem.FieldByName('ZRESOLVEDVER').Asinteger,
+          cdsBugItem.FieldByName('ZMAILTO').AsString,
+          DataSet.FieldByName('ZBUG_ID').Asinteger]);
 
-      ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
-      ClientSystem.fDbOpr.CommitTrans;
-    except
+        ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
+        ClientSystem.fDbOpr.CommitTrans;
+      except
+        ClientSystem.fDbOpr.RollbackTrans;
+      end;
+    finally
       HideProgress;
-      ClientSystem.fDbOpr.RollbackTrans;
     end;
-    
   end
   //新增回复
   else begin
@@ -1915,6 +1919,11 @@ begin
   begin
     dgBugItem.Canvas.Font.Color := clblue;
   end;
+
+  if cdsBugItem.FieldByName('ZVERIFYED').AsBoolean and(Column.Index = Ord(bcTitle)) then
+  begin
+    dgBugItem.Canvas.Font.Style := [fsBold];
+  end;
   
   case Column.Index of
     Ord(bcWhoBuild) :
@@ -1964,7 +1973,6 @@ begin
       cdsBugItem.FieldByName('ZTITLE').AsString);
 
     dgBugItem.Canvas.FrameRect(Rect);
-   
   end;
 
 end;

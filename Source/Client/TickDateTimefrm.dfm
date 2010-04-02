@@ -1,9 +1,11 @@
 inherited TickDateTimeDlg: TTickDateTimeDlg
   Left = 423
   Top = 350
-  Width = 358
-  Height = 262
+  BorderStyle = bsDialog
   Caption = #36873#21462#26085#26399#26102#38388
+  ClientHeight = 228
+  ClientWidth = 350
+  OldCreateOrder = True
   Position = poMainFormCenter
   PixelsPerInch = 96
   TextHeight = 15
@@ -12,7 +14,7 @@ inherited TickDateTimeDlg: TTickDateTimeDlg
     Top = 1
     Width = 330
     Height = 185
-    Date = 40028.361811875000000000
+    Date = 40028.404341724530000000
     TabOrder = 0
   end
   object btn1: TBitBtn

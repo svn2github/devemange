@@ -1,6 +1,6 @@
 inherited BugManageDlg: TBugManageDlg
-  Left = 86
-  Top = 99
+  Left = 94
+  Top = 49
   Width = 1040
   Height = 692
   Caption = #38169#35823#31649#29702
@@ -453,7 +453,7 @@ inherited BugManageDlg: TBugManageDlg
         ImageIndex = 1
         object Splitter2: TSplitter
           Left = 0
-          Top = 229
+          Top = 201
           Width = 1024
           Height = 10
           Cursor = crVSplit
@@ -463,9 +463,9 @@ inherited BugManageDlg: TBugManageDlg
         end
         object plBugHistory: TPanel
           Left = 0
-          Top = 239
+          Top = 211
           Width = 1024
-          Height = 294
+          Height = 322
           Align = alClient
           BevelOuter = bvNone
           TabOrder = 0
@@ -561,7 +561,7 @@ inherited BugManageDlg: TBugManageDlg
             Left = 0
             Top = 40
             Width = 1024
-            Height = 254
+            Height = 282
             Align = alClient
             BevelOuter = bvLowered
             Caption = 'Panel1'
@@ -570,12 +570,12 @@ inherited BugManageDlg: TBugManageDlg
               Left = 1
               Top = 1
               Width = 1022
-              Height = 252
+              Height = 280
               Align = alClient
               AllowDelete = False
               AllowInsert = False
               DataSource = dsBugBugHistory
-              PanelHeight = 84
+              PanelHeight = 93
               PanelWidth = 1005
               TabOrder = 0
               SelectedColor = clMoneyGreen
@@ -629,7 +629,7 @@ inherited BugManageDlg: TBugManageDlg
               end
               object Label11: TLabel
                 Left = 301
-                Top = 61
+                Top = 70
                 Width = 38
                 Height = 15
                 Anchors = [akLeft, akBottom]
@@ -637,7 +637,7 @@ inherited BugManageDlg: TBugManageDlg
               end
               object DBText3: TDBText
                 Left = 343
-                Top = 61
+                Top = 70
                 Width = 476
                 Height = 17
                 Cursor = crHandPoint
@@ -658,7 +658,7 @@ inherited BugManageDlg: TBugManageDlg
               end
               object Label12: TLabel
                 Left = 7
-                Top = 60
+                Top = 69
                 Width = 45
                 Height = 15
                 Anchors = [akLeft, akBottom]
@@ -666,7 +666,7 @@ inherited BugManageDlg: TBugManageDlg
               end
               object DBText4: TDBText
                 Left = 52
-                Top = 60
+                Top = 69
                 Width = 195
                 Height = 17
                 Anchors = [akLeft, akBottom]
@@ -702,7 +702,7 @@ inherited BugManageDlg: TBugManageDlg
               end
               object dbtxtZFILESAVE: TDBText
                 Left = 861
-                Top = 61
+                Top = 70
                 Width = 89
                 Height = 17
                 Cursor = crHandPoint
@@ -722,11 +722,10 @@ inherited BugManageDlg: TBugManageDlg
                 Left = 7
                 Top = 22
                 Width = 987
-                Height = 34
+                Height = 43
                 Anchors = [akLeft, akTop, akRight, akBottom]
                 DataField = 'ZCONTEXT'
                 DataSource = dsBugBugHistory
-                ImeName = #26497#21697#20116#31508#36755#20837#27861
                 ScrollBars = ssVertical
                 TabOrder = 0
               end
@@ -798,132 +797,118 @@ inherited BugManageDlg: TBugManageDlg
           Left = 0
           Top = 18
           Width = 1024
-          Height = 211
+          Height = 183
           Align = alTop
           Color = clBtnFace
           ParentColor = False
           TabOrder = 2
           object lbl1: TLabel
-            Left = 15
+            Left = 6
             Top = 75
             Width = 68
             Height = 15
             Caption = #25805#20316#31995#32479':'
           end
           object lbl2: TLabel
-            Left = 15
+            Left = 6
             Top = 45
             Width = 75
             Height = 15
             Caption = #38382#39064#26631#39064#65306
           end
           object lbl3: TLabel
-            Left = 18
+            Left = 9
             Top = 15
             Width = 77
             Height = 15
             Caption = #39033'    '#30446#65306
           end
           object lbl4: TLabel
-            Left = 447
+            Left = 438
             Top = 15
             Width = 105
             Height = 15
             Caption = #20986#38382#39064#30340#29256#26412#65306
           end
           object lbl5: TLabel
-            Left = 248
+            Left = 239
             Top = 73
             Width = 75
             Height = 15
             Caption = #38382#39064#31561#32423#65306
           end
           object lbl6: TLabel
-            Left = 473
+            Left = 464
             Top = 73
             Width = 75
             Height = 15
             Caption = #38382#39064#31867#22411#65306
           end
           object lbl7: TLabel
-            Left = 27
+            Left = 18
             Top = 101
             Width = 60
             Height = 15
             Caption = #25351#27966#32473#65306
           end
           object lbl8: TLabel
-            Left = 12
+            Left = 3
             Top = 126
             Width = 75
             Height = 15
             Caption = #37038#20214#36890#30693#65306
           end
           object lbl9: TLabel
-            Left = 247
+            Left = 238
             Top = 101
             Width = 75
             Height = 15
             Caption = #25351#27966#26102#38388#65306
           end
           object lbl10: TLabel
-            Left = 27
+            Left = 18
             Top = 156
             Width = 60
             Height = 15
             Caption = #35299#20915#20154#65306
           end
           object lbl11: TLabel
-            Left = 210
+            Left = 201
             Top = 156
             Width = 45
             Height = 15
             Caption = #26041#26696#65306
           end
           object lbl12: TLabel
-            Left = 370
+            Left = 361
             Top = 156
             Width = 45
             Height = 15
             Caption = #29256#26412#65306
           end
           object lbl13: TLabel
-            Left = 524
+            Left = 515
             Top = 156
             Width = 45
             Height = 15
             Caption = #26102#38388#65306
           end
           object lbl14: TLabel
-            Left = 523
+            Left = 514
             Top = 129
             Width = 24
             Height = 15
             Caption = '<<<'
           end
           object lbl15: TLabel
-            Left = 475
+            Left = 466
             Top = 101
             Width = 75
             Height = 15
             Caption = #35201#27714#26399#38480#65306
           end
-          object lbl16: TLabel
-            Left = 24
-            Top = 184
-            Width = 60
-            Height = 15
-            Caption = #23457#26680#20154#65306
-          end
-          object lbl17: TLabel
-            Left = 210
-            Top = 184
-            Width = 40
-            Height = 15
-            Caption = #26102#38388#65306
-          end
           object dblkcbbZOS: TDBLookupComboBox
-            Left = 88
+            Left = 79
             Top = 70
             Width = 153
             Height = 23
@@ -936,7 +921,7 @@ inherited BugManageDlg: TBugManageDlg
             TabOrder = 0
           end
           object dbedtZTREEPATH: TDBEdit
-            Left = 88
+            Left = 79
             Top = 12
             Width = 345
             Height = 23
@@ -948,7 +933,7 @@ inherited BugManageDlg: TBugManageDlg
             TabOrder = 1
           end
           object dblkcbbZOPENVER: TDBLookupComboBox
-            Left = 547
+            Left = 538
             Top = 12
             Width = 169
             Height = 23
@@ -962,7 +947,7 @@ inherited BugManageDlg: TBugManageDlg
             TabOrder = 2
           end
           object dbedtZTITLE: TDBEdit
-            Left = 88
+            Left = 79
             Top = 41
             Width = 626
             Height = 23
@@ -972,7 +957,7 @@ inherited BugManageDlg: TBugManageDlg
             TabOrder = 3
           end
           object dblkcbbZLEVEL: TDBLookupComboBox
-            Left = 318
+            Left = 309
             Top = 70
             Width = 146
             Height = 23
@@ -985,7 +970,7 @@ inherited BugManageDlg: TBugManageDlg
             TabOrder = 4
           end
           object dblkcbbZTYPE: TDBLookupComboBox
-            Left = 549
+            Left = 540
             Top = 70
             Width = 167
             Height = 23
@@ -998,7 +983,7 @@ inherited BugManageDlg: TBugManageDlg
             TabOrder = 5
           end
           object btnBugItem_Save: TBitBtn
-            Left = 728
+            Left = 713
             Top = 10
             Width = 100
             Height = 25
@@ -1007,7 +992,7 @@ inherited BugManageDlg: TBugManageDlg
             TabOrder = 6
           end
           object btnBugItem_Cancel: TBitBtn
-            Left = 728
+            Left = 713
             Top = 39
             Width = 100
             Height = 25
@@ -1016,7 +1001,7 @@ inherited BugManageDlg: TBugManageDlg
             TabOrder = 7
           end
           object dblkcbbZASSIGNEDTO: TDBLookupComboBox
-            Left = 88
+            Left = 79
             Top = 98
             Width = 153
             Height = 23
@@ -1030,7 +1015,7 @@ inherited BugManageDlg: TBugManageDlg
             OnCloseUp = dblkcbbSelectUsermailCloseUp
           end
           object dbedtZMAILTO: TDBEdit
-            Left = 88
+            Left = 79
             Top = 124
             Width = 433
             Height = 23
@@ -1041,7 +1026,7 @@ inherited BugManageDlg: TBugManageDlg
             TabOrder = 9
           end
           object dbedtZASSIGNEDDATE: TDBEdit
-            Left = 318
+            Left = 309
             Top = 98
             Width = 146
             Height = 23
@@ -1051,21 +1036,20 @@ inherited BugManageDlg: TBugManageDlg
             TabOrder = 10
           end
           object dbedtZRESOLVEDNAME: TDBEdit
-            Left = 88
+            Left = 79
             Top = 154
             Width = 114
             Height = 23
             Color = clScrollBar
             DataField = 'ZRESOLVEDNAME'
             DataSource = dsBugItem
-            ImeName = #26497#21697#20116#31508#36755#20837#27861
             ReadOnly = True
             TabOrder = 11
           end
           object dbedtZRESOLUTIONNAME: TDBEdit
-            Left = 255
+            Left = 246
             Top = 153
-            Width = 102
+            Width = 108
             Height = 23
             Color = clScrollBar
             DataField = 'ZRESOLUTIONNAME'
@@ -1075,7 +1059,7 @@ inherited BugManageDlg: TBugManageDlg
             TabOrder = 12
           end
           object dblkcbbZRESOLVEDVER: TDBLookupComboBox
-            Left = 413
+            Left = 404
             Top = 153
             Width = 108
             Height = 23
@@ -1090,7 +1074,7 @@ inherited BugManageDlg: TBugManageDlg
             TabOrder = 13
           end
           object btnBugHistory_PrivBug: TBitBtn
-            Left = 728
+            Left = 713
             Top = 68
             Width = 100
             Height = 25
@@ -1099,7 +1083,7 @@ inherited BugManageDlg: TBugManageDlg
             TabOrder = 14
           end
           object btnBugHistory_NextBug: TBitBtn
-            Left = 728
+            Left = 713
             Top = 97
             Width = 100
             Height = 25
@@ -1108,7 +1092,7 @@ inherited BugManageDlg: TBugManageDlg
             TabOrder = 15
           end
           object dbedtZRESOLVEDDATE: TDBEdit
-            Left = 565
+            Left = 556
             Top = 151
             Width = 148
             Height = 23
@@ -1120,7 +1104,7 @@ inherited BugManageDlg: TBugManageDlg
             TabOrder = 16
           end
           object dblkcbbSelectUsermail: TDBLookupComboBox
-            Left = 550
+            Left = 541
             Top = 124
             Width = 166
             Height = 23
@@ -1132,7 +1116,7 @@ inherited BugManageDlg: TBugManageDlg
             OnCloseUp = dblkcbbSelectUsermailCloseUp
           end
           object btnBug_GotoDemand: TBitBtn
-            Left = 728
+            Left = 713
             Top = 126
             Width = 100
             Height = 25
@@ -1141,58 +1125,82 @@ inherited BugManageDlg: TBugManageDlg
             TabOrder = 18
           end
           object dbedtZDEMAND_ID: TDBEdit
-            Left = 834
-            Top = 135
-            Width = 60
+            Left = 714
+            Top = 153
+            Width = 47
             Height = 23
             DataField = 'ZDEMAND_ID'
             DataSource = dsBugItem
             TabOrder = 19
           end
-          object dbedtZVERIF_NAME: TDBEdit
-            Left = 88
-            Top = 181
-            Width = 114
-            Height = 23
-            DataField = 'ZVERIF_NAME'
-            DataSource = dsBugItem
-            TabOrder = 20
-          end
-          object dbedtZVERIFYDATE: TDBEdit
-            Left = 252
-            Top = 180
-            Width = 164
-            Height = 23
-            DataField = 'ZVERIFYDATE'
-            DataSource = dsBugItem
-            TabOrder = 21
-          end
-          object BtnBug_Verify: TBitBtn
-            Left = 730
-            Top = 177
-            Width = 100
-            Height = 25
-            Action = actBug_Verify
-            Caption = #25105#26469#23457#26680
-            TabOrder = 22
-          end
           object dbedtZNEDDDATE: TDBEdit
-            Left = 549
+            Left = 540
             Top = 96
             Width = 142
             Height = 23
             DataField = 'ZNEDDDATE'
             DataSource = dsBugItem
-            TabOrder = 23
+            TabOrder = 20
           end
           object BtnSelectedDataTime: TBitBtn
-            Left = 693
+            Left = 685
             Top = 96
             Width = 21
             Height = 23
             Caption = 'D'
-            TabOrder = 24
+            TabOrder = 21
             OnClick = BtnSelectedDataTimeClick
+          end
+          object grp1: TGroupBox
+            Left = 823
+            Top = 7
+            Width = 121
+            Height = 168
+            Caption = #23457#26680
+            TabOrder = 22
+            object lbl16: TLabel
+              Left = 4
+              Top = 23
+              Width = 60
+              Height = 15
+              Caption = #23457#26680#20154#65306
+            end
+            object lbl17: TLabel
+              Left = 7
+              Top = 70
+              Width = 45
+              Height = 15
+              Caption = #26102#38388#65306
+            end
+            object BtnBug_Verify: TBitBtn
+              Left = 10
+              Top = 131
+              Width = 100
+              Height = 25
+              Action = actBug_Verify
+              Caption = #23457#26680
+              TabOrder = 0
+            end
+            object dbedtZVERIF_NAME: TDBEdit
+              Left = 6
+              Top = 42
+              Width = 109
+              Height = 23
+              Color = clScrollBar
+              DataField = 'ZVERIF_NAME'
+              DataSource = dsBugItem
+              TabOrder = 1
+            end
+            object dbedtZVERIFYDATE: TDBEdit
+              Left = 6
+              Top = 91
+              Width = 109
+              Height = 23
+              Color = clScrollBar
+              DataField = 'ZVERIFYDATE'
+              DataSource = dsBugItem
+              TabOrder = 2
+            end
           end
         end
       end
