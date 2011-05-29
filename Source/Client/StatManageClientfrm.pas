@@ -321,6 +321,7 @@ begin
   //计算规则1;
   mytask := cdsData.FieldByName('ZTaskFraction').AsInteger;
   myTest := cdsData.FieldByName('ZSOCRE').AsInteger;
+  //这地方可能有重复的svn名称,怎么办??
   mySvn  := cdsData.FieldByName('ZSvnSubimtCount').AsInteger;
   { +
             cdsData.FieldByName('ZSvnSubimt_M_Count').AsInteger * 0.1 +

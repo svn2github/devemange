@@ -1589,8 +1589,11 @@ begin
         if not (cdsTask.State in [dsEdit,dsInsert]) then
           cdsTask.Edit;
         cdsTask.FieldByName('ZSTATUS').AsInteger := Ord(tsClose);
-        cdsTask.FieldByName('ZCLOSEDATE').AsDateTime := ClientSystem.SysNow;
-            //formatdatetime('yyyy-mm-dd hh:ss:mm',ClientSystem.SysNow);
+        //关闭的时间为评分的时间
+        cdsTask.FieldByName('ZCLOSEDATE').AsDateTime :=
+          cdsTask.FieldByName('').AsDateTime;
+        //cdsTask.FieldByName('ZCLOSEDATE').AsDateTime := ClientSystem.SysNow;
+        //formatdatetime('yyyy-mm-dd hh:ss:mm',ClientSystem.SysNow);
         cdsTask.Post;
         //执行邮件通知
         UpdateProgressTitle('邮件通知...');

@@ -30,7 +30,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
       Top = 1
       Width = 954
       Height = 478
-      ActivePage = tsProjectList
+      ActivePage = tsTask
       Align = alClient
       MultiLine = True
       TabOrder = 0
