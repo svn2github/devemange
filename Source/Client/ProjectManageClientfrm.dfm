@@ -1,6 +1,6 @@
 inherited ProjectManageClientDlg: TProjectManageClientDlg
-  Left = 41
-  Top = 91
+  Left = 39
+  Top = 133
   Width = 1231
   Height = 585
   Caption = #39033#30446#31649#29702
@@ -802,52 +802,23 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
             object tsUser: TTabSheet
               Caption = #25191#34892#20154
               ImageIndex = 1
-              object dgUser: TDBGrid
-                Left = 0
+              object spl1: TSplitter
+                Left = 257
                 Top = 0
-                Width = 205
                 Height = 358
-                Align = alLeft
-                DataSource = dsTaskUser
-                Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
-                ReadOnly = True
-                TabOrder = 0
-                TitleFont.Charset = GB2312_CHARSET
-                TitleFont.Color = clWindowText
-                TitleFont.Height = -15
-                TitleFont.Name = #23435#20307
-                TitleFont.Style = []
-                Columns = <
-                  item
-                    Alignment = taRightJustify
-                    Expanded = False
-                    FieldName = 'ZUSER_ID'
-                    Title.Alignment = taCenter
-                    Title.Caption = 'UID'
-                    Width = 40
-                    Visible = True
-                  end
-                  item
-                    Expanded = False
-                    FieldName = 'ZUSERNAME'
-                    Title.Alignment = taCenter
-                    Title.Caption = #22995#21517
-                    Width = 141
-                    Visible = True
-                  end>
               end
               object plUserRight: TPanel
-                Left = 205
+                Left = 260
                 Top = 0
-                Width = 589
+                Width = 534
                 Height = 358
                 Align = alClient
                 BevelOuter = bvNone
-                TabOrder = 1
+                TabOrder = 0
                 object plUserBottom: TPanel
                   Left = 0
                   Top = 285
-                  Width = 589
+                  Width = 534
                   Height = 73
                   Align = alBottom
                   BevelOuter = bvNone
@@ -912,7 +883,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
                 object plScore: TPanel
                   Left = 0
                   Top = 0
-                  Width = 589
+                  Width = 534
                   Height = 285
                   Align = alClient
                   BevelOuter = bvNone
@@ -1075,6 +1046,61 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
                     ScrollBars = ssVertical
                     TabOrder = 6
                   end
+                end
+              end
+              object pnlLeft: TPanel
+                Left = 0
+                Top = 0
+                Width = 257
+                Height = 358
+                Align = alLeft
+                BevelOuter = bvNone
+                Caption = 'pnlLeft'
+                TabOrder = 1
+                object dbgrdUser: TDBGrid
+                  Left = 0
+                  Top = 0
+                  Width = 257
+                  Height = 97
+                  Align = alTop
+                  DataSource = dsTaskUser
+                  Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
+                  ReadOnly = True
+                  TabOrder = 0
+                  TitleFont.Charset = GB2312_CHARSET
+                  TitleFont.Color = clWindowText
+                  TitleFont.Height = -15
+                  TitleFont.Name = #23435#20307
+                  TitleFont.Style = []
+                  Columns = <
+                    item
+                      Alignment = taRightJustify
+                      Expanded = False
+                      FieldName = 'ZUSER_ID'
+                      Title.Alignment = taCenter
+                      Title.Caption = 'UID'
+                      Width = 40
+                      Visible = True
+                    end
+                    item
+                      Expanded = False
+                      FieldName = 'ZUSERNAME'
+                      Title.Alignment = taCenter
+                      Title.Caption = #22995#21517
+                      Width = 141
+                      Visible = True
+                    end>
+                end
+                object dbmmoZDESIGN: TDBMemo
+                  Left = 0
+                  Top = 97
+                  Width = 257
+                  Height = 261
+                  Align = alClient
+                  DataField = 'ZDESIGN'
+                  DataSource = dsTask
+                  ScrollBars = ssBoth
+                  TabOrder = 1
                 end
               end
             end

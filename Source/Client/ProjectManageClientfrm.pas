@@ -117,7 +117,6 @@ type
     DBMDesign: TDBMemo;
     DBMTestCase: TDBMemo;
     tsUser: TTabSheet;
-    dgUser: TDBGrid;
     tsPlan: TTabSheet;
     actTask_to: TAction;
     BitBtn13: TBitBtn;
@@ -224,6 +223,10 @@ type
     dbtxtZCLOSEDATE: TDBText;
     dtpCloseDate: TDateTimePicker;
     chkCloseDate: TCheckBox;
+    pnlLeft: TPanel;
+    dbgrdUser: TDBGrid;
+    dbmmoZDESIGN: TDBMemo;
+    spl1: TSplitter;
     procedure actPro_AddExecute(Sender: TObject);
     procedure cbEditProItemClick(Sender: TObject);
     procedure actPro_AddUpdate(Sender: TObject);
