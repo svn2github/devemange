@@ -1,6 +1,6 @@
 inherited AntManageClientDlg: TAntManageClientDlg
   Left = 182
-  Top = 132
+  Top = 131
   Width = 964
   Height = 607
   Caption = #32534#35793#37096#32626

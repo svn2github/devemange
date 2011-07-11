@@ -42,8 +42,6 @@ type
     Label7: TLabel;
     Label10: TLabel;
     Label11: TLabel;
-    lbl2: TLabel;
-    dtpDate: TDateTimePicker;
     lbl3: TLabel;
     lbl4: TLabel;
     lbl5: TLabel;

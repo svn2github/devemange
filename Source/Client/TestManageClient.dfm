@@ -1,6 +1,6 @@
 inherited TestManageChildfrm: TTestManageChildfrm
   Left = 141
-  Top = 57
+  Top = 25
   Width = 1139
   Height = 713
   Caption = #27979#35797#31649#29702
@@ -313,7 +313,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
           Left = 0
           Top = 40
           Width = 1123
-          Height = 279
+          Height = 281
           Align = alClient
           AllowDelete = False
           AllowInsert = False

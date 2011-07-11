@@ -9,6 +9,7 @@
 //   增加svn  的日志显示功能 作者:龙仕云 2009-1-18
 //   修改编译时可以指定要编译的版本号 作者:龙仕云 2009-11-19
 //   修改增加分页处理，因为项目现在多起来了 作者:龙仕云 2009-12-17
+//   找不到Base64.pas文件，编译错误，2011-6-9
 //
 //
 //
@@ -248,7 +249,7 @@ const
 implementation
 uses
   DmUints,
-  Base64,
+  EncdDecd,{Base64, 不知为什么没有Base64 作者:龙仕云 2011-6-9}
   ClinetSystemUnits, Mainfrm;
 
 {$R *.dfm}
@@ -1238,7 +1239,7 @@ begin
   //保存结果
   ShowProgress('保存中...',0);
   try
-    mySQL := Format(glSQL,[Encode(lstResult.Items.Text),
+    mySQL := Format(glSQL,[EncodeString(lstResult.Items.Text),
       cdsAntList.FieldByName('ZGUID').AsString]);
     ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
   finally
@@ -1269,7 +1270,7 @@ begin
       Exit;
     end;
 
-    mysl.Text := Decode(myVarint);
+    mysl.Text := DecodeString(myVarint);
     lstErrors.Clear;
     lstResult.Clear;
 

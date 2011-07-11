@@ -222,6 +222,8 @@ type
     actTask_FindWho: TAction;
     lbl4: TLabel;
     dbtxtZCLOSEDATE: TDBText;
+    dtpCloseDate: TDateTimePicker;
+    chkCloseDate: TCheckBox;
     procedure actPro_AddExecute(Sender: TObject);
     procedure cbEditProItemClick(Sender: TObject);
     procedure actPro_AddUpdate(Sender: TObject);
@@ -1589,10 +1591,7 @@ begin
         if not (cdsTask.State in [dsEdit,dsInsert]) then
           cdsTask.Edit;
         cdsTask.FieldByName('ZSTATUS').AsInteger := Ord(tsClose);
-        //关闭的时间为评分的时间
-        cdsTask.FieldByName('ZCLOSEDATE').AsDateTime :=
-          cdsTask.FieldByName('').AsDateTime;
-        //cdsTask.FieldByName('ZCLOSEDATE').AsDateTime := ClientSystem.SysNow;
+        cdsTask.FieldByName('ZCLOSEDATE').AsDateTime := ClientSystem.SysNow;
         //formatdatetime('yyyy-mm-dd hh:ss:mm',ClientSystem.SysNow);
         cdsTask.Post;
         //执行邮件通知
@@ -1690,13 +1689,19 @@ begin
           cdsTaskUser.FieldByName('ZRATE').AsFloat := 2 //现在加班的系统变为2
         else
           cdsTaskUser.FieldByName('ZRATE').AsFloat := 1;
-        myfrom.dtpDate.Date := ClientSystem.SysNow;
         if myfrom.ShowModal() = mrOK then
         begin
           cdsTaskUser.FieldByName('ZTASKSCORE').AsFloat := myfrom.fTaskScore;
           cdsTaskUser.FieldByName('ZSCORE').AsFloat :=
             myfrom.fTaskScore{cdsTaskUser.FieldByName('ZTASKSCORE').AsFloat} * cdsTaskUser.FieldByName('ZRATE').AsFloat;
-          cdsTaskUser.FieldByName('ZSCOREDATE').AsDateTime := myfrom.dtpDate.Date;//ClientSystem.SysNow;
+          //统一评分时间 作者:龙仕云
+          if chkCloseDate.Checked then
+          begin
+            cdsTaskUser.FieldByName('ZSCOREDATE').AsDateTime := dtpCloseDate.DateTime;//ClientSystem.SysNow;
+          end
+          else
+            cdsTaskUser.FieldByName('ZSCOREDATE').AsDateTime := ClientSystem.SysNow;
+          //end
           cdsTaskUser.FieldByName('ZREMASK').AsString := cdsTaskUser.FieldByName('ZREMASK').AsString + #13#10 +
             myfrom.fScoreStr;
 

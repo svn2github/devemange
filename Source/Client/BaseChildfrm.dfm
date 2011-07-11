@@ -1,6 +1,6 @@
 object BaseChildDlg: TBaseChildDlg
   Left = 288
-  Top = 130
+  Top = 98
   Width = 870
   Height = 640
   Caption = 'BaseChildDlg'

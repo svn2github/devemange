@@ -1,6 +1,6 @@
 inherited TaskScoreDlg: TTaskScoreDlg
-  Left = 338
-  Top = 79
+  Left = 370
+  Top = 124
   BorderStyle = bsDialog
   Caption = #20219#21153#35780#20998
   ClientHeight = 659
@@ -121,13 +121,6 @@ inherited TaskScoreDlg: TTaskScoreDlg
     Height = 15
     Caption = '%'
   end
-  object lbl2: TLabel
-    Left = 15
-    Top = 621
-    Width = 75
-    Height = 15
-    Caption = #35780#20998#26102#38388#65306
-  end
   object lbl3: TLabel
     Left = 200
     Top = 110
@@ -153,8 +146,8 @@ inherited TaskScoreDlg: TTaskScoreDlg
   object lbl6: TLabel
     Left = 48
     Top = 264
-    Width = 440
-    Height = 45
+    Width = 431
+    Height = 60
     Caption = 
       '1.'#20219#21153#21333#26159#28857#20889#25353#35268#26684#26469','#25552#20132#30340'svn'#26159#21542#25353#35268#26684#26469','#20195#30721#26816#26597#21518#26377#27809#26377#25353#35268#21017#26469#20889#13#10'2.'#25552#20132#30340#20195#30721#21040'svn'#26381#21153#22120#32534#35793#20986#38169#20943' 2%.' +
       #13#10
@@ -170,8 +163,8 @@ inherited TaskScoreDlg: TTaskScoreDlg
   object lbl8: TLabel
     Left = 80
     Top = 58
-    Width = 256
-    Height = 34
+    Width = 237
+    Height = 45
     Caption = #22914#20170#22825#27809#26377#29992#20363#25552#20132' '#26368#22810#21482#33021' 25%'#13#10#22914#20170#22825#27809#26377'svn'#25552#20132' '#26368#22810#21482#33021' 20 %'#13#10
   end
   object BitBtn1: TBitBtn
@@ -337,14 +330,5 @@ inherited TaskScoreDlg: TTaskScoreDlg
     Height = 23
     TabOrder = 17
     Text = '15'
-  end
-  object dtpDate: TDateTimePicker
-    Left = 88
-    Top = 618
-    Width = 133
-    Height = 23
-    Date = 40028.372069224540000000
-    Time = 40028.372069224540000000
-    TabOrder = 18
   end
 end
