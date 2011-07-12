@@ -1,6 +1,6 @@
 inherited ProjectManageClientDlg: TProjectManageClientDlg
-  Left = 39
-  Top = 133
+  Left = 312
+  Top = 106
   Width = 1231
   Height = 585
   Caption = #39033#30446#31649#29702
@@ -533,11 +533,29 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
           Align = alLeft
           BevelOuter = bvNone
           TabOrder = 2
+          object spl2: TSplitter
+            Left = 0
+            Top = 49
+            Width = 401
+            Height = 3
+            Cursor = crVSplit
+            Align = alBottom
+          end
+          object lbl5: TLabel
+            Left = 0
+            Top = 331
+            Width = 401
+            Height = 15
+            Align = alBottom
+            Caption = #32479#35745':'
+            Color = clMoneyGreen
+            ParentColor = False
+          end
           object dgTaskList: TDBGrid
             Left = 0
             Top = 0
             Width = 401
-            Height = 346
+            Height = 49
             Align = alClient
             DataSource = dsTask
             Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
@@ -560,10 +578,9 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
               end
               item
                 Expanded = False
-                FieldName = 'ZDATE'
-                Title.Alignment = taCenter
-                Title.Caption = #26085#26399
-                Width = 85
+                FieldName = 'ZBEGINDATE'
+                Title.Caption = #26085#24535#26085#26399
+                Width = 70
                 Visible = True
               end
               item
@@ -581,6 +598,14 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
                 Title.Caption = #29366#24577
                 Width = 50
                 Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'ZDATE'
+                Title.Alignment = taCenter
+                Title.Caption = #26085#26399
+                Width = 85
+                Visible = True
               end>
           end
           object pnlTaskListBottom: TPanel
@@ -589,6 +614,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
             Width = 401
             Height = 40
             Align = alBottom
+            BevelOuter = bvNone
             TabOrder = 1
             object lblPage: TLabel
               Left = 334
@@ -634,6 +660,90 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
               TabOrder = 3
             end
           end
+          object dbgrdResult: TDBGrid
+            Left = 0
+            Top = 52
+            Width = 401
+            Height = 176
+            Align = alBottom
+            DataSource = dsToDayResult
+            Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
+            ReadOnly = True
+            TabOrder = 2
+            TitleFont.Charset = GB2312_CHARSET
+            TitleFont.Color = clWindowText
+            TitleFont.Height = -15
+            TitleFont.Name = #23435#20307
+            TitleFont.Style = []
+            Columns = <
+              item
+                Expanded = False
+                FieldName = 'ZCONTENTID'
+                Title.Alignment = taCenter
+                Title.Caption = #20869#23481'ID'
+                Width = 70
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'ZCONTENT'
+                Title.Alignment = taCenter
+                Title.Caption = #26631#39064
+                Width = 300
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'ZUSER_NAME'
+                Title.Alignment = taCenter
+                Title.Caption = #36129#29486#20154
+                Width = 80
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'ZDATETIME'
+                Title.Alignment = taCenter
+                Title.Caption = #36129#29486#26102#38388
+                Width = 100
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'ZNOTETEXT'
+                Title.Alignment = taCenter
+                Title.Caption = #21407#22240#20107#30001
+                Width = 250
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'ZTYPENAME'
+                Title.Alignment = taCenter
+                Title.Caption = #31867#22411
+                Width = 60
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'ZWRITERNAME'
+                Title.Alignment = taCenter
+                Title.Caption = #35841#25253#21151#20030#25253
+                Width = 80
+                Visible = True
+              end>
+          end
+          object dbmmoZCONTENT: TDBMemo
+            Left = 0
+            Top = 228
+            Width = 401
+            Height = 103
+            Align = alBottom
+            DataField = 'ZCONTENT'
+            DataSource = dsToDayResult
+            ScrollBars = ssBoth
+            TabOrder = 3
+          end
         end
         object plTaskContext: TPanel
           Left = 411
@@ -648,7 +758,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
             Top = 0
             Width = 802
             Height = 386
-            ActivePage = tsUser
+            ActivePage = tsDesign
             Align = alClient
             TabOrder = 0
             TabPosition = tpBottom
@@ -1110,7 +1220,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
               object Splitter2: TSplitter
                 Left = 0
                 Top = 169
-                Width = 527
+                Width = 794
                 Height = 10
                 Cursor = crVSplit
                 Align = alTop
@@ -1120,7 +1230,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
               object DBGrid1: TDBGrid
                 Left = 0
                 Top = 0
-                Width = 527
+                Width = 794
                 Height = 169
                 Align = alTop
                 DataSource = dsTaskItem
@@ -1162,7 +1272,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
               object dbmItemDeign: TDBMemo
                 Left = 0
                 Top = 179
-                Width = 527
+                Width = 794
                 Height = 139
                 Align = alClient
                 DataField = 'ZDESIGN'
@@ -1175,7 +1285,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
               object plTaskItemBottom: TPanel
                 Left = 0
                 Top = 318
-                Width = 527
+                Width = 794
                 Height = 40
                 Align = alBottom
                 BevelOuter = bvNone
@@ -1220,9 +1330,9 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
                 object Label11: TLabel
                   Left = 16
                   Top = 163
-                  Width = 105
+                  Width = 75
                   Height = 15
-                  Caption = #20219#21153#24320#22987#26102#38388#65306
+                  Caption = #26085#24535#26085#26399#65306
                 end
                 object Label7: TLabel
                   Left = 16
@@ -1798,5 +1908,33 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
     DataSet = cdsUser
     Left = 609
     Top = 37
+  end
+  object cdsToDayResult: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 648
+    Top = 8
+  end
+  object dsToDayResult: TDataSource
+    DataSet = cdsToDayResult
+    Left = 648
+    Top = 40
+  end
+  object cdsTYPE: TClientDataSet
+    Active = True
+    Aggregates = <>
+    Params = <>
+    Left = 680
+    Top = 8
+    Data = {
+      400000009619E0BD0100000018000000020000000000030000004000035A4944
+      0400010000000000055A4E414D45010049000000010005574944544802000200
+      14000000}
+    object intgrfldcds1ZID: TIntegerField
+      FieldName = 'ZID'
+    end
+    object strngfldcds1ZNAME: TStringField
+      FieldName = 'ZNAME'
+    end
   end
 end

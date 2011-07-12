@@ -4,7 +4,8 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, BaseDialogfrm, StdCtrls, Buttons, Mask, DBCtrls, DB, DBClient;
+  Dialogs, BaseDialogfrm, StdCtrls, Buttons, Mask, DBCtrls, DB, DBClient,
+  ComCtrls;
 
 type
   TNewTaskDlg = class(TBaseDialog)
@@ -40,6 +41,8 @@ type
     cdsCloneProjectName: TClientDataSet;
     dsCloneProjectName: TDataSource;
     dbtxtVer: TDBText;
+    dtp1: TDateTimePicker;
+    lbl1: TLabel;
   private
     { Private declarations }
   public

@@ -227,6 +227,15 @@ type
     dbgrdUser: TDBGrid;
     dbmmoZDESIGN: TDBMemo;
     spl1: TSplitter;
+    spl2: TSplitter;
+    cdsToDayResult: TClientDataSet;
+    dsToDayResult: TDataSource;
+    cdsTYPE: TClientDataSet;
+    intgrfldcds1ZID: TIntegerField;
+    strngfldcds1ZNAME: TStringField;
+    dbgrdResult: TDBGrid;
+    lbl5: TLabel;
+    dbmmoZCONTENT: TDBMemo;
     procedure actPro_AddExecute(Sender: TObject);
     procedure cbEditProItemClick(Sender: TObject);
     procedure actPro_AddUpdate(Sender: TObject);
@@ -309,6 +318,10 @@ type
     function  GetTaskItemPageCount(APageIndex:integer;AWhereStr:String):integer; //取出页总数
     procedure LoadTaskItem(APageIndex:integer;Awhere:String); //加载任务单
     function BuildCode_Task():String; //生成任务单号
+
+    //贡献
+    procedure LoadToDayResult(AUserID:Integer;ADateTime:TDateTime);
+
   public
     procedure initBase; override;
     procedure freeBase; override;
@@ -454,6 +467,31 @@ begin
   cdsCheckName.Filter   := 'not (ZCHECKTASK=0)';
   cdsCheckName.Filtered := True;
   cdsUser.CloneCursor(DM.cdsUser,True);
+
+  cdsTYPE.Append;
+  cdsTYPE.FieldByName('ZID').AsInteger := 0;
+  cdsTYPE.FieldByName('ZNAME').AsString := '测试用例';
+  cdsTYPE.Post;
+
+  cdsTYPE.Append;
+  cdsTYPE.FieldByName('ZID').AsInteger := 1;
+  cdsTYPE.FieldByName('ZNAME').AsString := 'BUG';
+  cdsTYPE.Post;
+
+  cdsTYPE.Append;
+  cdsTYPE.FieldByName('ZID').AsInteger := 2;
+  cdsTYPE.FieldByName('ZNAME').AsString := 'SVN';
+  cdsTYPE.Post;
+
+  cdsTYPE.Append;
+  cdsTYPE.FieldByName('ZID').AsInteger := 3;
+  cdsTYPE.FieldByName('ZNAME').AsString := '报功';
+  cdsTYPE.Post;
+
+  cdsTYPE.Append;
+  cdsTYPE.FieldByName('ZID').AsInteger := 4;
+  cdsTYPE.FieldByName('ZNAME').AsString := '举报';
+  cdsTYPE.Post;
 
 
   LoadProjectItem();
@@ -1035,6 +1073,7 @@ begin
     cdsTask.Append;
     if myform.ShowModal() = mrOK then
     begin
+
       Application.ProcessMessages;
       //项目的版本号
       cdsTask.FieldByName('ZPRO_VERSION_ID').AsInteger := myform.cdsCloneProjectName.FieldByname('ZHIGHVERID').AsInteger;
@@ -1051,8 +1090,13 @@ begin
         cdsTaskUser.Post;
 
         cdsTask.FieldByName('ZSTATUS').AsInteger := Ord(tsing);
-        cdsTask.FieldByName('ZBEGINDATE').AsString :=
-          formatdatetime('yyyy-mm-dd hh:ss:mm',ClientSystem.SysNow);
+        //cdsTask.FieldByName('ZBEGINDATE').AsString :=
+        //  formatdatetime('yyyy-mm-dd hh:ss:mm',ClientSystem.SysNow);
+
+        //指定日期 作者：龙仕云
+        //myform.dtp1.
+        cdsTask.FieldByName('ZBEGINDATE').AsString := formatdatetime('yyyy-mm-dd',myform.dtp1.Date);
+        //end
       end;
       cdsTask.Post;
 
@@ -1061,10 +1105,10 @@ begin
       begin
         ShowProgress('邮件通知...',0);
         try
-          cdsTask.Edit;
-          cdsTask.FieldByName('ZBEGINDATE').AsString :=
-          formatdatetime('yyyy-mm-dd hh:ss:mm',ClientSystem.SysNow);
-          cdsTask.Post;
+          //cdsTask.Edit;
+          //cdsTask.FieldByName('ZBEGINDATE').AsString :=
+          //formatdatetime('yyyy-mm-dd hh:ss:mm',ClientSystem.SysNow);
+          //cdsTask.Post;
           ClientSystem.fDbOpr.MailTo(1,cdsTask.FieldByName('ZCODE').AsString,-1);
         finally
           HideProgress;
@@ -1370,6 +1414,12 @@ begin
       mycds.Free;
       cdsTaskItem.EnableConstraints;
     end;
+
+    //贡献统计
+    fLoading := False;
+    LoadToDayResult(DataSet.fieldByName('ZUSER_ID').AsInteger,
+      DataSet.fieldByName('ZBEGINDATE').AsDateTime
+      );
 
   finally
     fLoading := myb;
@@ -2078,6 +2128,242 @@ begin
     dgProVersion.Canvas.Brush.Color := clSilver;
 
   dgProVersion.DefaultDrawColumnCell(Rect,DataCol,Column,State);
+end;
+
+procedure TProjectManageClientDlg.LoadToDayResult(AUserID: Integer;
+  ADateTime: TDateTime);
+var
+  mySQL  : string;
+  i : integer;
+  myfield : TFieldDef;
+  myDataSet : TClientDataSet;
+  myb : Boolean;
+  mywhere : String;
+  mykind : Integer;
+  myUserType : Integer;
+
+  mycount14,mycount15,mycount16,mycount17,mycount18 : Integer;
+
+const
+  glSQL = 'exec pt_SplitPage ''TB_TODAYRESULT'',' +
+          '''ZID,ZTYPE,ZUSER_ID,ZDATETIME,ZCONTENTID,ZCONTENT,ZNOTE, ' +
+          'ZWRITER,ZACTION'',' +
+          '''%s'',200,%d,%d,1,''%s''';
+          // 页码,以总数=1, 条件where
+  glSQL2 = 'exec pt_ToDayResult %d,%d,''%s''';
+begin
+
+  if fLoading then Exit;
+  mywhere :=  Format('ZUSER_ID=%d and ZDATETIME=''''%s''''',
+      [AUserID,DateToStr(ADateTime)]);
+
+  mySQL := format(glSQL,[
+      'ZID',
+      1,
+      0, //不是取总数
+      mywhere]);
+
+  ClientSystem.BeginTickCount;
+  myb := fLoading;
+  fLoading := True;
+  myDataSet := TClientDataSet.Create(nil);
+  try
+    myDataSet.Data := ClientSystem.fDbOpr.ReadDataSet(PChar(mySQL));
+
+    if cdsToDayResult.Fields.Count=0 then
+      with cdsToDayResult do
+      begin
+        Fields.Clear;
+        FieldDefs.Assign(myDataSet.FieldDefs);
+        myfield := FieldDefs.AddFieldDef;
+        myfield.Name :='ZISNEW';
+        myfield.DataType := ftBoolean;
+
+        myfield := FieldDefs.AddFieldDef;
+        myfield.Name :='ZMYID';
+        myfield.DataType := ftInteger;
+
+        for i:=0 to FieldDefs.Count -1 do
+        begin
+          FieldDefs[i].CreateField(cdsToDayResult).Alignment := taLeftJustify;
+        end;
+
+        //谁贡献的
+        myfield := FieldDefs.AddFieldDef;
+        myfield.Name :='ZUSER_NAME';
+        myfield.DataType := ftString;
+        myfield.Size := 50;
+        with myfield.CreateField(cdsToDayResult) do
+        begin
+          FieldKind := fkLookup;
+          KeyFields := 'ZUSER_ID';
+          LookupDataSet := DM.cdsUserAll;
+          LookupKeyFields := 'ZID';
+          LookupResultField := 'ZNAME';
+        end;
+
+        //谁加功的
+        myfield := FieldDefs.AddFieldDef;
+        myfield.Name :='ZWRITERNAME';
+        myfield.DataType := ftString;
+        myfield.Size := 50;
+        with myfield.CreateField(cdsToDayResult) do
+        begin
+          FieldKind := fkLookup;
+          KeyFields := 'ZWRITER';
+          LookupDataSet := DM.cdsUserAll;
+          LookupKeyFields := 'ZID';
+          LookupResultField := 'ZNAME';
+        end;
+
+        //类型
+        myfield := FieldDefs.AddFieldDef;
+        myfield.Name :='ZTYPENAME';
+        myfield.DataType := ftString;
+        myfield.Size := 50;
+        with myfield.CreateField(cdsToDayResult) do
+        begin
+          FieldKind := fkLookup;
+          KeyFields := 'ZTYPE';
+          LookupDataSet := cdsTYPE;
+          LookupKeyFields := 'ZID';
+          LookupResultField := 'ZNAME';
+        end;
+
+        //
+        myField := cdsToDayResult.FieldDefs.AddFieldDef ;
+        myField.Name := 'ZNOTETEXT';
+        myField.DataType := ftString;
+        myField.Size := 4000;
+        with myfield.CreateField(cdsToDayResult) do
+        begin
+          FieldKind := fkCalculated;
+        end;
+
+        CreateDataSet;
+      end
+    else begin
+      cdsToDayResult.DisableControls;
+      try
+        while not cdsToDayResult.IsEmpty do cdsToDayResult.Delete;
+      finally
+        cdsToDayResult.EnableControls;
+      end;
+    end;
+
+    //统计各内容
+    cdsToDayResult.DisableControls;
+    try
+
+      myDataSet.First;
+      while not myDataSet.Eof do
+      begin
+        cdsToDayResult.Append;
+        cdsToDayResult.FieldByName('ZISNEW').AsBoolean := False;
+        for i:=0 to myDataSet.FieldDefs.Count -1 do
+        begin
+          if myDataSet.FieldDefs[i].Name = 'ZID' then
+            cdsToDayResult.FieldByName('ZMYID').asInteger :=
+              myDataSet.FieldByName('ZID').asInteger
+          else
+            cdsToDayResult.FieldByName(myDataSet.FieldDefs[i].Name).AsVariant :=
+              myDataSet.FieldByName(myDataSet.FieldDefs[i].Name).AsVariant;
+        end;
+        cdsToDayResult.Post;
+        myDataSet.Next;
+      end;
+
+      //SVN Bug
+      mykind := 1;
+      mySQL := Format(glSQL2,[AUserID,
+        mykind,
+        DateToStr(ADateTime)]);
+
+      if DM.cdsUserAll.Locate('ZID',AUserID,[loPartialKey]) then
+        myUserType := DM.cdsUserAll.FieldByName('ZTYPE').AsInteger
+      else
+        myUserType := 3;
+
+      myDataSet.Data := ClientSystem.fDbOpr.ReadDataSet(pchar(mySQL));
+      myDataSet.First;
+      while not myDataSet.Eof do
+      begin
+        cdsToDayResult.Append;
+        cdsToDayResult.FieldByName('ZISNEW').AsBoolean := False;
+        cdsToDayResult.FieldByName('ZMYID').asInteger := -1;
+        cdsToDayResult.FieldByName('ZWRITER').AsInteger := -1;
+        cdsToDayResult.FieldByName('ZTYPE').AsInteger := myDataSet.FieldByName('ZTYPE').AsInteger;
+        //类型 0=测试用例 1=bug 2=svn 3=报功 4=举报
+        case myDataSet.FieldByName('ZTYPE').AsInteger of
+          0:
+            if TEditerType(myUserType) in [etAdmin,etDeve] then
+              cdsToDayResult.FieldByName('ZUSER_ID').AsInteger := myDataSet.FieldByName('ZOPEN_USER_ID').AsInteger
+            else
+              cdsToDayResult.FieldByName('ZUSER_ID').AsInteger := myDataSet.FieldByName('ZCLOSE_USER_ID').AsInteger;
+          1:
+           if TEditerType(myUserType) in [etAdmin,etDeve] then
+              cdsToDayResult.FieldByName('ZUSER_ID').AsInteger := myDataSet.FieldByName('ZCLOSE_USER_ID').AsInteger
+            else
+              cdsToDayResult.FieldByName('ZUSER_ID').AsInteger := myDataSet.FieldByName('ZOPEN_USER_ID').AsInteger;
+
+          2:cdsToDayResult.FieldByName('ZUSER_ID').AsInteger := myDataSet.FieldByName('ZOPEN_USER_ID').AsInteger;
+        end;
+
+        cdsToDayResult.FieldByName('ZCONTENTID').AsInteger := myDataSet.FieldByName('ZCONTENTID').AsInteger;
+        cdsToDayResult.FieldByName('ZCONTENT').AsString := myDataSet.FieldByName('ZCONTENT').AsString;
+        cdsToDayResult.FieldByName('ZACTION').AsInteger := myDataSet.FieldByName('ZACTION').AsInteger;
+        cdsToDayResult.FieldByName('ZDATETIME').AsDateTime := ADateTime;
+
+        if cdsToDayResult.FieldByName('ZUSER_ID').AsInteger >=0 then
+          cdsToDayResult.Post
+        else
+          cdsToDayResult.Cancel;
+        myDataSet.Next;
+      end;
+
+      //统计
+      mycount14 := 0;mycount15:=0;mycount16:=0;mycount17:=0;mycount18:=0;
+      cdsToDayResult.First;
+      while not cdsToDayResult.Eof do
+      begin
+        if cdsToDayResult.FieldByName('ZACTION').AsInteger = 0 then
+        begin
+          if cdsToDayResult.FieldByName('ZTYPE').AsInteger = 0 then  //用例
+            inc(mycount15)
+          else
+            inc(mycount16);
+        end
+        else begin
+          //0=测试用例 1=bug 2=svn 3=报功 4=举报
+          case cdsToDayResult.FieldByName('ZTYPE').AsInteger of
+            0: Inc(mycount14);
+            1: Inc(mycount17);
+            2: Inc(mycount18);
+          end;
+        end;
+        cdsToDayResult.Next;
+      end;
+      lbl5.Caption := format('统计: 提交测试=%d 提交BUG=%d SVN提交=%d',[mycount14,mycount17,
+        mycount18]);
+      {
+      lbl14.Caption := IntToStr(mycount14);
+      lbl15.Caption := IntToStr(mycount15);
+      lbl16.Caption := IntToStr(mycount16);
+      lbl17.Caption := IntToStr(mycount17);
+      lbl18.Caption := IntToStr(mycount18);
+      }
+
+      cdsToDayResult.First;
+    finally
+      cdsToDayResult.EnableControls;
+    end;
+
+  finally
+    myDataSet.Free;
+    fLoading :=myb;
+    ClientSystem.EndTickCount;
+    HideProgress;
+  end;
 end;
 
 end.

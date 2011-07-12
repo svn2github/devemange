@@ -72,7 +72,7 @@ inherited NewTaskDlg: TNewTaskDlg
     object Label10: TLabel
       Left = 372
       Top = 51
-      Width = 55
+      Width = 60
       Height = 15
       Caption = #29256#26412#21495#65306
     end
@@ -229,14 +229,21 @@ inherited NewTaskDlg: TNewTaskDlg
     TabOrder = 4
     object Label11: TLabel
       Left = 16
-      Top = 29
+      Top = 25
       Width = 83
       Height = 15
       Caption = #25351#23450#23457#26680#20154':'
     end
+    object lbl1: TLabel
+      Left = 353
+      Top = 49
+      Width = 75
+      Height = 15
+      Caption = #26085#24535#26085#26399#65306
+    end
     object dblkcbbName: TDBLookupComboBox
       Left = 112
-      Top = 24
+      Top = 20
       Width = 203
       Height = 23
       DataField = 'ZCHECKNAME'
@@ -248,7 +255,7 @@ inherited NewTaskDlg: TNewTaskDlg
     end
     object chkSelf: TCheckBox
       Left = 336
-      Top = 28
+      Top = 21
       Width = 191
       Height = 17
       Caption = #25351#27966#32473#33258#24049','#24182#33258#23450#20998#25968':'
@@ -256,10 +263,20 @@ inherited NewTaskDlg: TNewTaskDlg
     end
     object edtSelfSrce: TEdit
       Left = 527
-      Top = 24
+      Top = 17
       Width = 134
       Height = 23
       TabOrder = 2
+    end
+    object dtp1: TDateTimePicker
+      Left = 434
+      Top = 44
+      Width = 231
+      Height = 23
+      Hint = #21482#26377#25351#27966#32473#33258#24049#25165#33021#35774#32622
+      Date = 40736.434164131950000000
+      Time = 40736.434164131950000000
+      TabOrder = 3
     end
   end
   object cdsCloneProjectName: TClientDataSet
