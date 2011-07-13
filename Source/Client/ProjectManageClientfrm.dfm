@@ -675,6 +675,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
             TitleFont.Height = -15
             TitleFont.Name = #23435#20307
             TitleFont.Style = []
+            OnDrawColumnCell = dbgrdResultDrawColumnCell
             Columns = <
               item
                 Expanded = False

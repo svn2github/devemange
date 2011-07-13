@@ -310,6 +310,8 @@ type
     procedure dgProVersionDrawColumnCell(Sender: TObject;
       const Rect: TRect; DataCol: Integer; Column: TColumn;
       State: TGridDrawState);
+    procedure dbgrdResultDrawColumnCell(Sender: TObject; const Rect: TRect;
+      DataCol: Integer; Column: TColumn; State: TGridDrawState);
   private
     { Private declarations }
     fTaskPageRec : TTaskPageRec;
@@ -1802,6 +1804,9 @@ procedure TProjectManageClientDlg.dgTaskListDrawColumnCell(Sender: TObject;
   const Rect: TRect; DataCol: Integer; Column: TColumn;
   State: TGridDrawState);
 begin
+  if (cdsTask.RecNo mod 2  = 0) and not ( gdSelected in State)  then
+    dgTaskList.Canvas.Brush.Color := clSilver;
+
   if (cdsTask.FieldByName('ZSTATUS').AsInteger = Ord(tsClose)) then
   begin
     dgTaskList.Canvas.Font.Color := clblue;
@@ -2364,6 +2369,20 @@ begin
     ClientSystem.EndTickCount;
     HideProgress;
   end;
+end;
+
+procedure TProjectManageClientDlg.dbgrdResultDrawColumnCell(
+  Sender: TObject; const Rect: TRect; DataCol: Integer; Column: TColumn;
+  State: TGridDrawState);
+begin
+  if (cdsToDayResult.RecNo mod 2  = 0) and not ( gdSelected in State)  then
+    dbgrdResult.Canvas.Brush.Color := clSilver;
+
+  if (cdsToDayResult.FieldByName('ZACTION').AsInteger=0) then
+  begin
+    dbgrdResult.Canvas.Font.Color := clred;
+  end;
+  dbgrdResult.DefaultDrawColumnCell(Rect,DataCol,Column,State);
 end;
 
 end.

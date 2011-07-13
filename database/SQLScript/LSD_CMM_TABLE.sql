@@ -219,7 +219,7 @@ create table TB_TASK(
 	ZDATE           datetime,                               /*制单时间*/
 	ZPALNDAY        float not null default 1,               /*计划工期(天)*/
 
-	ZBEGINDATE      datetime,	                        /*任务开始时间 由任务执行人生成,这时状态变更为执行中*/
+	ZBEGINDATE      datetime,	                        /*任务开始时间(日记时间) 由任务执行人生成,这时状态变更为执行中*/
 	ZDAY            float,                                  /*实际的天数*/
 	ZSUCCESSDATE    datetime,                               /*完成时间*/
 	ZCLOSEDATE      datetime,                               /*关闭时间*/
@@ -259,10 +259,10 @@ if exists (select * from dbo.sysobjects
 drop table [dbo].[TB_TASK_ITEM]
 go
 create table TB_TASK_ITEM(
-	ZID				int IDENTITY (1, 1) not null,
+	ZID			int IDENTITY (1, 1) not null,
 	ZTASK_CODE		varchar(30) not null,
 	ZDATE			datetime,
-	ZDESIGN         text,									/*测试说明*/
+	ZDESIGN         text,					/*测试说明*/
 	ZUSER_ID        int  not null,                          /*书写人员*/
 
 	constraint PK_TB_TASK_ITEM primary key(ZID)
