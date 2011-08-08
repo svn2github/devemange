@@ -1,6 +1,6 @@
 inherited ProjectManageClientDlg: TProjectManageClientDlg
-  Left = 312
-  Top = 106
+  Left = 94
+  Top = 123
   Width = 1231
   Height = 585
   Caption = #39033#30446#31649#29702
@@ -535,7 +535,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
           TabOrder = 2
           object spl2: TSplitter
             Left = 0
-            Top = 49
+            Top = 67
             Width = 401
             Height = 3
             Cursor = crVSplit
@@ -551,11 +551,20 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
             Color = clMoneyGreen
             ParentColor = False
           end
+          object dbtxtZCONTENT: TDBText
+            Left = 0
+            Top = 246
+            Width = 401
+            Height = 85
+            Align = alBottom
+            DataField = 'ZCONTENT'
+            DataSource = dsToDayResult
+          end
           object dgTaskList: TDBGrid
             Left = 0
             Top = 0
             Width = 401
-            Height = 49
+            Height = 67
             Align = alClient
             DataSource = dsTask
             Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
@@ -662,7 +671,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
           end
           object dbgrdResult: TDBGrid
             Left = 0
-            Top = 52
+            Top = 70
             Width = 401
             Height = 176
             Align = alBottom
@@ -734,17 +743,6 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
                 Visible = True
               end>
           end
-          object dbmmoZCONTENT: TDBMemo
-            Left = 0
-            Top = 228
-            Width = 401
-            Height = 103
-            Align = alBottom
-            DataField = 'ZCONTENT'
-            DataSource = dsToDayResult
-            ScrollBars = ssBoth
-            TabOrder = 3
-          end
         end
         object plTaskContext: TPanel
           Left = 411
@@ -759,7 +757,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
             Top = 0
             Width = 802
             Height = 386
-            ActivePage = tsDesign
+            ActivePage = tsUser
             Align = alClient
             TabOrder = 0
             TabPosition = tpBottom
@@ -914,14 +912,14 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
               Caption = #25191#34892#20154
               ImageIndex = 1
               object spl1: TSplitter
-                Left = 257
+                Left = 330
                 Top = 0
                 Height = 358
               end
               object plUserRight: TPanel
-                Left = 260
+                Left = 333
                 Top = 0
-                Width = 534
+                Width = 461
                 Height = 358
                 Align = alClient
                 BevelOuter = bvNone
@@ -929,7 +927,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
                 object plUserBottom: TPanel
                   Left = 0
                   Top = 285
-                  Width = 534
+                  Width = 461
                   Height = 73
                   Align = alBottom
                   BevelOuter = bvNone
@@ -994,7 +992,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
                 object plScore: TPanel
                   Left = 0
                   Top = 0
-                  Width = 534
+                  Width = 461
                   Height = 285
                   Align = alClient
                   BevelOuter = bvNone
@@ -1162,7 +1160,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
               object pnlLeft: TPanel
                 Left = 0
                 Top = 0
-                Width = 257
+                Width = 330
                 Height = 358
                 Align = alLeft
                 BevelOuter = bvNone
@@ -1171,8 +1169,8 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
                 object dbgrdUser: TDBGrid
                   Left = 0
                   Top = 0
-                  Width = 257
-                  Height = 97
+                  Width = 330
+                  Height = 53
                   Align = alTop
                   DataSource = dsTaskUser
                   Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
@@ -1204,14 +1202,23 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
                 end
                 object dbmmoZDESIGN: TDBMemo
                   Left = 0
-                  Top = 97
-                  Width = 257
-                  Height = 261
+                  Top = 53
+                  Width = 330
+                  Height = 132
                   Align = alClient
                   DataField = 'ZDESIGN'
                   DataSource = dsTask
                   ScrollBars = ssBoth
                   TabOrder = 1
+                end
+                object calTaskDate: TMonthCalendar
+                  Left = 0
+                  Top = 185
+                  Width = 330
+                  Height = 173
+                  Align = alBottom
+                  Date = 40763.612732384260000000
+                  TabOrder = 2
                 end
               end
             end

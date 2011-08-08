@@ -235,7 +235,8 @@ type
     strngfldcds1ZNAME: TStringField;
     dbgrdResult: TDBGrid;
     lbl5: TLabel;
-    dbmmoZCONTENT: TDBMemo;
+    dbtxtZCONTENT: TDBText;
+    calTaskDate: TMonthCalendar;
     procedure actPro_AddExecute(Sender: TObject);
     procedure cbEditProItemClick(Sender: TObject);
     procedure actPro_AddUpdate(Sender: TObject);
@@ -1422,6 +1423,7 @@ begin
     LoadToDayResult(DataSet.fieldByName('ZUSER_ID').AsInteger,
       DataSet.fieldByName('ZBEGINDATE').AsDateTime
       );
+    calTaskDate.Date := DataSet.fieldByName('ZBEGINDATE').AsDateTime;
 
   finally
     fLoading := myb;
