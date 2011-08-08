@@ -232,6 +232,8 @@ inherited TaskScoreDlg: TTaskScoreDlg
     Width = 86
     Height = 17
     Caption = #24037#20316#37327#22823
+    Checked = True
+    State = cbChecked
     TabOrder = 5
   end
   object cbEasy: TCheckBox
@@ -240,6 +242,8 @@ inherited TaskScoreDlg: TTaskScoreDlg
     Width = 84
     Height = 17
     Caption = #38590#26131#31243#24230
+    Checked = True
+    State = cbChecked
     TabOrder = 6
   end
   object CheckUnitsDeiged: TCheckBox
@@ -248,6 +252,8 @@ inherited TaskScoreDlg: TTaskScoreDlg
     Width = 86
     Height = 17
     Caption = #21333#20803#35774#35745' '
+    Checked = True
+    State = cbChecked
     TabOrder = 7
   end
   object cbUnitTest: TCheckBox
@@ -256,6 +262,8 @@ inherited TaskScoreDlg: TTaskScoreDlg
     Width = 83
     Height = 17
     Caption = #21333#20803#27979#35797
+    Checked = True
+    State = cbChecked
     TabOrder = 8
   end
   object cbCode: TCheckBox
@@ -264,6 +272,8 @@ inherited TaskScoreDlg: TTaskScoreDlg
     Width = 84
     Height = 17
     Caption = #20195#30721#36136#37327
+    Checked = True
+    State = cbChecked
     TabOrder = 9
   end
   object btnCalc: TBitBtn
@@ -305,7 +315,7 @@ inherited TaskScoreDlg: TTaskScoreDlg
     Width = 65
     Height = 23
     TabOrder = 14
-    Text = '10'
+    Text = '6'
   end
   object edtUnitDesig: TEdit
     Left = 109
@@ -321,7 +331,7 @@ inherited TaskScoreDlg: TTaskScoreDlg
     Width = 65
     Height = 23
     TabOrder = 16
-    Text = '8'
+    Text = '3'
   end
   object edtOtherRate: TEdit
     Left = 109

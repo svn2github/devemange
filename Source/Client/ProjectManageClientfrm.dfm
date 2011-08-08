@@ -544,7 +544,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
           object lbl5: TLabel
             Left = 0
             Top = 331
-            Width = 401
+            Width = 38
             Height = 15
             Align = alBottom
             Caption = #32479#35745':'
@@ -1217,7 +1217,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
                   Width = 330
                   Height = 173
                   Align = alBottom
-                  Date = 40763.612732384260000000
+                  Date = 40763.760575625000000000
                   TabOrder = 2
                 end
               end
