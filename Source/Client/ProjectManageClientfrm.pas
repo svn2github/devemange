@@ -237,6 +237,7 @@ type
     lbl5: TLabel;
     dbtxtZCONTENT: TDBText;
     calTaskDate: TMonthCalendar;
+    chkLogDateSort: TCheckBox;
     procedure actPro_AddExecute(Sender: TObject);
     procedure cbEditProItemClick(Sender: TObject);
     procedure actPro_AddUpdate(Sender: TObject);
@@ -1834,10 +1835,19 @@ const
           '''%s'',20,%d,%d,1,''%s''';
 begin
 
-  mySQL := format(glSQL,[
-      'ZDATE',
-      APageIndex,
-      0,Awhere]);
+  //按日志日期排序
+  if chkLogDateSort.Checked then
+
+    mySQL := format(glSQL,[
+        'ZBEGINDATE',
+        APageIndex,
+        0,Awhere])
+
+  else
+    mySQL := format(glSQL,[
+        'ZDATE',
+        APageIndex,
+        0,Awhere]);
 
   myb := fLoading;
   fLoading := True;

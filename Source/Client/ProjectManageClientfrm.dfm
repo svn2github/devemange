@@ -480,9 +480,9 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
           Align = alTop
           TabOrder = 1
           object DBText1: TDBText
-            Left = 405
+            Left = 413
             Top = 1
-            Width = 807
+            Width = 799
             Height = 20
             Align = alClient
             Color = clGray
@@ -499,7 +499,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
           object DBText2: TDBText
             Left = 1
             Top = 1
-            Width = 404
+            Width = 412
             Height = 20
             Align = alLeft
             Color = clGray
@@ -524,6 +524,18 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
             TabOrder = 0
             OnClick = cbEditDesingClick
           end
+          object chkLogDateSort: TCheckBox
+            Left = 278
+            Top = 4
+            Width = 129
+            Height = 17
+            Caption = #25353#26085#24535#26085#26399#25490#24207
+            Checked = True
+            Color = clGray
+            ParentColor = False
+            State = cbChecked
+            TabOrder = 1
+          end
         end
         object plTaskList: TPanel
           Left = 0
@@ -544,7 +556,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
           object lbl5: TLabel
             Left = 0
             Top = 331
-            Width = 38
+            Width = 401
             Height = 15
             Align = alBottom
             Caption = #32479#35745':'
@@ -642,7 +654,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
               TabOrder = 0
             end
             object btnTask_UpPage: TBitBtn
-              Left = 89
+              Left = 88
               Top = 10
               Width = 75
               Height = 25
@@ -651,7 +663,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
               TabOrder = 1
             end
             object btnTask_NextPage: TBitBtn
-              Left = 169
+              Left = 167
               Top = 10
               Width = 75
               Height = 25
@@ -660,7 +672,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
               TabOrder = 2
             end
             object btnTask_Lastpage: TBitBtn
-              Left = 251
+              Left = 246
               Top = 10
               Width = 75
               Height = 25
@@ -757,7 +769,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
             Top = 0
             Width = 802
             Height = 386
-            ActivePage = tsUser
+            ActivePage = tsDesign
             Align = alClient
             TabOrder = 0
             TabPosition = tpBottom
@@ -1217,7 +1229,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
                   Width = 330
                   Height = 173
                   Align = alBottom
-                  Date = 40763.760575625000000000
+                  Date = 40763.360536921300000000
                   TabOrder = 2
                 end
               end
