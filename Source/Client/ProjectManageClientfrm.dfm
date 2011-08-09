@@ -1,6 +1,6 @@
 inherited ProjectManageClientDlg: TProjectManageClientDlg
-  Left = 94
-  Top = 123
+  Left = 146
+  Top = 135
   Width = 1231
   Height = 585
   Caption = #39033#30446#31649#29702
@@ -571,6 +571,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
             Align = alBottom
             DataField = 'ZCONTENT'
             DataSource = dsToDayResult
+            PopupMenu = pm1CopyTxt
           end
           object dgTaskList: TDBGrid
             Left = 0
@@ -1229,7 +1230,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
                   Width = 330
                   Height = 173
                   Align = alBottom
-                  Date = 40763.360536921300000000
+                  Date = 40763.367840520830000000
                   TabOrder = 2
                 end
               end
@@ -1955,6 +1956,16 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
     end
     object strngfldcds1ZNAME: TStringField
       FieldName = 'ZNAME'
+    end
+  end
+  object pm1CopyTxt: TPopupMenu
+    AutoHotkeys = maManual
+    AutoLineReduction = maManual
+    Left = 717
+    Top = 8
+    object mniN8CopyTxt: TMenuItem
+      Caption = #25335#36125#25991#26412
+      OnClick = mniN8CopyTxtClick
     end
   end
 end

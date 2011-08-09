@@ -238,6 +238,8 @@ type
     dbtxtZCONTENT: TDBText;
     calTaskDate: TMonthCalendar;
     chkLogDateSort: TCheckBox;
+    pm1CopyTxt: TPopupMenu;
+    mniN8CopyTxt: TMenuItem;
     procedure actPro_AddExecute(Sender: TObject);
     procedure cbEditProItemClick(Sender: TObject);
     procedure actPro_AddUpdate(Sender: TObject);
@@ -314,6 +316,7 @@ type
       State: TGridDrawState);
     procedure dbgrdResultDrawColumnCell(Sender: TObject; const Rect: TRect;
       DataCol: Integer; Column: TColumn; State: TGridDrawState);
+    procedure mniN8CopyTxtClick(Sender: TObject);
   private
     { Private declarations }
     fTaskPageRec : TTaskPageRec;
@@ -340,6 +343,7 @@ var
 
 implementation
 uses
+  Clipbrd,
   ClinetSystemUnits,
   DmUints,
   TaskScorefrm,               {ÆÀ·Ö}
@@ -2395,6 +2399,13 @@ begin
     dbgrdResult.Canvas.Font.Color := clred;
   end;
   dbgrdResult.DefaultDrawColumnCell(Rect,DataCol,Column,State);
+end;
+
+procedure TProjectManageClientDlg.mniN8CopyTxtClick(Sender: TObject);
+begin
+  Clipboard.Open;
+  Clipboard.AsText := dbtxtZCONTENT.Caption;  //
+  Clipboard.Close;
 end;
 
 end.
