@@ -1237,10 +1237,10 @@ const
   glSQL2  = 'insert TB_BUG_ITEM (ZID,ZTREE_ID,ZPRO_ID,ZTREEPATH,ZTITLE,' +
              ' ZOS,ZTYPE,ZLEVEL,ZSTATUS,ZMAILTO,ZOPENEDBY, ' +
              ' ZOPENEDDATE,ZOPENVER,ZASSIGNEDTO,ZASSIGNEDDATE,ZRESOLUTION,' +
-             ' ZLASTEDITEDBY,ZLASTEDITEDDATE,ZTAGNAME,ZDEMAND_ID) ' +
+             ' ZLASTEDITEDBY,ZLASTEDITEDDATE,ZTAGNAME,ZDEMAND_ID,ZNEDDDATE) ' +
              'values(%d,%d,%d,''%s'',''%s'',%d,%d,%d,%d,''%s'',%d,' +
-             ' %s,%d,%d,%s,%d,%d,%s,''%s'',%d)' ;
-             
+             ' %s,%d,%d,%s,%d,%d,%s,''%s'',%d,''%s'')' ;
+
   glSQL3  = 'update TB_BUG_ITEM set ' +
             'ZTITLE=''%s'', ' +
             'ZOS=%d, ' +
@@ -1257,7 +1257,7 @@ const
             'ZNEDDDATE=''%s'', ' +
             'ZVERIFYDATE=''%s'', ' +
             'ZVERIFYED=%d ,' +
-            'ZVERIFNAME=%d ' +
+            'ZVERIFNAME=%d, ' +
             'where ZID=%d';
 begin
   //
@@ -1345,8 +1345,9 @@ begin
       DataSet.FieldByName('ZOPENEDBY').AsInteger,
       'getdate()',
       DataSet.FieldByName('ZTAGNAME').AsString,
-      DataSet.FieldByName('ZDEMAND_ID').AsInteger]);
-      
+      DataSet.FieldByName('ZDEMAND_ID').AsInteger,
+      DateToStr(StrToDateDef(DataSet.FieldByName('ZNEDDDATE').AsString,StrToDate('2008-1-1')))]);
+
     ClientSystem.fDbOpr.BeginTrans;
     try
       ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
