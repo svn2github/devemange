@@ -59,6 +59,13 @@ type
     cdsToWho: TClientDataSet;
     dsToWho: TDataSource;
     dblkcbb2: TDBLookupComboBox;
+    edtName: TEdit;
+    chkName: TCheckBox;
+    dtpAmod2: TDateTimePicker;
+    dtpBugday2: TDateTimePicker;
+    chkNeedDate: TCheckBox;
+    dtpNeed: TDateTimePicker;
+    dtpNeed2: TDateTimePicker;
     procedure chkmoduleClick(Sender: TObject);
     procedure btntodayClick(Sender: TObject);
     procedure btntodayBugClick(Sender: TObject);
@@ -96,21 +103,25 @@ end;
 procedure TBugHighQueryDlg.btntodayClick(Sender: TObject);
 begin
   dtpAmod.DateTime := now();
+  dtpAmod2.DateTime := now() + 1;
 end;
 
 procedure TBugHighQueryDlg.btntodayBugClick(Sender: TObject);
 begin
   dtpBugday.DateTime := now();
+  dtpBugday2.DateTime := Now() + 1;
 end;
 
 procedure TBugHighQueryDlg.btnyesterdayClick(Sender: TObject);
 begin
   dtpAmod.DateTime := now()-1;
+  dtpAmod2.DateTime := Now();
 end;
 
 procedure TBugHighQueryDlg.btnyesterdaybugClick(Sender: TObject);
 begin
   dtpBugday.DateTime := now()-1;
+  dtpBugday2.DateTime := Now();
 end;
 
 procedure TBugHighQueryDlg.btngetvesionClick(Sender: TObject);
@@ -190,7 +201,7 @@ begin
   if chktodayAmind.Checked then
   begin
     mystr := format('(ZRESOLVEDDATE between ''%s'' and ''%s'') and (ZSTATUS=1) ',
-      [''''+datetostr(dtpAmod.Date)+'''',''''+datetostr(dtpAmod.Date+1)+'''']);
+      [''''+datetostr(dtpAmod.Date)+'''',''''+datetostr(dtpAmod2.Date)+'''']);
   end;
   if mystr <> '' then mywhere := mywhere + ' and ' + mystr;
 
@@ -199,7 +210,7 @@ begin
   if chktodayBug.Checked then
   begin
     mystr := format('(ZOPENEDDATE between ''%s'' and ''%s'')  ',
-      [''''+datetostr(dtpBugday.Date)+'''',''''+datetostr(dtpBugday.Date+1)+'''']);
+      [''''+datetostr(dtpBugday.Date)+'''',''''+datetostr(dtpBugday2.Date)+'''']);
   end;
   if mystr <> '' then mywhere := mywhere + ' and ' + mystr;
 
@@ -264,6 +275,24 @@ begin
   if (chkTag.Checked) and (cbbTag.ItemIndex>=0) then
   begin
     mystr := Format('(ZTAGNAME  like ''''%s'''')',['%'+cbbTag.Text+'%']);
+  end;
+  if mystr <> '' then mywhere := mywhere + ' and ' + mystr;
+
+  //名称查找
+  mystr := '';
+  if (edtName.Text <> '') then
+  begin
+    mystr := Format('(ZTITLE  like ''''%s'''')',['%'+edtName.Text+'%']);
+  end;
+  if mystr <> '' then mywhere := mywhere + ' and ' + mystr;
+
+
+  //要求完成时间
+  mystr := '';
+  if chkNeedDate.Checked then
+  begin
+    mystr := format('(ZNEDDDATE between ''%s'' and ''%s'')  ',
+      [''''+datetostr(dtpNeed.Date)+'''',''''+datetostr(dtpNeed2.Date)+'''']);
   end;
   if mystr <> '' then mywhere := mywhere + ' and ' + mystr;
 

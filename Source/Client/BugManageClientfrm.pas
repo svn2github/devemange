@@ -2279,6 +2279,10 @@ begin
         end;
         dtpAmod.DateTime   := now();
         dtpBugday.DateTime := now();
+        dtpAmod2.DateTime   := now();
+        dtpBugday2.DateTime := now();
+        dtpNeed.DateTime := Now();
+        dtpNeed2.DateTime := Now();
         cdsBugCreater.CloneCursor(DM.cdsUser,True);
         cdsBugAdmder.CloneCursor(DM.cdsUser,True);
         cdsToWho.CloneCursor(DM.cdsUser,True);

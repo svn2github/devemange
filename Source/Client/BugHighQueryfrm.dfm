@@ -1,9 +1,9 @@
 inherited BugHighQueryDlg: TBugHighQueryDlg
-  Left = 369
-  Top = 123
+  Left = 395
+  Top = 136
   BorderStyle = bsDialog
   Caption = #39640#32423#26597#35810
-  ClientHeight = 493
+  ClientHeight = 494
   ClientWidth = 620
   OldCreateOrder = True
   Position = poMainFormCenter
@@ -11,7 +11,7 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
   TextHeight = 15
   object btn1: TBitBtn
     Left = 482
-    Top = 455
+    Top = 450
     Width = 100
     Height = 25
     TabOrder = 1
@@ -19,7 +19,7 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
   end
   object btn2: TBitBtn
     Left = 378
-    Top = 455
+    Top = 450
     Width = 100
     Height = 25
     TabOrder = 2
@@ -27,7 +27,7 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
   end
   object chktodayAmind: TCheckBox
     Left = 30
-    Top = 141
+    Top = 123
     Width = 153
     Height = 17
     Caption = #35299#20915#30340#38382#39064#26102#38388':'
@@ -35,8 +35,8 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
   end
   object dtpAmod: TDateTimePicker
     Left = 203
-    Top = 141
-    Width = 194
+    Top = 119
+    Width = 142
     Height = 23
     Date = 39648.739446967590000000
     Time = 39648.739446967590000000
@@ -44,18 +44,18 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
     TabOrder = 4
   end
   object btntoday: TBitBtn
-    Left = 408
-    Top = 137
-    Width = 75
+    Left = 473
+    Top = 118
+    Width = 36
     Height = 25
     Caption = #20170#22825
     TabOrder = 5
     OnClick = btntodayClick
   end
   object btnyesterday: TBitBtn
-    Left = 496
-    Top = 137
-    Width = 75
+    Left = 521
+    Top = 118
+    Width = 36
     Height = 25
     Caption = #26152#22825
     TabOrder = 6
@@ -63,7 +63,7 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
   end
   object chktodayBug: TCheckBox
     Left = 30
-    Top = 179
+    Top = 151
     Width = 137
     Height = 17
     Caption = #21019#24314#30340#38382#39064#26102#38388':'
@@ -71,8 +71,8 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
   end
   object dtpBugday: TDateTimePicker
     Left = 203
-    Top = 179
-    Width = 194
+    Top = 146
+    Width = 142
     Height = 23
     Date = 39648.741306423610000000
     Time = 39648.741306423610000000
@@ -80,18 +80,18 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
     TabOrder = 8
   end
   object btntodayBug: TBitBtn
-    Left = 407
-    Top = 175
-    Width = 75
+    Left = 472
+    Top = 148
+    Width = 36
     Height = 25
     Caption = #20170#22825
     TabOrder = 9
     OnClick = btntodayBugClick
   end
   object btnyesterdaybug: TBitBtn
-    Left = 495
-    Top = 175
-    Width = 75
+    Left = 521
+    Top = 148
+    Width = 36
     Height = 25
     Caption = #26152#22825
     TabOrder = 10
@@ -99,7 +99,7 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
   end
   object chkmodule: TCheckBox
     Left = 30
-    Top = 44
+    Top = 43
     Width = 97
     Height = 17
     Caption = #25351#23450#27169#22359':'
@@ -108,7 +108,7 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
   end
   object cbbModule: TComboBox
     Left = 203
-    Top = 39
+    Top = 38
     Width = 194
     Height = 23
     Style = csDropDownList
@@ -119,7 +119,7 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
   end
   object chkBugType: TCheckBox
     Left = 30
-    Top = 214
+    Top = 208
     Width = 97
     Height = 17
     Caption = #38169#35823#31867#22411':'
@@ -127,7 +127,7 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
   end
   object chkVersion: TCheckBox
     Left = 30
-    Top = 72
+    Top = 70
     Width = 166
     Height = 17
     Caption = #25351#23450#20986#29616#38382#39064#30340#29256#26412':'
@@ -135,7 +135,7 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
   end
   object dblkcbbVersion: TDBLookupComboBox
     Left = 203
-    Top = 70
+    Top = 65
     Width = 194
     Height = 23
     ImeName = #26497#21697#20116#31508#36755#20837#27861
@@ -148,14 +148,14 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
     Left = 408
     Top = 68
     Width = 75
-    Height = 53
+    Height = 45
     Caption = #33719#21462#29256#26412
     TabOrder = 16
     OnClick = btngetvesionClick
   end
   object dblkcbbBugtype: TDBLookupComboBox
     Left = 202
-    Top = 212
+    Top = 205
     Width = 194
     Height = 23
     ImeName = #26497#21697#20116#31508#36755#20837#27861
@@ -166,7 +166,7 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
   end
   object chkAmideBugVer: TCheckBox
     Left = 30
-    Top = 103
+    Top = 100
     Width = 166
     Height = 17
     Caption = #25351#23450#35299#20915#38382#39064#30340#29256#26412':'
@@ -174,7 +174,7 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
   end
   object dblkcbbAmdieVer: TDBLookupComboBox
     Left = 203
-    Top = 101
+    Top = 92
     Width = 194
     Height = 23
     ImeName = #26497#21697#20116#31508#36755#20837#27861
@@ -213,7 +213,7 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
   end
   object btnAll: TBitBtn
     Left = 274
-    Top = 455
+    Top = 450
     Width = 100
     Height = 25
     Caption = #20840#37096#38382#39064
@@ -233,8 +233,8 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
     Visible = False
   end
   object chkBugLevel: TCheckBox
-    Left = 32
-    Top = 246
+    Left = 30
+    Top = 235
     Width = 97
     Height = 17
     Caption = #38382#39064#31561#32423#65306
@@ -242,7 +242,7 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
   end
   object dblkcbbBugLevel: TDBLookupComboBox
     Left = 202
-    Top = 243
+    Top = 232
     Width = 194
     Height = 23
     ImeName = #26497#21697#20116#31508#36755#20837#27861
@@ -252,8 +252,8 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
     TabOrder = 25
   end
   object chkStatus: TCheckBox
-    Left = 32
-    Top = 288
+    Left = 30
+    Top = 270
     Width = 97
     Height = 17
     Caption = #38382#39064#29366#24577#65306
@@ -261,7 +261,7 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
   end
   object rg1: TRadioGroup
     Left = 200
-    Top = 273
+    Top = 259
     Width = 368
     Height = 36
     Columns = 2
@@ -271,16 +271,16 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
     TabOrder = 27
   end
   object chkBugCreateor: TCheckBox
-    Left = 32
-    Top = 328
+    Left = 30
+    Top = 310
     Width = 97
     Height = 17
     Caption = #38382#39064#21019#24314#20154':'
     TabOrder = 28
   end
   object cbBugAmdorer: TCheckBox
-    Left = 32
-    Top = 361
+    Left = 30
+    Top = 343
     Width = 97
     Height = 17
     Caption = #38382#39064#35299#20915#20154':'
@@ -288,7 +288,7 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
   end
   object DBLookupComboBox1: TDBLookupComboBox
     Left = 202
-    Top = 321
+    Top = 303
     Width = 201
     Height = 23
     ImeName = #26497#21697#20116#31508#36755#20837#27861
@@ -299,7 +299,7 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
   end
   object dblkcbb1: TDBLookupComboBox
     Left = 202
-    Top = 351
+    Top = 330
     Width = 201
     Height = 23
     ImeName = #26497#21697#20116#31508#36755#20837#27861
@@ -309,16 +309,16 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
     TabOrder = 31
   end
   object chkTag: TCheckBox
-    Left = 36
-    Top = 423
+    Left = 30
+    Top = 393
     Width = 97
     Height = 17
-    Caption = #26631#31614
+    Caption = #26631#31614':'
     TabOrder = 32
   end
   object cbbTag: TComboBox
     Left = 202
-    Top = 416
+    Top = 384
     Width = 199
     Height = 23
     Style = csDropDownList
@@ -327,16 +327,16 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
     TabOrder = 33
   end
   object chkToWho: TCheckBox
-    Left = 34
-    Top = 388
+    Left = 30
+    Top = 370
     Width = 97
     Height = 17
     Caption = #25351#27966#32473#35841':'
     TabOrder = 34
   end
   object dblkcbb2: TDBLookupComboBox
-    Left = 201
-    Top = 383
+    Left = 202
+    Top = 357
     Width = 201
     Height = 23
     DropDownRows = 30
@@ -345,6 +345,69 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
     ListField = 'ZNAME'
     ListSource = dsToWho
     TabOrder = 35
+  end
+  object edtName: TEdit
+    Left = 202
+    Top = 411
+    Width = 377
+    Height = 23
+    TabOrder = 36
+  end
+  object chkName: TCheckBox
+    Left = 30
+    Top = 417
+    Width = 155
+    Height = 17
+    Caption = #38382#39064#21517#31216#27169#31946#26597#25214#65306
+    TabOrder = 37
+  end
+  object dtpAmod2: TDateTimePicker
+    Left = 349
+    Top = 119
+    Width = 118
+    Height = 23
+    Date = 39648.739446967590000000
+    Time = 39648.739446967590000000
+    ImeName = #26497#21697#20116#31508#36755#20837#27861
+    TabOrder = 38
+  end
+  object dtpBugday2: TDateTimePicker
+    Left = 349
+    Top = 146
+    Width = 118
+    Height = 23
+    Date = 39648.741306423610000000
+    Time = 39648.741306423610000000
+    ImeName = #26497#21697#20116#31508#36755#20837#27861
+    TabOrder = 39
+  end
+  object chkNeedDate: TCheckBox
+    Left = 30
+    Top = 177
+    Width = 121
+    Height = 17
+    Caption = #35201#27714#23436#25104#26102#38388#65306
+    TabOrder = 40
+  end
+  object dtpNeed: TDateTimePicker
+    Left = 203
+    Top = 173
+    Width = 142
+    Height = 23
+    Date = 39648.741306423610000000
+    Time = 39648.741306423610000000
+    ImeName = #26497#21697#20116#31508#36755#20837#27861
+    TabOrder = 41
+  end
+  object dtpNeed2: TDateTimePicker
+    Left = 349
+    Top = 173
+    Width = 118
+    Height = 23
+    Date = 39648.741306423610000000
+    Time = 39648.741306423610000000
+    ImeName = #26497#21697#20116#31508#36755#20837#27861
+    TabOrder = 42
   end
   object cdsProject: TClientDataSet
     Tag = -1
