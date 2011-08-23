@@ -1257,7 +1257,7 @@ const
             'ZNEDDDATE=''%s'', ' +
             'ZVERIFYDATE=''%s'', ' +
             'ZVERIFYED=%d ,' +
-            'ZVERIFNAME=%d, ' +
+            'ZVERIFNAME=%d ' +
             'where ZID=%d';
 begin
   //
