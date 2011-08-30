@@ -1076,6 +1076,7 @@ begin
   myform := TNewTaskDlg.Create(nil);
   try
     myform.cdsCloneProjectName.CloneCursor(cdsProjectItem,True);
+    myform.dtp1.Date := ClientSystem.SysNow;
     if cdsTask.State in [dsEdit,dsInsert] then
       cdsTask.Post;
     cdsTask.Append;
@@ -1103,7 +1104,7 @@ begin
 
         //指定日期 作者：龙仕云
         //myform.dtp1.
-        cdsTask.FieldByName('ZBEGINDATE').AsString := formatdatetime('yyyy-mm-dd',myform.dtp1.Date);
+        cdsTask.FieldByName('ZBEGINDATE').AsDateTime := myform.dtp1.Date;
         //end
       end;
       cdsTask.Post;
@@ -1160,8 +1161,9 @@ var
   mySQL : String;
 const
   glSQL = 'insert TB_TASK(ZCODE,ZTYPE,ZNAME,ZUSER_ID,ZPRO_ID, ' +
-          'ZPRO_VERSION_ID,ZDESIGN,ZTESTCASE,ZSTATUS,ZDATE,ZPALNDAY,ZCHECKNAME,ZOVERWORK) ' +
-          'values(''%s'',%d,''%s'',%d,%d,%d,''%s'',''%s'',%d,''%s'',%d,%d,%d)';
+          'ZPRO_VERSION_ID,ZDESIGN,ZTESTCASE,ZSTATUS,ZDATE,ZPALNDAY,ZCHECKNAME,ZOVERWORK,ZBEGINDATE) ' +
+          'values(''%s'',%d,''%s'',%d,%d,%d,''%s'',''%s'',%d,''%s'',%d,%d,%d,''%s'')';
+
   glSQL2 = 'update TB_TASK set ZSTATUS=%d,ZDESIGN=''%s'',ZTESTCASE=''%s'' ' +
            'where ZCODE=''%s''';
   glSQL3 = 'update TB_TASK set ZSTATUS=%d,ZDESIGN=''%s'',ZTESTCASE=''%s'', ' +
@@ -1188,7 +1190,8 @@ begin
       DataSet.FieldByName('ZDATE').AsString,
       DataSet.FieldByName('ZPALNDAY').AsInteger,
       DataSet.FieldByName('ZCHECKNAME').AsInteger,
-      Ord(DataSet.FieldByName('ZOVERWORK').AsBoolean)]);
+      Ord(DataSet.FieldByName('ZOVERWORK').AsBoolean),
+      DataSet.FieldByName('ZBEGINDATE').AsString]);
 
     ClientSystem.fDbOpr.BeginTrans;
     try

@@ -1,6 +1,6 @@
 inherited ProjectManageClientDlg: TProjectManageClientDlg
-  Left = 146
-  Top = 135
+  Left = 121
+  Top = 59
   Width = 1231
   Height = 585
   Caption = #39033#30446#31649#29702
@@ -1230,7 +1230,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
                   Width = 330
                   Height = 173
                   Align = alBottom
-                  Date = 40763.367840520830000000
+                  Date = 40763.365906388890000000
                   TabOrder = 2
                 end
               end
