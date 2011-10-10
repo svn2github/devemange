@@ -143,7 +143,6 @@ type
     plTaskItemBottom: TPanel;
     BitBtn15: TBitBtn;
     actTask_AddItem: TAction;
-    BitBtn16: TBitBtn;
     BitBtn17: TBitBtn;
     BitBtn18: TBitBtn;
     actTask_Finally: TAction;
@@ -240,6 +239,8 @@ type
     chkLogDateSort: TCheckBox;
     pm1CopyTxt: TPopupMenu;
     mniN8CopyTxt: TMenuItem;
+    btnTask_Finally: TBitBtn;
+    lbl6: TLabel;
     procedure actPro_AddExecute(Sender: TObject);
     procedure cbEditProItemClick(Sender: TObject);
     procedure actPro_AddUpdate(Sender: TObject);

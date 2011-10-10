@@ -8,7 +8,7 @@ inherited DayWorktableManageClientDlg: TDayWorktableManageClientDlg
   object pnlnovisible: TPanel
     Left = 0
     Top = 0
-    Width = 963
+    Width = 955
     Height = 74
     Align = alTop
     TabOrder = 0
@@ -17,8 +17,8 @@ inherited DayWorktableManageClientDlg: TDayWorktableManageClientDlg
   object pgc1: TPageControl
     Left = 0
     Top = 74
-    Width = 963
-    Height = 532
+    Width = 955
+    Height = 528
     ActivePage = ts1
     Align = alClient
     TabOrder = 1
@@ -28,8 +28,8 @@ inherited DayWorktableManageClientDlg: TDayWorktableManageClientDlg
       Caption = #24037#20316#21488
       object dbtxtZROWNAME: TDBText
         Left = 0
-        Top = 484
-        Width = 955
+        Top = 480
+        Width = 947
         Height = 18
         Align = alBottom
         DataField = 'ZROWNAME'
@@ -38,7 +38,7 @@ inherited DayWorktableManageClientDlg: TDayWorktableManageClientDlg
       object pnlworkTop: TPanel
         Left = 0
         Top = 0
-        Width = 955
+        Width = 947
         Height = 40
         Align = alTop
         BevelOuter = bvNone
@@ -107,8 +107,8 @@ inherited DayWorktableManageClientDlg: TDayWorktableManageClientDlg
       object dbgrdwork: TDBGrid
         Left = 0
         Top = 40
-        Width = 955
-        Height = 444
+        Width = 947
+        Height = 440
         Align = alClient
         DataSource = dswork
         Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
@@ -162,7 +162,7 @@ inherited DayWorktableManageClientDlg: TDayWorktableManageClientDlg
       object pnlTool: TPanel
         Left = 0
         Top = 0
-        Width = 955
+        Width = 947
         Height = 40
         Align = alTop
         BevelOuter = bvNone
@@ -258,8 +258,8 @@ inherited DayWorktableManageClientDlg: TDayWorktableManageClientDlg
       object dbgrdResult: TDBGrid
         Left = 0
         Top = 40
-        Width = 955
-        Height = 337
+        Width = 947
+        Height = 333
         Align = alClient
         DataSource = dsToDayResult
         Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
@@ -339,8 +339,8 @@ inherited DayWorktableManageClientDlg: TDayWorktableManageClientDlg
       end
       object pnl1: TPanel
         Left = 0
-        Top = 377
-        Width = 955
+        Top = 373
+        Width = 947
         Height = 125
         Align = alBottom
         BevelOuter = bvLowered
@@ -349,7 +349,7 @@ inherited DayWorktableManageClientDlg: TDayWorktableManageClientDlg
         object dbtxtZCONTENT: TDBText
           Left = 1
           Top = 1
-          Width = 615
+          Width = 607
           Height = 123
           Align = alClient
           DataField = 'ZCONTENT'
@@ -357,7 +357,7 @@ inherited DayWorktableManageClientDlg: TDayWorktableManageClientDlg
           WordWrap = True
         end
         object pnl2: TPanel
-          Left = 616
+          Left = 608
           Top = 1
           Width = 338
           Height = 123
