@@ -30,7 +30,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
       Top = 1
       Width = 1254
       Height = 549
-      ActivePage = tsTask
+      ActivePage = tsProjectList
       Align = alClient
       MultiLine = True
       TabOrder = 0
@@ -1241,7 +1241,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
                   Width = 330
                   Height = 173
                   Align = alBottom
-                  Date = 40763.456023773150000000
+                  Date = 40763.469464502310000000
                   ParentShowHint = False
                   ShowHint = False
                   TabOrder = 2

@@ -10,7 +10,7 @@ inherited StatManageClientDlg: TStatManageClientDlg
   object pnlTool: TPanel
     Left = 0
     Top = 0
-    Width = 963
+    Width = 955
     Height = 40
     Align = alTop
     TabOrder = 0
@@ -106,8 +106,8 @@ inherited StatManageClientDlg: TStatManageClientDlg
   object tbc1: TTabControl
     Left = 0
     Top = 40
-    Width = 963
-    Height = 298
+    Width = 955
+    Height = 294
     Align = alClient
     TabOrder = 1
     Tabs.Strings = (
@@ -118,8 +118,8 @@ inherited StatManageClientDlg: TStatManageClientDlg
     object dbgrdData: TDBGrid
       Left = 4
       Top = 26
-      Width = 955
-      Height = 268
+      Width = 947
+      Height = 264
       Align = alClient
       DataSource = dsData
       Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
@@ -135,8 +135,8 @@ inherited StatManageClientDlg: TStatManageClientDlg
   end
   object pnl1: TPanel
     Left = 0
-    Top = 338
-    Width = 963
+    Top = 334
+    Width = 955
     Height = 95
     Align = alBottom
     TabOrder = 2
@@ -191,6 +191,14 @@ inherited StatManageClientDlg: TStatManageClientDlg
       Height = 17
       Caption = #26041#27861'2('#20170#26085#26085#24535#25171#20998' + '#20851#38381#27979#35797#29992#20363#25968'+'#21019#24314'Bug'#25968')'
       TabOrder = 4
+    end
+    object rbRule_3: TRadioButton
+      Left = 14
+      Top = 48
+      Width = 361
+      Height = 17
+      Caption = #26041#27861'3('#20170#26085#26085#24535#25171#20998' + Bug'#24471#20998')'
+      TabOrder = 5
     end
   end
   object cdsData: TClientDataSet

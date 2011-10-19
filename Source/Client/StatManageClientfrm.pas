@@ -41,6 +41,7 @@ type
     lbl3: TLabel;
     lbl4: TLabel;
     rbRule_2: TRadioButton;
+    rbRule_3: TRadioButton;
     procedure actStatExecute(Sender: TObject);
     procedure actExportExcelExecute(Sender: TObject);
     procedure actExportExcelUpdate(Sender: TObject);
@@ -58,6 +59,7 @@ type
     { Private declarations }
     procedure CalcTotal_1();
     procedure CalcTotal_2();
+    procedure CalcTotal_3();
   public
     { Public declarations }
     procedure initBase; override;
@@ -96,22 +98,23 @@ begin
       for i :=0 to cdsData.Fields.Count -1 do
       begin
         case i of
-          0:cdsData.Fields[i].DisplayLabel  := '姓名';
-          1:cdsData.Fields[i].DisplayLabel  := '解决问题';
-          2:cdsData.Fields[i].DisplayLabel  := '发现问题';
-          3:cdsData.Fields[i].DisplayLabel  := '回复问题';
-          4:cdsData.Fields[i].DisplayLabel  := '问题激活';
-          5:cdsData.Fields[i].DisplayLabel  := '问题得分';
-          6:cdsData.Fields[i].DisplayLabel  := '完成任务';
-          7:cdsData.Fields[i].DisplayLabel  := '任务得分';
-          8:cdsData.Fields[i].DisplayLabel  := '加班分钟';
-          9:cdsData.Fields[i].DisplayLabel  := 'SVN提交数';
-          10:cdsData.Fields[i].DisplayLabel  := 'SVN文件修改数';
-          11:cdsData.Fields[i].DisplayLabel  := 'SVN文件删除数';
-          12:cdsData.Fields[i].DisplayLabel  := 'SVN文件增加数';
-          13:cdsData.Fields[i].DisplayLabel := '提交测试数';
-          14:cdsData.Fields[i].DisplayLabel := '完成测试数';
-          15:cdsData.Fields[i].DisplayLabel := '测试得分' ;
+          0:cdsData.Fields[i].DisplayLabel   := '姓名';
+          1:cdsData.Fields[i].DisplayLabel   := '解决问题';
+          2:cdsData.Fields[i].DisplayLabel   := '发现问题';
+          3:cdsData.Fields[i].DisplayLabel   := '回复问题';
+          4:cdsData.Fields[i].DisplayLabel   := '问题激活';
+          5:cdsData.Fields[i].DisplayLabel   := '问题个数';
+          6:cdsData.Fields[i].DisplayLabel   := 'BUG得分';
+          7:cdsData.Fields[i].DisplayLabel   := '完成任务';
+          8:cdsData.Fields[i].DisplayLabel   := '今日日记分';
+          9:cdsData.Fields[i].DisplayLabel   := '加班分钟';
+          10:cdsData.Fields[i].DisplayLabel  := 'SVN提交数';
+          11:cdsData.Fields[i].DisplayLabel  := 'SVN文件修改数';
+          12:cdsData.Fields[i].DisplayLabel  := 'SVN文件删除数';
+          13:cdsData.Fields[i].DisplayLabel  := 'SVN文件增加数';
+          14:cdsData.Fields[i].DisplayLabel  := '提交测试数';
+          15:cdsData.Fields[i].DisplayLabel  := '完成测试数';
+          16:cdsData.Fields[i].DisplayLabel  := '测试得分' ;
           //16:cdsData.Fields[i].DisplayLabel := '总分';
         end;
         cdsData.Fields[i].DisplayWidth := 10;
@@ -309,6 +312,7 @@ procedure TStatManageClientDlg.actCalc_TotalExecute(Sender: TObject);
 begin
   if rbRule_1.Checked then CalcTotal_1;
   if rbRule_2.Checked then CalcTotal_2;
+  if rbRule_3.Checked then CalcTotal_3;
 end;
 
 procedure TStatManageClientDlg.CalcTotal_1;
@@ -349,6 +353,21 @@ begin
   myTest := cdsData.FieldByName('ZAnswerTestCount').AsInteger;
   mybug  := cdsData.FieldByName('ZSubmitBugCount').AsInteger;
   edt2.Text := IntToStr(mytask+myTest+mybug);
+end;
+
+procedure TStatManageClientDlg.CalcTotal_3;
+var
+  mytask : Integer;
+  myTest : Extended;
+  mySvn  : Extended;
+begin
+  edt1.Text := cdsData.FieldByName('ZUSERNAME').AsString;
+  //计算规则1;
+  mytask := cdsData.FieldByName('ZTaskFraction').AsInteger;
+  myTest := cdsData.FieldByName('ZbugSorce').AsFloat;
+
+  edt2.Text := FloatToStr(mytask+myTest);
+
 end;
 
 end.

@@ -924,7 +924,7 @@ inherited BugManageDlg: TBugManageDlg
           object lbl20: TLabel
             Left = 465
             Top = 100
-            Width = 72
+            Width = 75
             Height = 15
             Caption = #38656#27714#32534#21495#65306
           end
@@ -1252,8 +1252,11 @@ inherited BugManageDlg: TBugManageDlg
             Top = 123
             Width = 102
             Height = 23
+            Hint = #21487#20197#26159#23567#25968#20301' 0.5 '#23567#26102
             DataField = 'ZWORKTIME'
             DataSource = dsBugItem
+            ParentShowHint = False
+            ShowHint = True
             TabOrder = 23
           end
           object dbedtZWORKLEVEL: TDBEdit
@@ -1261,8 +1264,11 @@ inherited BugManageDlg: TBugManageDlg
             Top = 122
             Width = 167
             Height = 23
+            Hint = #33539#22260#20174'1 '#21040'1.5'
             DataField = 'ZWORKLEVEL'
             DataSource = dsBugItem
+            ParentShowHint = False
+            ShowHint = True
             TabOrder = 24
           end
         end

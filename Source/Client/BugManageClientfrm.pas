@@ -1283,6 +1283,7 @@ begin
       myAssingdate := 'getdate()'
     else
       myAssingdate := 'NULL';
+
     mySQL := format(glSQL3,[
       DataSet.FieldByName('ZTITLE').AsString,
       DataSet.FieldByName('ZOS').AsInteger,
@@ -1296,8 +1297,8 @@ begin
       DataSet.FieldByName('ZDEMAND_ID').AsInteger,
       DataSet.FieldByName('ZTAGNAME').AsString,
       //要求日期
-      DateToStr(StrToDateDef(DataSet.FieldByName('ZNEDDDATE').AsString,StrToDate('2008-1-1'))),
-      DateToStr(StrToDateDef(DataSet.FieldByName('ZVERIFYDATE').AsString,StrToDate('2008-1-1'))),
+      DateTimeToStr(StrToDateTimeDef(DataSet.FieldByName('ZNEDDDATE').AsString,StrToDate('2008-1-1'))),
+      DateToStr(StrToDateTimeDef(DataSet.FieldByName('ZVERIFYDATE').AsString,StrToDate('2008-1-1'))),
       Ord(DataSet.FieldByName('ZVERIFYED').AsBoolean),
       DataSet.FieldByName('ZVERIFNAME').AsInteger,
       DataSet.FieldByName('ZWORKTIME').AsFloat,
@@ -1362,7 +1363,7 @@ begin
       'getdate()',
       DataSet.FieldByName('ZTAGNAME').AsString,
       DataSet.FieldByName('ZDEMAND_ID').AsInteger,
-      DateToStr(StrToDateDef(DataSet.FieldByName('ZNEDDDATE').AsString,StrToDate('2008-1-1'))),
+      DateTimeToStr(StrToDateTimeDef(DataSet.FieldByName('ZNEDDDATE').AsString,StrToDate('2008-1-1'))),
       DataSet.FieldByName('ZWORKTIME').AsFloat,
       DataSet.FieldByName('ZWORKLEVEL').AsFloat]);
 
