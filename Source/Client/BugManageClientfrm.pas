@@ -193,6 +193,14 @@ type
     dbedtZVERIF_NAME: TDBEdit;
     lbl17: TLabel;
     dbedtZVERIFYDATE: TDBEdit;
+    lbl18: TLabel;
+    dbedtZWORKTIME: TDBEdit;
+    lbl19: TLabel;
+    dbedtZWORKLEVEL: TDBEdit;
+    lbl20: TLabel;
+    lbl21: TLabel;
+    dbedtZSCORE: TDBEdit;
+    lbl22: TLabel;
     procedure actBug_AddDirExecute(Sender: TObject);
     procedure tvProjectExpanding(Sender: TObject; Node: TTreeNode;
       var AllowExpansion: Boolean);
@@ -660,7 +668,7 @@ const
   glSQL = 'exec pt_SplitPage ''TB_BUG_ITEM'',' +
           '''ZPRO_ID,ZID,ZTYPE,ZTITLE,ZOPENEDBY,ZOPENEDDATE,ZASSIGNEDTO,ZRESOLVEDBY,' +
           'ZRESOLUTION,ZRESOLVEDDATE,ZOS,ZLEVEL,ZSTATUS,ZMAILTO,ZOPENVER, ' +
-          'ZRESOLVEDVER,ZTREEPATH,ZTREE_ID,ZASSIGNEDTO,ZASSIGNEDDATE,ZTAGNAME,ZTERM,ZDEMAND_ID,ZNEDDDATE,ZVERIFYDATE,ZVERIFYED,ZVERIFNAME'',' +
+          'ZRESOLVEDVER,ZTREEPATH,ZTREE_ID,ZASSIGNEDTO,ZASSIGNEDDATE,ZTAGNAME,ZTERM,ZDEMAND_ID,ZNEDDDATE,ZVERIFYDATE,ZVERIFYED,ZVERIFNAME,ZWORKTIME,ZWORKLEVEL,ZWORKSCORE'',' +
           '''%s'',20,%d,%d,1,''%s''';
   //                                             页码,以总数=1, 条件where
 begin
@@ -1184,6 +1192,8 @@ begin
   DataSet.FieldByName('ZMAILTO').AsString := Format('%s(%d)',[ClientSystem.fEditer,ClientSystem.fEditer_id]);
   DataSet.FieldByName('ZDEMAND_ID').AsInteger := -1;
   DataSet.FieldByName('ZNEDDDATE').AsDateTime := ClientSystem.fDbOpr.GetSysDateTime;
+  DataSet.FieldByName('ZWORKLEVEL').AsFloat := 1;
+  DataSet.FieldByName('ZWORKTIME').AsFloat  := 0;
 end;
 
 procedure TBugManageDlg.actBug_AddBugExecute(Sender: TObject);
@@ -1237,9 +1247,9 @@ const
   glSQL2  = 'insert TB_BUG_ITEM (ZID,ZTREE_ID,ZPRO_ID,ZTREEPATH,ZTITLE,' +
              ' ZOS,ZTYPE,ZLEVEL,ZSTATUS,ZMAILTO,ZOPENEDBY, ' +
              ' ZOPENEDDATE,ZOPENVER,ZASSIGNEDTO,ZASSIGNEDDATE,ZRESOLUTION,' +
-             ' ZLASTEDITEDBY,ZLASTEDITEDDATE,ZTAGNAME,ZDEMAND_ID,ZNEDDDATE) ' +
+             ' ZLASTEDITEDBY,ZLASTEDITEDDATE,ZTAGNAME,ZDEMAND_ID,ZNEDDDATE,ZWORKTIME,ZWORKLEVEL) ' +
              'values(%d,%d,%d,''%s'',''%s'',%d,%d,%d,%d,''%s'',%d,' +
-             ' %s,%d,%d,%s,%d,%d,%s,''%s'',%d,''%s'')' ;
+             ' %s,%d,%d,%s,%d,%d,%s,''%s'',%d,''%s'',%f,%f)' ;
 
   glSQL3  = 'update TB_BUG_ITEM set ' +
             'ZTITLE=''%s'', ' +
@@ -1257,7 +1267,10 @@ const
             'ZNEDDDATE=''%s'', ' +
             'ZVERIFYDATE=''%s'', ' +
             'ZVERIFYED=%d ,' +
-            'ZVERIFNAME=%d ' +
+            'ZVERIFNAME=%d, ' +
+            'ZWORKTIME=%f,' +
+            'ZWORKLEVEL=%f,' +
+            'ZWORKSCORE=%f'  +
             'where ZID=%d';
 begin
   //
@@ -1287,6 +1300,9 @@ begin
       DateToStr(StrToDateDef(DataSet.FieldByName('ZVERIFYDATE').AsString,StrToDate('2008-1-1'))),
       Ord(DataSet.FieldByName('ZVERIFYED').AsBoolean),
       DataSet.FieldByName('ZVERIFNAME').AsInteger,
+      DataSet.FieldByName('ZWORKTIME').AsFloat,
+      DataSet.FieldByName('ZWORKLEVEL').AsFloat,
+      DataSet.FieldByName('ZWORKSCORE').AsFloat,
       DataSet.FieldByName('ZID').AsInteger]);
 
     ClientSystem.fDbOpr.BeginTrans;
@@ -1346,7 +1362,9 @@ begin
       'getdate()',
       DataSet.FieldByName('ZTAGNAME').AsString,
       DataSet.FieldByName('ZDEMAND_ID').AsInteger,
-      DateToStr(StrToDateDef(DataSet.FieldByName('ZNEDDDATE').AsString,StrToDate('2008-1-1')))]);
+      DateToStr(StrToDateDef(DataSet.FieldByName('ZNEDDDATE').AsString,StrToDate('2008-1-1'))),
+      DataSet.FieldByName('ZWORKTIME').AsFloat,
+      DataSet.FieldByName('ZWORKLEVEL').AsFloat]);
 
     ClientSystem.fDbOpr.BeginTrans;
     try
@@ -2770,6 +2788,10 @@ begin
   cdsBugItem.FieldByName('ZVERIFYED').AsBoolean := True;
   cdsBugItem.FieldByName('ZVERIFNAME').AsInteger := ClientSystem.fEditer_id;
   cdsBugItem.FieldByName('ZVERIFYDATE').AsDateTime := ClientSystem.fDbOpr.GetSysDateTime;
+
+  //得分
+  cdsBugItem.FieldByName('ZWORKSCORE').AsFloat := cdsBugItem.FieldByName('ZWORKTIME').AsFloat * 1 *
+    cdsBugItem.FieldByName('ZWORKLEVEL').AsFloat;
 
 end;
 
