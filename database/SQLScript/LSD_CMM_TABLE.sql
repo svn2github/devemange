@@ -321,32 +321,34 @@ create table TB_BUG_ITEM(
 	ZTREE_ID       int  not null,                             /*BUG项目ID*/
 	ZPRO_ID        int  not null,                             /*立项项目项目ID*/
 	ZTREEPATH      varchar(200) not null,                     /*项目路径*/ 
-	ZTITLE         varchar(200),                              /*项目标题*/
-	ZOS            int  not null,                             /*操作系统*/
+	ZTITLE         varchar(200),                             /*项目标题*/
+	ZOS            int  not null,                            /*操作系统*/
 	ZTYPE          int,                                       /*错误类型*/
-	ZLEVEL         int  not null,                             /*BUG第级*/
-	ZSTATUS        int  not null,                             /*BUG状态*/
-	ZMAILTO        varchar(200),                              /*邮件给别人,用#13#10分开*/
-	ZOPENEDBY      int  not null,                             /*BUG创建人*/
-	ZOPENEDDATE    datetime not null,                         /*创建时间*/
-	ZOPENVER       int not null,                              /*当时有问题的版本*/
+	ZLEVEL         int  not null,                            /*BUG第级*/
+	ZSTATUS        int  not null,                            /*BUG状态*/
+	ZMAILTO        varchar(200),                             /*邮件给别人,用#13#10分开*/
+	ZOPENEDBY      int  not null,                            /*BUG创建人*/
+	ZOPENEDDATE    datetime not null,                       /*创建时间*/
+	ZOPENVER       int not null,                             /*当时有问题的版本*/
 	ZASSIGNEDTO    int,                                       /*分派给*/
-        ZASSIGNEDDATE  datetime,                                  /*分派时间*/
+        ZASSIGNEDDATE  datetime,                                 /*分派时间*/
 	ZRESOLVEDBY    int,                                       /*解决人*/
 	ZRESOLUTION    int,                                       /*解决方案*/
 	ZRESOLVEDVER   int,                                       /*解决的版本*/
 	ZRESOLVEDDATE  datetime,                                  /*解决的时间*/
 	ZLASTEDITEDBY  int not null,                              /*最后修改的人*/
-	ZLASTEDITEDDATE datetime not null,                        /*最后修改的时间*/ 
-	ZOVERFRACTION  bit not null default 0 ,                   /*=True表示已记过分了*/ 
+	ZLASTEDITEDDATE datetime not null,                       /*最后修改的时间*/ 
+	ZOVERFRACTION  bit not null default 0 ,                  /*=True表示已记过分了*/ 
 	ZTAGNAME       varchar(100),                              /*标签 多个标签采用;号分开 */ 
-	ZTERM          int ,                                      /*要求期限(6)*/
+	ZTERM          int ,                                       /*要求期限(6)*/
 	ZDEMAND_ID     int default -1,                            /*需求ID号*/ 
 	ZNEDDDATE      datetime,                                  /*要求时间 要求期限暂时无用*/
 	ZVERIFYDATE    datetime,                                  /*审核时间*/
-	ZVERIFYED      bit not null default 0 ,                   /*是否已审核过了*/
-	ZVERIFNAME     int,                                       /*审核人*/
-  
+	ZVERIFYED      bit not null default 0 ,                  /*是否已审核过了*/
+	ZVERIFNAME     int,                                        /*审核人*/
+	ZWORKTIME      float default 0,                           /*要求工期（小时）*/
+	ZWORKLEVEL     float default 1,                           /*BUG难度系数*/
+	ZWORKSCORE     float default 0,                           /*得分*/
 	
 	constraint PK_TB_BUG_ITEM primary key(ZID desc,ZTREE_ID)   
 )
