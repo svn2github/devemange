@@ -5,6 +5,7 @@ inherited ActivationDlg: TActivationDlg
   Caption = #28608#27963
   ClientHeight = 229
   ClientWidth = 605
+  OldCreateOrder = True
   Position = poMainFormCenter
   PixelsPerInch = 96
   TextHeight = 15
@@ -69,5 +70,13 @@ inherited ActivationDlg: TActivationDlg
     Height = 25
     TabOrder = 4
     Kind = bkOK
+  end
+  object chkNoAdd: TCheckBox
+    Left = 10
+    Top = 200
+    Width = 191
+    Height = 17
+    Caption = #19981#24515#28857#20102#65292#19981#31639#28608#27963#12290
+    TabOrder = 5
   end
 end

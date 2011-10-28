@@ -27,6 +27,7 @@ type
     mmoNote: TMemo;
     Btn1: TBitBtn;
     Btn2: TBitBtn;
+    chkNoAdd: TCheckBox;
   private
     { Private declarations }
   public
@@ -52,17 +53,20 @@ const
   gl_SQLTXT = 'insert TB_TODAYRESULT (ZTYPE,ZUSER_ID,ZDATETIME,ZCONTENTID, ' +
     'ZCONTENT,ZNOTE,ZWRITER,ZACTION) values(%d,%d,''%s'',%d,''%s'',''%s'',%d,%d)';
 begin
-  mydatetime := ClientSystem.fDbOpr.GetSysDateTime;
-  mySQL := Format(gl_SQLTXT,[
-    fType,
-    fAcivate_UserID,
-    DateToStr(mydatetime),
-    StrToIntDef(edtID.Text,0),
-    edtName.Text ,
-    mmoNote.Text ,
-    ClientSystem.fEditer_id,
-    0]);
-  ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
+  if not chkNoAdd.Checked then
+  begin
+    mydatetime := ClientSystem.fDbOpr.GetSysDateTime;
+    mySQL := Format(gl_SQLTXT,[
+      fType,
+      fAcivate_UserID,
+      DateToStr(mydatetime),
+      StrToIntDef(edtID.Text,0),
+      edtName.Text ,
+      mmoNote.Text ,
+      ClientSystem.fEditer_id,
+      0]);
+    ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
+  end;
 end;
 
 end.
