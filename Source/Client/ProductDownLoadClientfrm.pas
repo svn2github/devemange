@@ -17,9 +17,6 @@ type
 
   end;
 
-var
-  ProductDownLoadClientDlg: TProductDownLoadClientDlg;
-
 implementation
 
 uses  DmUints,DB;

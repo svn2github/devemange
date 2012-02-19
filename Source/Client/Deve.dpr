@@ -29,7 +29,8 @@ uses
   ExtendWebClientfrm in 'ExtendWebClientfrm.pas' {ExtendWebClientDlg},
   ExtendWebManagefrm in 'ExtendWebManagefrm.pas' {ExtendWebManageDlg},
   DeveCalendarfrm in 'DeveCalendarfrm.pas' {DeveCalendarDlg},
-  Activationfrm in 'Activationfrm.pas' {ActivationDlg};
+  Activationfrm in 'Activationfrm.pas' {ActivationDlg},
+  SvnManageClientfrm in 'SvnManageClientfrm.pas' {SVNManagerDlg};
 
 {$R *.res}
 {$R resource.res}

@@ -102,6 +102,8 @@ type
     N22: TMenuItem;
     tmrBack: TTimer;
     chkShowCancel: TCheckBox;
+    actMod_SVN: TAction;
+    btnMod_SVN: TToolButton;
     procedure FormCreate(Sender: TObject);
     procedure actmod_FilesExecute(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -138,6 +140,7 @@ type
     procedure actExtend_ManageExecute(Sender: TObject);
     procedure tmrBackTimer(Sender: TObject);
     procedure chkShowCancelClick(Sender: TObject);
+    procedure actMod_SVNExecute(Sender: TObject);
   private
     fChildform : TList; //所有子窗口的对象
     fCurrentChildform : TBaseChildDlg;
@@ -205,7 +208,8 @@ uses
   DemandClientfrm,         {需求管理}
   WebClientfrm,
   ExtendWebClientfrm,      {web扩展应用}
-  ExtendWebManagefrm      {扩展应用管理}
+  ExtendWebManagefrm,      {扩展应用管理}
+  SvnManageClientfrm     {SVN管理}
    , SetSysParamsfrm, DeveCalendarfrm;
 
 {$R *.dfm}
@@ -1067,6 +1071,11 @@ end;
 procedure TMainDlg.chkShowCancelClick(Sender: TObject);
 begin
   ShowCelander(chkShowCancel.Checked);
+end;
+
+procedure TMainDlg.actMod_SVNExecute(Sender: TObject);
+begin
+  DoChangeClient(TSVNManagerDlg);
 end;
 
 end.
