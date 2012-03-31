@@ -41,6 +41,7 @@ type
 
   public
     fAppDir : String;
+    fDataDir : String;            //用户数据目录
     fTempDir : String;            //临时目录
     fDbOpr  : IDbOperator;        //数据接口处理
     fEditer_id : integer;         //用户的id号
@@ -145,7 +146,10 @@ constructor TClinetSystem.Create;
 
 begin
   fDbOpr := CreateBfssDBOpr();
-  fAppDir := ExtractFileDir(System.ParamStr(0));
+  fAppDir  := ExtractFileDir(System.ParamStr(0));
+  fDataDir := fAppDir + '\Data';
+  if not DirectoryExists(fDataDir) then
+    CreateDir(fDataDir);
   ftempdir := DoGetTemp;
   fcdsUsePriv := TClientDataSet.Create(nil);
   fEditer_id := -1;

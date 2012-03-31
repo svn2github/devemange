@@ -11,7 +11,7 @@ uses
 
 type
 
-  TBugColumns = (bcCode,bcTitle,bcWhoBuild,bcAssingeto,bcwhoReso,bcType,bcBuildDate
+  TBugColumns = (bcCode,bcTitle,bcWhoBuild,bcAssingeto,bcsubAssingeto,bcwhoReso,bcType,bcBuildDate
     ,bcResoDate);
 
   TPageType = (ptDir,ptMe,ptQuery); //按项目分页,按由我创建分页或指给我分页
@@ -201,6 +201,8 @@ type
     lbl21: TLabel;
     dbedtZSCORE: TDBEdit;
     lbl22: TLabel;
+    dblkcbbZASSIGNEDTO1: TDBLookupComboBox;
+    lbl23: TLabel;
     procedure actBug_AddDirExecute(Sender: TObject);
     procedure tvProjectExpanding(Sender: TObject; Node: TTreeNode;
       var AllowExpansion: Boolean);
@@ -666,7 +668,7 @@ var
   mywhere : String;
 const
   glSQL = 'exec pt_SplitPage ''TB_BUG_ITEM'',' +
-          '''ZPRO_ID,ZID,ZTYPE,ZTITLE,ZOPENEDBY,ZOPENEDDATE,ZASSIGNEDTO,ZRESOLVEDBY,' +
+          '''ZPRO_ID,ZID,ZTYPE,ZTITLE,ZOPENEDBY,ZOPENEDDATE,ZASSIGNEDTO,ZSUBASSIGNEDTO,ZRESOLVEDBY,' +
           'ZRESOLUTION,ZRESOLVEDDATE,ZOS,ZLEVEL,ZSTATUS,ZMAILTO,ZOPENVER, ' +
           'ZRESOLVEDVER,ZTREEPATH,ZTREE_ID,ZASSIGNEDTO,ZASSIGNEDDATE,ZTAGNAME,ZTERM,ZDEMAND_ID,ZNEDDDATE,ZVERIFYDATE,ZVERIFYED,ZVERIFNAME,ZWORKTIME,ZWORKLEVEL,ZWORKSCORE'',' +
           '''%s'',20,%d,%d,1,''%s''';
@@ -746,6 +748,20 @@ begin
         begin
           FieldKind := fkLookup;
           KeyFields := 'ZASSIGNEDTO';
+          LookupDataSet := DM.cdsUserAll;
+          LookupKeyFields := 'ZID';
+          LookupResultField := 'ZNAME';
+        end;
+
+        //从指派给
+        myfield := FieldDefs.AddFieldDef;
+        myfield.Name :='ZSUBASSIGNEDNAME';
+        myfield.DataType := ftString;
+        myfield.Size := 50;
+        with myfield.CreateField(cdsBugItem) do
+        begin
+          FieldKind := fkLookup;
+          KeyFields := 'ZSUBASSIGNEDTO';
           LookupDataSet := DM.cdsUserAll;
           LookupKeyFields := 'ZID';
           LookupResultField := 'ZNAME';
@@ -1246,7 +1262,7 @@ const
   glSQL   = 'select isNull(max(ZID),0)+1 from TB_BUG_ITEM';
   glSQL2  = 'insert TB_BUG_ITEM (ZID,ZTREE_ID,ZPRO_ID,ZTREEPATH,ZTITLE,' +
              ' ZOS,ZTYPE,ZLEVEL,ZSTATUS,ZMAILTO,ZOPENEDBY, ' +
-             ' ZOPENEDDATE,ZOPENVER,ZASSIGNEDTO,ZASSIGNEDDATE,ZRESOLUTION,' +
+             ' ZOPENEDDATE,ZOPENVER,ZASSIGNEDTO,ZSUBASSIGNEDTO,ZASSIGNEDDATE,ZRESOLUTION,' +
              ' ZLASTEDITEDBY,ZLASTEDITEDDATE,ZTAGNAME,ZDEMAND_ID,ZNEDDDATE,ZWORKTIME,ZWORKLEVEL) ' +
              'values(%d,%d,%d,''%s'',''%s'',%d,%d,%d,%d,''%s'',%d,' +
              ' %s,%d,%d,%s,%d,%d,%s,''%s'',%d,''%s'',%f,%f)' ;
@@ -1259,6 +1275,7 @@ const
             'ZMAILTO=''%s'','+
             'ZOPENVER=%d, ' +
             'ZASSIGNEDTO=%d, '+
+            'ZSUBASSIGNEDTO=%d,' +
             'ZASSIGNEDDATE=%s, '+
             'ZLASTEDITEDBY=%d , ' +
             'ZLASTEDITEDDATE=getdate(),' +
@@ -1292,6 +1309,7 @@ begin
       DataSet.FieldByName('ZMAILTO').AsString,
       DataSet.FieldByName('ZOPENVER').AsInteger,
       DataSet.FieldByName('ZASSIGNEDTO').AsInteger,
+      DataSet.FieldByName('ZSUBASSIGNEDTO').AsInteger,
       myAssingdate,
       ClientSystem.fEditer_id,
       DataSet.FieldByName('ZDEMAND_ID').AsInteger,
@@ -1357,6 +1375,7 @@ begin
       'getdate()',
       DataSet.FieldByName('ZOPENVER').AsInteger,
       DataSet.FieldByName('ZASSIGNEDTO').AsInteger,  //指派给
+      DataSet.FieldByName('ZSUBASSIGNEDTO').AsInteger, //从指派给
       myAssingdate, //指派时间
       DataSet.FieldByName('ZRESOLUTION').AsInteger,
       DataSet.FieldByName('ZOPENEDBY').AsInteger,
@@ -1406,6 +1425,7 @@ begin
     try
       dblcQustionType.Enabled := False;
       dblcQustionVer.Enabled  := False;
+      fBugItem_ID := cdsBugItem.FieldByName('ZID').AsInteger;
       if ShowModal <> mrOK then
       begin
         cdsBugHistory.EnableControls;
@@ -1468,6 +1488,7 @@ begin
     cdsBugHistory.FieldByName('ZSTATUS').AsInteger := Ord(bgsDeath);
     with TBugAeplyDlg.Create(nil) do
     try
+      fBugItem_ID := cdsBugItem.FieldByName('ZID').AsInteger;
       if ShowModal <> mrOK then
       begin
         cdsBugHistory.EnableControls;
@@ -1688,6 +1709,8 @@ var
   myProID : integer;
   mymailstr : string;
   myeditid : Integer;  //编号人,可能是回复人,或是解决人
+  mytemptxt : string;
+  mysl : TStringList;
 const
   glSQL  =  'insert TB_BUG_HISTORY (ZBUG_ID,ZUSER_ID,ZSTATUS,ZCONTEXT,' +
             'ZACTIONDATE,ZANNEXFILE_ID,ZANNEXFILENAME) ' +
@@ -1717,6 +1740,19 @@ begin
     ClientSystem.fDbOpr.BeginTrans;
     ShowProgress('保存...',0);
     try
+
+      //保存要保存到本地，防止上传到库内丢失。2012-3-30
+      if DataSet.fieldByName('ZCONTEXT').AsString <> '' then
+      begin
+        mytemptxt := ClientSystem.fDataDir + '\#' + cdsBugItem.FieldByName('ZID').AsString ;
+        mysl := TStringList.Create;
+        if FileExists(mytemptxt) then
+          mysl.LoadFromFile(mytemptxt);
+        mysl.Add(DataSet.fieldByName('ZCONTEXT').AsString);
+        mysl.SaveToFile(mytemptxt);
+        mysl.Free;
+      end;
+      
       try
         ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
         mySQL := format(glSQL3,[
@@ -1758,6 +1794,18 @@ begin
     try
       ShowProgress('保存...',4);
       try
+      //保存要保存到本地，防止上传到库内丢失。2012-3-30
+      if DataSet.FieldByName('ZCONTEXT').AsString <> '' then
+      begin
+        mytemptxt := ClientSystem.fDataDir + '\#' + cdsBugItem.FieldByName('ZID').AsString ;
+        mysl := TStringList.Create;
+        if FileExists(mytemptxt) then
+          mysl.LoadFromFile(mytemptxt);
+        mysl.Add(DataSet.fieldByName('ZCONTEXT').AsString);
+        mysl.SaveToFile(mytemptxt);
+        mysl.Free;
+      end;
+
       myFileID := -1;
       UpdateProgressTitle('上传文件...');
       UpdateProgress(1);
@@ -1952,7 +2000,7 @@ begin
       begin
         dgBugItem.Canvas.Brush.Color := clAqua;
       end;
-    Ord(bcAssingeto):
+    Ord(bcAssingeto),Ord(bcsubAssingeto):
       if cdsBugItem.FieldByName('ZASSIGNEDTO').AsInteger =
          ClientSystem.fEditer_id then
       begin
@@ -2030,11 +2078,11 @@ begin
 
   try
     fPageType.fType := ptMe;
-    fPageType.fWhereStr := 'ZASSIGNEDTO=%d';
+    fPageType.fWhereStr := 'ZASSIGNEDTO=%d or ZSUBASSIGNEDTO=%d ';
     fPageType.fName := '指派给我';
     fPageType.fIndex := 1;
     myPageIndex := 1;
-    mywhere := format(fPageType.fWhereStr{'ZASSIGNEDTO=%d'},[ClientSystem.fEditer_id]);
+    mywhere := format(fPageType.fWhereStr{'ZASSIGNEDTO=%d'},[ClientSystem.fEditer_id,ClientSystem.fEditer_id]);
     fPageType.fIndexCount := GetBugItemPageCount(myPageindex,myWhere);
     LoadBugItem(myPageindex,myWhere);
     lbPageCount.Caption := format('%d/%d',[
@@ -2305,6 +2353,7 @@ begin
         cdsBugCreater.CloneCursor(DM.cdsUser,True);
         cdsBugAdmder.CloneCursor(DM.cdsUser,True);
         cdsToWho.CloneCursor(DM.cdsUser,True);
+        cdsSubToWho.CloneCursor(DM.cdsUser,True);
         cbbTag.Items.Clear;
         DM.cdsTag.First;
         while not DM.cdsTag.Eof do

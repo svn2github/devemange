@@ -1,9 +1,9 @@
 inherited BugHighQueryDlg: TBugHighQueryDlg
-  Left = 395
+  Left = 297
   Top = 136
   BorderStyle = bsDialog
   Caption = #39640#32423#26597#35810
-  ClientHeight = 494
+  ClientHeight = 522
   ClientWidth = 620
   OldCreateOrder = True
   Position = poMainFormCenter
@@ -11,7 +11,7 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
   TextHeight = 15
   object btn1: TBitBtn
     Left = 482
-    Top = 450
+    Top = 480
     Width = 100
     Height = 25
     TabOrder = 1
@@ -19,7 +19,7 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
   end
   object btn2: TBitBtn
     Left = 378
-    Top = 450
+    Top = 480
     Width = 100
     Height = 25
     TabOrder = 2
@@ -213,7 +213,7 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
   end
   object btnAll: TBitBtn
     Left = 274
-    Top = 450
+    Top = 480
     Width = 100
     Height = 25
     Caption = #20840#37096#38382#39064
@@ -310,7 +310,7 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
   end
   object chkTag: TCheckBox
     Left = 30
-    Top = 393
+    Top = 421
     Width = 97
     Height = 17
     Caption = #26631#31614':'
@@ -318,7 +318,7 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
   end
   object cbbTag: TComboBox
     Left = 202
-    Top = 384
+    Top = 414
     Width = 199
     Height = 23
     Style = csDropDownList
@@ -348,14 +348,14 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
   end
   object edtName: TEdit
     Left = 202
-    Top = 411
+    Top = 441
     Width = 377
     Height = 23
     TabOrder = 36
   end
   object chkName: TCheckBox
     Left = 30
-    Top = 417
+    Top = 446
     Width = 155
     Height = 17
     Caption = #38382#39064#21517#31216#27169#31946#26597#25214#65306
@@ -408,6 +408,25 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
     Time = 39648.741306423610000000
     ImeName = #26497#21697#20116#31508#36755#20837#27861
     TabOrder = 42
+  end
+  object chkSubToWho: TCheckBox
+    Left = 31
+    Top = 394
+    Width = 97
+    Height = 17
+    Caption = #20174#25351#27966#32473#35841':'
+    TabOrder = 43
+  end
+  object dblkcbb3: TDBLookupComboBox
+    Left = 203
+    Top = 382
+    Width = 201
+    Height = 23
+    DropDownRows = 30
+    KeyField = 'ZID'
+    ListField = 'ZNAME'
+    ListSource = dsSubToWho
+    TabOrder = 44
   end
   object cdsProject: TClientDataSet
     Tag = -1
@@ -486,5 +505,16 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
     DataSet = cdsToWho
     Left = 497
     Top = 347
+  end
+  object cdsSubToWho: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 533
+    Top = 316
+  end
+  object dsSubToWho: TDataSource
+    DataSet = cdsSubToWho
+    Left = 534
+    Top = 348
   end
 end

@@ -66,6 +66,10 @@ type
     chkNeedDate: TCheckBox;
     dtpNeed: TDateTimePicker;
     dtpNeed2: TDateTimePicker;
+    chkSubToWho: TCheckBox;
+    dblkcbb3: TDBLookupComboBox;
+    cdsSubToWho: TClientDataSet;
+    dsSubToWho: TDataSource;
     procedure chkmoduleClick(Sender: TObject);
     procedure btntodayClick(Sender: TObject);
     procedure btntodayBugClick(Sender: TObject);
@@ -268,6 +272,14 @@ begin
   if chkToWho.Checked then
   begin
     mystr := format('ZASSIGNEDTO=%d',[cdsToWho.FieldByName('ZID').AsInteger]);
+  end;
+  if mystr <> '' then mywhere := mywhere + ' and ' + mystr;
+
+  //¥”÷∏≈…∏¯À≠
+  mystr := '';
+  if chkSubToWho.Checked then
+  begin
+    mystr := format('ZASSIGNEDTO=%d',[cdsSubToWho.FieldByName('ZID').AsInteger]);
   end;
   if mystr <> '' then mywhere := mywhere + ' and ' + mystr;
 

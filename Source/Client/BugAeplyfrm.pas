@@ -30,11 +30,14 @@ type
     btbnOpenAnnix: TBitBtn;
     Label9: TLabel;
     edPath: TEdit;
+    btnOpenFileTxt: TBitBtn;
     procedure btbnOpenAnnixClick(Sender: TObject);
+    procedure btnOpenFileTxtClick(Sender: TObject);
   private
     { Private declarations }
   public
     { Public declarations }
+    fBugItem_ID : Integer; 
   end;
 
 var
@@ -42,7 +45,10 @@ var
 
 implementation
 
-uses BugManageClientfrm;
+uses
+BugManageClientfrm,
+
+  ClinetSystemUnits;
 
 {$R *.dfm}
 
@@ -55,6 +61,26 @@ begin
     myfilename := OpenDialog1.FileName;
     edPath.Text := myfilename;
   end;
+end;
+
+procedure TBugAeplyDlg.btnOpenFileTxtClick(Sender: TObject);
+var
+  myfilename : string;
+  mysl : TStringList;
+begin
+  myfilename := ClientSystem.fDataDir + '\#' + IntToStr(fBugItem_ID);
+  if not FileExists(myfilename) then
+  begin
+    Application.MessageBox('无草稿，不能打开。','提示',MB_ICONWARNING+MB_OK);
+    Exit;
+  end;
+
+  mysl := TStringList.Create;
+  mysl.LoadFromFile(myfilename);
+  DBMemo1.Lines.Assign(mysl);
+  mysl.Free;
+
+
 end;
 
 end.

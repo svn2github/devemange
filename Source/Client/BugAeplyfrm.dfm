@@ -1,17 +1,17 @@
 inherited BugAeplyDlg: TBugAeplyDlg
-  Left = 476
-  Top = 255
+  Left = 299
+  Top = 152
   BorderStyle = bsDialog
   Caption = #22238#22797
-  ClientHeight = 461
+  ClientHeight = 445
   ClientWidth = 661
   OldCreateOrder = True
   Position = poMainFormCenter
   PixelsPerInch = 96
   TextHeight = 15
   object BitBtn1: TBitBtn
-    Left = 408
-    Top = 420
+    Left = 449
+    Top = 414
     Width = 100
     Height = 25
     Caption = #30830#23450'(&O)'
@@ -19,8 +19,8 @@ inherited BugAeplyDlg: TBugAeplyDlg
     Kind = bkOK
   end
   object BitBtn2: TBitBtn
-    Left = 528
-    Top = 420
+    Left = 553
+    Top = 414
     Width = 100
     Height = 25
     Caption = #21462#28040'(&C)'
@@ -33,6 +33,7 @@ inherited BugAeplyDlg: TBugAeplyDlg
     Width = 663
     Height = 59
     BevelOuter = bvNone
+    Color = clMoneyGreen
     TabOrder = 2
     object Label8: TLabel
       Left = 0
@@ -224,9 +225,18 @@ inherited BugAeplyDlg: TBugAeplyDlg
       TabOrder = 2
     end
   end
+  object btnOpenFileTxt: TBitBtn
+    Left = 13
+    Top = 414
+    Width = 100
+    Height = 25
+    Caption = #25171#24320#33609#31295
+    TabOrder = 4
+    OnClick = btnOpenFileTxtClick
+  end
   object OpenDialog1: TOpenDialog
     Filter = #25152#26377#25991#20214'(*.*)|*.*|Png(*.png)|*.png|bmp(*.bmp)|*.bmp|jpg(*.jpg)|*.jpg'
-    Left = 24
-    Top = 424
+    Left = 192
+    Top = 160
   end
 end
