@@ -331,6 +331,7 @@ create table TB_BUG_ITEM(
 	ZOPENEDDATE    datetime not null,                       /*创建时间*/
 	ZOPENVER       int not null,                             /*当时有问题的版本*/
 	ZASSIGNEDTO    int,                                       /*分派给*/
+	ZSUBASSIGNEDTO int,                                       /*从分派给 2012-3-30*/
         ZASSIGNEDDATE  datetime,                                 /*分派时间*/
 	ZRESOLVEDBY    int,                                       /*解决人*/
 	ZRESOLUTION    int,                                       /*解决方案*/
