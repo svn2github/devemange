@@ -874,7 +874,8 @@ begin
   begin
     fPageType.fIndex := fPageType.fIndex + 1;
     myPageIndex := fPageType.fIndex;
-    mywhere := Format(fPageType.fWhereStr,[ClientSystem.fEditer_id]);
+    mywhere := Format(fPageType.fWhereStr,[ClientSystem.fEditer_id,
+      ClientSystem.fEditer_id]);
     LoadBugItem(myPageindex,myWhere);
     lbPageCount.Caption := format('%d/%d',[
       fPageType.fIndex,
@@ -950,7 +951,8 @@ begin
   begin
     fPageType.fIndex := fPageType.fIndex -1;
     myPageIndex := fPageType.fIndex;
-    mywhere := Format(fPageType.fWhereStr,[ClientSystem.fEditer_id]);
+    mywhere := Format(fPageType.fWhereStr,[ClientSystem.fEditer_id,
+      ClientSystem.fEditer_id]);
     LoadBugItem(myPageindex,myWhere);
     lbPageCount.Caption := format('%d/%d',[
       fPageType.fIndex,
@@ -1045,7 +1047,8 @@ begin
   begin
     fPageType.fIndex := 1;
     myPageIndex := 1;
-    mywhere := Format(fPageType.fWhereStr,[ClientSystem.fEditer_id]);
+    mywhere := Format(fPageType.fWhereStr,[ClientSystem.fEditer_id,
+      ClientSystem.fEditer_id]);
     LoadBugItem(myPageindex,myWhere);
     lbPageCount.Caption := format('%d/%d',[
       1,
@@ -1106,7 +1109,8 @@ begin
   begin
     fPageType.fIndex := fPageType.fIndexCount;
     myPageIndex := fPageType.fIndex;
-    mywhere := Format(fPageType.fWhereStr,[ClientSystem.fEditer_id]);
+    mywhere := Format(fPageType.fWhereStr,[ClientSystem.fEditer_id,
+      ClientSystem.fEditer_id]);
     LoadBugItem(myPageindex,myWhere);
     lbPageCount.Caption := format('%d/%d',[
       fPageType.fIndex,
@@ -2053,11 +2057,12 @@ begin
 
   try
     fPageType.fType := ptMe;
-    fPageType.fWhereStr := 'ZOPENEDBY=%d';
+    fPageType.fWhereStr := '(ZOPENEDBY=%d or ZOPENEDBY=%d)';
     fPageType.fIndex := 1;
     fPageType.fName := '由我创建';
     myPageIndex := 1;
-    mywhere := format(fPageType.fWhereStr{'ZOPENEDBY=%d'},[ClientSystem.fEditer_id]);
+    mywhere := format(fPageType.fWhereStr{'ZOPENEDBY=%d'},[ClientSystem.fEditer_id,
+      ClientSystem.fEditer_id]);
     fPageType.fIndexCount := GetBugItemPageCount(myPageindex,myWhere);
     LoadBugItem(myPageindex,myWhere);
     lbPageCount.Caption := format('%d/%d',[
@@ -2078,7 +2083,7 @@ begin
 
   try
     fPageType.fType := ptMe;
-    fPageType.fWhereStr := 'ZASSIGNEDTO=%d or ZSUBASSIGNEDTO=%d ';
+    fPageType.fWhereStr := '(ZASSIGNEDTO=%d or ZSUBASSIGNEDTO=%d) ';
     fPageType.fName := '指派给我';
     fPageType.fIndex := 1;
     myPageIndex := 1;
@@ -2103,12 +2108,13 @@ begin
 
   try
     fPageType.fType := ptMe;
-    fPageType.fWhereStr := 'ZRESOLVEDBY=%d';
+    fPageType.fWhereStr := '(ZRESOLVEDBY=%d or ZRESOLVEDBY=%d)';
     fPageType.fIndex := 1;
     fPageType.fName := '由我解决';
 
     myPageIndex := 1;
-    mywhere := format(fPageType.fWhereStr{'ZRESOLVEDBY=%d'},[ClientSystem.fEditer_id]);
+    mywhere := format(fPageType.fWhereStr{'ZRESOLVEDBY=%d'},[ClientSystem.fEditer_id,
+      ClientSystem.fEditer_id]);
     fPageType.fIndexCount:= GetBugItemPageCount(myPageindex,myWhere);
     LoadBugItem(myPageindex,myWhere);
     lbPageCount.Caption := format('%d/%d',[
@@ -2177,7 +2183,8 @@ begin
     if fPageType.fType = ptMe then
     begin
       myPageindex := fPageType.fIndex;
-      mywhere := Format(fPageType.fWhereStr,[ClientSystem.fEditer_id]);
+      mywhere := Format(fPageType.fWhereStr,[ClientSystem.fEditer_id,
+        ClientSystem.fEditer_id]);
       fPageType.fIndexCount := GetBugItemPageCount(myPageindex,myWhere);
       LoadBugItem(myPageindex,myWhere);
       lbPageCount.Caption := format('%d/%d',[
