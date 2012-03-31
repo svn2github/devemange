@@ -1269,7 +1269,7 @@ const
              ' ZOPENEDDATE,ZOPENVER,ZASSIGNEDTO,ZSUBASSIGNEDTO,ZASSIGNEDDATE,ZRESOLUTION,' +
              ' ZLASTEDITEDBY,ZLASTEDITEDDATE,ZTAGNAME,ZDEMAND_ID,ZNEDDDATE,ZWORKTIME,ZWORKLEVEL) ' +
              'values(%d,%d,%d,''%s'',''%s'',%d,%d,%d,%d,''%s'',%d,' +
-             ' %s,%d,%d,%s,%d,%d,%s,''%s'',%d,''%s'',%f,%f)' ;
+             ' %s,%d,%d,%d,%s,%d,%d,%s,''%s'',%d,''%s'',%f,%f)' ;
 
   glSQL3  = 'update TB_BUG_ITEM set ' +
             'ZTITLE=''%s'', ' +
