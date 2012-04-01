@@ -1,6 +1,6 @@
 inherited BugManageDlg: TBugManageDlg
-  Left = 0
-  Top = 51
+  Left = 250
+  Top = 72
   Width = 1024
   Height = 687
   Caption = #38169#35823#31649#29702
@@ -34,42 +34,26 @@ inherited BugManageDlg: TBugManageDlg
       object tsBugItem: TTabSheet
         Caption = #38382#39064#21015#34920
         object Splitter1: TSplitter
-          Left = 189
+          Left = 185
           Top = 0
           Width = 10
           Height = 524
           Beveled = True
           ResizeStyle = rsLine
         end
-        object tvProject: TTreeView
-          Left = 0
-          Top = 0
-          Width = 189
-          Height = 524
-          Align = alLeft
-          HideSelection = False
-          Images = DM.ImageListTree
-          Indent = 19
-          PopupMenu = pmBugTree
-          ReadOnly = True
-          TabOrder = 0
-          OnChange = tvProjectChange
-          OnChanging = tvProjectChanging
-          OnExpanding = tvProjectExpanding
-        end
         object plBugList: TPanel
-          Left = 199
+          Left = 195
           Top = 0
-          Width = 801
+          Width = 805
           Height = 524
           Align = alClient
           BevelOuter = bvNone
           Caption = 'plBugList'
-          TabOrder = 1
+          TabOrder = 0
           object lbProjectName: TLabel
             Left = 0
             Top = 40
-            Width = 801
+            Width = 805
             Height = 15
             Align = alTop
             Caption = 'lbProjectName'
@@ -85,7 +69,7 @@ inherited BugManageDlg: TBugManageDlg
           object dgBugItem: TDBGrid
             Left = 0
             Top = 55
-            Width = 801
+            Width = 805
             Height = 366
             Align = alClient
             DataSource = dsBugItem
@@ -190,7 +174,7 @@ inherited BugManageDlg: TBugManageDlg
           object plBugTop: TPanel
             Left = 0
             Top = 0
-            Width = 801
+            Width = 805
             Height = 40
             Align = alTop
             BevelOuter = bvNone
@@ -368,7 +352,7 @@ inherited BugManageDlg: TBugManageDlg
           object plBugItemBottom: TPanel
             Left = 0
             Top = 484
-            Width = 801
+            Width = 805
             Height = 40
             Align = alBottom
             BevelOuter = bvNone
@@ -444,7 +428,7 @@ inherited BugManageDlg: TBugManageDlg
           object dbmmoZTITLE: TDBMemo
             Left = 0
             Top = 421
-            Width = 801
+            Width = 805
             Height = 63
             Align = alBottom
             DataField = 'ZTITLE'
@@ -452,6 +436,51 @@ inherited BugManageDlg: TBugManageDlg
             ReadOnly = True
             ScrollBars = ssVertical
             TabOrder = 3
+          end
+        end
+        object pnlBugLeft: TPanel
+          Left = 0
+          Top = 0
+          Width = 185
+          Height = 524
+          Align = alLeft
+          BevelOuter = bvNone
+          TabOrder = 1
+          object spl1: TSplitter
+            Left = 0
+            Top = 421
+            Width = 185
+            Height = 3
+            Cursor = crVSplit
+            Align = alBottom
+          end
+          object lstAdvancedQuery: TListBox
+            Left = 0
+            Top = 424
+            Width = 185
+            Height = 100
+            Hint = #26597#35810#21015#34920#65292#21487#20197#28857#39640#32423#26597#35810#65292#24377#20986#31383#21475#20445#23384#26597#35810#12290
+            Align = alBottom
+            ItemHeight = 15
+            PopupMenu = pmAdvQuery
+            TabOrder = 0
+            OnDblClick = lstAdvancedQueryDblClick
+          end
+          object tvProject: TTreeView
+            Left = 0
+            Top = 0
+            Width = 185
+            Height = 421
+            Align = alClient
+            HideSelection = False
+            Images = DM.ImageListTree
+            Indent = 19
+            PopupMenu = pmBugTree
+            ReadOnly = True
+            TabOrder = 1
+            OnChange = tvProjectChange
+            OnChanging = tvProjectChanging
+            OnExpanding = tvProjectExpanding
           end
         end
       end
@@ -1502,6 +1531,23 @@ inherited BugManageDlg: TBugManageDlg
       OnExecute = actBug_VerifyExecute
       OnUpdate = actBug_VerifyUpdate
     end
+    object actBug_DelAdvQuery: TAction
+      Category = #38382#39064#21015#34920
+      Caption = #21024#38500#39640#32423#26597#35810'...'
+      OnExecute = actBug_DelAdvQueryExecute
+      OnUpdate = actBug_DelAdvQueryUpdate
+    end
+    object actBug_RunAdvQuery: TAction
+      Category = #38382#39064#21015#34920
+      Caption = #25191#34892#39640#32423#26597#35810'('#21452#20987')'
+      OnExecute = actBug_RunAdvQueryExecute
+      OnUpdate = actBug_RunAdvQueryUpdate
+    end
+    object actBug_LoadAdvQuery: TAction
+      Category = #38382#39064#21015#34920
+      Caption = #21047#26032#39640#32423#26597#35810
+      OnExecute = actBug_LoadAdvQueryExecute
+    end
   end
   object pmBugTree: TPopupMenu
     AutoHotkeys = maManual
@@ -1660,5 +1706,25 @@ inherited BugManageDlg: TBugManageDlg
     DataSet = cdsTerm
     Left = 416
     Top = 48
+  end
+  object pmAdvQuery: TPopupMenu
+    AutoHotkeys = maManual
+    Left = 56
+    Top = 48
+    object mniBug_RunAdvQuery: TMenuItem
+      Action = actBug_RunAdvQuery
+    end
+    object mniBug_HighQuery: TMenuItem
+      Action = actBug_HighQuery
+    end
+    object mniBug_LoadAdvQuery: TMenuItem
+      Action = actBug_LoadAdvQuery
+    end
+    object mniN15: TMenuItem
+      Caption = '-'
+    end
+    object mniBug_DelAdvQuery: TMenuItem
+      Action = actBug_DelAdvQuery
+    end
   end
 end

@@ -70,6 +70,9 @@ type
     dblkcbb3: TDBLookupComboBox;
     cdsSubToWho: TClientDataSet;
     dsSubToWho: TDataSource;
+    edtMutilModule: TEdit;
+    chkMutilModule: TCheckBox;
+    btnSave: TBitBtn;
     procedure chkmoduleClick(Sender: TObject);
     procedure btntodayClick(Sender: TObject);
     procedure btntodayBugClick(Sender: TObject);
@@ -79,6 +82,7 @@ type
     procedure cbbModuleChange(Sender: TObject);
     procedure edtCodeChange(Sender: TObject);
     procedure btnAllClick(Sender: TObject);
+    procedure btnSaveClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -145,9 +149,25 @@ begin
 end;
 
 procedure TBugHighQueryDlg.cbbModuleChange(Sender: TObject);
+var
+  mystr : string;
 begin
   cdsProject.Close;
   cdsAmdieVer.Close;
+
+  //多模块时
+  if chkMutilModule.Checked then
+  begin
+    mystr := cbbTreeID.Items[cbbModule.ItemIndex];// cbbModule.Text;
+    if Pos(mystr+ ';',edtMutilModule.Text) = 0 then
+    begin
+
+      if edtMutilModule.Text = '' then
+        edtMutilModule.Text := mystr + ';'
+      else
+        edtMutilModule.Text := edtMutilModule.Text + mystr +';';
+    end;
+  end;
 end;
 
 procedure TBugHighQueryDlg.GetBugType;
@@ -163,12 +183,29 @@ var
   mystr : string;
   mywhere : string;
   i : integer;
+  mysl : TStringList;
 begin
   //1.指定模块
   mystr := '';
   if chkmodule.Checked then
   begin
-    mystr := format('ZTREE_ID=%s',[cbbTreeID.Items[cbbModule.ItemIndex]]);
+    if not chkMutilModule.Checked then
+      mystr := format('ZTREE_ID=%s',[cbbTreeID.Items[cbbModule.ItemIndex]])
+    else begin
+      //多模块时
+      mysl := TStringList.Create;
+      mysl.Delimiter := ';';
+      mysl.DelimitedText := edtMutilModule.Text;
+      for i:=0 to  mysl.Count -1 do
+      begin
+        if mysl.Strings[i] = '' then Continue;
+        if mystr = '' then
+          mystr := format('ZTREE_ID=%s',[mysl.Strings[i]])
+        else
+          mystr := mystr + ' or ' + format('ZTREE_ID=%s',[mysl.Strings[i]]);
+      end;
+      mysl.Free
+    end;
   end
   else begin
     for i:=0 to cbbModule.Items.Count -1 do
@@ -331,6 +368,30 @@ begin
   cbBugAmdorer.Checked   := False;
   chkTag.Checked         := False;
   ModalResult := mrOK;
+end;
+
+procedure TBugHighQueryDlg.btnSaveClick(Sender: TObject);
+var
+  myfilename : string;
+  mystr : string;
+  mysl : TStringList;
+begin
+  //
+  if not InputQuery('保存','查询名称',mystr) then
+    Exit;
+
+  myfilename := ClientSystem.fQueryDir + '\' + mystr;
+  if FileExists(myfilename) then
+  begin
+    Application.MessageBox('已经有重名的了','保存',MB_ICONWARNING+MB_OK);
+    Exit;
+  end;
+
+  //写入到文件内
+  mysl := TStringList.Create;
+  mysl.Add(GetwhereStr());
+  mysl.SaveToFile(myfilename);
+  mysl.Free;
 end;
 
 end.

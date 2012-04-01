@@ -7,7 +7,8 @@ uses
   Dialogs, BaseChildfrm, ExtCtrls, ComCtrls, DB, DBClient,
 
   ClientTypeUnits, ActnList, Menus, Grids, DBGrids, StdCtrls, Buttons,
-  DBCtrls, Mask, dbcgrids,BugHighQueryfrm;
+  DBCtrls, Mask, dbcgrids,BugHighQueryfrm,
+  ClinetSystemUnits;
 
 type
 
@@ -58,7 +59,6 @@ type
     tsBugItem: TTabSheet;
     tsBugContext: TTabSheet;
     Splitter1: TSplitter;
-    tvProject: TTreeView;
     plBugList: TPanel;
     dgBugItem: TDBGrid;
     plBugTop: TPanel;
@@ -203,6 +203,19 @@ type
     lbl22: TLabel;
     dblkcbbZASSIGNEDTO1: TDBLookupComboBox;
     lbl23: TLabel;
+    pnlBugLeft: TPanel;
+    lstAdvancedQuery: TListBox;
+    tvProject: TTreeView;
+    spl1: TSplitter;
+    pmAdvQuery: TPopupMenu;
+    mniBug_HighQuery: TMenuItem;
+    actBug_DelAdvQuery: TAction;
+    mniBug_DelAdvQuery: TMenuItem;
+    mniN15: TMenuItem;
+    actBug_RunAdvQuery: TAction;
+    mniBug_RunAdvQuery: TMenuItem;
+    actBug_LoadAdvQuery: TAction;
+    mniBug_LoadAdvQuery: TMenuItem;
     procedure actBug_AddDirExecute(Sender: TObject);
     procedure tvProjectExpanding(Sender: TObject; Node: TTreeNode;
       var AllowExpansion: Boolean);
@@ -273,10 +286,17 @@ type
     procedure actBug_VerifyExecute(Sender: TObject);
     procedure actBug_VerifyUpdate(Sender: TObject);
     procedure BtnSelectedDataTimeClick(Sender: TObject);
+    procedure actBug_DelAdvQueryUpdate(Sender: TObject);
+    procedure actBug_DelAdvQueryExecute(Sender: TObject);
+    procedure actBug_RunAdvQueryUpdate(Sender: TObject);
+    procedure actBug_RunAdvQueryExecute(Sender: TObject);
+    procedure lstAdvancedQueryDblClick(Sender: TObject);
+    procedure actBug_LoadAdvQueryExecute(Sender: TObject);
   private
     fPageType : TPageTypeRec; //分页处理
     fHighQuery : TBugHighQueryDlg;
     fZRESOLVEDBY : Integer; //保存起来为激活用
+    fBugAQuery : TAdvancedQueryArray; //错误管理内的高级查询
 
     procedure ClearNode(AParent:TTreeNode);
     function  GetBugItemPageCount(APageIndex:integer;AWhereStr:String):integer; //取出页总数
@@ -287,6 +307,8 @@ type
     procedure WMShowBugItem(var msg:TMessage); message gcMSG_GetBugItem; //直接显示bug,用于测试用例内
     procedure LoadTag(AItems:TStrings);
     procedure SetTag(ATagName:string); //设置标签
+
+    procedure LoadBugQuery(); //加载查询条件
   public
     { Public declarations }
     procedure initBase; override;
@@ -302,7 +324,6 @@ implementation
 uses
   ShellAPI,
   AddBugTreeNodefrm,          {增加BUG项目}
-  ClinetSystemUnits,
   Activationfrm,              {激活窗口}
   TickDateTimefrm,            {选择窗口}
   SelectBugStatusfrm,
@@ -383,6 +404,7 @@ begin
   LoadTag(cbbTag.Items);
   LoadBugTree(-1,nil);
   fHighQuery := nil;
+  LoadBugQuery();
 end;
 
 procedure TBugManageDlg.LoadBugTree(APID: integer; APNode: TTreeNode);
@@ -431,7 +453,7 @@ begin
       myData^.fhasChild := cdsBugTree.FieldByName('ZHASCHILD').AsBoolean;
       myData^.fPageIndex := 1;
       myData^.fPageCount := 1;
-      myNode := tvProject.Items.AddChild(APNode,myData^.fName);
+      myNode := tvProject.Items.AddChild(APNode,format('%s(%d)',[myData^.fName,myData^.fID]));
       myNode.Data := myData;
       if myData^.fhasChild then
       begin
@@ -2319,6 +2341,8 @@ procedure TBugManageDlg.actBug_HighQueryExecute(Sender: TObject);
 var
   myPageIndex:integer;
   mywhere : String;
+  myNode : TTreeNode;
+  myData,myPData : PBugTreeNode;
 const
   glSQL  = 'select ZID,ZNAME,ZPRO_ID from TB_BUG_TREE Order by ZSORT';
 begin
@@ -2334,6 +2358,22 @@ begin
       //对内容进行初期化
       with fHighQuery do
       begin
+
+        //优化，不需要从服务器上取数据了.
+        myNode := tvProject.TopItem;
+        while Assigned(myNode) do
+        begin
+          if Assigned(myNode.Data) then
+          begin
+            myData := myNode.Data;
+            cbbModule.Items.Add(Format('%s(%d)',[myData^.fName,myData^.fID]));
+            cbbModuleID.Items.Add(IntToStr(myData^.fPRO_ID));
+            cbbTreeID.Items.Add(IntToStr(myData^.fID));
+          end;
+          myNode := myNode.GetNext;
+        end;
+
+        {
         cdstemp.Data := ClientSystem.fDbOpr.ReadDataSet(PChar(glSQL));
         cdstemp.First;
         while not cdstemp.Eof do
@@ -2351,6 +2391,7 @@ begin
           cbbTreeID.Items.Add(cdstemp.FieldByName('ZID').AsString);
           cdstemp.Next;
         end;
+        }
         dtpAmod.DateTime   := now();
         dtpBugday.DateTime := now();
         dtpAmod2.DateTime   := now();
@@ -2374,6 +2415,7 @@ begin
       HideProgress;
     end;
   end;
+
   with fHighQuery  do
   begin
     edtCode.SelectAll;
@@ -2890,6 +2932,100 @@ begin
     cdsBugItem.FieldByName('ZNEDDDATE').AsDateTime := myform.cal1.Date;
   end;
   myform.Free;
+end;
+
+procedure TBugManageDlg.LoadBugQuery;
+var
+  MyFound: TSearchRec;
+  myFinished : Integer;
+begin
+  SetLength(fBugAQuery,0);
+  lstAdvancedQuery.Clear;
+  myFinished := FindFirst(ClientSystem.fQueryDir + '\*.*', 63, MyFound);
+  while myFinished = 0 do
+  begin
+    if (MyFound.Name <> '.')  and
+       (MyFound.Name <> '..') then
+    begin
+      SetLength(fBugAQuery,Length(fBugAQuery)+1);
+      fBugAQuery[Length(fBugAQuery)-1].fName := ExtractFileName(MyFound.Name);
+      fBugAQuery[Length(fBugAQuery)-1].fFilePath := ClientSystem.fQueryDir + '\' + MyFound.Name;
+      lstAdvancedQuery.Items.Add(MyFound.Name);
+    end;
+    myFinished := FindNext(MyFound);
+  end;
+  FindClose(MyFound);
+end;
+
+procedure TBugManageDlg.actBug_DelAdvQueryUpdate(Sender: TObject);
+begin
+  (Sender as TAction).Enabled := lstAdvancedQuery.ItemIndex >=0;
+end;
+
+procedure TBugManageDlg.actBug_DelAdvQueryExecute(Sender: TObject);
+var
+  myindex : Integer;
+begin
+  myindex := lstAdvancedQuery.ItemIndex;
+  if (myindex >=0) and (myindex < Length(fBugAQuery)) then
+  begin
+    if Application.MessageBox('是否删除','询问',MB_ICONQUESTION+MB_YESNO)=IDNO then
+      Exit;
+    DeleteFile(fBugAQuery[myindex].fFilePath);
+    lstAdvancedQuery.Items.Delete(myindex);
+  end;
+end;
+
+procedure TBugManageDlg.actBug_RunAdvQueryUpdate(Sender: TObject);
+begin
+ (Sender as TAction).Enabled := lstAdvancedQuery.ItemIndex >=0;
+end;
+
+procedure TBugManageDlg.actBug_RunAdvQueryExecute(Sender: TObject);
+var
+  myindex : Integer;
+  myfilename : string;
+  mysl : TStringList;
+  mywhere : string;
+  myPageIndex : Integer;
+begin
+  myindex := lstAdvancedQuery.ItemIndex;
+  if (myindex >=0) and (myindex < Length(fBugAQuery)) then
+  begin
+    myfilename := fBugAQuery[myindex].fFilePath;
+    if FileExists(myfilename) then
+    begin
+      mysl := TStringList.Create;
+      mysl.LoadFromFile(myfilename);
+
+      //执行
+      mywhere := mysl.Text;
+      fPageType.fType := ptQuery;
+      fPageType.fWhereStr := mywhere;
+      fPageType.fIndex := 1;
+      fPageType.fName := '高级查询';
+      myPageIndex := 1;
+      fPageType.fIndexCount := GetBugItemPageCount(1,myWhere);
+      LoadBugItem(myPageindex,myWhere);
+      lbPageCount.Caption := format('%d/%d',[
+          fPageType.fIndex,
+          fPageType.fIndexCount]);
+      lbProjectName.Caption := format('%s  =>第%d共%d页',[
+      fPageType.fName,fPageType.fIndex,fPageType.fIndexCount]);
+
+      mysl.Free;
+    end;
+  end;
+end;
+
+procedure TBugManageDlg.lstAdvancedQueryDblClick(Sender: TObject);
+begin
+  actBug_RunAdvQuery.Execute;
+end;
+
+procedure TBugManageDlg.actBug_LoadAdvQueryExecute(Sender: TObject);
+begin
+  LoadBugQuery();
 end;
 
 end.

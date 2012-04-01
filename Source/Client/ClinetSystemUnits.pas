@@ -27,6 +27,14 @@ type
     fDate : TDateTime;
   end;
 
+  PAdvancedQuery = ^TAdvancedQuery;
+  TAdvancedQuery = record
+    fName : string;
+    fFilePath : string;    //路径
+  end;
+  TAdvancedQueryArray = array of  TAdvancedQuery;
+
+
   TClinetSystem  = Class;
 
   TClinetSystem = Class(TObject)
@@ -42,6 +50,7 @@ type
   public
     fAppDir : String;
     fDataDir : String;            //用户数据目录
+    fQueryDir : string;           //高级查询保存目录
     fTempDir : String;            //临时目录
     fDbOpr  : IDbOperator;        //数据接口处理
     fEditer_id : integer;         //用户的id号
@@ -150,6 +159,10 @@ begin
   fDataDir := fAppDir + '\Data';
   if not DirectoryExists(fDataDir) then
     CreateDir(fDataDir);
+  fQueryDir := fDataDir + '\' + 'Query';
+  if not DirectoryExists(fQueryDir) then
+    CreateDir(fQueryDir);
+
   ftempdir := DoGetTemp;
   fcdsUsePriv := TClientDataSet.Create(nil);
   fEditer_id := -1;
@@ -163,6 +176,7 @@ begin
   fEditer_CheckTask := False;
   fLoginImageIndex := -1;
   Loadfromini;
+
 end;
 
 destructor TClinetSystem.Destroy;

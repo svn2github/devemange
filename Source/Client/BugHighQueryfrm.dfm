@@ -1,9 +1,9 @@
 inherited BugHighQueryDlg: TBugHighQueryDlg
-  Left = 297
+  Left = 357
   Top = 136
   BorderStyle = bsDialog
   Caption = #39640#32423#26597#35810
-  ClientHeight = 522
+  ClientHeight = 544
   ClientWidth = 620
   OldCreateOrder = True
   Position = poMainFormCenter
@@ -11,7 +11,7 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
   TextHeight = 15
   object btn1: TBitBtn
     Left = 482
-    Top = 480
+    Top = 508
     Width = 100
     Height = 25
     TabOrder = 1
@@ -19,7 +19,7 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
   end
   object btn2: TBitBtn
     Left = 378
-    Top = 480
+    Top = 508
     Width = 100
     Height = 25
     TabOrder = 2
@@ -27,7 +27,7 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
   end
   object chktodayAmind: TCheckBox
     Left = 30
-    Top = 123
+    Top = 122
     Width = 153
     Height = 17
     Caption = #35299#20915#30340#38382#39064#26102#38388':'
@@ -63,7 +63,7 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
   end
   object chktodayBug: TCheckBox
     Left = 30
-    Top = 151
+    Top = 150
     Width = 137
     Height = 17
     Caption = #21019#24314#30340#38382#39064#26102#38388':'
@@ -166,7 +166,7 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
   end
   object chkAmideBugVer: TCheckBox
     Left = 30
-    Top = 100
+    Top = 96
     Width = 166
     Height = 17
     Caption = #25351#23450#35299#20915#38382#39064#30340#29256#26412':'
@@ -185,7 +185,7 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
   end
   object cbbModuleID: TComboBox
     Left = 408
-    Top = 37
+    Top = 7
     Width = 97
     Height = 23
     ImeName = #26497#21697#20116#31508#36755#20837#27861
@@ -213,7 +213,7 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
   end
   object btnAll: TBitBtn
     Left = 274
-    Top = 480
+    Top = 508
     Width = 100
     Height = 25
     Caption = #20840#37096#38382#39064
@@ -223,7 +223,7 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
   end
   object cbbTreeID: TComboBox
     Left = 511
-    Top = 36
+    Top = 6
     Width = 88
     Height = 23
     ImeName = #26497#21697#20116#31508#36755#20837#27861
@@ -272,7 +272,7 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
   end
   object chkBugCreateor: TCheckBox
     Left = 30
-    Top = 310
+    Top = 308
     Width = 97
     Height = 17
     Caption = #38382#39064#21019#24314#20154':'
@@ -280,7 +280,7 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
   end
   object cbBugAmdorer: TCheckBox
     Left = 30
-    Top = 343
+    Top = 338
     Width = 97
     Height = 17
     Caption = #38382#39064#35299#20915#20154':'
@@ -310,7 +310,7 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
   end
   object chkTag: TCheckBox
     Left = 30
-    Top = 421
+    Top = 416
     Width = 97
     Height = 17
     Caption = #26631#31614':'
@@ -328,7 +328,7 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
   end
   object chkToWho: TCheckBox
     Left = 30
-    Top = 370
+    Top = 364
     Width = 97
     Height = 17
     Caption = #25351#27966#32473#35841':'
@@ -355,7 +355,7 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
   end
   object chkName: TCheckBox
     Left = 30
-    Top = 446
+    Top = 444
     Width = 155
     Height = 17
     Caption = #38382#39064#21517#31216#27169#31946#26597#25214#65306
@@ -383,7 +383,7 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
   end
   object chkNeedDate: TCheckBox
     Left = 30
-    Top = 177
+    Top = 176
     Width = 121
     Height = 17
     Caption = #35201#27714#23436#25104#26102#38388#65306
@@ -411,7 +411,7 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
   end
   object chkSubToWho: TCheckBox
     Left = 31
-    Top = 394
+    Top = 388
     Width = 97
     Height = 17
     Caption = #20174#25351#27966#32473#35841':'
@@ -428,50 +428,74 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
     ListSource = dsSubToWho
     TabOrder = 44
   end
+  object edtMutilModule: TEdit
+    Left = 476
+    Top = 38
+    Width = 121
+    Height = 23
+    TabOrder = 45
+  end
+  object chkMutilModule: TCheckBox
+    Left = 408
+    Top = 42
+    Width = 65
+    Height = 17
+    Caption = #22810#27169#22359
+    TabOrder = 46
+  end
+  object btnSave: TBitBtn
+    Left = 24
+    Top = 508
+    Width = 100
+    Height = 25
+    Caption = #20445#23384#26597#35810'...'
+    TabOrder = 47
+    OnClick = btnSaveClick
+  end
   object cdsProject: TClientDataSet
     Tag = -1
     Aggregates = <>
     Params = <>
     Left = 416
-    Top = 208
+    Top = 200
   end
   object dsProject: TDataSource
     DataSet = cdsProject
     Left = 416
-    Top = 240
+    Top = 232
   end
   object cdsBugType: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 456
-    Top = 208
+    Top = 200
   end
   object dsBugType: TDataSource
     DataSet = cdsBugType
     Left = 456
-    Top = 240
+    Top = 232
   end
   object cdsAmdieVer: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 494
-    Top = 208
+    Top = 200
   end
   object dsAmdieVer: TDataSource
     DataSet = cdsAmdieVer
     Left = 496
-    Top = 240
+    Top = 232
   end
   object cdsBugLevel: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 536
-    Top = 208
+    Top = 200
   end
   object dsBugLevel: TDataSource
     DataSet = cdsBugLevel
     Left = 536
-    Top = 240
+    Top = 232
   end
   object cdsBugCreater: TClientDataSet
     Aggregates = <>
