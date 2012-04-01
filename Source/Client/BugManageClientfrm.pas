@@ -2714,6 +2714,8 @@ procedure TBugManageDlg.actBug_ExportExcelExecute(Sender: TObject);
 var
   Eclapp:variant;
   i,j,n,c:integer;
+  myoldindex : Integer;
+  myindex,myindexcount : Integer;
 begin
 
   //生成Excel文件
@@ -2734,25 +2736,33 @@ begin
 
   cdsBugItem.DisableControls;
   try
-    cdsBugItem.First;
-    n:=n+1;c := 1;
-    while not cdsBugItem.Eof do
+    c := 1;
+    n:=n+1;
+    myoldindex := fPageType.fIndex;
+    for myindex := fPageType.fIndex to fPageType.fIndexCount do
     begin
-      eclapp.cells[n,1] := inttostr(c); c:=c+1;
-      for j :=0 to dgBugItem.FieldCount -1 do
+      actBug_NewPage.Execute;  //处理下一页
+      cdsBugItem.First;
+
+      while not cdsBugItem.Eof do
       begin
-        eclapp.cells[n,2+j] := cdsBugItem.FieldByName(
-          dgBugItem.Columns.Items[j].FieldName).AsString;
+        eclapp.cells[n,1] := inttostr(c); c:=c+1;
+        for j :=0 to dgBugItem.FieldCount -1 do
+        begin
+          eclapp.cells[n,2+j] := cdsBugItem.FieldByName(
+            dgBugItem.Columns.Items[j].FieldName).AsString;
+        end;
+        inc(n);
+        cdsBugItem.Next;
       end;
-      inc(n);
-      cdsBugItem.Next;
     end;
+    fPageType.fIndex := myoldindex;
     cdsBugItem.First;
   finally
     cdsBugItem.EnableControls;
   end;
 
-  eclapp.cells[n+1,1] := '记录的总数为：'+inttostr(cdsBugItem.RecordCount)+'条';
+  eclapp.cells[n+1,1] := '记录的总数为：'+inttostr(c-1)+'条';
 
 end;
 
