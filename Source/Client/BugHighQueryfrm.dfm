@@ -296,6 +296,7 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
     ListField = 'ZNAME'
     ListSource = dsBugCreaeter
     TabOrder = 30
+    OnCloseUp = DBLookupComboBox1CloseUp
   end
   object dblkcbb1: TDBLookupComboBox
     Left = 202
@@ -451,6 +452,21 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
     Caption = #20445#23384#26597#35810'...'
     TabOrder = 47
     OnClick = btnSaveClick
+  end
+  object chkMutilCreateor: TCheckBox
+    Left = 410
+    Top = 306
+    Width = 95
+    Height = 17
+    Caption = #22810#21019#24314#20154
+    TabOrder = 48
+  end
+  object edtMutilCreateor: TEdit
+    Left = 494
+    Top = 303
+    Width = 95
+    Height = 23
+    TabOrder = 49
   end
   object cdsProject: TClientDataSet
     Tag = -1

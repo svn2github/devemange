@@ -10,7 +10,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
   object pnlOnVisible: TPanel
     Left = 0
     Top = 0
-    Width = 1131
+    Width = 1123
     Height = 68
     Align = alTop
     TabOrder = 0
@@ -19,8 +19,8 @@ inherited TestManageChildfrm: TTestManageChildfrm
   object pgcTestMain: TPageControl
     Left = 0
     Top = 68
-    Width = 1131
-    Height = 611
+    Width = 1123
+    Height = 607
     ActivePage = tsList
     Align = alClient
     TabOrder = 1
@@ -31,8 +31,8 @@ inherited TestManageChildfrm: TTestManageChildfrm
       object dbgrdTest: TDBGrid
         Left = 0
         Top = 40
-        Width = 1123
-        Height = 438
+        Width = 1115
+        Height = 434
         Align = alClient
         DataSource = dsTestItem
         Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
@@ -137,7 +137,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
       object pnlTestTool: TPanel
         Left = 0
         Top = 0
-        Width = 1123
+        Width = 1115
         Height = 40
         Align = alTop
         BevelOuter = bvNone
@@ -208,8 +208,8 @@ inherited TestManageChildfrm: TTestManageChildfrm
       end
       object pnlTestBottom: TPanel
         Left = 0
-        Top = 541
-        Width = 1123
+        Top = 537
+        Width = 1115
         Height = 40
         Align = alBottom
         TabOrder = 2
@@ -277,8 +277,8 @@ inherited TestManageChildfrm: TTestManageChildfrm
       end
       object dbmmoZNAME: TDBMemo
         Left = 0
-        Top = 478
-        Width = 1123
+        Top = 474
+        Width = 1115
         Height = 63
         Align = alBottom
         DataField = 'ZNAME'
@@ -294,7 +294,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
       object spl1: TSplitter
         Left = 0
         Top = 250
-        Width = 1123
+        Width = 1115
         Height = 10
         Cursor = crVSplit
         Align = alTop
@@ -304,30 +304,30 @@ inherited TestManageChildfrm: TTestManageChildfrm
       object pnlTestClient: TPanel
         Left = 0
         Top = 260
-        Width = 1123
-        Height = 321
+        Width = 1115
+        Height = 317
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 0
         object dbctrlgrd1: TDBCtrlGrid
           Left = 0
           Top = 40
-          Width = 1123
-          Height = 281
+          Width = 1115
+          Height = 277
           Align = alClient
           AllowDelete = False
           AllowInsert = False
           ColCount = 2
           DataSource = dsResult
           PanelBorder = gbNone
-          PanelHeight = 93
-          PanelWidth = 553
+          PanelHeight = 92
+          PanelWidth = 549
           TabOrder = 0
           SelectedColor = clMoneyGreen
           OnPaintPanel = dbctrlgrd1PaintPanel
           object Label8: TLabel
             Left = 4
-            Top = 69
+            Top = 68
             Width = 60
             Height = 15
             Anchors = [akLeft, akBottom]
@@ -335,15 +335,15 @@ inherited TestManageChildfrm: TTestManageChildfrm
           end
           object Label16: TLabel
             Left = 181
-            Top = 70
+            Top = 69
             Width = 60
             Height = 15
             Anchors = [akLeft, akBottom]
             Caption = #23454#38469#20540#65306
           end
           object dbtxtZNO: TDBText
-            Left = 527
-            Top = 69
+            Left = 523
+            Top = 68
             Width = 18
             Height = 17
             Alignment = taCenter
@@ -360,8 +360,8 @@ inherited TestManageChildfrm: TTestManageChildfrm
             ParentFont = False
           end
           object dbtxtZUSERNAME: TDBText
-            Left = 477
-            Top = 69
+            Left = 473
+            Top = 68
             Width = 50
             Height = 17
             Alignment = taCenter
@@ -381,16 +381,16 @@ inherited TestManageChildfrm: TTestManageChildfrm
           object bvl1: TBevel
             Left = 0
             Top = 0
-            Width = 553
-            Height = 93
+            Width = 549
+            Height = 92
             Align = alClient
             Shape = bsFrame
           end
           object dbmmoZACTION: TDBMemo
             Left = 5
             Top = 6
-            Width = 541
-            Height = 56
+            Width = 537
+            Height = 55
             Anchors = [akLeft, akTop, akRight, akBottom]
             DataField = 'ZACTION'
             DataSource = dsResult
@@ -399,7 +399,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
           end
           object dbedtZTRUEVALUE: TDBEdit
             Left = 55
-            Top = 65
+            Top = 64
             Width = 121
             Height = 23
             Anchors = [akLeft, akBottom]
@@ -410,7 +410,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
           end
           object dbedtZINFACE: TDBEdit
             Left = 234
-            Top = 66
+            Top = 65
             Width = 150
             Height = 23
             Anchors = [akLeft, akBottom]
@@ -421,7 +421,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
           end
           object dbchkOK: TDBCheckBox
             Left = 387
-            Top = 69
+            Top = 68
             Width = 37
             Height = 17
             Anchors = [akLeft, akBottom]
@@ -436,14 +436,14 @@ inherited TestManageChildfrm: TTestManageChildfrm
         object pnl1: TPanel
           Left = 0
           Top = 0
-          Width = 1123
+          Width = 1115
           Height = 40
           Align = alTop
           BevelOuter = bvNone
           Color = clTeal
           TabOrder = 1
           DesignSize = (
-            1123
+            1115
             40)
           object bvl2: TBevel
             Left = 426
@@ -507,7 +507,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
             TabOrder = 5
           end
           object dbnvgr1: TDBNavigator
-            Left = 962
+            Left = 954
             Top = 8
             Width = 152
             Height = 25
@@ -530,7 +530,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
       object pnlTitle: TPanel
         Left = 0
         Top = 0
-        Width = 1123
+        Width = 1115
         Height = 15
         Align = alTop
         BevelOuter = bvNone
@@ -539,7 +539,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
         object lblTitle: TLabel
           Left = 0
           Top = 0
-          Width = 64
+          Width = 984
           Height = 15
           Align = alClient
           Caption = 'lblTitle'
@@ -553,7 +553,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
           ParentFont = False
         end
         object dbtxtZOPENEDBYNAME: TDBText
-          Left = 992
+          Left = 984
           Top = 0
           Width = 131
           Height = 15
@@ -574,7 +574,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
       object pnlTop: TPanel
         Left = 0
         Top = 15
-        Width = 1123
+        Width = 1115
         Height = 235
         Align = alTop
         BevelOuter = bvNone
@@ -1033,7 +1033,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
         object dbmmoZTESTNOTE: TDBMemo
           Left = 829
           Top = 0
-          Width = 294
+          Width = 286
           Height = 235
           Align = alClient
           DataField = 'ZTESTNOTE'

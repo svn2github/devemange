@@ -1015,10 +1015,14 @@ begin
     //位置
     DeveCalendarDlg.Left := plForm.Width - DeveCalendarDlg.Width-3;
     DeveCalendarDlg.Top  := plForm.Height - DeveCalendarDlg.Height-3;
+    DeveCalendarDlg.init;
+    DeveCalendarDlg.tmr1.Enabled := True; 
     DeveCalendarDlg.Show;
   end
-  else
+  else begin
+    DeveCalendarDlg.tmr1.Enabled := False; //关闭线程处理
     DeveCalendarDlg.Hide;
+  end;
 end;
 
 { TBackThread }

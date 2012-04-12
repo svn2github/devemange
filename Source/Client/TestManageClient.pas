@@ -1271,10 +1271,17 @@ var
   mysv  : TStringList;
   myMails : TStringList;
   myBugID  : integer; //Bug的ID值;
+  myIDs : TStringList;
+  mySQL : string;
+const
+  gSQLTXT = 'insert into TB_MSG(ZUSER_ID,ZDATETIME,ZCODE,ZCONTENT,ZTYPE,ZSEND_ID)' +
+            'values(%d,getdate(),%d,''%s'',1,''%s'')';
+
 begin
   mysl := TStringList.Create;
   mysv := TStringList.Create;
   myMails := TStringlist.Create;
+  myIDs := TStringList.Create;
   ShowProgress('邮件通知...',0);
   try
     myBugID := cdsTestItem.FieldByName('ZID').AsInteger;
@@ -1300,6 +1307,7 @@ begin
             if CompareText(myStr,mysv[i]) = 0 then
             begin
               myMails.Add(DM.cdsUser.FieldByName('ZEMAIL').AsString);
+              myIDs.Add(DM.cdsUser.FieldByName('ZID').AsString);
               break;
             end;
             DM.cdsUser.Next;
@@ -1310,6 +1318,27 @@ begin
     finally
       DM.cdsUser.EnableControls;
     end;
+
+    //写信息库
+    mystr := '';
+    for i:=0 to myIDs.Count -1 do
+    begin
+      if Trim(myIDs[i])='' then Continue;
+      if mystr = '' then
+        mystr := myIDs[i]
+      else
+        mystr := mystr + '|' + myIDs[i];
+    end;
+    if mystr <> '' then mystr := mystr + '|';
+
+    mySQL := Format(gSQLTXT,
+      [ClientSystem.fEditer_id,
+       myBugID,
+       cdsTestItem.FieldByName('ZNAME').AsString,
+       mystr]
+      );
+    ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
+
 
     //调用接口发送
     mystr := '';
@@ -1328,6 +1357,7 @@ begin
     mysl.Free;
     mysv.Free;
     myMails.Free;
+    myIDs.free;
     HideProgress();
   end;
 end;

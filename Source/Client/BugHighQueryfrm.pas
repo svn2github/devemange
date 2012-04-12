@@ -73,6 +73,8 @@ type
     edtMutilModule: TEdit;
     chkMutilModule: TCheckBox;
     btnSave: TBitBtn;
+    chkMutilCreateor: TCheckBox;
+    edtMutilCreateor: TEdit;
     procedure chkmoduleClick(Sender: TObject);
     procedure btntodayClick(Sender: TObject);
     procedure btntodayBugClick(Sender: TObject);
@@ -83,6 +85,7 @@ type
     procedure edtCodeChange(Sender: TObject);
     procedure btnAllClick(Sender: TObject);
     procedure btnSaveClick(Sender: TObject);
+    procedure DBLookupComboBox1CloseUp(Sender: TObject);
   private
     { Private declarations }
   public
@@ -292,7 +295,24 @@ begin
   mystr := '';
   if chkBugCreateor.Checked then
   begin
-    mystr := format('ZOPENEDBY=%d',[cdsBugCreater.FieldByName('ZID').AsInteger]);
+    if not chkMutilCreateor.Checked then
+      mystr := format('ZOPENEDBY=%d',[cdsBugCreater.FieldByName('ZID').AsInteger])
+    else begin
+      //多模块时
+      mysl := TStringList.Create;
+      mysl.Delimiter := ';';
+      mysl.DelimitedText := edtMutilCreateor.Text;
+      for i:=0 to  mysl.Count -1 do
+      begin
+        if mysl.Strings[i] = '' then Continue;
+        if mystr = '' then
+          mystr := format('ZOPENEDBY=%s',[mysl.Strings[i]])
+        else
+          mystr := mystr + ' or ' + format('ZOPENEDBY=%s',[mysl.Strings[i]]);
+      end;
+      mysl.Free ;
+      mystr := '(' + mystr + ')' ;
+    end;
   end;
   if mystr <> '' then mywhere := mywhere + ' and ' + mystr;
 
@@ -393,5 +413,25 @@ begin
   mysl.SaveToFile(myfilename);
   mysl.Free;
 end;
+
+procedure TBugHighQueryDlg.DBLookupComboBox1CloseUp(Sender: TObject);
+var
+  mystr : string;
+begin
+  //多模块时
+  if chkMutilCreateor.Checked then
+  begin
+    mystr := cdsBugCreater.FieldByName('ZID').AsString;
+    if Pos(mystr+ ';',edtMutilCreateor.Text) = 0 then
+    begin
+
+      if edtMutilCreateor.Text = '' then
+        edtMutilCreateor.Text := mystr + ';'
+      else
+        edtMutilCreateor.Text := edtMutilCreateor.Text + mystr +';';
+    end;
+  end;
+end;
+
 
 end.
