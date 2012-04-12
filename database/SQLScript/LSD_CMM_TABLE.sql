@@ -893,6 +893,26 @@ create table TB_LOG(
 go
 
 
+/*信息表*/
+if exists (select * from dbo.sysobjects
+  where id = object_id(N'[dbo].[TB_MSG]')
+  and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+drop table [dbo].[TB_MSG]
+go
+
+create table TB_MSG(
+	ZID          int IDENTITY (1, 1) not null,                   /*主键*/
+	ZUSER_ID     int not null,                                   /*发起谁*/
+	ZDATETIME    datetime,                                       /*时间*/
+	ZCODE        int ,                                           /*内容的ID，如是Bug则是bug的Code*/ 
+	ZCONTENT     varchar(200),                                   /*内容*/
+	ZTYPE        int,                                            /*类型 0=bug , 1=测试用例*/
+	ZSEND_ID     varchar(200),                                   /*哪个人，多个采用|分开*/
+	
+	constraint PK_TB_MSG primary key(ZID)  
+)
+go
+
 
 
 
