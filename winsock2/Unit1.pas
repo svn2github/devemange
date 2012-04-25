@@ -5,7 +5,7 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, StdCtrls, Sockets, IdTCPServer, IdBaseComponent, IdComponent,
-  IdTCPConnection, IdTCPClient, CoolTrayIcon, Menus;
+  IdTCPConnection, IdTCPClient, Menus;
 
 type
   TForm1 = class(TForm)
@@ -19,10 +19,8 @@ type
     btn7: TButton;
     lbl1: TLabel;
     lbl2: TLabel;
-    cltrycn1: TCoolTrayIcon;
     pm1: TPopupMenu;
     N1: TMenuItem;
-    btn1: TButton;
     edt1: TEdit;
     lbl3: TLabel;
     procedure idtcpsrvr1Connect(AThread: TIdPeerThread);
@@ -33,10 +31,8 @@ type
     procedure idtcpsrvr1Disconnect(AThread: TIdPeerThread);
     procedure btn4Click(Sender: TObject);
     procedure btn7Click(Sender: TObject);
-    procedure N1Click(Sender: TObject);
-    procedure btn1Click(Sender: TObject);
-    procedure cltrycn1DblClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure FormShow(Sender: TObject);
   private
     { Private declarations }
   public
@@ -55,6 +51,7 @@ uses
 {$R *.dfm}
 
 type
+
   TCP_KeepAlive = record
     OnOff: Cardinal;
     KeepAliveTime: Cardinal;
@@ -99,25 +96,24 @@ end;
 
 procedure TForm1.idtcpsrvr1Connect(AThread: TIdPeerThread);
 type
-      TCP_KeepAlive   =   record  
-          OnOff:   Cardinal;  
-          KeepAliveTime:   Cardinal;  
-          KeepAliveInterval:   Cardinal  
-      end;  
-  var  
-      Val:   TCP_KeepAlive;  
-      Ret:   DWord;  
+
+  TCP_KeepAlive = record
+    OnOff:   Cardinal;
+    KeepAliveTime:   Cardinal;
+    KeepAliveInterval:   Cardinal
+  end;
+
+  var
+    Val:   TCP_KeepAlive;
+    Ret:   DWord;
   begin
-
-     mmo1.Lines.Add(datetimetostr(now())+ ' 来自主机 '
-   + AThread.Connection.Socket.Binding.PeerIP
-   + ' 的连接请求已被接纳！');
-
-
-      Val.OnOff:=1;
-      Val.KeepAliveTime:=6000*10;
-      Val.KeepAliveInterval:=6000;
-      WSAIoctl(AThread.Connection.Socket.Binding.Handle,   IOC_IN   or   IOC_VENDOR   or   4,
+    mmo1.Lines.Add(datetimetostr(now())+ ' 来自主机 '
+      + AThread.Connection.Socket.Binding.PeerIP
+      + ' 的连接请求已被接纳！');
+    Val.OnOff:=1;
+    Val.KeepAliveTime:=6000*10;
+    Val.KeepAliveInterval:=6000;
+    WSAIoctl(AThread.Connection.Socket.Binding.Handle,   IOC_IN   or   IOC_VENDOR   or   4,
           @Val,   SizeOf(Val),   nil,   0,   @Ret,   nil,   nil)
   end;
 
@@ -188,10 +184,21 @@ begin
                 DeleteFile(mybfile);
 
               // winexec('cmd /c c:\python25\python c:\python_svn.py >c:\a.txt',0);
+              //如当前位置有dosvn.bat 时，先运行 2012-2-23 作者：龙仕云
+              if FileExists(fPyDir+'\dosvn.bat') then
+              begin
+                WinExecExW(PChar(GetShortName(fPyDir+'\dosvn.bat')),PChar(fPyDir),0)
+              end;
+
               cmdcommand := Format('cmd /c %s %s > %s',[edt1.Text,
-               GetShortName(mybat),GetShortName(mybfile)]);
+                  GetShortName(mybat),GetShortName(mybfile)]);
+
               //winexec(Pchar(cmdcommand),0);
               mmo1.Lines.Add(datetimetostr(now())+ '执行的代码 ' + cmdcommand);
+
+              //
+              //这地方要等待编译，可能会死锁掉
+              //
               if WinExecExW(PChar(cmdcommand),PChar(fPyDir),0)<>0 then
               begin
                 //
@@ -209,21 +216,16 @@ begin
 
             end;
         end;
-
-
       except
-
       end;
    end;
-
 end;
 
 procedure TForm1.idtcpsrvr1Disconnect(AThread: TIdPeerThread);
 begin
- mmo1.Lines.Add(datetimetostr(now()) + ' 自主机 '
+  mmo1.Lines.Add(datetimetostr(now()) + ' 自主机 '
    + AThread.Connection.Socket.Binding.PeerIP
    + ' 的连接已中断！');
-
 end;
 
 procedure TForm1.btn4Click(Sender: TObject);
@@ -238,25 +240,15 @@ begin
   mmo1.Lines.Clear;
 end;
 
-procedure TForm1.N1Click(Sender: TObject);
-begin
-  cltrycn1.ShowMainForm;
-end;
-
-procedure TForm1.btn1Click(Sender: TObject);
-begin
-  cltrycn1.HideMainForm;
-end;
-
-procedure TForm1.cltrycn1DblClick(Sender: TObject);
-begin
-  cltrycn1.ShowMainForm;
-end;
-
 procedure TForm1.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
   if idtcpsrvr1.Active then
     idtcpsrvr1.Active := False;
+end;
+
+procedure TForm1.FormShow(Sender: TObject);
+begin
+  btn2Click(nil);
 end;
 
 end.
