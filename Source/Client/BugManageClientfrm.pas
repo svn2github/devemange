@@ -2771,7 +2771,7 @@ begin
     myoldindex := fPageType.fIndex;
     for myindex := fPageType.fIndex to fPageType.fIndexCount do
     begin
-      actBug_NewPage.Execute;  //处理下一页
+
       cdsBugItem.First;
 
       while not cdsBugItem.Eof do
@@ -2785,6 +2785,9 @@ begin
         inc(n);
         cdsBugItem.Next;
       end;
+
+      actBug_NewPage.Execute;  //处理下一页
+
     end;
     fPageType.fIndex := myoldindex;
     cdsBugItem.First;
