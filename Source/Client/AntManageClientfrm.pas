@@ -566,6 +566,8 @@ var
 const
   gl_SQLTXT = 'update TB_STATE set ZSTATECODE=%d where ZID=%d';
 begin
+  if Application.MessageBox('是否编译项目','提示',MB_ICONQUESTION+MB_YESNO)=IDNO then
+    Exit;
   MyThread := TPySvnThread.Create(cdsAntList,ani1,lstResult,idtcpclnt1,
     MainDlg.actMod_Ant);
   MyThread.Resume;
