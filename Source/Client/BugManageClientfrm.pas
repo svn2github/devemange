@@ -292,6 +292,7 @@ type
     procedure actBug_RunAdvQueryExecute(Sender: TObject);
     procedure lstAdvancedQueryDblClick(Sender: TObject);
     procedure actBug_LoadAdvQueryExecute(Sender: TObject);
+    procedure cdsBugItemCalcFields(DataSet: TDataSet);
   private
     fPageType : TPageTypeRec; //分页处理
     fHighQuery : TBugHighQueryDlg;
@@ -844,6 +845,18 @@ begin
           LookupKeyFields := 'ZID';
           LookupResultField := 'ZNAME';
         end;
+
+        //显示的下方内容
+
+        myfield := FieldDefs.AddFieldDef;
+        myfield.Name :='ZTITLEALL';
+        myfield.DataType := ftString;
+        myfield.Size := 400;
+        with myfield.CreateField(cdsBugItem) do
+        begin
+          FieldKind := fkCalculated;
+        end;
+
 
         CreateDataSet;
       end
@@ -3069,6 +3082,13 @@ end;
 procedure TBugManageDlg.actBug_LoadAdvQueryExecute(Sender: TObject);
 begin
   LoadBugQuery();
+end;
+
+procedure TBugManageDlg.cdsBugItemCalcFields(DataSet: TDataSet);
+begin
+  DataSet.FieldByName('ZTITLEALL').AsString := Format('#%s %s',[
+    DataSet.FieldByName('ZID').AsString,
+    DataSet.FieldByName('ZTITLE').AsString]);
 end;
 
 end.
