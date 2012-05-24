@@ -350,6 +350,7 @@ create table TB_BUG_ITEM(
 	ZWORKTIME      float default 0,                           /*要求工期（小时）*/
 	ZWORKLEVEL     float default 1,                           /*BUG难度系数*/
 	ZWORKSCORE     float default 0,                           /*得分*/
+	ZNOTDEMAND     bit not null default 0,                    /*=True 表示需求不明确*/
 	
 	constraint PK_TB_BUG_ITEM primary key(ZID desc,ZTREE_ID)   
 )
@@ -374,6 +375,7 @@ create table TB_BUG_HISTORY(
 	ZCONTEXT       text,                                     /*内容*/
 	ZANNEXFILE_ID  int,                                      /*附件内容，可能是图片这个更直接*/
 	ZANNEXFILENAME varchar(50),                              /*附件名称*/
+	ZNOTDEMAND     bit not null default 0,                    /*=True 表示需求不明确*/
 	constraint PK_TB_BUG_HISTORY primary key(ZID,ZBUG_ID)   
 )
 go
