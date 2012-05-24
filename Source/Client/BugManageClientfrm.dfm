@@ -1,6 +1,6 @@
 inherited BugManageDlg: TBugManageDlg
-  Left = 186
-  Top = 35
+  Left = 161
+  Top = 63
   Width = 1024
   Height = 687
   Caption = #38169#35823#31649#29702
@@ -431,7 +431,7 @@ inherited BugManageDlg: TBugManageDlg
             Width = 805
             Height = 63
             Align = alBottom
-            DataField = 'ZTITLE'
+            DataField = 'ZTITLEALL'
             DataSource = dsBugItem
             ReadOnly = True
             ScrollBars = ssVertical
@@ -1570,6 +1570,7 @@ inherited BugManageDlg: TBugManageDlg
     Aggregates = <>
     Params = <>
     BeforePost = cdsBugItemBeforePost
+    OnCalcFields = cdsBugItemCalcFields
     OnNewRecord = cdsBugItemNewRecord
     Left = 144
     Top = 16

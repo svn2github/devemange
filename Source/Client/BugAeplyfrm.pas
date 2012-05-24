@@ -31,6 +31,7 @@ type
     Label9: TLabel;
     edPath: TEdit;
     btnOpenFileTxt: TBitBtn;
+    chkNeed: TCheckBox;
     procedure btbnOpenAnnixClick(Sender: TObject);
     procedure btnOpenFileTxtClick(Sender: TObject);
   private

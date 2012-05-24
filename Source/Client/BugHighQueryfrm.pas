@@ -75,6 +75,8 @@ type
     btnSave: TBitBtn;
     chkMutilCreateor: TCheckBox;
     edtMutilCreateor: TEdit;
+    chkNeed: TCheckBox;
+    cbbNeed: TComboBox;
     procedure chkmoduleClick(Sender: TObject);
     procedure btntodayClick(Sender: TObject);
     procedure btntodayBugClick(Sender: TObject);
@@ -362,6 +364,14 @@ begin
   begin
     mystr := format('(ZNEDDDATE between ''%s'' and ''%s'')  ',
       [''''+datetostr(dtpNeed.Date)+'''',''''+datetostr(dtpNeed2.Date)+'''']);
+  end;
+  if mystr <> '' then mywhere := mywhere + ' and ' + mystr;
+
+  //需要不明确
+  mystr := '';
+  if chkNeed.Checked and (cbbNeed.ItemIndex in [0,1]) then
+  begin
+    mystr := Format('(ZNOTDEMAND=%d)',[cbbNeed.ItemIndex]);
   end;
   if mystr <> '' then mywhere := mywhere + ' and ' + mystr;
 

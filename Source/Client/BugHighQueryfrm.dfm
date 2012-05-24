@@ -468,6 +468,26 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
     Height = 23
     TabOrder = 49
   end
+  object chkNeed: TCheckBox
+    Left = 31
+    Top = 472
+    Width = 97
+    Height = 17
+    Caption = #38656#35201#19981#26126#30830
+    TabOrder = 50
+  end
+  object cbbNeed: TComboBox
+    Left = 203
+    Top = 467
+    Width = 145
+    Height = 23
+    Style = csDropDownList
+    ItemHeight = 15
+    TabOrder = 51
+    Items.Strings = (
+      #21542
+      #26159)
+  end
   object cdsProject: TClientDataSet
     Tag = -1
     Aggregates = <>

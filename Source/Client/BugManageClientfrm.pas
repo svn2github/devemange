@@ -693,7 +693,7 @@ const
   glSQL = 'exec pt_SplitPage ''TB_BUG_ITEM'',' +
           '''ZPRO_ID,ZID,ZTYPE,ZTITLE,ZOPENEDBY,ZOPENEDDATE,ZASSIGNEDTO,ZSUBASSIGNEDTO,ZRESOLVEDBY,' +
           'ZRESOLUTION,ZRESOLVEDDATE,ZOS,ZLEVEL,ZSTATUS,ZMAILTO,ZOPENVER, ' +
-          'ZRESOLVEDVER,ZTREEPATH,ZTREE_ID,ZASSIGNEDTO,ZASSIGNEDDATE,ZTAGNAME,ZTERM,ZDEMAND_ID,ZNEDDDATE,ZVERIFYDATE,ZVERIFYED,ZVERIFNAME,ZWORKTIME,ZWORKLEVEL,ZWORKSCORE'',' +
+          'ZRESOLVEDVER,ZTREEPATH,ZTREE_ID,ZASSIGNEDTO,ZASSIGNEDDATE,ZTAGNAME,ZTERM,ZDEMAND_ID,ZNEDDDATE,ZVERIFYDATE,ZVERIFYED,ZVERIFNAME,ZWORKTIME,ZWORKLEVEL,ZWORKSCORE,ZNOTDEMAND'',' +
           '''%s'',20,%d,%d,1,''%s''';
   //                                             页码,以总数=1, 条件where
 begin
@@ -1326,7 +1326,8 @@ const
             'ZVERIFNAME=%d, ' +
             'ZWORKTIME=%f,' +
             'ZWORKLEVEL=%f,' +
-            'ZWORKSCORE=%f'  +
+            'ZWORKSCORE=%f,'  +
+            'ZNOTDEMAND=%d'   +
             'where ZID=%d';
 begin
   //
@@ -1361,6 +1362,7 @@ begin
       DataSet.FieldByName('ZWORKTIME').AsFloat,
       DataSet.FieldByName('ZWORKLEVEL').AsFloat,
       DataSet.FieldByName('ZWORKSCORE').AsFloat,
+      Ord(DataSet.FieldByName('ZNOTDEMAND').AsBoolean),
       DataSet.FieldByName('ZID').AsInteger]);
 
     ClientSystem.fDbOpr.BeginTrans;
@@ -1465,6 +1467,7 @@ begin
       dblcQustionType.Enabled := False;
       dblcQustionVer.Enabled  := False;
       fBugItem_ID := cdsBugItem.FieldByName('ZID').AsInteger;
+      chkNeed.Checked := cdsBugItem.FieldByName('ZNOTDEMAND').AsBoolean;
       if ShowModal <> mrOK then
       begin
         cdsBugHistory.EnableControls;
@@ -1474,6 +1477,10 @@ begin
       end;
       myfilename := edPath.Text;
       cdsBugHistory.FieldByName('ZFILEPATH').AsString := myfilename;
+
+      //需求不明确
+      cdsBugHistory.FieldByName('ZNOTDEMAND').AsBoolean := chkNeed.Checked;
+
     finally
       free;
     end;
@@ -1537,6 +1544,10 @@ begin
         Exit;
       end;
       cdsBugHistory.FieldByName('ZFILEPATH').AsString := edPath.Text;
+
+      //需求不明确
+      cdsBugHistory.FieldByName('ZNOTDEMAND').AsBoolean := chkNeed.Checked;
+
     finally
       free;
     end;
@@ -1759,7 +1770,7 @@ const
 
   glSQL3 = 'update TB_BUG_ITEM set ZLASTEDITEDBY=%d,ZLASTEDITEDDATE=getdate(), '+
            'ZSTATUS=%d,ZRESOLVEDBY=%d,ZRESOLUTION=%d,ZRESOLVEDVER=%d, ' +
-           'ZRESOLVEDDATE=getdate(),ZMAILTO=''%s''' +
+           'ZRESOLVEDDATE=getdate(),ZMAILTO=''%s'',ZNOTDEMAND=%d' +
            'where ZID=%d';
 begin
   if fLoading then Exit;
@@ -1801,6 +1812,7 @@ begin
           cdsBugItem.FieldByName('ZRESOLUTION').Asinteger,
           cdsBugItem.FieldByName('ZRESOLVEDVER').Asinteger,
           cdsBugItem.FieldByName('ZMAILTO').AsString,
+          Ord(cdsBugHistory.FieldByName('ZNOTDEMAND').AsBoolean),
           DataSet.FieldByName('ZBUG_ID').Asinteger]);
 
         ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
@@ -1861,17 +1873,21 @@ begin
           Exit;
         end;
 
-        myProID := cdsBugItem.FieldByName('ZPRO_ID').Asinteger;
-        if not UpBugFile(myProID,myFileName,myFileID) then
-        begin
-          MessageBox(Handle,'上传附件有问题。','提示',MB_ICONERROR+MB_OK);
+        try
+          myProID := cdsBugItem.FieldByName('ZPRO_ID').Asinteger;
+          if not UpBugFile(myProID,myFileName,myFileID) then
+          begin
+            MessageBox(Handle,'上传附件有问题。','提示',MB_ICONERROR+MB_OK);
+            ClientSystem.fDbOpr.RollbackTrans;
+            Exit;
+          end;
+          DataSet.FieldByName('ZANNEXFILENAME').AsString :=ExtractFileName(myfileName);
+          DataSet.FieldByName('ZANNEXFILE_ID').AsInteger := myFileID;
+        except
           ClientSystem.fDbOpr.RollbackTrans;
-          Exit;
         end;
-        DataSet.FieldByName('ZANNEXFILENAME').AsString :=ExtractFileName(myfileName);
-        DataSet.FieldByName('ZANNEXFILE_ID').AsInteger := myFileID;
+        
       end;
-
 
       UpdateProgressTitle('保存回复...');
       UpdateProgress(2);
@@ -1915,6 +1931,7 @@ begin
           cdsBugPlan.FieldByName('ZID').AsInteger,
           cdsProject.FieldByName('ZID').AsInteger,
           cdsBugItem.FieldByName('ZMAILTO').AsString,
+          Ord(cdsBugHistory.FieldByName('ZNOTDEMAND').AsBoolean),
           DataSet.FieldByName('ZBUG_ID').Asinteger]);
 
       end
@@ -1926,6 +1943,7 @@ begin
           -1,
           -1,
           cdsBugItem.FieldByName('ZMAILTO').AsString,
+          Ord(cdsBugHistory.FieldByName('ZNOTDEMAND').AsBoolean),
           DataSet.FieldByName('ZBUG_ID').Asinteger]);
       end;
 
@@ -1948,6 +1966,7 @@ begin
         cdsBugItem.FieldByName('ZRESOLVEDVER').AsInteger := cdsProject.FieldByName('ZID').AsInteger;
         cdsBugItem.FieldByName('ZRESOLVEDDATE').AsDateTime := ClientSystem.SysNow;
         cdsBugItem.FieldByName('ZSTATUS').asInteger := DataSet.FieldByName('ZSTATUS').Asinteger;
+        cdsBugItem.FieldByName('ZNOTDEMAND').AsBoolean := DataSet.FieldByName('ZNOTDEMAND').AsBoolean;
         cdsBugItem.Post;
       end
       else begin
@@ -1960,6 +1979,7 @@ begin
         cdsBugItem.FieldByName('ZRESOLVEDVER').AsInteger   := -1;
         cdsBugItem.FieldByName('ZRESOLVEDDATE').AsVariant  := NULL;
         cdsBugItem.FieldByName('ZSTATUS').asInteger := DataSet.FieldByName('ZSTATUS').Asinteger;
+        cdsBugItem.FieldByName('ZNOTDEMAND').AsBoolean := DataSet.FieldByName('ZNOTDEMAND').AsBoolean;
         cdsBugItem.Post;
       end;
 
@@ -2022,6 +2042,11 @@ begin
   if (cdsBugItem.RecNo mod 2  = 0) and not ( gdSelected in State)  then
     dgBugItem.Canvas.Brush.Color := clSilver;
 
+  if cdsBugItem.FieldByName('ZNOTDEMAND').AsBoolean then
+  begin
+    dgBugItem.Canvas.Font.Color := clRed;
+  end;
+
   if (cdsBugItem.FieldByName('ZSTATUS').AsInteger = Ord(bgsDeath)) then
   begin
     dgBugItem.Canvas.Font.Color := clblue;
@@ -2031,6 +2056,8 @@ begin
   begin
     dgBugItem.Canvas.Font.Style := [fsBold];
   end;
+
+
   
   case Column.Index of
     Ord(bcWhoBuild) :
@@ -2759,6 +2786,7 @@ var
   i,j,n,c:integer;
   myoldindex : Integer;
   myindex,myindexcount : Integer;
+  mystr : string;
 begin
 
   //生成Excel文件
@@ -2792,8 +2820,29 @@ begin
         eclapp.cells[n,1] := inttostr(c); c:=c+1;
         for j :=0 to dgBugItem.FieldCount -1 do
         begin
-          eclapp.cells[n,2+j] := cdsBugItem.FieldByName(
-            dgBugItem.Columns.Items[j].FieldName).AsString;
+          if dgBugItem.Columns.Items[j].FieldName = 'ZTITLE' then
+          begin
+            if cdsBugItem.FieldByName('ZNOTDEMAND').AsBoolean then
+            begin
+              mystr := Format('(需求不明)%s|%s',[
+                cdsBugItem.FieldByName('ZTAGNAME').AsString,
+                cdsBugItem.FieldByName('ZTITLE').AsString
+                ]);
+            end
+            else begin
+              mystr := Format('%s|%s',[
+                cdsBugItem.FieldByName('ZTAGNAME').AsString,
+                cdsBugItem.FieldByName('ZTITLE').AsString
+                ]);
+            end;
+            if (Length(mystr)>0) and (mystr[1]='|') then
+              Delete(mystr,1,1);
+
+            eclapp.cells[n,2+j] := mystr;
+          end
+          else
+            eclapp.cells[n,2+j] := cdsBugItem.FieldByName(
+              dgBugItem.Columns.Items[j].FieldName).AsString;
         end;
         inc(n);
         cdsBugItem.Next;

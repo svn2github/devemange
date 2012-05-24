@@ -224,6 +224,21 @@ inherited BugAeplyDlg: TBugAeplyDlg
       Height = 23
       TabOrder = 2
     end
+    object chkNeed: TCheckBox
+      Left = 548
+      Top = 24
+      Width = 98
+      Height = 17
+      Hint = #38656#35201#20135#21697#20877#30830#23450#30340
+      Caption = #38656#27714#19981#26126#30830
+      Font.Charset = GB2312_CHARSET
+      Font.Color = clRed
+      Font.Height = -15
+      Font.Name = #23435#20307
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 3
+    end
   end
   object btnOpenFileTxt: TBitBtn
     Left = 13
