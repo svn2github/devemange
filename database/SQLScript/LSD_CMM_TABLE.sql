@@ -627,6 +627,8 @@ create table TB_ANT(
 	ZSVN_URL varchar(200),           --显示SVN日志的脚本 URL
 	ZSVN_LATEST_VERSION int,         --SVN服务器上的版本号
 	ZCOMPILETEXT text,               --最近的编译信息
+	ZLANGTYPE int default 0,         -- 0 = Delphi 1=Java 2012-6-30
+	ZWEBURL varchar(200),            -- web项目的url路径，用于直接连过去 2012-6-30 
 
 	
 	constraint PK_TB_ANT primary key(ZGUID)  
