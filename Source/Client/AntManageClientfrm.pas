@@ -143,6 +143,17 @@ type
     lblPageCount: TLabel;
     act_RefreshData: TAction;
     BtnRefreshData: TBitBtn;
+    lbl12: TLabel;
+    lbl13: TLabel;
+    dbedtZWEBURL: TDBEdit;
+    cdsLangType: TClientDataSet;
+    dsLangType: TDataSource;
+    intgrfldLangTypeLangID: TIntegerField;
+    strngfldLangTypeLangName: TStringField;
+    dblkcbbZLANGTYPE: TDBLookupComboBox;
+    btnGotoWebURL: TBitBtn;
+    act_GotoWebURL: TAction;
+    dbedtZGUID: TDBEdit;
     procedure act_ProAddExecute(Sender: TObject);
     procedure cdsAntListNewRecord(DataSet: TDataSet);
     procedure act_ProSaveUpdate(Sender: TObject);
@@ -195,6 +206,8 @@ type
     procedure act_LastPageExecute(Sender: TObject);
     procedure act_LastPageUpdate(Sender: TObject);
     procedure act_RefreshDataExecute(Sender: TObject);
+    procedure act_GotoWebURLUpdate(Sender: TObject);
+    procedure act_GotoWebURLExecute(Sender: TObject);
   private
     { Private declarations }
     fSVNCommitPageRec :TSVNCommitPageRec;
@@ -248,6 +261,7 @@ const
 
 implementation
 uses
+  ShellAPI,
   DmUints,
   EncdDecd,{Base64, 不知为什么没有Base64 作者:龙仕云 2011-6-9}
   ClinetSystemUnits, Mainfrm;
@@ -284,6 +298,21 @@ begin
   inherited;
   fPySvning := False;
   ani1.ResName := 'MOV';
+
+  //开发语言
+  cdsLangType.Append;
+  cdsLangType.FieldByName('LangID').AsInteger  := 0;
+  cdsLangType.FieldByName('LangName').AsString := 'Delphi';
+  cdsLangType.Post;
+  cdsLangType.Append;
+  cdsLangType.FieldByName('LangID').AsInteger  := 1;
+  cdsLangType.FieldByName('LangName').AsString := 'Java';
+  cdsLangType.Post;
+  cdsLangType.Append;
+  cdsLangType.FieldByName('LangID').AsInteger  := 2;
+  cdsLangType.FieldByName('LangName').AsString := '.Net';
+  cdsLangType.Post;
+
   mycds := TClientDataSet.Create(nil);
   try
     mycds.data := ClientSystem.fDbOpr.ReadDataSet(PChar(glSQL1));
@@ -397,10 +426,10 @@ procedure TAntManageClientDlg.cdsAntListBeforePost(DataSet: TDataSet);
 var
   mySQL : string;
 const
-  gl_SQL1 = 'insert TB_ANT(ZGUID,ZNAME,ZPRO_ID,ZIP,ZPYFILE,ZREMARK,ZDATE,ZSVN,ZVERSION,ZSVN_URL,ZSVN_LATEST_VERSION)' +
-       ' values(''%s'',''%s'',%d,''%s'',''%s'',''%s'',''%s'',%d,''%s'',''%s'',%d)';
+  gl_SQL1 = 'insert TB_ANT(ZGUID,ZNAME,ZPRO_ID,ZIP,ZPYFILE,ZREMARK,ZDATE,ZSVN,ZVERSION,ZSVN_URL,ZSVN_LATEST_VERSION,ZLANGTYPE,ZWEBURL)' +
+       ' values(''%s'',''%s'',%d,''%s'',''%s'',''%s'',''%s'',%d,''%s'',''%s'',%d,%d,''%s'')';
   gl_SQL2 = 'update TB_ANT set ZNAME=''%s'',ZPRO_ID=%d,ZIP=''%s'',ZPYFILE=''%s'', ' +
-      'ZREMARK=''%s'',ZDATE=''%s'',ZSVN=%d,ZVERSION=''%s'',ZSVN_URL=''%s'',ZSVN_LATEST_VERSION=%d where ZGUID=''%s''';
+      'ZREMARK=''%s'',ZDATE=''%s'',ZSVN=%d,ZVERSION=''%s'',ZSVN_URL=''%s'',ZSVN_LATEST_VERSION=%d,ZLANGTYPE=%d,ZWEBURL=''%s'' where ZGUID=''%s''';
 begin
   if fLoading then Exit;
 
@@ -417,7 +446,9 @@ begin
       DataSet.FieldByName('ZSVN').AsInteger,
       DataSet.FieldByName('ZVERSION').AsString,
       DataSet.FieldByName('ZSVN_URL').AsString,
-      DataSet.FieldByName('ZSVN_LATEST_VERSION').AsInteger
+      DataSet.FieldByName('ZSVN_LATEST_VERSION').AsInteger,
+      DataSet.FieldByName('ZLANGTYPE').AsInteger,
+      DataSet.FieldByName('ZWEBURL').AsString
       ]);
     ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
 
@@ -435,6 +466,8 @@ begin
       DataSet.FieldByName('ZVERSION').AsString,
       DataSet.FieldByName('ZSVN_URL').AsString,
       DataSet.FieldByName('ZSVN_LATEST_VERSION').AsInteger,
+      DataSet.FieldByName('ZLANGTYPE').AsInteger,
+      DataSet.FieldByName('ZWEBURL').AsString,
       DataSet.FieldByName('ZGUID').AsString]);
     ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
   end;
@@ -585,11 +618,53 @@ end;
 procedure TAntManageClientDlg.dbgrd1DrawColumnCell(Sender: TObject;
   const Rect: TRect; DataCol: Integer; Column: TColumn;
   State: TGridDrawState);
+var
+  mystr : string;
+  myfontsize : Integer;
+  myfontcolor,mybrushcolor : TColor;
+  mywidth,myh : integer;
+  mycolor : TColor;
+  myRect : TRect;
 begin
   if (cdsAntList.RecNo mod 2  = 0) and not ( gdSelected in State)  then
     dbgrd1.Canvas.Brush.Color := clSilver;
 
   dbgrd1.DefaultDrawColumnCell(Rect,DataCol,Column,State);
+
+  if (Column.FieldName = 'ZLANGTYPE') then
+  begin
+    dbgrd1.Canvas.FillRect(Rect);
+    case cdsAntList.FieldByName('ZLANGTYPE').AsInteger of
+      0: begin mystr := 'Delphi'; mycolor := clMaroon; end;
+      1: begin mystr := 'Java'; mycolor := clNavy; end;
+      2: begin mystr := '.Net'; mycolor := clLime; end;
+      else
+        mystr := '其他'
+    end;
+    myfontsize   := dbgrd1.Canvas.Font.Size;
+    myfontcolor  := dbgrd1.Canvas.Font.Color;
+    mybrushcolor := dbgrd1.Canvas.Brush.Color;
+
+    myRect.Left := Rect.Left + 1;
+    myRect.Top  := Rect.Top  + 1;
+    myRect.Right := rect.Right -1;
+    myRect.Bottom := Rect.Bottom -1;
+
+    dbgrd1.Canvas.Font.Color := clBtnFace;
+    dbgrd1.Canvas.Brush.Color := mycolor;
+    dbgrd1.Canvas.FillRect(myRect);
+    myh := dbgrd1.Canvas.TextHeight(mystr);
+    mywidth := dbgrd1.Canvas.TextWidth(mystr);
+    dbgrd1.Canvas.TextOut(myRect.Left+(myRect.Right-myRect.Left-mywidth) div 2,
+      myRect.Top + (myRect.Bottom-myRect.Top-myh) div 2,mystr);
+
+    dbgrd1.Canvas.Font.Size := myfontsize;
+    dbgrd1.Canvas.Font.Color := myfontcolor;
+    dbgrd1.Canvas.Brush.Color := mybrushcolor;
+
+    dbgrd1.Canvas.FrameRect(myRect);
+  end;
+
 end;
 
 procedure TAntManageClientDlg.pgcAntChanging(Sender: TObject;
@@ -849,7 +924,7 @@ const
   //glSQL = 'select * from TB_ANT order by ZDATE desc';  //ZID desc
   glSQL = 'exec pt_SplitPage ''TB_ANT '',' +
           '''ZGUID,ZID,ZNAME,ZPRO_ID,ZIP,ZPYFILE,ZREMARK, ' +
-          'ZDATE,ZSVN,ZVERSION,ZSVN_URL,ZSVN_LATEST_VERSION,ZCOMPILETEXT'',' +
+          'ZDATE,ZSVN,ZVERSION,ZSVN_URL,ZSVN_LATEST_VERSION,ZCOMPILETEXT,ZLANGTYPE,ZWEBURL'',' +
           '''%s'',20,%d,%d,1,''%s''';
 
 begin
@@ -1135,6 +1210,7 @@ begin
     Exit;
   end;
   dbedtZSVN_URL.Visible := True;
+  dbedtZGUID.Visible := True;
   btnEditSVNRUL.Visible := False;
 end;
 
@@ -1361,6 +1437,22 @@ begin
   lblPageCount.Caption := format('%d/%d',[
       fPageType.fIndex,
       fPageType.fIndexCount]);
+end;
+
+procedure TAntManageClientDlg.act_GotoWebURLUpdate(Sender: TObject);
+begin
+  //java,或net才行
+  (Sender as TAction).Enabled := (cdsAntList.FieldByName('ZWEBURL').AsString<>'') and
+  (cdsAntList.FieldByName('ZLANGTYPE').AsInteger in [1,2]);
+end;
+
+procedure TAntManageClientDlg.act_GotoWebURLExecute(Sender: TObject);
+var
+  myurl : string;
+begin
+  myurl := cdsAntList.FieldByName('ZWEBURL').AsString;
+  ShellExecute(handle,'open',
+    PChar(myurl), nil,nil,SW_SHOWNORMAL);
 end;
 
 end.

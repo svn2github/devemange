@@ -1,8 +1,8 @@
 inherited AntManageClientDlg: TAntManageClientDlg
-  Left = 183
-  Top = 83
+  Left = 164
+  Top = 106
   Width = 964
-  Height = 607
+  Height = 588
   Caption = #32534#35793#37096#32626
   OldCreateOrder = True
   PixelsPerInch = 96
@@ -11,7 +11,7 @@ inherited AntManageClientDlg: TAntManageClientDlg
     Left = 0
     Top = 69
     Width = 948
-    Height = 500
+    Height = 481
     ActivePage = ts1
     Align = alClient
     TabOrder = 0
@@ -41,7 +41,7 @@ inherited AntManageClientDlg: TAntManageClientDlg
         Left = 0
         Top = 40
         Width = 940
-        Height = 390
+        Height = 371
         Align = alClient
         DataSource = dsAntList
         Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
@@ -58,7 +58,15 @@ inherited AntManageClientDlg: TAntManageClientDlg
             FieldName = 'ZINDEX'
             Title.Alignment = taCenter
             Title.Caption = #24207#21495
-            Width = 60
+            Width = 41
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'ZLANGTYPE'
+            Title.Alignment = taCenter
+            Title.Caption = #24320#21457#35821#35328
+            Width = 80
             Visible = True
           end
           item
@@ -82,15 +90,7 @@ inherited AntManageClientDlg: TAntManageClientDlg
             FieldName = 'ZDATE'
             Title.Alignment = taCenter
             Title.Caption = #32534#35793#26085#26399
-            Width = 150
-            Visible = True
-          end
-          item
-            Expanded = False
-            FieldName = 'ZIP'
-            Title.Alignment = taCenter
-            Title.Caption = #32534#35793#26381#21153#22120
-            Width = 150
+            Width = 192
             Visible = True
           end
           item
@@ -119,7 +119,7 @@ inherited AntManageClientDlg: TAntManageClientDlg
       end
       object pnl7: TPanel
         Left = 0
-        Top = 430
+        Top = 411
         Width = 940
         Height = 40
         Align = alBottom
@@ -211,13 +211,13 @@ inherited AntManageClientDlg: TAntManageClientDlg
         Left = 0
         Top = 274
         Width = 940
-        Height = 196
+        Height = 177
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 0
         object spl4: TSplitter
           Left = 0
-          Top = 131
+          Top = 112
           Width = 940
           Height = 3
           Cursor = crVSplit
@@ -293,12 +293,21 @@ inherited AntManageClientDlg: TAntManageClientDlg
             Caption = #26816#26597#32467#26524
             TabOrder = 5
           end
+          object btnGotoWebURL: TBitBtn
+            Left = 665
+            Top = 8
+            Width = 100
+            Height = 25
+            Action = act_GotoWebURL
+            Caption = #36816#34892'Web'#39033#30446
+            TabOrder = 6
+          end
         end
         object lstResult: TListBox
           Left = 0
           Top = 40
           Width = 940
-          Height = 91
+          Height = 72
           Style = lbOwnerDrawFixed
           Align = alClient
           ItemHeight = 16
@@ -316,7 +325,7 @@ inherited AntManageClientDlg: TAntManageClientDlg
         end
         object lstErrors: TListBox
           Left = 0
-          Top = 134
+          Top = 115
           Width = 940
           Height = 62
           Align = alBottom
@@ -368,7 +377,7 @@ inherited AntManageClientDlg: TAntManageClientDlg
         end
         object lbl5: TLabel
           Left = 8
-          Top = 162
+          Top = 190
           Width = 75
           Height = 15
           Caption = #32534#35793#35828#26126#65306
@@ -421,10 +430,24 @@ inherited AntManageClientDlg: TAntManageClientDlg
           Font.Style = []
           ParentFont = False
         end
+        object lbl12: TLabel
+          Left = 8
+          Top = 163
+          Width = 72
+          Height = 15
+          Caption = #24320#21457#35821#35328#65306
+        end
+        object lbl13: TLabel
+          Left = 251
+          Top = 163
+          Width = 109
+          Height = 15
+          Caption = 'Web'#26381#21153#22120'HOST:'
+        end
         object dbedtZNAME: TDBEdit
           Left = 81
           Top = 11
-          Width = 456
+          Width = 453
           Height = 23
           DataField = 'ZNAME'
           DataSource = dsAntList
@@ -478,9 +501,9 @@ inherited AntManageClientDlg: TAntManageClientDlg
         end
         object dbmmoZREMARK: TDBMemo
           Left = 81
-          Top = 159
+          Top = 185
           Width = 722
-          Height = 75
+          Height = 56
           DataField = 'ZREMARK'
           DataSource = dsAntList
           ScrollBars = ssVertical
@@ -535,13 +558,44 @@ inherited AntManageClientDlg: TAntManageClientDlg
           Visible = False
         end
         object btnEditSVNRUL: TBitBtn
-          Left = 83
-          Top = 130
-          Width = 100
+          Left = 80
+          Top = 129
+          Width = 726
           Height = 25
           Caption = #32534#36753#36335#24452
           TabOrder = 12
           OnClick = btnEditSVNRULClick
+        end
+        object dbedtZWEBURL: TDBEdit
+          Left = 364
+          Top = 158
+          Width = 438
+          Height = 23
+          DataField = 'ZWEBURL'
+          DataSource = dsAntList
+          TabOrder = 13
+        end
+        object dblkcbbZLANGTYPE: TDBLookupComboBox
+          Left = 81
+          Top = 158
+          Width = 152
+          Height = 23
+          DataField = 'ZLANGTYPE'
+          DataSource = dsAntList
+          KeyField = 'LangID'
+          ListField = 'LangName'
+          ListSource = dsLangType
+          TabOrder = 14
+        end
+        object dbedtZGUID: TDBEdit
+          Left = 813
+          Top = 129
+          Width = 121
+          Height = 23
+          DataField = 'ZGUID'
+          DataSource = dsAntList
+          TabOrder = 15
+          Visible = False
         end
       end
     end
@@ -550,7 +604,7 @@ inherited AntManageClientDlg: TAntManageClientDlg
       ImageIndex = 2
       object spl2: TSplitter
         Left = 0
-        Top = 294
+        Top = 275
         Width = 940
         Height = 8
         Cursor = crVSplit
@@ -654,7 +708,7 @@ inherited AntManageClientDlg: TAntManageClientDlg
       end
       object dbgrdSvnChanges: TDBGrid
         Left = 0
-        Top = 302
+        Top = 283
         Width = 940
         Height = 168
         Align = alBottom
@@ -705,14 +759,14 @@ inherited AntManageClientDlg: TAntManageClientDlg
         Left = 0
         Top = 57
         Width = 940
-        Height = 237
+        Height = 218
         Align = alClient
         BevelOuter = bvNone
         Caption = 'pnl5'
         TabOrder = 2
         object spl3: TSplitter
           Left = 0
-          Top = 140
+          Top = 121
           Width = 940
           Height = 8
           Cursor = crVSplit
@@ -722,7 +776,7 @@ inherited AntManageClientDlg: TAntManageClientDlg
           Left = 0
           Top = 0
           Width = 940
-          Height = 140
+          Height = 121
           Align = alClient
           DataSource = dsSvnCommits
           ImeName = #26497#21697#20116#31508#36755#20837#27861
@@ -779,7 +833,7 @@ inherited AntManageClientDlg: TAntManageClientDlg
         end
         object dbmmoZMESSAGE: TDBMemo
           Left = 0
-          Top = 148
+          Top = 129
           Width = 940
           Height = 89
           Align = alBottom
@@ -928,6 +982,12 @@ inherited AntManageClientDlg: TAntManageClientDlg
       Caption = #21047#26032#25968#25454
       OnExecute = act_RefreshDataExecute
     end
+    object act_GotoWebURL: TAction
+      Category = #32534#35793
+      Caption = #36816#34892'Web'#39033#30446
+      OnExecute = act_GotoWebURLExecute
+      OnUpdate = act_GotoWebURLUpdate
+    end
   end
   object idtcpclnt1: TIdTCPClient
     MaxLineAction = maException
@@ -985,5 +1045,28 @@ inherited AntManageClientDlg: TAntManageClientDlg
     Params = <>
     Left = 234
     Top = 7
+  end
+  object cdsLangType: TClientDataSet
+    Active = True
+    Aggregates = <>
+    Params = <>
+    Left = 272
+    Top = 8
+    Data = {
+      460000009619E0BD0100000018000000020000000000030000004600064C616E
+      6749440400010000000000084C616E674E616D65010049000000010005574944
+      54480200020032000000}
+    object intgrfldLangTypeLangID: TIntegerField
+      FieldName = 'LangID'
+    end
+    object strngfldLangTypeLangName: TStringField
+      FieldName = 'LangName'
+      Size = 50
+    end
+  end
+  object dsLangType: TDataSource
+    DataSet = cdsLangType
+    Left = 272
+    Top = 40
   end
 end
