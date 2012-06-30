@@ -1,6 +1,6 @@
 object MainDlg: TMainDlg
-  Left = 202
-  Top = 114
+  Left = 269
+  Top = 53
   Width = 870
   Height = 640
   Caption = 'DeveManage'
@@ -35,69 +35,60 @@ object MainDlg: TMainDlg
     TabOrder = 0
     object plupgrade: TPanel
       Left = 1
-      Top = 465
+      Top = 467
       Width = 852
-      Height = 55
+      Height = 53
       Align = alBottom
       Color = clYellow
       TabOrder = 0
       Visible = False
       DesignSize = (
         852
-        55)
-      object Label1: TLabel
-        Left = 17
-        Top = 30
-        Width = 72
-        Height = 21
-        Caption = 'Label1'
+        53)
+      object lblplupgradememo: TLabel
+        Left = 10
+        Top = 26
+        Width = 260
+        Height = 19
+        Caption = #20320#35201#19981#35201#21319#32423#20102#65292#26377#26032#29256#26412#12290
+        Font.Charset = GB2312_CHARSET
+        Font.Color = clBlue
+        Font.Height = -19
+        Font.Name = #23435#20307
+        Font.Style = [fsBold]
+        ParentFont = False
       end
       object Label2: TLabel
         Left = 1
         Top = 1
         Width = 850
-        Height = 15
+        Height = 13
         Align = alTop
         Caption = #31995#32479#21319#32423
-        Color = clGray
+        Color = clOlive
         Font.Charset = GB2312_CHARSET
         Font.Color = clWhite
-        Font.Height = -15
+        Font.Height = -13
         Font.Name = #23435#20307
         Font.Style = []
         ParentColor = False
         ParentFont = False
       end
-      object btbnUpgrade: TBitBtn
-        Left = 634
-        Top = 23
+      object btnNoUpgrade: TBitBtn
+        Left = 740
+        Top = 21
         Width = 100
         Height = 25
         Anchors = [akTop, akRight]
-        Caption = #21319#32423
+        Caption = #20851#38381#19981#35201#28902#25105
         Font.Charset = GB2312_CHARSET
         Font.Color = clBlack
-        Font.Height = -12
+        Font.Height = -13
         Font.Name = #23435#20307
         Font.Style = []
         ParentFont = False
         TabOrder = 0
-      end
-      object btbnNoUpgrade: TBitBtn
-        Left = 748
-        Top = 23
-        Width = 100
-        Height = 25
-        Anchors = [akTop, akRight]
-        Caption = #19981#21319#32423
-        Font.Charset = GB2312_CHARSET
-        Font.Color = clBlack
-        Font.Height = -12
-        Font.Name = #23435#20307
-        Font.Style = []
-        ParentFont = False
-        TabOrder = 1
-        OnClick = btbnNoUpgradeClick
+        OnClick = btnNoUpgradeClick
       end
     end
     object chkShowCancel: TCheckBox
@@ -202,11 +193,6 @@ object MainDlg: TMainDlg
         Left = 670
         Top = 0
         Action = actMod_Release
-      end
-      object btnMod_SVN: TToolButton
-        Left = 737
-        Top = 0
-        Action = actMod_SVN
       end
     end
   end
@@ -1112,6 +1098,9 @@ object MainDlg: TMainDlg
       end
       object N18: TMenuItem
         Action = actMod_Release
+      end
+      object mniMod_SVN: TMenuItem
+        Action = actMod_SVN
       end
       object N15: TMenuItem
         Caption = '-'

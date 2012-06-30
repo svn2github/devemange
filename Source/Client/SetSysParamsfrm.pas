@@ -14,6 +14,7 @@ type
     dbgrdParams: TDBGrid;
     dbmmoZVALUE: TDBMemo;
     Splitter1: TSplitter;
+    mmo1: TMemo;
     procedure FormShow(Sender: TObject);
     procedure cdsParamsBeforePost(DataSet: TDataSet);
   private
@@ -90,7 +91,7 @@ var
   mysql : String;
   mystr : string;
 const
-  glSQL2 = 'update TB_SYSPARAMS set ZVALUE=''%s'' where ZNAME=''%s''';
+  glSQL2 = 'update TB_SYSPARAMS set ZVALUE=''%s'',ZREMARK=''%s'' where ZNAME=''%s''';
 begin
   if fLoading then Exit;
   ClientSystem.fDbOpr.BeginTrans;
@@ -98,6 +99,7 @@ begin
     mystr := DataSet.FieldByName('ZVALUE').AsString;
     mysql := format(glSQL2,[
         mystr,
+        DataSet.FieldByName('ZREMARK').AsString,
         DataSet.FieldByName('ZNAME').AsString]);
 
     ClientSystem.fDbOpr.ExeSQL(Pchar(mysql));

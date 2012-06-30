@@ -46,9 +46,7 @@ type
     N3: TMenuItem;
     N4: TMenuItem;
     plupgrade: TPanel;
-    Label1: TLabel;
-    btbnUpgrade: TBitBtn;
-    btbnNoUpgrade: TBitBtn;
+    lblplupgradememo: TLabel;
     Label2: TLabel;
     StatusBarMain: TStatusBar;
     ApplicationEvents1: TApplicationEvents;
@@ -103,14 +101,15 @@ type
     tmrBack: TTimer;
     chkShowCancel: TCheckBox;
     actMod_SVN: TAction;
-    btnMod_SVN: TToolButton;
+    mniMod_SVN: TMenuItem;
+    btnNoUpgrade: TBitBtn;
     procedure FormCreate(Sender: TObject);
     procedure actmod_FilesExecute(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure actMod_BugExecute(Sender: TObject);
     procedure actMod_ProjectExecute(Sender: TObject);
     procedure actManage_UserExecute(Sender: TObject);
-    procedure btbnNoUpgradeClick(Sender: TObject);
+    procedure btnNoUpgradeClick(Sender: TObject);
     procedure StatusBarMainResize(Sender: TObject);
     procedure StatusBarMainDrawPanel(StatusBar: TStatusBar;
       Panel: TStatusPanel; const Rect: TRect);
@@ -299,6 +298,7 @@ const
   glSQL = 'select ZNAME from TB_TODAYSAY ' +
           'where ZID=(select max(ZID) from TB_TODAYSAY where ZSTOP=0)';
   gl_SQLTXT2 = 'select ZID,ZNAME from TB_EXTENDWEB order by ZSORT ';
+  gl_SQLTXT3 = 'select ZVALUE,ZREMARK from TB_SYSPARAMS where ZNAME=''升级版本V4'''; //升级
 begin
   if ClientSystem.fDbOpr.Version < cnCurDbOprVersion then
   begin
@@ -311,6 +311,7 @@ begin
 
 
   mycds := TClientDataSet.Create(nil);
+  ShowProgress('系统初期化...',0);
   try
 
     //每日一句
@@ -319,6 +320,15 @@ begin
       plForm.Caption := mycds.FieldByName('ZNAME').AsString
     else
       plForm.Caption := '';
+
+    //是否有升级
+    mycds.Data := ClientSystem.fDbOpr.ReadDataSet(PChar(gl_SQLTXT3));
+    if (mycds.RecordCount > 0) and
+       (StrToIntDef(mycds.FieldByName('ZVALUE').AsString,0) >ClientSystem.fVer[3]) then
+    begin
+      plupgrade.Visible := True;
+      lblplupgradememo.Caption := mycds.FieldByName('ZREMARK').AsString;
+    end;
 
     //加载扩展应用
     mycds.Data := ClientSystem.fDbOpr.ReadDataSet(PChar(gl_SQLTXT2));
@@ -348,6 +358,7 @@ begin
 
   finally
     mycds.Free;
+    HideProgress;
   end;
 
   with ClientSystem do
@@ -355,9 +366,8 @@ begin
         [Application.Title,fVer[0],fVer[1],fVer[2],fVer[3]]);
 
 
-          
 
-  //版本检查
+
   
 
 end;
@@ -395,7 +405,7 @@ begin
     MessageBox(Handle,'无权限','提示',MB_ICONWARNING+MB_OK);
 end;
 
-procedure TMainDlg.btbnNoUpgradeClick(Sender: TObject);
+procedure TMainDlg.btnNoUpgradeClick(Sender: TObject);
 begin
   plupgrade.Visible := False;
 end;
