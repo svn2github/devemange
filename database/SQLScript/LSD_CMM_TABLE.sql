@@ -629,6 +629,7 @@ create table TB_ANT(
 	ZCOMPILETEXT text,               --最近的编译信息
 	ZLANGTYPE int default 0,         -- 0 = Delphi 1=Java 2012-6-30
 	ZWEBURL varchar(200),            -- web项目的url路径，用于直接连过去 2012-6-30 
+	ZLOCALSVNBAT varchar(200),       --svn更新bat文件。
 
 	
 	constraint PK_TB_ANT primary key(ZGUID)  
@@ -868,12 +869,13 @@ create table TB_TODAYRESULT(
 	ZID          int IDENTITY (1, 1) not null,                   /*主键*/
 	ZTYPE 	     int not null,                                   /*类型 0=测试用例 1=bug 2=svn 3=报功 4=举报 */
 	ZUSER_ID     int not null,                                   /*谁的贡献*/
-	ZDATETIME    datetime,                                       /*贡献时间*/
+	ZDATETIME    datetime,                                       /*贡献时间,发生时间*/
 	ZCONTENTID   int,                                            /*如是测试用列则写ID,bug则写bug*/
 	ZCONTENT     varchar(200),                                   /*内容*/
 	ZNOTE        text,                                           /*原因*/
 	ZWRITER      int,                                            /*空则系统写*/
 	ZACTION      int,                                            /*=0 表示是激活的 1=另外加分的*/
+	ZSCORE       float,                                          /*得分,对考核有用的 2012-6-30*/
 	
 	constraint PK_TB_TODAYRESULT primary key(ZID)  
 )
