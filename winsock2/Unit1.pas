@@ -23,6 +23,7 @@ type
     N1: TMenuItem;
     edt1: TEdit;
     lbl3: TLabel;
+    lbl4: TLabel;
     procedure idtcpsrvr1Connect(AThread: TIdPeerThread);
     procedure btn2Click(Sender: TObject);
     procedure idtcpsrvr1Exception(AThread: TIdPeerThread;
@@ -179,6 +180,11 @@ begin
               mybat := Copy(mycommand,2,maxint);
               fPyDir := ExtractFileDir(mybat);
               SetCurrentDir(fPyDir); //设置当前目录
+
+              mybfile := fPyDir + '\b1.txt';
+              if FileExists(mybfile) then
+                DeleteFile(mybfile);
+
               mybfile := fPyDir + '\b.txt';
               if FileExists(mybfile) then
                 DeleteFile(mybfile);
