@@ -1,6 +1,6 @@
 object Form1: TForm1
-  Left = 361
-  Top = 255
+  Left = 299
+  Top = 214
   BorderStyle = bsDialog
   Caption = #32534#35793#26381#21153
   ClientHeight = 350
@@ -19,9 +19,9 @@ object Form1: TForm1
   object lbl1: TLabel
     Left = 372
     Top = 255
-    Width = 300
+    Width = 294
     Height = 12
-    Caption = #24037#20855#26159#37197#21512#24320#21457#31649#29702#31995#32479#20351#29992#12290#20316#32773#65306#40857#20181#20113' 2012-2-23'
+    Caption = #24037#20855#26159#37197#21512#24320#21457#31649#29702#31995#32479#20351#29992#12290#20316#32773#65306#40857#20181#20113' 2012-7-2'
   end
   object lbl2: TLabel
     Left = 11
@@ -38,7 +38,7 @@ object Form1: TForm1
   object lbl4: TLabel
     Left = 373
     Top = 284
-    Width = 281
+    Width = 210
     Height = 12
     Caption = #22914#39033#30446#30446#24405#19979#26377'dosvn.bat'#21017#20250#20808#25191#34892#12290
   end
@@ -89,7 +89,7 @@ object Form1: TForm1
       Height = 20
       ImeName = #26497#21697#20116#31508#36755#20837#27861
       TabOrder = 3
-      Text = '8180'
+      Text = '8181'
     end
     object btn4: TButton
       Left = 32

@@ -76,7 +76,7 @@ begin
   Result := sShortName;
 end;
 
-Function WinExecExW(cmd,workdir:pchar;visiable:integer):DWORD; 
+Function WinExecExW(cmd,workdir:pchar;visiable:integer):DWORD;
 var 
   StartupInfo:TStartupInfo;
   ProcessInfo:TProcessInformation;
@@ -150,22 +150,35 @@ var
   mybat : string;
   mybfile : string;
   cmdcommand : string;
+  mycommandsl : TStringList;
+  myCompilever : string; //编译版本
+  mysvnbat : string;
 begin
   if not AThread.Terminated and AThread.Connection.Connected then
    begin
+
       try
         mycommand := AThread.Connection.ReadLnWait(100);
-        mmo1.Lines.Add( AThread.Connection.Socket.Binding.PeerIP + ':' +mycommand  );
+        mmo1.Lines.Add( AThread.Connection.Socket.Binding.PeerIP + ':' +mycommand );
+
+        mycommandsl := TStringList.Create;
+        mycommandsl.Delimiter := ';';
+        mycommandsl.DelimitedText := mycommand;
+
+
         case mycommand[1] of
           'A': //取说明
             begin
+              mybat := Copy(mycommand,2,maxint);
+              if mybat <> '' then
+                fPyDir := ExtractFileDir(mybat);
               mybfile := fPyDir + '\b.txt';
               mysl := TStringList.Create;
               if FileExists(mybfile) then
               begin
                 mysl.LoadFromFile(mybfile);
                 AThread.Connection.WriteInteger(mysl.Count);
-                for i:=mysl.Count-1 downto  0 do
+                for i:=0 to mysl.Count-1  do
                   AThread.Connection.WriteLn(mysl.Strings[i]);
               end
               else begin
@@ -176,8 +189,14 @@ begin
             end;
           'C':
             begin
-
-              mybat := Copy(mycommand,2,maxint);
+              //
+              // 转过来的是一个TStringList.txt 值  2012-7-2
+              //
+              if mycommandsl.Values['CPyFileName'] <> '' then
+                mybat := mycommandsl.Values['CPyFileName']
+              else
+                mybat := Copy(mycommandsl.Strings[0],2,maxint);
+              //mybat := Copy(mycommand,2,maxint);
               fPyDir := ExtractFileDir(mybat);
               SetCurrentDir(fPyDir); //设置当前目录
 
@@ -189,41 +208,81 @@ begin
               if FileExists(mybfile) then
                 DeleteFile(mybfile);
 
-              // winexec('cmd /c c:\python25\python c:\python_svn.py >c:\a.txt',0);
-              //如当前位置有dosvn.bat 时，先运行 2012-2-23 作者：龙仕云
-              if FileExists(fPyDir+'\dosvn.bat') then
+              myCompilever := '';
+                if mycommandsl.Values['ComplieVer'] <> '' then
+                  myCompilever := mycommandsl.Values['ComplieVer'];
+
+              //如是java时处理
+              if strtointdef(mycommandsl.Values['Lang'],0) = 1 then
               begin
-                WinExecExW(PChar(GetShortName(fPyDir+'\dosvn.bat')),PChar(fPyDir),0)
-              end;
+                mysvnbat := mycommandsl.Values['SvnBat'];
+                if FileExists(mysvnbat) then
+                begin
+                  //1.更新svn内容
+                  if WinExecExW(PChar(GetShortName(mysvnbat)+ ' ' + myCompilever + ' ' + GetShortName(mybfile)),'',0)<> 0 then
+                  begin
+                    AThread.Connection.WriteLn('取SVN出错，无法取出...');
+                    mycommandsl.free;
+                    Exit;
+                  end;
+                end;
 
-              cmdcommand := Format('cmd /c %s %s > %s',[edt1.Text,
+                //2.执行build.xml文件
+                cmdcommand := Format('cmd /c ant -buildfile %s > %s',[
                   GetShortName(mybat),GetShortName(mybfile)]);
-
-              //winexec(Pchar(cmdcommand),0);
-              mmo1.Lines.Add(datetimetostr(now())+ '执行的代码 ' + cmdcommand);
-
-              //
-              //这地方要等待编译，可能会死锁掉
-              //
-              if WinExecExW(PChar(cmdcommand),PChar(fPyDir),0)<>0 then
-              begin
-                //
-                // 经以前的用过程中,b.txt 可能锁了,产生的问题
-                //
-                mybfile := fPyDir + '\b1.txt';
-                cmdcommand := Format('cmd /c %s %s > %s',[edt1.Text,
-                  GetShortName(mybat),GetShortName(mybfile)]);
-                mmo1.Lines.Add(cmdcommand);
                 if WinExecExW(PChar(cmdcommand),PChar(fPyDir),0)<>0 then
-                  AThread.Connection.WriteLn('编译进度出错...');
-              end
-              else
-                AThread.Connection.WriteLn('编译完成。');
+                  AThread.Connection.WriteLn('编译进度出错...')
+                else
+                  AThread.Connection.WriteLn('编译完成。');
 
+              end //end java
+              else begin
+
+                // winexec('cmd /c c:\python25\python c:\python_svn.py >c:\a.txt',0);
+                //如当前位置有dosvn.bat 时，先运行 2012-2-23 作者：龙仕云
+                if FileExists(fPyDir+'\dosvn.bat') then
+                begin
+                  WinExecExW(PChar(GetShortName(fPyDir+'\dosvn.bat ' + myCompilever)),PChar(GetShortName(fPyDir)),0)
+                end;
+
+                if myCompilever <> '' then
+                  cmdcommand := Format('cmd /c %s %s %s > %s',[edt1.Text,
+                    GetShortName(mybat), myCompilever,GetShortName(mybfile)])
+                else
+                  cmdcommand := Format('cmd /c %s %s > %s',[edt1.Text,
+                    GetShortName(mybat),GetShortName(mybfile)]);
+
+                //winexec(Pchar(cmdcommand),0);
+                mmo1.Lines.Add(datetimetostr(now())+ '执行的代码 ' + cmdcommand);
+
+                //
+                //这地方要等待编译，可能会死锁掉
+                //
+                if WinExecExW(PChar(cmdcommand),PChar(fPyDir),0)<>0 then
+                begin
+                  //
+                  // 经以前的用过程中,b.txt 可能锁了,产生的问题
+                  //
+                  mybfile := fPyDir + '\b1.txt';
+                  cmdcommand := Format('cmd /c %s %s > %s',[edt1.Text,
+                    GetShortName(mybat),GetShortName(mybfile)]);
+                  mmo1.Lines.Add(cmdcommand);
+                  if WinExecExW(PChar(cmdcommand),PChar(fPyDir),0)<>0 then
+                    AThread.Connection.WriteLn('编译进度出错...');
+                end
+                else
+                  AThread.Connection.WriteLn('编译完成。');
+              end; //end delphi
             end;
-        end;
+        end; //end case
+
+        if Assigned(mycommandsl) then
+          mycommandsl.free;
       except
+        AThread.Connection.WriteLn('编译出错...');
       end;
+
+
    end;
 end;
 
