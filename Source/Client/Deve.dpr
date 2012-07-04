@@ -1,6 +1,10 @@
 program Deve;
 
 uses
+  FastMM4,
+  FastCode,
+  FastMove,
+
   Forms,
   Mainfrm in 'Mainfrm.pas' {MainDlg},
   ClinetSystemUnits in 'ClinetSystemUnits.pas',
