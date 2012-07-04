@@ -240,24 +240,48 @@ begin
                 mylog.free;
 
               end
+              //delphi
               else begin
-                mybat := Copy(mycommand,2,maxint);
-                if mybat <> '' then
-                  fPyDir := ExtractFileDir(mybat);
-                mybfile := fPyDir + '\b.txt';
-                mysl := TStringList.Create;
-                if FileExists(mybfile) then
+                if (mycommandsl.Count >1) and (strtointdef(mycommandsl.Values['Lang'],-1) = 0) then
                 begin
-                  mysl.LoadFromFile(mybfile);
-                  AThread.Connection.WriteInteger(mysl.Count);
-                  for i:=0 to mysl.Count-1  do
-                    AThread.Connection.WriteLn(mysl.Strings[i]);
+                  mybat := mycommandsl.Values['PYFILE'];
+                  if mybat <> '' then
+                    fPyDir := ExtractFileDir(mybat);
+                  mybfile := fPyDir + '\b.txt';
+                  mysl := TStringList.Create;
+                  if FileExists(mybfile) then
+                  begin
+                    mysl.LoadFromFile(mybfile);
+                    AThread.Connection.WriteInteger(mysl.Count);
+                    for i:=0 to mysl.Count-1  do
+                      AThread.Connection.WriteLn(mysl.Strings[i]);
+                  end
+                  else begin
+                    mmo1.Lines.Add(Format('无法找到编译结果文件 %s，可能还没有编译完，请稍候...',[mybfile]));
+                    AThread.Connection.WriteInteger(-1);
+                  end;
+                  mysl.Free;
+
                 end
                 else begin
-                  mmo1.Lines.Add(Format('无法找到编译结果文件 %s，可能还没有编译完，请稍候...',[mybfile]));
-                  AThread.Connection.WriteInteger(-1);
+                  mybat := Copy(mycommand,2,maxint);
+                  if mybat <> '' then
+                    fPyDir := ExtractFileDir(mybat);
+                  mybfile := fPyDir + '\b.txt';
+                  mysl := TStringList.Create;
+                  if FileExists(mybfile) then
+                  begin
+                    mysl.LoadFromFile(mybfile);
+                    AThread.Connection.WriteInteger(mysl.Count);
+                    for i:=0 to mysl.Count-1  do
+                      AThread.Connection.WriteLn(mysl.Strings[i]);
+                  end
+                  else begin
+                    mmo1.Lines.Add(Format('无法找到编译结果文件 %s，可能还没有编译完，请稍候...',[mybfile]));
+                    AThread.Connection.WriteInteger(-1);
+                  end;
+                  mysl.Free;
                 end;
-                mysl.Free;
               end;
             end;
           'C':
