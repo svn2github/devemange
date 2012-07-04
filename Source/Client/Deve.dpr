@@ -30,7 +30,7 @@ uses
   ExtendWebManagefrm in 'ExtendWebManagefrm.pas' {ExtendWebManageDlg},
   DeveCalendarfrm in 'DeveCalendarfrm.pas' {DeveCalendarDlg},
   Activationfrm in 'Activationfrm.pas' {ActivationDlg},
-  SvnManageClientfrm in 'SvnManageClientfrm.pas' {SVNManagerDlg};
+  WarnBuckleScoreClientfrm in 'WarnBuckleScoreClientfrm.pas' {WarnBuckleScoreClientDlg};
 
 {$R *.res}
 {$R resource.res}

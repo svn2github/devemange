@@ -103,6 +103,9 @@ type
     actMod_SVN: TAction;
     mniMod_SVN: TMenuItem;
     btnNoUpgrade: TBitBtn;
+    act_WarnBuckleScore: TAction;
+    btnWarnBuckleScore: TToolButton;
+    mniWarnBuckleScore: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure actmod_FilesExecute(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -140,6 +143,7 @@ type
     procedure tmrBackTimer(Sender: TObject);
     procedure chkShowCancelClick(Sender: TObject);
     procedure actMod_SVNExecute(Sender: TObject);
+    procedure act_WarnBuckleScoreExecute(Sender: TObject);
   private
     fChildform : TList; //所有子窗口的对象
     fCurrentChildform : TBaseChildDlg;
@@ -208,8 +212,9 @@ uses
   WebClientfrm,
   ExtendWebClientfrm,      {web扩展应用}
   ExtendWebManagefrm,      {扩展应用管理}
-  SvnManageClientfrm     {SVN管理}
-   , SetSysParamsfrm, DeveCalendarfrm;
+  SvnManageClientfrm,        {SVN管理}
+  WarnBuckleScoreClientfrm, {投诉扣分}
+  SetSysParamsfrm, DeveCalendarfrm;
 
 {$R *.dfm}
 
@@ -1090,6 +1095,11 @@ end;
 procedure TMainDlg.actMod_SVNExecute(Sender: TObject);
 begin
   DoChangeClient(TSVNManagerDlg);
+end;
+
+procedure TMainDlg.act_WarnBuckleScoreExecute(Sender: TObject);
+begin
+  DoChangeClient(TWarnBuckleScoreClientDlg);
 end;
 
 end.
