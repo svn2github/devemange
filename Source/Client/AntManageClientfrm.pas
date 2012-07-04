@@ -154,6 +154,8 @@ type
     btnGotoWebURL: TBitBtn;
     act_GotoWebURL: TAction;
     dbedtZGUID: TDBEdit;
+    lbl14: TLabel;
+    dbedtZLOCALSVNBAT: TDBEdit;
     procedure act_ProAddExecute(Sender: TObject);
     procedure cdsAntListNewRecord(DataSet: TDataSet);
     procedure act_ProSaveUpdate(Sender: TObject);
@@ -241,6 +243,8 @@ type
     fIdTCP : TIdTCPClient;
     PyFileName : string;
     ComplieVer : Integer; //要编译的版本
+    fLangType : Integer;  //什么语言的
+    fSvnbat   : string;   //svn的更新 bat文件
     fAction : TAction;
 
     procedure BeginAnimate();
@@ -426,12 +430,13 @@ procedure TAntManageClientDlg.cdsAntListBeforePost(DataSet: TDataSet);
 var
   mySQL : string;
 const
-  gl_SQL1 = 'insert TB_ANT(ZGUID,ZNAME,ZPRO_ID,ZIP,ZPYFILE,ZREMARK,ZDATE,ZSVN,ZVERSION,ZSVN_URL,ZSVN_LATEST_VERSION,ZLANGTYPE,ZWEBURL)' +
-       ' values(''%s'',''%s'',%d,''%s'',''%s'',''%s'',''%s'',%d,''%s'',''%s'',%d,%d,''%s'')';
+  gl_SQL1 = 'insert TB_ANT(ZGUID,ZNAME,ZPRO_ID,ZIP,ZPYFILE,ZREMARK,ZDATE,ZSVN,ZVERSION,ZSVN_URL,ZSVN_LATEST_VERSION,ZLANGTYPE,ZWEBURL,ZLOCALSVNBAT)' +
+       ' values(''%s'',''%s'',%d,''%s'',''%s'',''%s'',''%s'',%d,''%s'',''%s'',%d,%d,''%s'',''%s'')';
   gl_SQL2 = 'update TB_ANT set ZNAME=''%s'',ZPRO_ID=%d,ZIP=''%s'',ZPYFILE=''%s'', ' +
-      'ZREMARK=''%s'',ZDATE=''%s'',ZSVN=%d,ZVERSION=''%s'',ZSVN_URL=''%s'',ZSVN_LATEST_VERSION=%d,ZLANGTYPE=%d,ZWEBURL=''%s'' where ZGUID=''%s''';
+      'ZREMARK=''%s'',ZDATE=''%s'',ZSVN=%d,ZVERSION=''%s'',ZSVN_URL=''%s'',ZSVN_LATEST_VERSION=%d,ZLANGTYPE=%d,ZWEBURL=''%s'',ZLOCALSVNBAT=''%s'' where ZGUID=''%s''';
 begin
   if fLoading then Exit;
+
 
   if DataSet.FieldByName('ZISNEW').AsBoolean then
   begin
@@ -442,14 +447,15 @@ begin
       DataSet.FieldByName('ZIP').AsString,
       DataSet.FieldByName('ZPYFILE').AsString,
       DataSet.FieldByName('ZREMARK').AsString,
-      DataSet.FieldByName('ZDATE').AsString,
+      DateTimeToStr(now()), //DataSet.FieldByName('ZDATE').AsString,
       DataSet.FieldByName('ZSVN').AsInteger,
       DataSet.FieldByName('ZVERSION').AsString,
       DataSet.FieldByName('ZSVN_URL').AsString,
       DataSet.FieldByName('ZSVN_LATEST_VERSION').AsInteger,
       DataSet.FieldByName('ZLANGTYPE').AsInteger,
-      DataSet.FieldByName('ZWEBURL').AsString
-      ]);
+      DataSet.FieldByName('ZWEBURL').AsString,
+      DataSet.FieldByName('ZLOCALSVNBAT').AsString
+      ]);                                        
     ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
 
     DataSet.FieldByName('ZISNEW').AsBoolean := False;
@@ -468,6 +474,7 @@ begin
       DataSet.FieldByName('ZSVN_LATEST_VERSION').AsInteger,
       DataSet.FieldByName('ZLANGTYPE').AsInteger,
       DataSet.FieldByName('ZWEBURL').AsString,
+      DataSet.FieldByName('ZLOCALSVNBAT').AsString,
       DataSet.FieldByName('ZGUID').AsString]);
     ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
   end;
@@ -501,7 +508,10 @@ var
 const
   gl_SQLTXT = 'update TB_STATE set ZSTATECODE=%d where ZID=%d';
 begin
-  idtcpclnt1.WriteLn('A');
+  mystr := 'A=A;' + 'PYFILE=' + cdsAntList.FieldByName('ZPYFILE').AsString + ';' +
+           'SvnBat=' + cdsAntList.FieldByName('ZLOCALSVNBAT').AsString + ';' +
+           'Lang=' + cdsAntList.FieldByName('ZLANGTYPE').AsString;
+  idtcpclnt1.WriteLn(mystr);
   count := idtcpclnt1.ReadInteger;
   if count = -1 then
   begin
@@ -639,7 +649,7 @@ begin
       1: begin mystr := 'Java'; mycolor := clNavy; end;
       2: begin mystr := '.Net'; mycolor := clLime; end;
       else
-        mystr := '其他'
+        begin mystr := '其他'; mycolor := clWindow; end;
     end;
     myfontsize   := dbgrd1.Canvas.Font.Size;
     myfontcolor  := dbgrd1.Canvas.Font.Color;
@@ -924,7 +934,7 @@ const
   //glSQL = 'select * from TB_ANT order by ZDATE desc';  //ZID desc
   glSQL = 'exec pt_SplitPage ''TB_ANT '',' +
           '''ZGUID,ZID,ZNAME,ZPRO_ID,ZIP,ZPYFILE,ZREMARK, ' +
-          'ZDATE,ZSVN,ZVERSION,ZSVN_URL,ZSVN_LATEST_VERSION,ZCOMPILETEXT,ZLANGTYPE,ZWEBURL'',' +
+          'ZDATE,ZSVN,ZVERSION,ZSVN_URL,ZSVN_LATEST_VERSION,ZCOMPILETEXT,ZLANGTYPE,ZWEBURL,ZLOCALSVNBAT'',' +
           '''%s'',20,%d,%d,1,''%s''';
 
 begin
@@ -990,8 +1000,10 @@ begin
   fMemo.Items.Clear;
   fMemo.Items.Add(#13#10);
   fMemo.Items.Add('  正在编译中...');
-  PyFileName := Format('C%s',[fcds.FieldByName('ZPYFILE').AsString]);
+  PyFileName := Format('%s',[fcds.FieldByName('ZPYFILE').AsString]);
   ComplieVer := fcds.FieldByName('ZSVN').AsInteger;
+  fLangType  := fcds.FieldByName('ZLANGTYPE').AsInteger;
+  fSvnbat    := fcds.FieldByName('ZLOCALSVNBAT').AsString;
   fAction.ImageIndex := 12;
   Application.ProcessMessages;
 end;
@@ -1031,9 +1043,13 @@ begin
   try
     fResultStr := '';
     Synchronize(BeginAnimate);
-    mystr := Format('%s %d',[PyFileName,ComplieVer]);
+    mystr := 'PyFileName='+PyFileName + ';' +
+             'ComplieVer='+IntToStr(ComplieVer) + ';' +
+             'Lang='+Inttostr(fLangType) + ';' +
+             'SvnBat=' + fSvnbat;
+    //mystr := Format('%s %d',[PyFileName,ComplieVer]);
     //fIdTCP.WriteLn(PyFileName);
-    fIdTCP.WriteLn(mystr);
+    fIdTCP.WriteLn('C' + mystr);  //加C是为了命令处理
     fResultStr := fIdTCP.ReadLn();
   finally
     Synchronize(EndAnimate);
@@ -1211,6 +1227,7 @@ begin
   end;
   dbedtZSVN_URL.Visible := True;
   dbedtZGUID.Visible := True;
+  dbedtZLOCALSVNBAT.Visible := True;
   btnEditSVNRUL.Visible := False;
 end;
 
