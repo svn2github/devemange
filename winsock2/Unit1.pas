@@ -23,7 +23,6 @@ type
     N1: TMenuItem;
     edt1: TEdit;
     lbl3: TLabel;
-    lbl4: TLabel;
     procedure idtcpsrvr1Connect(AThread: TIdPeerThread);
     procedure btn2Click(Sender: TObject);
     procedure idtcpsrvr1Exception(AThread: TIdPeerThread;
@@ -95,6 +94,43 @@ begin
   end;
 end;
 
+function WinExecAndWait32_v1(FileName: string; Visibility: integer): Cardinal;
+var
+  zAppName: array[0..512] of char;
+  zCurDir: array[0..255] of char;
+  WorkDir: string;
+  StartupInfo: TStartupInfo;
+  ProcessInfo: TProcessInformation;
+begin
+  StrPCopy(zAppName, FileName);
+  GetDir(0, WorkDir);
+  StrPCopy(zCurDir, WorkDir);
+  FillChar(StartupInfo, Sizeof(StartupInfo), #0);
+  StartupInfo.cb := Sizeof(StartupInfo);
+  StartupInfo.dwFlags := STARTF_USESHOWWINDOW;
+  StartupInfo.wShowWindow := Visibility;
+  if not CreateProcess(nil,
+    zAppName,               { pointer to command line string }
+    nil,                    { pointer to process security attributes }
+    nil,                    { pointer to thread security attributes }
+    true,                   { handle inheritance flag }
+    CREATE_NEW_CONSOLE or   { creation flags }
+    NORMAL_PRIORITY_CLASS,
+    nil,                    { pointer to new environment block }
+    nil,                    { pointer to current directory name, PChar}
+    StartupInfo,            { pointer to STARTUPINFO }
+    ProcessInfo)            { pointer to PROCESS_INF }
+    then Result := INFINITE {-1} else
+  begin
+    WaitforSingleObject(ProcessInfo.hProcess, INFINITE);
+    GetExitCodeProcess(ProcessInfo.hProcess, Result);
+    CloseHandle(ProcessInfo.hProcess);  { to prevent memory leaks }
+    CloseHandle(ProcessInfo.hThread);
+    result:=0
+  end;
+end;
+
+
 procedure TForm1.idtcpsrvr1Connect(AThread: TIdPeerThread);
 type
 
@@ -153,6 +189,8 @@ var
   mycommandsl : TStringList;
   myCompilever : string; //编译版本
   mysvnbat : string;
+  mysvndir : string;
+  mylog : TStringList;
 begin
   if not AThread.Terminated and AThread.Connection.Connected then
    begin
@@ -169,23 +207,58 @@ begin
         case mycommand[1] of
           'A': //取说明
             begin
-              mybat := Copy(mycommand,2,maxint);
-              if mybat <> '' then
-                fPyDir := ExtractFileDir(mybat);
-              mybfile := fPyDir + '\b.txt';
-              mysl := TStringList.Create;
-              if FileExists(mybfile) then
+              //java
+              if (mycommandsl.Count >1) and (strtointdef(mycommandsl.Values['Lang'],0) = 1) then
               begin
-                mysl.LoadFromFile(mybfile);
-                AThread.Connection.WriteInteger(mysl.Count);
-                for i:=0 to mysl.Count-1  do
-                  AThread.Connection.WriteLn(mysl.Strings[i]);
+                mylog := TStringList.Create;
+                //1.取出snv
+                mysvnbat := ExtractFileDir(mycommandsl.Values['SvnBat']) + '\b.txt';
+                if FileExists(mysvnbat) then
+                begin
+                  mylog.LoadFromFile(mysvnbat);
+                end;
+
+                //2.取出build.xml
+                mybat := mycommandsl.Values['PYFILE'];
+                if mybat <> '' then
+                  fPyDir := ExtractFileDir(mybat);
+                mybfile := fPyDir + '\b.txt';
+                mysl := TStringList.Create;
+                if FileExists(mybfile) then
+                begin
+                  mysl.LoadFromFile(mybfile);
+                  for i:=0 to mysl.Count -1 do
+                  begin
+                    mylog.Add(mysl.Strings[i]);
+                  end;
+
+                  AThread.Connection.WriteInteger(mylog.Count);
+                  for i:=0 to mylog.Count-1  do
+                    AThread.Connection.WriteLn(mylog.Strings[i]);
+                end;
+                mysl.Free;
+                mylog.free;
+
               end
               else begin
-                mmo1.Lines.Add(Format('无法找到编译结果文件 %s，可能还没有编译完，请稍候...',[mybfile]));
-                AThread.Connection.WriteInteger(-1);
+                mybat := Copy(mycommand,2,maxint);
+                if mybat <> '' then
+                  fPyDir := ExtractFileDir(mybat);
+                mybfile := fPyDir + '\b.txt';
+                mysl := TStringList.Create;
+                if FileExists(mybfile) then
+                begin
+                  mysl.LoadFromFile(mybfile);
+                  AThread.Connection.WriteInteger(mysl.Count);
+                  for i:=0 to mysl.Count-1  do
+                    AThread.Connection.WriteLn(mysl.Strings[i]);
+                end
+                else begin
+                  mmo1.Lines.Add(Format('无法找到编译结果文件 %s，可能还没有编译完，请稍候...',[mybfile]));
+                  AThread.Connection.WriteInteger(-1);
+                end;
+                mysl.Free;
               end;
-              mysl.Free;
             end;
           'C':
             begin
@@ -219,18 +292,26 @@ begin
                 if FileExists(mysvnbat) then
                 begin
                   //1.更新svn内容
-                  if WinExecExW(PChar(GetShortName(mysvnbat)+ ' ' + myCompilever + ' ' + GetShortName(mybfile)),'',0)<> 0 then
+                  //GetShortName(mybfile)
+                  mysvndir := ExtractFileDir(mysvnbat);
+                  SetCurrentDir(mysvndir); //设置当前目录
+                  if FileExists(mysvndir+'\b.txt') then
+                    DeleteFile(mysvndir+'\b.txt');
+                  if WinExecAndWait32_v1(PChar(GetShortName(mysvnbat)+ ' ' + myCompilever)
+                      ,SW_HIDE)<> 0 then
                   begin
                     AThread.Connection.WriteLn('取SVN出错，无法取出...');
                     mycommandsl.free;
                     Exit;
                   end;
+                  SetCurrentDir(fPyDir); //设置当前目录
                 end;
 
                 //2.执行build.xml文件
                 cmdcommand := Format('cmd /c ant -buildfile %s > %s',[
                   GetShortName(mybat),GetShortName(mybfile)]);
-                if WinExecExW(PChar(cmdcommand),PChar(fPyDir),0)<>0 then
+                if WinExecAndWait32_v1(PChar(cmdcommand),0) <> 0 then
+                //if WinExecExW(PChar(cmdcommand),PChar(fPyDir),0)<>0 then
                   AThread.Connection.WriteLn('编译进度出错...')
                 else
                   AThread.Connection.WriteLn('编译完成。');

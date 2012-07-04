@@ -35,13 +35,6 @@ object Form1: TForm1
     Color = clMoneyGreen
     ParentColor = False
   end
-  object lbl4: TLabel
-    Left = 373
-    Top = 284
-    Width = 210
-    Height = 12
-    Caption = #22914#39033#30446#30446#24405#19979#26377'dosvn.bat'#21017#20250#20808#25191#34892#12290
-  end
   object grp2: TGroupBox
     Left = 11
     Top = 8
@@ -89,7 +82,7 @@ object Form1: TForm1
       Height = 20
       ImeName = #26497#21697#20116#31508#36755#20837#27861
       TabOrder = 3
-      Text = '8181'
+      Text = '8180'
     end
     object btn4: TButton
       Left = 32
