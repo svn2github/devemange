@@ -11,6 +11,10 @@ library lgDB;
   using PChar or ShortString parameters. }
 
 uses
+  FastMM4,
+  FastCode,
+  FastMove,
+  
   SysUtils,
   Classes,
   DbApiImpl in 'DbApiImpl.pas',
