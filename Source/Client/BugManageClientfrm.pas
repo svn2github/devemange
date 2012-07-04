@@ -1742,6 +1742,7 @@ end;
 
 procedure TBugManageDlg.cdsBugHistoryNewRecord(DataSet: TDataSet);
 begin
+  if fLoading then Exit;
   DataSet.FieldByName('ZISNEW').AsBoolean  := True;
   DataSet.FieldByName('ZBUG_ID').AsInteger :=
     cdsBugItem.FieldByName('ZID').AsInteger;
