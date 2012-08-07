@@ -61,6 +61,7 @@ type
     intgrfldcds1ZSvnSubimt_M_Count: TIntegerField;
     intgrfldcds1ZSvnSubimt_D_Count: TIntegerField;
     intgrfldcds1ZSvnSubimt_A_Count: TIntegerField;
+    btn1: TBitBtn;
     procedure cds1CalcFields(DataSet: TDataSet);
     procedure chkSubmitBugCountClick(Sender: TObject);
     procedure chkAnswerBugCountClick(Sender: TObject);
@@ -75,6 +76,7 @@ type
     procedure BitBtn2Click(Sender: TObject);
     procedure BitBtn3Click(Sender: TObject);
     procedure chkZSvnSubimtCountClick(Sender: TObject);
+    procedure btn1Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -183,6 +185,21 @@ end;
 procedure TStatChartDlg.chkZSvnSubimtCountClick(Sender: TObject);
 begin
   brsrsZSvnSubimtCount.Active := chkZSvnSubimtCount.Checked;
+end;
+
+procedure TStatChartDlg.btn1Click(Sender: TObject);
+begin
+  //É¾³ýµÃ·ÖÎª0
+  cds1.First;
+  while not cds1.Eof  do
+  begin
+    if cds1.FieldByName('ZSvnSubimtCount').AsInteger =0 then
+      cds1.Delete
+    else
+      cds1.Next;
+  end;
+
+  dbcht1.RefreshData;
 end;
 
 end.
