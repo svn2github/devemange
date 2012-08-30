@@ -58,7 +58,7 @@ go
 
 create table TB_FILE_ITEM(
 	ZTREE_ID       int not null,           /*树ID*/
-        ZSTYPE         int not null,           /*类型，分文件管理，bug管理，项目文档*/ 
+        ZSTYPE         int not null,           /*类型，分文件管理=0，bug管理=1，项目文档=2 测试管理=4*/ 
 	ZID	       int not null,           /*文件id*/
 	ZVER           int not null,           /*文件的版本号*/
 	ZNAME          varchar(200) not null,  /*名称*/
@@ -74,6 +74,7 @@ create table TB_FILE_ITEM(
 	ZSIZE          int not null,           /*文件大小*/
 	ZParentPri     bit not null default 0, /*是否采用上级树目录的权限 2008-4-28*/
 	ZOWNER         int not null default 1, /*文件的创建人 1=admin 2008-4-28*/
+	ZCONTENTID     int ,                   /*如是bug则是bug的id号,用于关联bug管理 2012-8-29*/
 	constraint PK_TB_FILE_ITEM primary key(ZTREE_ID,ZTYPE,ZID,ZVER)
 )
 go
@@ -90,6 +91,8 @@ create table TB_FILE_CONTEXT(
 	ZGROUPID  int not null,          /*文件块的顺序号*/
 	ZVER      int not null,          /*文件版本*/
 	ZSTREAM   image not null,        /*文件块内容*/
+	ZLOCALGUID varchar(36),          /*本地的存文件的路径*/
+	ZTYPE     int default 0,         /*=0表示采用Stream保存到库内,否则采用是文件保存某目录下*/
 	constraint PK_TB_FILE_CONTEXT primary key(ZFILE_ID,ZGROUPID,ZVER)       
 )
 go
