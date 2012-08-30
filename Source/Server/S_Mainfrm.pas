@@ -18,7 +18,7 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs,
   ShellAPI, Menus, ActnList, ExtCtrls, ComCtrls, StdCtrls, DBCtrls,
-  Grids, DB,  DBGrids, Buttons,Registry, ImgList;
+  Grids, DB,  DBGrids, Buttons,Registry, ImgList, Sockets;
 
 const
   WM_MIDASICON    = WM_USER + 1;
@@ -46,6 +46,11 @@ type
     btn1: TBitBtn;
     btn2: TBitBtn;
     lbl1: TLabel;
+    tcpsrvr1: TTcpServer;
+    edtHost: TEdit;
+    edtPort: TEdit;
+    btnRun: TButton;
+    btnClose: TButton;
     procedure actSys_PropertiesExecute(Sender: TObject);
     procedure actSys_ClaseExecute(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -54,6 +59,10 @@ type
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure FormDestroy(Sender: TObject);
     procedure actSys_dbRestoreExecute(Sender: TObject);
+    procedure btnRunClick(Sender: TObject);
+    procedure tcpsrvr1Accept(Sender: TObject;
+      ClientSocket: TCustomIpClient);
+    procedure btnCloseClick(Sender: TObject);
   private
     fClosing: Boolean;
     fIconData: TNotifyIconData;
@@ -79,8 +88,11 @@ var
 implementation
 uses
   S_DataModuleUnits,    {数据源}
-  BFSSClassUnits
-  ;
+  BFSSClassUnits,
+  CnMD5;
+
+const
+  gc_FileServerPost = '2121';
 
 
 
@@ -222,6 +234,7 @@ procedure TMainDlg.FormCreate(Sender: TObject);
 begin
   fClosing := False;
   ficon:= TIcon.Create;
+  btnRunClick(nil);  //启动
 end;
 
 procedure TMainDlg.FormShow(Sender: TObject);
@@ -261,6 +274,8 @@ procedure TMainDlg.FormDestroy(Sender: TObject);
 begin
   freeform;
   ficon.Free;
+  if tcpsrvr1.Active then
+    tcpsrvr1.Close;
 end;
 
 procedure TMainDlg.actSys_dbRestoreExecute(Sender: TObject);
@@ -274,6 +289,133 @@ begin
       MessageBox(Handle,'数据恢复成功。','提示',MB_ICONHAND+MB_OK);
     end;
   end;
+end;
+
+procedure TMainDlg.btnRunClick(Sender: TObject);
+begin
+  //
+  if tcpsrvr1.Active  then
+  begin
+    if Application.MessageBox('已是启动了,是否重启','提示',MB_ICONQUESTION+MB_YESNO)=IDNO then
+      Exit;
+  end;
+
+  edtHost.Text := CurrBFSSSystem.fAttachHost;
+  edtPort.Text := CurrBFSSSystem.fAttachPort;
+  if tcpsrvr1.Active then
+    tcpsrvr1.Close;
+  tcpsrvr1.LocalHost := edtHost.Text;
+  tcpsrvr1.LocalPort := edtPort.Text;
+  tcpsrvr1.Open;
+end;
+
+procedure TMainDlg.tcpsrvr1Accept(Sender: TObject;
+  ClientSocket: TCustomIpClient);
+var
+  myCommand : string;
+  myFileName : string;
+  mySize : Integer;
+  myfm : TFileStream;
+  myLocalFileName : string;
+  myguid : string;
+  mymd5 : string;
+  myContentid : Integer;
+  myStyle : Integer;
+
+  pbuf  : Pointer;
+  mycursize,iacRec : Integer;
+  myfileid : Integer;
+  myfileguid : string;
+
+begin
+  myCommand := ClientSocket.Receiveln();
+  //上传
+  if myCommand = 'UPFILE' then
+  begin
+    myStyle     := StrToIntDef(ClientSocket.Receiveln(),1);
+    myContentid := StrToIntDef(ClientSocket.Receiveln(),-1);
+    myFileName  := ClientSocket.Receiveln();
+    mySize := StrToIntDef(ClientSocket.Receiveln(),0);
+    //要写入库了
+    myguid := NewGuid;
+    myLocalFileName := CurrBFSSSystem.fAttachDir + '/' + myguid;
+    myfm := TFileStream.Create(myLocalFileName,fmCreate);
+
+    GetMem(pbuf,512);
+    mycursize := 0;
+    try
+      while mycursize < mysize  do
+      begin
+        if mycursize + 512 < mysize then
+          iacRec := ClientSocket.ReceiveBuf(pbuf^,512)
+        else
+          iacRec := ClientSocket.ReceiveBuf(pbuf^,mysize-mycursize);
+        if iacRec = -1 then
+          Break;
+        myfm.Write(pbuf^,iacRec);
+        Inc(mycursize,iacRec);
+      end;
+    finally
+      FreeMem(pbuf);//释放内存
+      myfm.Free; //释放流
+    end;
+
+    //md5检验
+    mymd5 := ClientSocket.Receiveln();
+    if CompareText(MD5Print(MD5File(myLocalFileName)),mymd5) = 0 then
+    begin
+      //将文件写入库内
+      if DM.AddFile(
+        myStyle,
+        myContentid,myLocalFileName,myguid,myFileName,mySize) then
+      begin
+        ClientSocket.Sendln('0');
+      end
+      else begin
+        ClientSocket.Sendln('2');
+        DeleteFile(myLocalFileName);
+      end;
+    end
+    else begin
+      ClientSocket.Sendln('1');
+      DeleteFile(myLocalFileName);
+    end;
+  end
+  //下载
+  else if myCommand = 'DOWNFLE' then
+  begin
+    myfileid := StrToIntDef(ClientSocket.Receiveln(),-1);
+    if DM.GetDownFile(myfileid,myfileguid) then
+    begin
+      myLocalFileName := CurrBFSSSystem.fAttachDir + '/' + myfileguid;
+      if not FileExists(myLocalFileName) then
+      begin
+        ClientSocket.Sendln('4');
+        Exit;
+      end;
+
+      ClientSocket.Sendln('0');
+      mymd5 := MD5Print(MD5File(myLocalFileName));
+      myfm := TFileStream.Create(myLocalFileName,fmOpenRead);
+      try
+        ClientSocket.Sendln(IntToStr(myfm.Size));
+        ClientSocket.SendStream(myfm);
+      finally
+        myfm.Free;
+      end;
+      ClientSocket.Sendln(mymd5);
+
+    end
+    else
+      ClientSocket.Sendln('3');
+  end;
+
+end;
+
+procedure TMainDlg.btnCloseClick(Sender: TObject);
+begin
+  if tcpsrvr1.Active then
+    tcpsrvr1.Close;
 end;
 
 end.

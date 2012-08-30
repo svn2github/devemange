@@ -1,10 +1,10 @@
 object MainDlg: TMainDlg
-  Left = 419
-  Top = 188
+  Left = 435
+  Top = 212
   BorderIcons = [biSystemMenu]
   BorderStyle = bsDialog
   Caption = 'BFFS'
-  ClientHeight = 307
+  ClientHeight = 340
   ClientWidth = 491
   Color = clBtnFace
   Font.Charset = GB2312_CHARSET
@@ -21,8 +21,8 @@ object MainDlg: TMainDlg
   PixelsPerInch = 96
   TextHeight = 15
   object lbl1: TLabel
-    Left = 48
-    Top = 96
+    Left = 104
+    Top = 80
     Width = 263
     Height = 29
     Caption = #26381#21153#22120#27491#22312#36816#34892'....'
@@ -44,7 +44,7 @@ object MainDlg: TMainDlg
   end
   object StatusBar: TStatusBar
     Left = 0
-    Top = 288
+    Top = 321
     Width = 491
     Height = 19
     Panels = <
@@ -57,7 +57,7 @@ object MainDlg: TMainDlg
   end
   object btn1: TBitBtn
     Left = 200
-    Top = 248
+    Top = 280
     Width = 100
     Height = 25
     Action = actSys_dbBackup
@@ -66,12 +66,50 @@ object MainDlg: TMainDlg
   end
   object btn2: TBitBtn
     Left = 320
-    Top = 248
+    Top = 280
     Width = 100
     Height = 25
     Action = actSys_dbRestore
     Caption = #25968#25454#24674#22797
     TabOrder = 3
+  end
+  object edtHost: TEdit
+    Left = 80
+    Top = 192
+    Width = 121
+    Height = 23
+    Color = clScrollBar
+    ReadOnly = True
+    TabOrder = 4
+    Text = '192.168.1.50'
+  end
+  object edtPort: TEdit
+    Left = 212
+    Top = 191
+    Width = 121
+    Height = 23
+    Color = clScrollBar
+    ReadOnly = True
+    TabOrder = 5
+    Text = '2121'
+  end
+  object btnRun: TButton
+    Left = 342
+    Top = 188
+    Width = 115
+    Height = 25
+    Caption = #21551#21160#38468#20214#19978#20256
+    TabOrder = 6
+    OnClick = btnRunClick
+  end
+  object btnClose: TButton
+    Left = 343
+    Top = 217
+    Width = 113
+    Height = 25
+    Caption = #20851#38381#19978#20256
+    TabOrder = 7
+    OnClick = btnCloseClick
   end
   object PopupMenu: TPopupMenu
     AutoHotkeys = maManual
@@ -270,5 +308,10 @@ object MainDlg: TMainDlg
       C007F83F00000000E00FFC7F00000000E00FFFFF00000000D837FFFF00000000
       FEFFFFFF00000000FEFFFFFF0000000000000000000000000000000000000000
       000000000000}
+  end
+  object tcpsrvr1: TTcpServer
+    OnAccept = tcpsrvr1Accept
+    Left = 264
+    Top = 8
   end
 end

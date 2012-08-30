@@ -29,7 +29,19 @@ type
     procedure DoBackDatabase(AFileName:String);
     function DoRestoreDatabase(AFileName:String):Boolean;
 
+    function AddFile(
+      AStyle : Integer;
+      AContentid:Integer;
+      ALocalFileName:string;AGuid:string;AFileName:string;
+      AFileSize:Integer):Boolean;
+
+    //取出内容来,根据文件的ID号
+    function GetDownFile(AFileid:Integer;var AFileGuid:string):Boolean;
+
   end;
+
+
+  function NewGuid: string;
 
 var
   DM: TDM;
@@ -40,6 +52,16 @@ uses
   ActiveX;
 
 {$R *.dfm}
+
+function NewGuid: string;
+var
+  aGuid: TGUID;
+begin
+  CreateGUID(aGuid);
+  result:=GUIDToString(aGuid);
+  result:=Copy(result, 2, 36);
+end;
+
 
 procedure TDM.DataModuleCreate(Sender: TObject);
 var
@@ -193,6 +215,110 @@ begin
     end;
   finally
     Execute('use ' + CurrBFSSSystem.fDataBase.fDBName);
+  end;
+end;
+
+function TDM.AddFile(AStyle : Integer;
+      AContentid:Integer;
+      ALocalFileName:string;AGuid:string;AFileName:string;
+      AFileSize:Integer): Boolean;
+var
+  myQuery : TADOQuery;
+  myfid : Integer;
+  mysql : String;
+const
+  glSQL1  = 'select isnull(Max(ZID),0)+1 as mymax from TB_FILE_ITEM';
+  glSQL2  = 'insert into TB_FILE_ITEM (ZTREE_ID,ZSTYPE,ZID,ZVER,ZNAME,ZEDITER_ID, ' +
+            'ZEDITDATETIME,ZSTATUS,ZEXT,ZSTRUCTVER,ZTYPE,ZNEWVER,ZSIZE,ZCONTENTID) '+
+            ' values(%d,%d,%d,%d,''%s'',%d,''%s'',%d,''%s'',%d,%d,1,%d,%d) ';
+  glSQL4  = 'insert into TB_FILE_CONTEXT (ZFILE_ID,ZGROUPID,ZVER,ZLOCALGUID,ZTYPE) ' +
+            ' values(%d,%d,%d,''%s'',%d)';
+begin
+  //
+  Result := False;
+  myQuery := TADOQuery.Create(nil);
+  try
+    myQuery.Connection := gConn;
+
+    gConn.BeginTrans;
+    try
+      mysql := glSQL1;
+      myQuery.SQL.Add(mysql);
+      myQuery.Open;
+      myfid := myQuery.FieldByName('mymax').AsInteger;
+
+
+      mysql := Format(glSQL2,[
+        0,
+        AStyle,
+        myfid,
+        1,
+        ExtractFileName(AFileName),
+        0,
+        datetimetostr(now()),
+        0,
+        ExtractFileExt(AFileName),
+        0,
+        1,
+        AFileSize,
+        AContentid]);
+
+      myQuery.Close;
+      myQuery.SQL.Clear;
+      myQuery.SQL.Add(mysql);
+      myQuery.ExecSQL;
+
+      //增加明细
+      myQuery.Close;
+      myQuery.SQL.Clear;
+      mysql := Format(glSQL4,[
+        myfid,
+        0,
+        1,
+        AGuid,
+        1
+        ]);
+      myQuery.Close;
+      myQuery.SQL.Clear;
+      myQuery.SQL.Add(mysql);
+      myQuery.ExecSQL;
+      gConn.CommitTrans;
+
+      Result := True;
+    except
+      gConn.RollbackTrans;
+    end;
+  finally
+    myQuery.Free;
+  end;
+end;
+
+function TDM.GetDownFile(AFileid: Integer; var AFileGuid: string): Boolean;
+var
+  myQuery : TADOQuery;
+  mySQL : string;
+
+const
+  gl_SQL = 'select * from TB_FILE_CONTEXT where ZFILE_ID=%d and ZGROUPID=0 and ZVER=1 and ZTYPE=1';
+begin
+  //
+  Result := False;
+  myQuery := TADOQuery.Create(nil);
+  try
+    myQuery.Connection := gConn;
+    mySQL := Format(gl_SQL,[AFileid]);
+    myQuery.SQL.Add(mySQL);
+    myQuery.Open;
+    if myQuery.RecordCount > 0 then
+    begin
+      AFileGuid := myQuery.FieldByName('ZLOCALGUID').AsString;
+      Result := True;
+    end
+    else
+      Result := False;
+
+  finally
+    myQuery.Free;
   end;
 end;
 

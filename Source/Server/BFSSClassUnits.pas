@@ -93,6 +93,9 @@ type
     fAppCaption : String;  //应用名称
     fHasZipData : Boolean; //是否压缩数据包
     fSMTPParams : TSMTPParams;
+    fAttachDir  : string;   //附件的目录
+    fAttachHost : string;
+    fAttachPort : string;
 
     constructor Create ;
     destructor Destroy; override;
@@ -172,6 +175,9 @@ begin
   try
     fAppCaption := ini.ReadString('App','Caption','应用服务器');
     fHasZipData := ini.ReadBool('App','HasZipData',False);
+    fAttachDir  := ini.ReadString('App','AttachDir',fAppDir);
+    fAttachHost := ini.ReadString('App','AttachHost','');
+    fAttachPort := ini.ReadString('App','AttachPort','2121');
 
     fSMTPParams.fAction   := ini.ReadBool('SMTP','Action',False);
     fSMTPParams.fHost     := ini.ReadString('SMTP','Host','');
