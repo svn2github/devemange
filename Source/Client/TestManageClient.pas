@@ -23,7 +23,7 @@ uses
   ClinetSystemUnits,
   ClientTypeUnits, StdCtrls, ComCtrls, Buttons, ActnList, Mask, DBCtrls,
   dbcgrids,
-  TestHighQueryfrm {高级查询};
+  TestHighQueryfrm, ImgList, Menus {高级查询};
 
 type
 
@@ -31,6 +31,13 @@ type
     fCount : integer;
     fPageindex : integer;
     fwhere : string;
+  end;
+
+  PAttachFileRec  = ^TAttachFileRec;
+  TAttachFileRec = record
+    fName : string;
+    ffileid : Integer;
+    fFileExt : string;
   end;
 
   TTestManageChildfrm = class(TBaseChildDlg)
@@ -182,6 +189,15 @@ type
     dbmmoZTESTNOTE: TDBMemo;
     spl2: TSplitter;
     dbmmoZNAME: TDBMemo;
+    lvAttach: TListView;
+    ilAttach: TImageList;
+    actAttach_Addfile: TAction;
+    actAttach_downfile: TAction;
+    dlgOpen1: TOpenDialog;
+    dlgSave1: TSaveDialog;
+    pmAttach: TPopupMenu;
+    N1: TMenuItem;
+    N2: TMenuItem;
     procedure act_NewExecute(Sender: TObject);
     procedure act_CancelUpdate(Sender: TObject);
     procedure act_CancelExecute(Sender: TObject);
@@ -244,18 +260,29 @@ type
     procedure act_AddDataExecute(Sender: TObject);
     procedure act_gotoDemandUpdate(Sender: TObject);
     procedure act_gotoDemandExecute(Sender: TObject);
+    procedure actAttach_AddfileExecute(Sender: TObject);
+    procedure actAttach_AddfileUpdate(Sender: TObject);
+    procedure actAttach_downfileExecute(Sender: TObject);
+    procedure actAttach_downfileUpdate(Sender: TObject);
+    procedure lvAttachDblClick(Sender: TObject);
   private
     { Private declarations }
     fTestPageRec : TTestPageRec;
     fHighQueryDlg : TTestHighQueryDlg;
+    fFileIconIndexList : TStringList; //附件的图示
+
     procedure Mailto(AEmailto:String); //发送到邮箱
     procedure WMShowTestItem(var msg:TMessage); message gcMSG_GetTestItem; //直接显示测试用
     procedure WMShowTestItemCode(var msg:TMessage);message gcMSG_GetTestItemByCode;
+    //取文件的图标
+    function GetFileIconIndex(FileName:string;AImageList:TImageList):integer;
+    procedure ClearAttachFile(); //清空附件
   public
     { Public declarations }
     procedure LoadTestItem(APageIndex: integer; Awhere: String);
     function  GetTestItemPageCount(APageIndex:integer;AWhereStr:String):integer; //取出页总数
     procedure LoadTestResult(AID:Integer);
+    procedure LoadAttach(ABugID:Integer);     //加载附件
 
     procedure initBase; override;
     procedure freeBase; override;
@@ -270,6 +297,7 @@ var
 implementation
 
 uses
+  ShellAPI,
   TestCaseSOCREfrm, {测试打分}
   Activationfrm,    {激活处量}
   GetSVNVerfrm,     {选择SVN的版本号}
@@ -289,7 +317,10 @@ procedure TTestManageChildfrm.freeBase;
 begin
   if Assigned(fHighQueryDlg) then
     fHighQueryDlg.Free;
+  ClearAttachFile();
+  fFileIconIndexList.Free;
   inherited;
+
 end;
 
 class function TTestManageChildfrm.GetModuleID: integer;
@@ -331,6 +362,8 @@ const
   glSQL3 = 'select ZID,ZNAME from TB_TEST_PARAMS where ZTYPE=%d';
 begin
   inherited;
+  fFileIconIndexList := TStringList.Create;
+
   fHighQueryDlg := nil;
   cdsProject.Data  := ClientSystem.fDbOpr.ReadDataSet(PChar(glSQL2));
   cdsLevel.Data    := ClientSystem.fDbOpr.ReadDataSet(PChar(Format(glSQL3,[0])));
@@ -773,6 +806,7 @@ begin
       DataSet.FieldByName('ZISNEW').AsBoolean := False;
       ClientSystem.fDbOpr.CommitTrans;
       LoadTestResult(myID);
+      LoadAttach(myID);
       //邮件通知,新建时不处理，只有提交测试用例时才处理
       //Mailto(DataSet.FieldByName('ZMAILTO').AsString);
     except
@@ -858,6 +892,7 @@ begin
 
   myID := cdsTestItem.FieldByName('ZID').AsInteger;
   LoadTestResult(myID);
+  LoadAttach(myID);
 
   if not cdsTestItem.FieldByName('ZISNEW').AsBoolean then
   begin
@@ -1569,6 +1604,7 @@ begin
     if pgcTestMain.ActivePageIndex=0 then
       pgcTestMain.ActivePageIndex := 1;
     LoadTestResult(msg.WParam);
+    LoadAttach(msg.WParam);
 
   finally
     fTestpageRec.fPageindex := myindex;
@@ -1692,6 +1728,7 @@ begin
         if pgcTestMain.ActivePageIndex=0 then
           pgcTestMain.ActivePageIndex := 1;
         LoadTestResult(msg.WParam);
+        LoadAttach(msg.WParam);
       end;
 
     finally
@@ -1809,6 +1846,173 @@ begin
   myZID := cdsTestItem.FieldByName('ZDEMAND_ID').AsInteger;
   if myZID = -1 then Exit;
   SendMessage(Application.MainForm.Handle,gcMSG_GetDemandItem,myZID,0);
+end;
+
+procedure TTestManageChildfrm.LoadAttach(ABugID: Integer);
+var
+  mycds : TClientDataSet;
+  mySQL : string;
+  myItem : TListItem;
+  myData : PAttachFileRec;
+  myb : Boolean;
+  myExt : string;
+const
+  glSQL = 'select * from  TB_FILE_ITEM where ZCONTENTID=%d and ZSTYPE=4 Order by ZEDITDATETIME';
+begin
+  mycds := TClientDataSet.Create(nil);
+  myb := fLoading;
+  fLoading := True;
+  lvAttach.Items.BeginUpdate;
+  try
+
+    ClearAttachFile;
+    mySQL := format(glSQL,[ABugID]);
+    mycds.Data := ClientSystem.fDbOpr.ReadDataSet(PChar(mySQL));
+    if mycds.RecordCount > 0 then
+    begin
+      mycds.First;
+      while not mycds.Eof do
+      begin
+        myItem := lvAttach.Items.Add;
+        myItem.Caption := mycds.FieldByName('ZNAME').AsString;
+        myExt := mycds.FieldByname('ZEXT').AsString;
+        if fFileIconIndexList.IndexOfName(myExt) >=0 then
+          myItem.ImageIndex := StrToIntDef(fFileIconIndexList.Values[myExt],0)
+        else begin
+          myItem.ImageIndex := GetFileIconIndex('c:\' + myItem.Caption,ilAttach);
+          fFileIconIndexList.Add(Format('%s=%d',[myExt,myItem.ImageIndex]));
+        end;
+
+        New(myData);
+        myData^.fName   := myItem.Caption;
+        mydata^.ffileid := mycds.FieldByName('ZID').AsInteger;
+        myData^.fFileExt := mycds.FieldByname('ZEXT').AsString;
+        myItem.Data    := mydata;
+
+        mycds.Next;
+      end;
+    end;
+
+  finally
+    mycds.Free;
+    lvAttach.Items.EndUpdate;
+    fLoading := myb;
+  end;
+
+end;
+
+function TTestManageChildfrm.GetFileIconIndex(FileName: string;
+  AImageList: TImageList): integer;
+var
+  sinfo:SHFILEINFO;
+  myIcon:TIcon;
+  nIndex : integer;
+begin
+  Result  := -1;
+  FillChar(sinfo, SizeOf(sinfo),0);
+  SHGetFileInfo(PChar(FileName),FILE_ATTRIBUTE_NORMAL,sinfo,SizeOf(sInfo),
+  SHGFI_USEFILEATTRIBUTES or SHGFI_ICON or SHGFI_LARGEICON{SHGFI_SMALLICON});
+  if sinfo.hIcon>0 then
+  begin
+    myIcon:=TIcon.Create;
+    myIcon.Handle:=sinfo.hIcon;
+    nIndex:= AImageList.AddIcon(myIcon);
+    myIcon.Free;
+    Result := nIndex;
+  end;
+end;
+
+
+procedure TTestManageChildfrm.ClearAttachFile;
+var
+  i : Integer;
+  myItem : PAttachFileRec;
+begin
+  for i:=0 to lvAttach.Items.Count -1 do
+  begin
+    myItem := lvAttach.Items[i].Data;
+    Dispose(myItem);
+  end;
+  lvAttach.Clear;
+end;
+
+procedure TTestManageChildfrm.actAttach_AddfileExecute(Sender: TObject);
+var
+  myfilename : string;
+  myBugid : Integer;
+  myid : Integer;
+begin
+  //UPFILE
+  if not dlgOpen1.Execute then Exit;
+
+  myfilename := dlgOpen1.FileName;
+
+  myBugid := cdsTestItem.FieldByName('ZID').AsInteger;
+
+  //上传中
+  ShowProgress('上传文件中...',0);
+  try
+    myid := ClientSystem.fDbOpr.UpFile(4,myBugid,myfilename);
+  finally
+    HideProgress;
+  end;
+
+  if myid = 0 then
+  begin
+    LoadAttach(myBugid);
+  end
+  else
+    Application.MessageBox(PChar('上传失败,错误号:' +inttostr(myid) ),'提示',
+      MB_ICONERROR);
+
+end;
+
+
+procedure TTestManageChildfrm.actAttach_AddfileUpdate(Sender: TObject);
+begin
+  (Sender as TAction).Enabled := cdsTestItem.State = dsBrowse; 
+end;
+
+procedure TTestManageChildfrm.actAttach_downfileExecute(Sender: TObject);
+var
+  myfilename : string;
+  myData : PAttachFileRec;
+  myi : Integer;
+begin
+  //
+  myData := lvAttach.Selected.Data;
+  dlgSave1.Filter := Format('*%s|*%s',[myData^.fFileExt,myData^.fFileExt]);
+  dlgSave1.FileName := myData^.fName;
+  dlgSave1.DefaultExt := myData^.fFileExt;
+  
+  if not dlgSave1.Execute then
+    Exit;
+  myfilename := dlgSave1.FileName;
+  myi := ClientSystem.fDbOpr.DownFile(myData^.ffileid,myfilename);
+  if myi = 0 then
+  begin
+    Application.MessageBox('下载成功','提示',MB_ICONQUESTION);
+  end
+  else
+    Application.MessageBox(PChar('下载失败,错误号:' + inttostr(myi)),'提示',MB_ICONERROR);
+
+
+end;
+
+
+procedure TTestManageChildfrm.actAttach_downfileUpdate(Sender: TObject);
+begin
+  (Sender as TAction).Enabled := Assigned(lvAttach.Selected) and
+  Assigned(lvAttach.Selected.Data);
+end;
+
+procedure TTestManageChildfrm.lvAttachDblClick(Sender: TObject);
+begin
+  if Assigned(lvAttach.Selected) and
+     Assigned(lvAttach.Selected.Data) then
+  begin
+    actAttach_downfile.Execute;
+  end;
 end;
 
 end.

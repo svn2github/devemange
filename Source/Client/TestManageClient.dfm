@@ -1,6 +1,6 @@
 inherited TestManageChildfrm: TTestManageChildfrm
-  Left = 141
-  Top = 25
+  Left = 123
+  Top = 168
   Width = 1139
   Height = 713
   Caption = #27979#35797#31649#29702
@@ -312,7 +312,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
         object dbctrlgrd1: TDBCtrlGrid
           Left = 0
           Top = 40
-          Width = 1115
+          Width = 1008
           Height = 277
           Align = alClient
           AllowDelete = False
@@ -321,7 +321,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
           DataSource = dsResult
           PanelBorder = gbNone
           PanelHeight = 92
-          PanelWidth = 549
+          PanelWidth = 495
           TabOrder = 0
           SelectedColor = clMoneyGreen
           OnPaintPanel = dbctrlgrd1PaintPanel
@@ -342,7 +342,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
             Caption = #23454#38469#20540#65306
           end
           object dbtxtZNO: TDBText
-            Left = 523
+            Left = 469
             Top = 68
             Width = 18
             Height = 17
@@ -360,7 +360,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
             ParentFont = False
           end
           object dbtxtZUSERNAME: TDBText
-            Left = 473
+            Left = 419
             Top = 68
             Width = 50
             Height = 17
@@ -381,7 +381,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
           object bvl1: TBevel
             Left = 0
             Top = 0
-            Width = 549
+            Width = 495
             Height = 92
             Align = alClient
             Shape = bsFrame
@@ -389,7 +389,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
           object dbmmoZACTION: TDBMemo
             Left = 5
             Top = 6
-            Width = 537
+            Width = 483
             Height = 55
             Anchors = [akLeft, akTop, akRight, akBottom]
             DataField = 'ZACTION'
@@ -525,6 +525,18 @@ inherited TestManageChildfrm: TTestManageChildfrm
             Caption = #25552#20132#27979#35797
             TabOrder = 7
           end
+        end
+        object lvAttach: TListView
+          Left = 1008
+          Top = 40
+          Width = 107
+          Height = 277
+          Align = alRight
+          Columns = <>
+          LargeImages = ilAttach
+          PopupMenu = pmAttach
+          TabOrder = 2
+          OnDblClick = lvAttachDblClick
         end
       end
       object pnlTitle: TPanel
@@ -1225,6 +1237,16 @@ inherited TestManageChildfrm: TTestManageChildfrm
       OnExecute = act_gotoDemandExecute
       OnUpdate = act_gotoDemandUpdate
     end
+    object actAttach_Addfile: TAction
+      Caption = #19978#20256#38468#20214'...'
+      OnExecute = actAttach_AddfileExecute
+      OnUpdate = actAttach_AddfileUpdate
+    end
+    object actAttach_downfile: TAction
+      Caption = #19979#36733#38468#20214'('#21452#20987')...'
+      OnExecute = actAttach_downfileExecute
+      OnUpdate = actAttach_downfileUpdate
+    end
   end
   object cdsProject: TClientDataSet
     Aggregates = <>
@@ -1323,5 +1345,30 @@ inherited TestManageChildfrm: TTestManageChildfrm
     Params = <>
     Left = 431
     Top = 2
+  end
+  object ilAttach: TImageList
+    Height = 32
+    Width = 32
+    Left = 560
+    Top = 16
+  end
+  object dlgOpen1: TOpenDialog
+    Left = 600
+    Top = 16
+  end
+  object dlgSave1: TSaveDialog
+    Left = 640
+    Top = 16
+  end
+  object pmAttach: TPopupMenu
+    AutoHotkeys = maManual
+    Left = 680
+    Top = 16
+    object N1: TMenuItem
+      Action = actAttach_Addfile
+    end
+    object N2: TMenuItem
+      Action = actAttach_downfile
+    end
   end
 end
