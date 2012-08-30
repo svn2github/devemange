@@ -8,7 +8,7 @@ uses
 
   ClientTypeUnits, ActnList, Menus, Grids, DBGrids, StdCtrls, Buttons,
   DBCtrls, Mask, dbcgrids,BugHighQueryfrm,
-  ClinetSystemUnits;
+  ClinetSystemUnits, ImgList;
 
 type
 
@@ -23,6 +23,13 @@ type
     fIndex : Integer;
     fIndexCount : Integer;
     fWhereStr : string; //分页的where条件
+  end;
+
+  PAttachFileRec  = ^TAttachFileRec;
+  TAttachFileRec = record
+    fName : string;
+    ffileid : Integer;
+    fFileExt : string;
   end;
 
   TBugManageDlg = class(TBaseChildDlg)
@@ -216,6 +223,14 @@ type
     mniBug_RunAdvQuery: TMenuItem;
     actBug_LoadAdvQuery: TAction;
     mniBug_LoadAdvQuery: TMenuItem;
+    lvAttach: TListView;
+    actAttach_AddFile: TAction;
+    dlgOpen1: TOpenDialog;
+    pmAttach: TPopupMenu;
+    N15: TMenuItem;
+    ilAttach: TImageList;
+    actAttach_downfile: TAction;
+    N16: TMenuItem;
     procedure actBug_AddDirExecute(Sender: TObject);
     procedure tvProjectExpanding(Sender: TObject; Node: TTreeNode;
       var AllowExpansion: Boolean);
@@ -293,16 +308,23 @@ type
     procedure lstAdvancedQueryDblClick(Sender: TObject);
     procedure actBug_LoadAdvQueryExecute(Sender: TObject);
     procedure cdsBugItemCalcFields(DataSet: TDataSet);
+    procedure actAttach_AddFileExecute(Sender: TObject);
+    procedure actAttach_AddFileUpdate(Sender: TObject);
+    procedure actAttach_downfileExecute(Sender: TObject);
+    procedure actAttach_downfileUpdate(Sender: TObject);
+    procedure lvAttachDblClick(Sender: TObject);
   private
     fPageType : TPageTypeRec; //分页处理
     fHighQuery : TBugHighQueryDlg;
     fZRESOLVEDBY : Integer; //保存起来为激活用
     fBugAQuery : TAdvancedQueryArray; //错误管理内的高级查询
+    fFileIconIndexList : TStringList; //附件的图示
 
     procedure ClearNode(AParent:TTreeNode);
     function  GetBugItemPageCount(APageIndex:integer;AWhereStr:String):integer; //取出页总数
     procedure LoadBugItem(APageIndex:integer;AWhereStr:String);
     procedure LoadBugHistory(ABugID:integer); //加载bug的回复
+    procedure LoadAttach(ABugID:Integer);     //加载附件
     function  UpBugFile(APro_ID:integer;AFileName:String;var AFileID:integer):Boolean; //上传文件并返回文件的ID号
     procedure Mailto(AEmailto:String); //发送到邮箱
     procedure WMShowBugItem(var msg:TMessage); message gcMSG_GetBugItem; //直接显示bug,用于测试用例内
@@ -310,6 +332,10 @@ type
     procedure SetTag(ATagName:string); //设置标签
 
     procedure LoadBugQuery(); //加载查询条件
+    procedure ClearAttachFile(); //清空附件
+    //取文件的图标
+    function GetFileIconIndex(FileName:string;AImageList:TImageList):integer;
+    
   public
     { Public declarations }
     procedure initBase; override;
@@ -394,6 +420,7 @@ procedure TBugManageDlg.initBase;
 const
   glSQL  = 'select ZID,ZNAME from TB_BUG_PARAMS where ZTYPE=%d';
 begin
+  fFileIconIndexList := TStringList.Create;
   with ClientSystem.fDbOpr do
   begin
     cdsBugStatus.Data := ReadDataSet(PChar(format(glSQL,[1])));
@@ -1195,6 +1222,7 @@ begin
       lbBugCaption.Caption := Format('#%d %s',[cdsBugItem.FieldByName('ZID').AsInteger,
         cdsBugItem.FieldByName('ZTITLE').AsString]);
       LoadBugHistory(cdsBugItem.FieldByName('ZID').Asinteger);
+      LoadAttach(cdsBugItem.FieldByName('ZID').Asinteger);
     end;
   end
   else if pcBug.ActivePageIndex = 1 then
@@ -2020,6 +2048,7 @@ begin
   lbBugCaption.Caption := Format('#%d %s',[cdsBugItem.FieldByName('ZID').AsInteger,
     cdsBugItem.FieldByName('ZTITLE').AsString]);
   LoadBugHistory(cdsBugItem.FieldByName('ZID').Asinteger);
+  LoadAttach(cdsBugItem.FieldByName('ZID').Asinteger);
 end;
 
 procedure TBugManageDlg.actBugHistory_NextBugExecute(Sender: TObject);
@@ -2028,6 +2057,7 @@ begin
   lbBugCaption.Caption := Format('#%d %s',[cdsBugItem.FieldByName('ZID').AsInteger,
     cdsBugItem.FieldByName('ZTITLE').AsString]);
   LoadBugHistory(cdsBugItem.FieldByName('ZID').Asinteger);
+  LoadAttach(cdsBugItem.FieldByName('ZID').Asinteger);
 end;
 
 procedure TBugManageDlg.dgBugItemDrawColumnCell(Sender: TObject;
@@ -2521,6 +2551,8 @@ begin
   inherited;
   if Assigned(fHighQuery) then
     fHighQuery.Free;
+  ClearAttachFile;
+  fFileIconIndexList.Free;
 end;
 
 procedure TBugManageDlg.actBug_MovetoExecute(Sender: TObject);
@@ -2668,6 +2700,7 @@ begin
     if pcBug.ActivePageIndex=0 then
       pcBug.ActivePageIndex := 1;
     LoadBugHistory(msg.WParam);
+    LoadAttach(msg.WParam);
 
   finally
     fPageType.fWhereStr := mywherestr;
@@ -2903,6 +2936,7 @@ begin
     cdsBugItem.FieldByName('ZPRO_ID').AsInteger := mycds.fieldByName('ZPRO_ID').AsInteger;
 
     LoadBugHistory(cdsBugItem.FieldByName('ZID').Asinteger);
+    LoadAttach(cdsBugItem.FieldByName('ZID').Asinteger);
     pcBug.ActivePageIndex := 1;
   finally
     mycds.Free;
@@ -3139,6 +3173,171 @@ begin
   DataSet.FieldByName('ZTITLEALL').AsString := Format('#%s %s',[
     DataSet.FieldByName('ZID').AsString,
     DataSet.FieldByName('ZTITLE').AsString]);
+end;
+
+procedure TBugManageDlg.actAttach_AddFileExecute(Sender: TObject);
+var
+  myfilename : string;
+  myBugid : Integer;
+  myid : Integer;
+begin
+  //UPFILE
+  if not dlgOpen1.Execute then Exit;
+
+  myfilename := dlgOpen1.FileName;
+
+  myBugid := cdsBugItem.FieldByName('ZID').AsInteger;
+
+  //上传中
+  ShowProgress('上传文件中...',0);
+  try
+    myid := ClientSystem.fDbOpr.UpFile(1,myBugid,myfilename);
+  finally
+    HideProgress;
+  end;
+
+  if myid = 0 then
+  begin
+    LoadAttach(myBugid);
+  end
+  else
+    Application.MessageBox(PChar('上传失败,错误号:' +inttostr(myid) ),'提示',
+      MB_ICONERROR);
+
+end;
+
+procedure TBugManageDlg.LoadAttach(ABugID: Integer);
+var
+  mycds : TClientDataSet;
+  mySQL : string;
+  myItem : TListItem;
+  myData : PAttachFileRec;
+  myb : Boolean;
+  myExt : string;
+const
+  glSQL = 'select * from  TB_FILE_ITEM where ZCONTENTID=%d and ZSTYPE=1 Order by ZEDITDATETIME';
+begin
+  mycds := TClientDataSet.Create(nil);
+  myb := fLoading;
+  fLoading := True;
+  lvAttach.Items.BeginUpdate;
+  try
+
+    ClearAttachFile;
+    mySQL := format(glSQL,[ABugID]);
+    mycds.Data := ClientSystem.fDbOpr.ReadDataSet(PChar(mySQL));
+    if mycds.RecordCount > 0 then
+    begin
+      mycds.First;
+      while not mycds.Eof do
+      begin
+        myItem := lvAttach.Items.Add;
+        myItem.Caption := mycds.FieldByName('ZNAME').AsString;
+        myExt := mycds.FieldByname('ZEXT').AsString;
+        if fFileIconIndexList.IndexOfName(myExt) >=0 then
+          myItem.ImageIndex := StrToIntDef(fFileIconIndexList.Values[myExt],0)
+        else begin
+          myItem.ImageIndex := GetFileIconIndex('c:\' + myItem.Caption,ilAttach);
+          fFileIconIndexList.Add(Format('%s=%d',[myExt,myItem.ImageIndex]));
+        end;
+
+        New(myData);
+        myData^.fName   := myItem.Caption;
+        mydata^.ffileid := mycds.FieldByName('ZID').AsInteger;
+        myData^.fFileExt := mycds.FieldByname('ZEXT').AsString;
+        myItem.Data    := mydata;
+
+        mycds.Next;
+      end;
+    end;
+
+  finally
+    mycds.Free;
+    lvAttach.Items.EndUpdate;
+    fLoading := myb;
+  end;
+
+end;
+
+procedure TBugManageDlg.ClearAttachFile;
+var
+  i : Integer;
+  myItem : PAttachFileRec;
+begin
+  for i:=0 to lvAttach.Items.Count -1 do
+  begin
+    myItem := lvAttach.Items[i].Data;
+    Dispose(myItem);
+  end;
+  lvAttach.Clear;
+end;
+
+function TBugManageDlg.GetFileIconIndex(FileName: string;
+  AImageList: TImageList): integer;
+var
+  sinfo:SHFILEINFO;
+  myIcon:TIcon;
+  nIndex : integer;
+begin
+  Result  := -1;
+  FillChar(sinfo, SizeOf(sinfo),0);
+  SHGetFileInfo(PChar(FileName),FILE_ATTRIBUTE_NORMAL,sinfo,SizeOf(sInfo),
+  SHGFI_USEFILEATTRIBUTES or SHGFI_ICON or SHGFI_LARGEICON{SHGFI_SMALLICON});
+  if sinfo.hIcon>0 then
+  begin
+    myIcon:=TIcon.Create;
+    myIcon.Handle:=sinfo.hIcon;
+    nIndex:= AImageList.AddIcon(myIcon);
+    myIcon.Free;
+    Result := nIndex;
+  end;
+end;
+
+
+procedure TBugManageDlg.actAttach_AddFileUpdate(Sender: TObject);
+begin
+  (Sender as TAction).Enabled := cdsBugItem.State = dsBrowse;
+end;
+
+procedure TBugManageDlg.actAttach_downfileExecute(Sender: TObject);
+var
+  myfilename : string;
+  myData : PAttachFileRec;
+  myi : Integer;
+begin
+  //
+  myData := lvAttach.Selected.Data;
+  dlgSave1.Filter := Format('*%s|*%s',[myData^.fFileExt,myData^.fFileExt]);
+  dlgSave1.FileName := myData^.fName;
+  dlgSave1.DefaultExt := myData^.fFileExt;
+  
+  if not dlgSave1.Execute then
+    Exit;
+  myfilename := dlgSave1.FileName;
+  myi := ClientSystem.fDbOpr.DownFile(myData^.ffileid,myfilename);
+  if myi = 0 then
+  begin
+    Application.MessageBox('下载成功','提示',MB_ICONQUESTION);
+  end
+  else
+    Application.MessageBox(PChar('下载失败,错误号:' + inttostr(myi)),'提示',MB_ICONERROR);
+
+
+end;
+
+procedure TBugManageDlg.actAttach_downfileUpdate(Sender: TObject);
+begin
+  (Sender as TAction).Enabled := Assigned(lvAttach.Selected) and
+  Assigned(lvAttach.Selected.Data);
+end;
+
+procedure TBugManageDlg.lvAttachDblClick(Sender: TObject);
+begin
+  if Assigned(lvAttach.Selected) and
+     Assigned(lvAttach.Selected.Data) then
+  begin
+    actAttach_downfile.Execute;
+  end;
 end;
 
 end.

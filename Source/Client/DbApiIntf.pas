@@ -103,6 +103,13 @@ type
     function Version : integer;stdcall;
     function AppServer : Variant; stdcall;
 
+    //6.上传文件 2012-8-28
+    //AStyle = 1 表示bug管理
+    //AContentid 为内容的id 如是bug管理则是bugid号
+    function UpFile(AStyle:Integer;AContentid:Integer;AFileName:WideString):Integer; stdcall;
+    function DownFile(AFileID:Integer;AFileName:WideString):Integer;stdcall;
+    
+
   end;
 
 

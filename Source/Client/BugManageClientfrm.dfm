@@ -1,6 +1,6 @@
 inherited BugManageDlg: TBugManageDlg
-  Left = 161
-  Top = 63
+  Left = 187
+  Top = 57
   Width = 1024
   Height = 687
   Caption = #38169#35823#31649#29702
@@ -605,14 +605,14 @@ inherited BugManageDlg: TBugManageDlg
             object dbcBugHistory: TDBCtrlGrid
               Left = 1
               Top = 1
-              Width = 998
+              Width = 889
               Height = 251
               Align = alClient
               AllowDelete = False
               AllowInsert = False
               DataSource = dsBugBugHistory
               PanelHeight = 83
-              PanelWidth = 981
+              PanelWidth = 872
               TabOrder = 0
               SelectedColor = clMoneyGreen
               object DBText1: TDBText
@@ -719,7 +719,7 @@ inherited BugManageDlg: TBugManageDlg
                 Transparent = True
               end
               object DBText5: TDBText
-                Left = 945
+                Left = 836
                 Top = 3
                 Width = 25
                 Height = 16
@@ -737,7 +737,7 @@ inherited BugManageDlg: TBugManageDlg
                 ParentFont = False
               end
               object dbtxtZFILESAVE: TDBText
-                Left = 837
+                Left = 728
                 Top = 60
                 Width = 89
                 Height = 17
@@ -757,7 +757,7 @@ inherited BugManageDlg: TBugManageDlg
               object DBMemo1: TDBMemo
                 Left = 7
                 Top = 22
-                Width = 963
+                Width = 854
                 Height = 33
                 Anchors = [akLeft, akTop, akRight, akBottom]
                 DataField = 'ZCONTEXT'
@@ -765,6 +765,18 @@ inherited BugManageDlg: TBugManageDlg
                 ScrollBars = ssVertical
                 TabOrder = 0
               end
+            end
+            object lvAttach: TListView
+              Left = 890
+              Top = 1
+              Width = 109
+              Height = 251
+              Align = alRight
+              Columns = <>
+              LargeImages = ilAttach
+              PopupMenu = pmAttach
+              TabOrder = 1
+              OnDblClick = lvAttachDblClick
             end
           end
         end
@@ -779,8 +791,8 @@ inherited BugManageDlg: TBugManageDlg
           object lbBugCaption: TLabel
             Left = 0
             Top = 0
-            Width = 96
-            Height = 15
+            Width = 725
+            Height = 18
             Align = alClient
             Caption = 'lbBugCaption'
             Color = clGray
@@ -1548,6 +1560,18 @@ inherited BugManageDlg: TBugManageDlg
       Caption = #21047#26032#39640#32423#26597#35810
       OnExecute = actBug_LoadAdvQueryExecute
     end
+    object actAttach_AddFile: TAction
+      Category = #38468#20214
+      Caption = #19978#20256#38468#20214'...'
+      OnExecute = actAttach_AddFileExecute
+      OnUpdate = actAttach_AddFileUpdate
+    end
+    object actAttach_downfile: TAction
+      Category = #38468#20214
+      Caption = #19979#36733#25991#20214'...'
+      OnExecute = actAttach_downfileExecute
+      OnUpdate = actAttach_downfileUpdate
+    end
   end
   object pmBugTree: TPopupMenu
     AutoHotkeys = maManual
@@ -1727,5 +1751,26 @@ inherited BugManageDlg: TBugManageDlg
     object mniBug_DelAdvQuery: TMenuItem
       Action = actBug_DelAdvQuery
     end
+  end
+  object dlgOpen1: TOpenDialog
+    Left = 560
+    Top = 48
+  end
+  object pmAttach: TPopupMenu
+    AutoHotkeys = maManual
+    Left = 88
+    Top = 48
+    object N15: TMenuItem
+      Action = actAttach_AddFile
+    end
+    object N16: TMenuItem
+      Action = actAttach_downfile
+    end
+  end
+  object ilAttach: TImageList
+    Height = 32
+    Width = 32
+    Left = 640
+    Top = 16
   end
 end

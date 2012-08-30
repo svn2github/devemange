@@ -101,6 +101,8 @@ type
     function AppServer : Variant; stdcall;
 
     //6
+    function UpFile(AStyle:Integer;AContentid:Integer;AFileName:WideString):Integer;stdcall;
+    function DownFile(AFileID:Integer;AFileName:WideString):Integer;stdcall;
 
   end;
 
@@ -112,7 +114,12 @@ var
 
 implementation
 uses
+  CnMD5,
+  Sockets,
   Variants;
+
+const
+  gc_FileServerPost = '2121';
 
   function CreateBfssDBOpr(): IDbOperator;
   begin
@@ -295,6 +302,73 @@ begin
     //ReSetTimer;
     AppServer.AS_Execute(AppServer.GetDSPName,
       ASqlStr,AParams, OwnerData);
+  end;
+end;
+
+function TBfssDBOpr.DownFile(AFileID: Integer;
+  AFileName: WideString): Integer;
+var
+  myCleint : TTcpClient;
+  myfm : TFileStream;
+  mymd5 : string;
+  pbuf  : Pointer;
+  mycursize,iacRec,mysize : Integer;
+begin
+  //
+  Result := 99;
+  myCleint := TTcpClient.Create(nil);
+  try
+    myCleint.RemoteHost := fHost;
+    myCleint.RemotePort := gc_FileServerPost;
+    if myCleint.Connect then
+    begin
+      myCleint.Sendln('DOWNFLE'); //先上命令
+      myCleint.Sendln(IntToStr(AFileID));
+      if myCleint.WaitForData(100000) then
+      begin
+        if myCleint.Receiveln() <> '0' then
+        begin
+          Exit;
+        end;
+        mysize := StrToIntDef(myCleint.Receiveln(),0);
+        //读取流文件
+        myfm := TFileStream.Create(AFileName,fmCreate);
+        GetMem(pbuf,512);
+        mycursize := 0;
+        try
+          while mycursize < mysize  do
+          begin
+            if mycursize + 512 < mysize then
+              iacRec := myCleint.ReceiveBuf(pbuf^,512)
+            else
+              iacRec := myCleint.ReceiveBuf(pbuf^,mysize-mycursize);
+            if iacRec = -1 then
+              Break;
+            myfm.Write(pbuf^,iacRec);
+            Inc(mycursize,iacRec);
+          end;
+        finally
+          FreeMem(pbuf);//释放内存
+          myfm.Free; //释放流
+        end;
+
+        //md5校验
+
+        mymd5 := MD5Print(MD5File(AFileName));
+        if CompareStr(mymd5,myCleint.Receiveln())=0 then
+        begin
+          Result := 0;
+        end
+        else
+          Result := 2;
+
+      end
+      else
+        Result := 1;
+    end;
+  finally
+    myCleint.Disconnect;
+    myCleint.Free;
   end;
 end;
 
@@ -498,6 +572,45 @@ end;
 procedure TBfssDBOpr.SendData(const Data: IDataBlock);
 begin
   WriteLog('发送='+inttostr(Data.Size));
+end;
+
+function TBfssDBOpr.UpFile(AStyle:Integer;AContentid:Integer;AFileName: WideString): Integer;
+var
+  myCleint : TTcpClient;
+  myfm : TFileStream;
+  mymd5 : string;
+begin
+  Result := 99;
+  myCleint := TTcpClient.Create(nil);
+  try
+    myCleint.RemoteHost := fHost;
+    myCleint.RemotePort := gc_FileServerPost;
+    if myCleint.Connect then
+    begin
+      mymd5 := MD5Print(MD5File(AFileName));
+      myfm := TFileStream.Create(AFileName,fmOpenRead);
+      try
+        myCleint.Sendln('UPFILE'); //先提示命令
+        myCleint.Sendln(IntToStr(AStyle));
+        myCleint.Sendln(IntToStr(AContentid));
+        myCleint.Sendln(AFileName);
+        myCleint.Sendln(IntToStr(myfm.Size));
+        myCleint.SendStream(myfm);
+        myCleint.Sendln(mymd5);
+        if myCleint.WaitForData(10000) then
+        begin
+          Result := StrToIntDef(myCleint.Receiveln(),99);
+        end
+        else
+          Result := 1;
+      finally
+        myfm.Free;
+      end;
+    end;
+  finally
+    myCleint.Disconnect;
+    myCleint.Free;
+  end;
 end;
 
 function TBfssDBOpr.UpFileChunk(AFile_ID, AVer, AGroupID: Integer;
