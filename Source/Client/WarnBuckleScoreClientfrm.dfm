@@ -79,6 +79,15 @@ inherited WarnBuckleScoreClientDlg: TWarnBuckleScoreClientDlg
           ShowHint = True
           TabOrder = 5
         end
+        object btnwarn_goto: TBitBtn
+          Left = 624
+          Top = 8
+          Width = 100
+          Height = 25
+          Action = act_warn_goto
+          Caption = #25171#24320#20869#23481
+          TabOrder = 6
+        end
       end
       object dbgrdResult: TDBGrid
         Left = 0
@@ -611,6 +620,10 @@ inherited WarnBuckleScoreClientDlg: TWarnBuckleScoreClientDlg
       Category = #39029#38754
       Caption = #20840#37096#25968#25454
       OnExecute = act_page_AlldataExecute
+    end
+    object act_warn_goto: TAction
+      Caption = #25171#24320#20869#23481
+      OnExecute = act_warn_gotoExecute
     end
   end
 end

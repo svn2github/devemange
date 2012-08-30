@@ -89,6 +89,8 @@ type
     act_page_Alldata: TAction;
     btnpage_reload: TBitBtn;
     edtendpage: TEdit;
+    act_warn_goto: TAction;
+    btnwarn_goto: TBitBtn;
     procedure cdsToDayResultCalcFields(DataSet: TDataSet);
     procedure dbgrdResultDrawColumnCell(Sender: TObject; const Rect: TRect;
       DataCol: Integer; Column: TColumn; State: TGridDrawState);
@@ -122,6 +124,7 @@ type
     procedure act_warn_scoreExecute(Sender: TObject);
     procedure act_warn_scoreUpdate(Sender: TObject);
     procedure act_page_AlldataExecute(Sender: TObject);
+    procedure act_warn_gotoExecute(Sender: TObject);
   private
     { Private declarations }
     fLoading : Boolean;
@@ -142,7 +145,7 @@ type
 
 implementation
 
-uses DmUints,ClinetSystemUnits,ComObj;
+uses DmUints,ClinetSystemUnits,ComObj,ClientTypeUnits;
 
 {$R *.dfm}
 
@@ -784,6 +787,16 @@ begin
   LoadToDayResult(fPageType.fIndex,
     fPageType.fWhereStr);
   lblPageCount.Caption := format('%d/%d',[1,fPageType.fIndexCount]);
+end;
+
+procedure TWarnBuckleScoreClientDlg.act_warn_gotoExecute(Sender: TObject);
+begin
+  if cdsToDayResult.FieldByName('ZTYPE').AsInteger =1 then
+    SendMessage(Application.MainForm.Handle,gcMSG_GetBugItem,
+      cdsToDayResult.FieldByName('ZCONTENTID').AsInteger,0)
+  else if cdsToDayResult.FieldByName('ZTYPE').AsInteger =0  then
+    SendMessage(Application.MainForm.Handle,gcMSG_GetTestItem,
+      cdsToDayResult.FieldByName('ZCONTENTID').AsInteger,0);
 end;
 
 end.

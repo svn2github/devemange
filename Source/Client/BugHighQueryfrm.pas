@@ -351,7 +351,7 @@ begin
 
   //√˚≥∆≤È’“
   mystr := '';
-  if (edtName.Text <> '') then
+  if chkName.Checked and (edtName.Text <> '') then
   begin
     mystr := Format('(ZTITLE  like ''''%s'''')',['%'+edtName.Text+'%']);
   end;

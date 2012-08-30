@@ -791,8 +791,8 @@ inherited BugManageDlg: TBugManageDlg
           object lbBugCaption: TLabel
             Left = 0
             Top = 0
-            Width = 725
-            Height = 18
+            Width = 96
+            Height = 15
             Align = alClient
             Caption = 'lbBugCaption'
             Color = clGray
@@ -1568,7 +1568,7 @@ inherited BugManageDlg: TBugManageDlg
     end
     object actAttach_downfile: TAction
       Category = #38468#20214
-      Caption = #19979#36733#25991#20214'...'
+      Caption = #19979#36733#25991#20214'('#21452#20987')...'
       OnExecute = actAttach_downfileExecute
       OnUpdate = actAttach_downfileUpdate
     end
