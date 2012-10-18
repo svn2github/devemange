@@ -1,6 +1,6 @@
 inherited BugManageDlg: TBugManageDlg
-  Left = 187
-  Top = 57
+  Left = 193
+  Top = 35
   Width = 1024
   Height = 687
   Caption = #38169#35823#31649#29702
@@ -358,9 +358,9 @@ inherited BugManageDlg: TBugManageDlg
             BevelOuter = bvNone
             TabOrder = 2
             object lbPageCount: TLabel
-              Left = 650
+              Left = 648
               Top = 13
-              Width = 88
+              Width = 69
               Height = 15
               Caption = 'lbPageCount'
               Font.Charset = GB2312_CHARSET
@@ -423,6 +423,22 @@ inherited BugManageDlg: TBugManageDlg
               Action = act_AllData
               Caption = #20840#37096#25968#25454
               TabOrder = 5
+            end
+            object edtBugCode: TEdit
+              Left = 727
+              Top = 9
+              Width = 105
+              Height = 23
+              Color = clBackground
+              Font.Charset = GB2312_CHARSET
+              Font.Color = clWhite
+              Font.Height = -15
+              Font.Name = #23435#20307
+              Font.Style = []
+              ParentFont = False
+              TabOrder = 6
+              Text = #32534#21495#22238#36710#26597#25214
+              OnKeyDown = edtBugCodeKeyDown
             end
           end
           object dbmmoZTITLE: TDBMemo

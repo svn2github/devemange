@@ -231,6 +231,7 @@ type
     ilAttach: TImageList;
     actAttach_downfile: TAction;
     N16: TMenuItem;
+    edtBugCode: TEdit;
     procedure actBug_AddDirExecute(Sender: TObject);
     procedure tvProjectExpanding(Sender: TObject; Node: TTreeNode;
       var AllowExpansion: Boolean);
@@ -313,6 +314,8 @@ type
     procedure actAttach_downfileExecute(Sender: TObject);
     procedure actAttach_downfileUpdate(Sender: TObject);
     procedure lvAttachDblClick(Sender: TObject);
+    procedure edtBugCodeKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
   private
     fPageType : TPageTypeRec; //分页处理
     fHighQuery : TBugHighQueryDlg;
@@ -3337,6 +3340,28 @@ begin
      Assigned(lvAttach.Selected.Data) then
   begin
     actAttach_downfile.Execute;
+  end;
+end;
+
+procedure TBugManageDlg.edtBugCodeKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+var
+  myPageIndex : Integer;
+begin
+  if Key=13 then
+  begin
+    fPageType.fType := ptQuery;
+    fPageType.fWhereStr := format('ZID=%d',[strtointdef(edtBugCode.Text,-1)]);
+    fPageType.fIndex := 1;
+    fPageType.fName := '编号快速查询';
+    myPageIndex := 1;
+    fPageType.fIndexCount := GetBugItemPageCount(1,fPageType.fWhereStr);
+    LoadBugItem(myPageindex,fPageType.fWhereStr);
+    lbPageCount.Caption := format('%d/%d',[
+      fPageType.fIndex,
+      fPageType.fIndexCount]);
+    lbProjectName.Caption := format('%s  =>第%d共%d页',[
+    fPageType.fName,fPageType.fIndex,fPageType.fIndexCount]);
   end;
 end;
 
