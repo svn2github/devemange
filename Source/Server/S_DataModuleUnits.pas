@@ -226,6 +226,7 @@ var
   myQuery : TADOQuery;
   myfid : Integer;
   mysql : String;
+  mySl  : TStringList;
 const
   glSQL1  = 'select isnull(Max(ZID),0)+1 as mymax from TB_FILE_ITEM';
   glSQL2  = 'insert into TB_FILE_ITEM (ZTREE_ID,ZSTYPE,ZID,ZVER,ZNAME,ZEDITER_ID, ' +
@@ -237,6 +238,7 @@ begin
   //
   Result := False;
   myQuery := TADOQuery.Create(nil);
+  mySl  := TStringList.Create;
   try
     myQuery.Connection := gConn;
 
@@ -263,6 +265,7 @@ begin
         AFileSize,
         AContentid]);
 
+      mySl.Add(mysql);
       myQuery.Close;
       myQuery.SQL.Clear;
       myQuery.SQL.Add(mysql);
@@ -278,6 +281,7 @@ begin
         AGuid,
         1
         ]);
+      mySl.Add(mysql);
       myQuery.Close;
       myQuery.SQL.Clear;
       myQuery.SQL.Add(mysql);
@@ -286,10 +290,13 @@ begin
 
       Result := True;
     except
+      mySl.SaveToFile(ChangeFileExt(System.ParamStr(0),'.log'));
+
       gConn.RollbackTrans;
     end;
   finally
     myQuery.Free;
+    mySl.Free;
   end;
 end;
 
