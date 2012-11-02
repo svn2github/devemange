@@ -1,8 +1,8 @@
 inherited BugManageDlg: TBugManageDlg
-  Left = 193
-  Top = 35
+  Left = 173
+  Top = 66
   Width = 1024
-  Height = 687
+  Height = 652
   Caption = #38169#35823#31649#29702
   OldCreateOrder = True
   PixelsPerInch = 96
@@ -11,7 +11,7 @@ inherited BugManageDlg: TBugManageDlg
     Left = 0
     Top = 95
     Width = 1008
-    Height = 554
+    Height = 519
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
@@ -25,7 +25,7 @@ inherited BugManageDlg: TBugManageDlg
       Left = 0
       Top = 0
       Width = 1008
-      Height = 554
+      Height = 519
       ActivePage = tsBugItem
       Align = alClient
       TabOrder = 0
@@ -37,7 +37,7 @@ inherited BugManageDlg: TBugManageDlg
           Left = 185
           Top = 0
           Width = 10
-          Height = 524
+          Height = 489
           Beveled = True
           ResizeStyle = rsLine
         end
@@ -45,7 +45,7 @@ inherited BugManageDlg: TBugManageDlg
           Left = 195
           Top = 0
           Width = 805
-          Height = 524
+          Height = 489
           Align = alClient
           BevelOuter = bvNone
           Caption = 'plBugList'
@@ -70,7 +70,7 @@ inherited BugManageDlg: TBugManageDlg
             Left = 0
             Top = 55
             Width = 805
-            Height = 366
+            Height = 331
             Align = alClient
             DataSource = dsBugItem
             Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
@@ -351,7 +351,7 @@ inherited BugManageDlg: TBugManageDlg
           end
           object plBugItemBottom: TPanel
             Left = 0
-            Top = 484
+            Top = 449
             Width = 805
             Height = 40
             Align = alBottom
@@ -360,7 +360,7 @@ inherited BugManageDlg: TBugManageDlg
             object lbPageCount: TLabel
               Left = 648
               Top = 13
-              Width = 69
+              Width = 88
               Height = 15
               Caption = 'lbPageCount'
               Font.Charset = GB2312_CHARSET
@@ -429,9 +429,8 @@ inherited BugManageDlg: TBugManageDlg
               Top = 9
               Width = 105
               Height = 23
-              Color = clBackground
               Font.Charset = GB2312_CHARSET
-              Font.Color = clWhite
+              Font.Color = clBlack
               Font.Height = -15
               Font.Name = #23435#20307
               Font.Style = []
@@ -443,7 +442,7 @@ inherited BugManageDlg: TBugManageDlg
           end
           object dbmmoZTITLE: TDBMemo
             Left = 0
-            Top = 421
+            Top = 386
             Width = 805
             Height = 63
             Align = alBottom
@@ -458,13 +457,13 @@ inherited BugManageDlg: TBugManageDlg
           Left = 0
           Top = 0
           Width = 185
-          Height = 524
+          Height = 489
           Align = alLeft
           BevelOuter = bvNone
           TabOrder = 1
           object spl1: TSplitter
             Left = 0
-            Top = 421
+            Top = 386
             Width = 185
             Height = 3
             Cursor = crVSplit
@@ -472,7 +471,7 @@ inherited BugManageDlg: TBugManageDlg
           end
           object lstAdvancedQuery: TListBox
             Left = 0
-            Top = 424
+            Top = 389
             Width = 185
             Height = 100
             Hint = #26597#35810#21015#34920#65292#21487#20197#28857#39640#32423#26597#35810#65292#24377#20986#31383#21475#20445#23384#26597#35810#12290
@@ -486,7 +485,7 @@ inherited BugManageDlg: TBugManageDlg
             Left = 0
             Top = 0
             Width = 185
-            Height = 421
+            Height = 386
             Align = alClient
             HideSelection = False
             Images = DM.ImageListTree
@@ -517,7 +516,7 @@ inherited BugManageDlg: TBugManageDlg
           Left = 0
           Top = 231
           Width = 1000
-          Height = 293
+          Height = 258
           Align = alClient
           BevelOuter = bvNone
           TabOrder = 0
@@ -613,7 +612,7 @@ inherited BugManageDlg: TBugManageDlg
             Left = 0
             Top = 40
             Width = 1000
-            Height = 253
+            Height = 218
             Align = alClient
             BevelOuter = bvLowered
             Caption = 'Panel1'
@@ -622,12 +621,11 @@ inherited BugManageDlg: TBugManageDlg
               Left = 1
               Top = 1
               Width = 889
-              Height = 251
+              Height = 216
               Align = alClient
               AllowDelete = False
               AllowInsert = False
               DataSource = dsBugBugHistory
-              PanelHeight = 83
               PanelWidth = 872
               TabOrder = 0
               SelectedColor = clMoneyGreen
@@ -786,7 +784,7 @@ inherited BugManageDlg: TBugManageDlg
               Left = 890
               Top = 1
               Width = 109
-              Height = 251
+              Height = 216
               Align = alRight
               Columns = <>
               LargeImages = ilAttach

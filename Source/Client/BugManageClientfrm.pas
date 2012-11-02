@@ -3347,21 +3347,27 @@ procedure TBugManageDlg.edtBugCodeKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 var
   myPageIndex : Integer;
+  mystr : string;
+  myType : TPageType;
 begin
   if Key=13 then
   begin
+    myType := fPageType.fType;
     fPageType.fType := ptQuery;
-    fPageType.fWhereStr := format('ZID=%d',[strtointdef(edtBugCode.Text,-1)]);
+    mystr := format('ZID=%d',[strtointdef(edtBugCode.Text,-1)]);
     fPageType.fIndex := 1;
     fPageType.fName := '编号快速查询';
     myPageIndex := 1;
-    fPageType.fIndexCount := GetBugItemPageCount(1,fPageType.fWhereStr);
-    LoadBugItem(myPageindex,fPageType.fWhereStr);
+    fPageType.fIndexCount := 1;
+    LoadBugItem(myPageindex,mystr);
     lbPageCount.Caption := format('%d/%d',[
       fPageType.fIndex,
       fPageType.fIndexCount]);
     lbProjectName.Caption := format('%s  =>第%d共%d页',[
     fPageType.fName,fPageType.fIndex,fPageType.fIndexCount]);
+
+
+    fPageType.fType := myType;
   end;
 end;
 

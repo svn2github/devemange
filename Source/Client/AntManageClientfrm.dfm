@@ -710,6 +710,9 @@ inherited AntManageClientDlg: TAntManageClientDlg
           Top = 8
           Width = 121
           Height = 23
+          Hint = #21487#20197#26597#35810#20316#32773#19982#20449#24687#20869#23481
+          ParentShowHint = False
+          ShowHint = True
           TabOrder = 5
         end
         object btnSvnLog_FindTxt: TBitBtn
@@ -795,8 +798,8 @@ inherited AntManageClientDlg: TAntManageClientDlg
           Height = 121
           Align = alClient
           DataSource = dsSvnCommits
-          ImeName = #26497#21697#20116#31508#36755#20837#27861
           Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
+          PopupMenu = pm1
           ReadOnly = True
           TabOrder = 0
           TitleFont.Charset = GB2312_CHARSET
@@ -998,6 +1001,12 @@ inherited AntManageClientDlg: TAntManageClientDlg
       OnExecute = actSvnLog_FindTxtExecute
       OnUpdate = actSvnLog_FindTxtUpdate
     end
+    object actSvnLog_FindAuthor: TAction
+      Category = 'SVN'#26085#24535
+      Caption = #26597#35810#36825#20010#20316#32773#30340#26085#24535
+      OnExecute = actSvnLog_FindAuthorExecute
+      OnUpdate = actSvnLog_FindAuthorUpdate
+    end
   end
   object idtcpclnt1: TIdTCPClient
     MaxLineAction = maException
@@ -1078,5 +1087,13 @@ inherited AntManageClientDlg: TAntManageClientDlg
     DataSet = cdsLangType
     Left = 272
     Top = 40
+  end
+  object pm1: TPopupMenu
+    AutoHotkeys = maManual
+    Left = 312
+    Top = 16
+    object N1: TMenuItem
+      Action = actSvnLog_FindAuthor
+    end
   end
 end

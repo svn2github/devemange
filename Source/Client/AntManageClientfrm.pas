@@ -23,7 +23,7 @@ uses
   Dialogs, BaseChildfrm, StdCtrls, ExtCtrls, DBCtrls, Buttons, ActnList,
   ComCtrls, Grids, DBGrids, IdBaseComponent, IdComponent, IdTCPConnection,
   IdTCPClient, DB, DBClient,
-  ClientTypeUnits, Mask;
+  ClientTypeUnits, Mask, Menus;
 
 type
 
@@ -155,6 +155,9 @@ type
     edtSvnFindTxt: TEdit;
     btnSvnLog_FindTxt: TBitBtn;
     actSvnLog_FindTxt: TAction;
+    actSvnLog_FindAuthor: TAction;
+    pm1: TPopupMenu;
+    N1: TMenuItem;
     procedure act_ProAddExecute(Sender: TObject);
     procedure cdsAntListNewRecord(DataSet: TDataSet);
     procedure act_ProSaveUpdate(Sender: TObject);
@@ -207,6 +210,8 @@ type
     procedure act_GotoWebURLExecute(Sender: TObject);
     procedure actSvnLog_FindTxtUpdate(Sender: TObject);
     procedure actSvnLog_FindTxtExecute(Sender: TObject);
+    procedure actSvnLog_FindAuthorUpdate(Sender: TObject);
+    procedure actSvnLog_FindAuthorExecute(Sender: TObject);
   private
     { Private declarations }
     fSVNCommitPageRec :TSVNCommitPageRec;
@@ -1464,8 +1469,31 @@ var
   mystr: string;
 begin
   fSVNCommitPageRec.findex := 1;
-  mystr := format('(%s) and (ZMESSAGE like ''''%%%s%%'''')',[
-    fSVNCommitPageRec.fWhere,edtSvnFindTxt.Text]);
+  mystr := format('(%s) and ((ZMESSAGE like ''''%%%s%%'''') or (ZAUTHOR like ''''%%%s%%'''') )',[
+    fSVNCommitPageRec.fWhere,edtSvnFindTxt.Text,edtSvnFindTxt.Text]);
+  fSVNCommitPagerec.fcount := GetSvnCommitPageCount(mystr);
+  fSVNCommitPageRec.fWhere := mystr;
+  LoadSvnCommit(mystr,fSVNCommitPageRec.findex);
+end;
+
+procedure TAntManageClientDlg.actSvnLog_FindAuthorUpdate(Sender: TObject);
+begin
+  //
+  (Sender as TAction).Enabled := cdsSvnCommits.RecordCount>0;
+end;
+
+procedure TAntManageClientDlg.actSvnLog_FindAuthorExecute(Sender: TObject);
+var
+  mystr : string;
+begin
+  edtSvnFindTxt.Text := cdsSvnCommits.FieldByName('ZAUTHOR').AsString;
+  mystr := edtSvnFindTxt.Text;
+
+  fSVNCommitPageRec.findex := 1;
+  mystr := format('(%s) and (ZAUTHOR like ''''%%%s%%'''') ',[
+    '1=1',mystr]);
+  fSVNCommitPageRec.fWhere := mystr;  
+  fSVNCommitPagerec.fcount := GetSvnCommitPageCount(mystr);
   LoadSvnCommit(mystr,fSVNCommitPageRec.findex);
 end;
 
