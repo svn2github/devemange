@@ -160,7 +160,8 @@ create table TB_PRO_ITEM(
 	ZMANAGERID     int ,                                     /*项目的负责人*/
 	ZUNITS         varchar(200),                             /*项目的使用单位*/     
 	ZHIGHVERID     int not null default -1,                  /*最新版本号的ID值*/
-	ZTESTTEAM      varchar(100),                             /*测试小组成员 格式 名称(编号) ,用于自动生成测试任务.*/     
+	ZTESTTEAM      varchar(100),                             /*测试小组成员 格式 名称(编号) ,用于自动生成测试任务.*/
+	ZSVNLOGGUID    varchar(36),                              /*项目的SVN日志GUID*/
 	constraint PK_TB_PRO_ITEM primary key(ZID)   
 )
 go
