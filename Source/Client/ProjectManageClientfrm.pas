@@ -550,10 +550,10 @@ procedure TProjectManageClientDlg.cdsProjectItemBeforePost(
 var
   mySQL : String;
 const
-  glSQL  = 'insert into TB_PRO_ITEM(ZNAME,ZOPENDATE,ZMANAGERID,ZUNITS,ZTESTTEAM) ' +
-           ' values(''%s'',''%s'',%d,''%s'',''%s'')';
+  glSQL  = 'insert into TB_PRO_ITEM(ZNAME,ZOPENDATE,ZMANAGERID,ZUNITS,ZTESTTEAM,ZSVNLOGGUID) ' +
+           ' values(''%s'',''%s'',%d,''%s'',''%s'',''%s'')';
   glSQL2 = 'update TB_PRO_ITEM set ZNAME=''%s'',ZOPENDATE=''%s'',ZMANAGERID=%d, ' +
-           'ZUNITS=''%s'',ZHIGHVERID=%d,ZTESTTEAM=''%s'' where ZID=%d';
+           'ZUNITS=''%s'',ZHIGHVERID=%d,ZTESTTEAM=''%s'',ZSVNLOGGUID=''%s'' where ZID=%d';
 begin
   if fLoading then Exit;
   //usUnmodified, usModified, usInserted, usDeleted
@@ -567,6 +567,7 @@ begin
       DataSet.FieldByName('ZUNITS').AsString,
       DataSet.FieldByName('ZHIGHVERID').AsInteger,
       DataSet.FieldByName('ZTESTTEAM').AsString,
+      DataSet.FieldByName('ZSVNLOGGUID').AsString,
       DataSet.FieldByName('ZID').AsInteger]);
     ClientSystem.fDbOpr.BeginTrans;
     try
@@ -584,7 +585,8 @@ begin
       DataSet.FieldByName('ZOPENDATE').AsString,
       DataSet.FieldByName('ZMANAGERID').AsInteger,
       DataSet.FieldByName('ZUNITS').AsString,
-      DataSet.FieldByName('ZTESTTEAM').AsString]);
+      DataSet.FieldByName('ZTESTTEAM').AsString,
+      DataSet.FieldByName('ZSVNLOGGUID').AsString]);
     ClientSystem.fDbOpr.BeginTrans;
     try
       ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));

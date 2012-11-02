@@ -1,6 +1,6 @@
 inherited AntManageClientDlg: TAntManageClientDlg
-  Left = 173
-  Top = 85
+  Left = 171
+  Top = 213
   Width = 1066
   Height = 588
   Caption = #32534#35793#37096#32626
@@ -654,14 +654,14 @@ inherited AntManageClientDlg: TAntManageClientDlg
         BevelOuter = bvNone
         TabOrder = 0
         object lblSvnPage: TLabel
-          Left = 757
+          Left = 537
           Top = 12
           Width = 80
           Height = 15
           Caption = 'lblSvnPage'
         end
         object btnSvnLog_FirstPage: TBitBtn
-          Left = 332
+          Left = 115
           Top = 8
           Width = 100
           Height = 25
@@ -670,7 +670,7 @@ inherited AntManageClientDlg: TAntManageClientDlg
           TabOrder = 0
         end
         object btnSvnLog_ProPage: TBitBtn
-          Left = 436
+          Left = 219
           Top = 8
           Width = 100
           Height = 25
@@ -679,7 +679,7 @@ inherited AntManageClientDlg: TAntManageClientDlg
           TabOrder = 1
         end
         object btnSvnLog_NextPage: TBitBtn
-          Left = 540
+          Left = 323
           Top = 8
           Width = 100
           Height = 25
@@ -688,7 +688,7 @@ inherited AntManageClientDlg: TAntManageClientDlg
           TabOrder = 2
         end
         object btnSvnLog_ProPage1: TBitBtn
-          Left = 644
+          Left = 427
           Top = 8
           Width = 100
           Height = 25
@@ -696,31 +696,29 @@ inherited AntManageClientDlg: TAntManageClientDlg
           Caption = #26368#21518#19968#39029
           TabOrder = 3
         end
-        object btnSvnLog_PiroProject: TBitBtn
-          Left = 0
-          Top = 8
-          Width = 100
-          Height = 25
-          Action = actSvnLog_PiroProject
-          Caption = #19978#19968#20010#39033#30446
-          TabOrder = 4
-        end
-        object btnSvnLog_NetProject: TBitBtn
-          Left = 104
-          Top = 8
-          Width = 100
-          Height = 25
-          Action = actSvnLog_NetProject
-          Caption = #19979#19968#20010#39033#30446
-          TabOrder = 5
-        end
         object btnSvnLog_AllProject: TBitBtn
-          Left = 208
+          Left = 11
           Top = 8
           Width = 100
           Height = 25
           Action = actSvnLog_AllProject
           Caption = #20840#37096#39033#30446
+          TabOrder = 4
+        end
+        object edtSvnFindTxt: TEdit
+          Left = 647
+          Top = 8
+          Width = 121
+          Height = 23
+          TabOrder = 5
+        end
+        object btnSvnLog_FindTxt: TBitBtn
+          Left = 776
+          Top = 8
+          Width = 100
+          Height = 25
+          Action = actSvnLog_FindTxt
+          Caption = #26597#35810
           TabOrder = 6
         end
       end
@@ -938,18 +936,6 @@ inherited AntManageClientDlg: TAntManageClientDlg
       OnExecute = actSvnLog_LastPageExecute
       OnUpdate = actSvnLog_LastPageUpdate
     end
-    object actSvnLog_PiroProject: TAction
-      Category = 'SVN'#26085#24535
-      Caption = #19978#19968#20010#39033#30446
-      OnExecute = actSvnLog_PiroProjectExecute
-      OnUpdate = actSvnLog_PiroProjectUpdate
-    end
-    object actSvnLog_NetProject: TAction
-      Category = 'SVN'#26085#24535
-      Caption = #19979#19968#20010#39033#30446
-      OnExecute = actSvnLog_NetProjectExecute
-      OnUpdate = actSvnLog_NetProjectUpdate
-    end
     object actSvnLog_AllProject: TAction
       Category = 'SVN'#26085#24535
       Caption = #20840#37096#39033#30446
@@ -1005,6 +991,12 @@ inherited AntManageClientDlg: TAntManageClientDlg
       Caption = #36816#34892'Web'#39033#30446
       OnExecute = act_GotoWebURLExecute
       OnUpdate = act_GotoWebURLUpdate
+    end
+    object actSvnLog_FindTxt: TAction
+      Category = 'SVN'#26085#24535
+      Caption = #26597#35810
+      OnExecute = actSvnLog_FindTxtExecute
+      OnUpdate = actSvnLog_FindTxtUpdate
     end
   end
   object idtcpclnt1: TIdTCPClient

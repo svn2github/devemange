@@ -1,5 +1,5 @@
 inherited ProjectManageClientDlg: TProjectManageClientDlg
-  Left = 104
+  Left = 98
   Top = 90
   Width = 1272
   Height = 660
@@ -186,7 +186,14 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
               Expanded = False
               FieldName = 'ZTESTTEAM'
               Title.Caption = #27979#35797#32452'('#26684#24335#22995#21517'(2);)'#22995#21517'(3)'
-              Width = 66
+              Width = 103
+              Visible = True
+            end
+            item
+              Expanded = False
+              FieldName = 'ZSVNLOGGUID'
+              Title.Caption = 'SVN'#26085#24535
+              Width = 68
               Visible = True
             end>
         end
@@ -1241,7 +1248,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
                   Width = 330
                   Height = 173
                   Align = alBottom
-                  Date = 40763.469464502310000000
+                  Date = 40763.600531273150000000
                   ParentShowHint = False
                   ShowHint = False
                   TabOrder = 2

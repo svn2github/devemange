@@ -112,10 +112,6 @@ type
     actSvnLog_ProPage: TAction;
     actSvnLog_NextPage: TAction;
     actSvnLog_LastPage: TAction;
-    btnSvnLog_PiroProject: TBitBtn;
-    btnSvnLog_NetProject: TBitBtn;
-    actSvnLog_PiroProject: TAction;
-    actSvnLog_NetProject: TAction;
     actSvnLog_AllProject: TAction;
     btnSvnLog_AllProject: TBitBtn;
     btnEditSVNRUL: TBitBtn;
@@ -156,6 +152,9 @@ type
     dbedtZGUID: TDBEdit;
     lbl14: TLabel;
     dbedtZLOCALSVNBAT: TDBEdit;
+    edtSvnFindTxt: TEdit;
+    btnSvnLog_FindTxt: TBitBtn;
+    actSvnLog_FindTxt: TAction;
     procedure act_ProAddExecute(Sender: TObject);
     procedure cdsAntListNewRecord(DataSet: TDataSet);
     procedure act_ProSaveUpdate(Sender: TObject);
@@ -188,10 +187,6 @@ type
     procedure actSvnLog_NextPageExecute(Sender: TObject);
     procedure actSvnLog_LastPageUpdate(Sender: TObject);
     procedure actSvnLog_LastPageExecute(Sender: TObject);
-    procedure actSvnLog_PiroProjectUpdate(Sender: TObject);
-    procedure actSvnLog_PiroProjectExecute(Sender: TObject);
-    procedure actSvnLog_NetProjectExecute(Sender: TObject);
-    procedure actSvnLog_NetProjectUpdate(Sender: TObject);
     procedure actSvnLog_AllProjectExecute(Sender: TObject);
     procedure btnEditSVNRULClick(Sender: TObject);
     procedure act_ApplyBuildUpdate(Sender: TObject);
@@ -210,6 +205,8 @@ type
     procedure act_RefreshDataExecute(Sender: TObject);
     procedure act_GotoWebURLUpdate(Sender: TObject);
     procedure act_GotoWebURLExecute(Sender: TObject);
+    procedure actSvnLog_FindTxtUpdate(Sender: TObject);
+    procedure actSvnLog_FindTxtExecute(Sender: TObject);
   private
     { Private declarations }
     fSVNCommitPageRec :TSVNCommitPageRec;
@@ -1069,13 +1066,29 @@ end;
 
 procedure TAntManageClientDlg.pgcAntChange(Sender: TObject);
 var
+  myPID : Integer; //项目ID
   myAGUID : string;
+  mysql : string;
+  myvar : Variant;
+const
+  gl_SQLTXT  = 'select ZSVNLOGGUID from TB_PRO_ITEM where ZID=%d';
 begin
   //是日志
   if pgcAnt.ActivePageIndex = 2 then
   begin
     if cdsAntList.IsEmpty then Exit;
-    myAGUID := cdsAntList.FieldByName('ZGUID').AsString;
+
+    myPID := cdsAntList.FieldByName('ZPRO_ID').AsInteger;
+
+    //去掉有没有项目的SVN日志，有则采用项目的GUID
+    mySQL := Format(gl_SQLTXT,[myPID]);
+    myvar := ClientSystem.fDbOpr.ReadVariant(PChar(mySQL));
+
+    if not VarIsNull(myvar) then
+      myAGUID := myvar
+    else
+      myAGUID := cdsAntList.FieldByName('ZGUID').AsString;
+
     fSVNCommitPagerec.findex := 1;
     fSVNCommitPageRec.fWhere := format('ZSVN_GUID=''''%s''''',[myAGUID]);
     fSVNCommitPagerec.fcount := GetSvnCommitPageCount(fSVNCommitPageRec.fWhere);
@@ -1177,37 +1190,6 @@ begin
   fSVNCommitPageRec.findex := fSVNCommitPageRec.fcount;
   LoadSvnCommit(fSVNCommitPageRec.fWhere,
    fSVNCommitPageRec.findex);
-end;
-
-procedure TAntManageClientDlg.actSvnLog_PiroProjectUpdate(Sender: TObject);
-begin
-  (Sender as TAction).Enabled := not cdsAntList.Bof;
-end;
-
-procedure TAntManageClientDlg.actSvnLog_PiroProjectExecute(
-  Sender: TObject);
-begin
-  cdsAntList.Prior;
-  fSVNCommitPagerec.findex := 1;
-  fSVNCommitPagerec.fWhere := format('ZSVN_GUID=''''%s''''',
-    [cdsAntList.FieldByName('ZGUID').AsString]);
-  fSVNCommitPagerec.fcount := GetSvnCommitPageCount(fSVNCommitPagerec.fWhere);
-  LoadSvnCommit(fSVNCommitPagerec.fWhere,1);
-end;
-
-procedure TAntManageClientDlg.actSvnLog_NetProjectExecute(Sender: TObject);
-begin
-  cdsAntList.Next;
-  fSVNCommitPagerec.findex := 1;
-    fSVNCommitPagerec.fWhere := format('ZSVN_GUID=''''%s''''',
-    [cdsAntList.FieldByName('ZGUID').AsString]);
-  fSVNCommitPagerec.fcount := GetSvnCommitPageCount(fSVNCommitPagerec.fWhere);
-  LoadSvnCommit(fSVNCommitPagerec.fWhere,1);
-end;
-
-procedure TAntManageClientDlg.actSvnLog_NetProjectUpdate(Sender: TObject);
-begin
-  (Sender as TAction).Enabled := not cdsAntList.Eof;
 end;
 
 procedure TAntManageClientDlg.actSvnLog_AllProjectExecute(Sender: TObject);
@@ -1470,6 +1452,21 @@ begin
   myurl := cdsAntList.FieldByName('ZWEBURL').AsString;
   ShellExecute(handle,'open',
     PChar(myurl), nil,nil,SW_SHOWNORMAL);
+end;
+
+procedure TAntManageClientDlg.actSvnLog_FindTxtUpdate(Sender: TObject);
+begin
+  (Sender as TAction).Enabled := edtSvnFindTxt.Text <> '';
+end;
+
+procedure TAntManageClientDlg.actSvnLog_FindTxtExecute(Sender: TObject);
+var
+  mystr: string;
+begin
+  fSVNCommitPageRec.findex := 1;
+  mystr := format('(%s) and (ZMESSAGE like ''''%%%s%%'''')',[
+    fSVNCommitPageRec.fWhere,edtSvnFindTxt.Text]);
+  LoadSvnCommit(mystr,fSVNCommitPageRec.findex);
 end;
 
 end.
