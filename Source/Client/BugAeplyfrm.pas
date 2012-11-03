@@ -57,6 +57,9 @@ procedure TBugAeplyDlg.btbnOpenAnnixClick(Sender: TObject);
 var
   myfilename : string;
 begin
+  Application.MessageBox('老版本的附件功能暂时关闭，请用右边白窗口右键增加附件。','提示',MB_ICONWARNING+MB_OK);
+  Exit;
+
   if OpenDialog1.Execute then
   begin
     myfilename := OpenDialog1.FileName;
