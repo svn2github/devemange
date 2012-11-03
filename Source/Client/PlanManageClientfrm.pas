@@ -77,7 +77,6 @@ type
     actPan_LastPage: TAction;
     il1: TImageList;
     pnlPlanItemTop: TPanel;
-    dbtxtZNAME: TDBText;
     dbgrdPlanItem: TDBGrid;
     btnItem_Add: TBitBtn;
     btnItem_Success: TBitBtn;
@@ -211,6 +210,8 @@ type
     N1: TMenuItem;
     actAttach_downfile: TAction;
     N2: TMenuItem;
+    btnDetail_Cancel: TBitBtn;
+    actDetail_Cancel: TAction;
     procedure cdsPlanNewRecord(DataSet: TDataSet);
     procedure actPan_SaveUpdate(Sender: TObject);
     procedure actPan_SaveExecute(Sender: TObject);
@@ -297,6 +298,8 @@ type
     procedure actAttach_downfileExecute(Sender: TObject);
     procedure actAttach_downfileUpdate(Sender: TObject);
     procedure lvAttachDblClick(Sender: TObject);
+    procedure actDetail_CancelUpdate(Sender: TObject);
+    procedure actDetail_CancelExecute(Sender: TObject);
   private
     { Private declarations }
     fPlanPageRec : TPlanPageRec;
@@ -1205,7 +1208,7 @@ end;
 procedure TPlanManageClientDlg.actDetail_AddUpdate(Sender: TObject);
 begin
   (Sender as TAction).Enabled := cdsPlanItem.Active and
-  (cdsPlanItem.State in [dsBrowse]) and
+  (cdsPlanItem.State in [dsBrowse]) and  chkEdit.Checked and
   (cdsPlanItem.RecordCount>0);
 end;
 
@@ -1773,6 +1776,7 @@ begin
   dbedtZCREATEDATE.ReadOnly := not myEdit;
   dbedtZFBDATE1.ReadOnly := not myEdit;
   dbedtZFBDATE2.ReadOnly := not myEdit;
+  dbgrdDetail.ReadOnly := not myEdit;
 
 end;
 
@@ -1960,7 +1964,8 @@ end;
 
 procedure TPlanManageClientDlg.actAttach_AddfileUpdate(Sender: TObject);
 begin
- (Sender as TAction).Enabled := cdsPlanDetail.State = dsBrowse;
+ (Sender as TAction).Enabled := (cdsPlanDetail.RecordCount >0) and
+  (cdsPlanDetail.State = dsBrowse);
 end;
 
 procedure TPlanManageClientDlg.actAttach_downfileExecute(Sender: TObject);
@@ -1999,6 +2004,17 @@ begin
   if Assigned(lvAttach.Selected) and
     Assigned(lvAttach.Selected.Data) then
     actAttach_downfileExecute(nil);
+end;
+
+procedure TPlanManageClientDlg.actDetail_CancelUpdate(Sender: TObject);
+begin
+  (Sender as TAction).Enabled := cdsPlanDetail.State in [dsEdit,dsInsert];  //
+end;
+
+procedure TPlanManageClientDlg.actDetail_CancelExecute(Sender: TObject);
+begin
+  inherited;
+  cdsPlanDetail.Cancel;
 end;
 
 end.

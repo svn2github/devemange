@@ -1,6 +1,6 @@
 inherited PlanManageClientDlg: TPlanManageClientDlg
-  Left = 161
-  Top = 165
+  Left = 155
+  Top = 136
   Width = 1043
   Caption = #39033#30446#35745#21010
   OldCreateOrder = True
@@ -309,23 +309,6 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
       object tsPlanItem: TTabSheet
         Caption = #39033#30446#20219#21153
         ImageIndex = 1
-        object dbtxtZNAME: TDBText
-          Left = 0
-          Top = 40
-          Width = 1017
-          Height = 17
-          Align = alTop
-          Color = clNavy
-          DataField = 'ZNAME'
-          DataSource = dsPlan
-          Font.Charset = GB2312_CHARSET
-          Font.Color = clWhite
-          Font.Height = -15
-          Font.Name = #23435#20307
-          Font.Style = []
-          ParentColor = False
-          ParentFont = False
-        end
         object pnlPlanItemTop: TPanel
           Left = 0
           Top = 0
@@ -405,9 +388,9 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
         end
         object dbgrdPlanItem: TDBGrid
           Left = 0
-          Top = 57
+          Top = 40
           Width = 1017
-          Height = 400
+          Height = 417
           Align = alClient
           DataSource = dsPlanItem
           Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
@@ -424,7 +407,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
               FieldName = 'ZNAME'
               Title.Alignment = taCenter
               Title.Caption = #20219#21153#21517#31216
-              Width = 323
+              Width = 400
               Visible = True
             end
             item
@@ -491,14 +474,6 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
               Title.Alignment = taCenter
               Title.Caption = #22791#27880
               Width = 155
-              Visible = True
-            end
-            item
-              Expanded = False
-              FieldName = 'ZSORT'
-              Title.Alignment = taCenter
-              Title.Caption = #25490#24207#21495
-              Width = 60
               Visible = True
             end>
         end
@@ -868,7 +843,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
               TabOrder = 0
             end
             object btnDetail_SUCCESS: TBitBtn
-              Left = 273
+              Left = 377
               Top = 8
               Width = 100
               Height = 25
@@ -877,7 +852,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
               TabOrder = 1
             end
             object btnDetail_Colse: TBitBtn
-              Left = 377
+              Left = 481
               Top = 8
               Width = 100
               Height = 25
@@ -886,7 +861,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
               TabOrder = 2
             end
             object btnDetail_Action: TBitBtn
-              Left = 481
+              Left = 585
               Top = 8
               Width = 100
               Height = 25
@@ -902,6 +877,15 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
               Action = actDetail_Save
               Caption = #20445#23384#20869#23481
               TabOrder = 4
+            end
+            object btnDetail_Cancel: TBitBtn
+              Left = 273
+              Top = 8
+              Width = 100
+              Height = 25
+              Action = actDetail_Cancel
+              Caption = #21462#28040#20869#23481
+              TabOrder = 5
             end
           end
           object dbgrdDetail: TDBGrid
@@ -1603,6 +1587,12 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
       Caption = #19979#36733#38468#20214'('#21452#20987')...'
       OnExecute = actAttach_downfileExecute
       OnUpdate = actAttach_downfileUpdate
+    end
+    object actDetail_Cancel: TAction
+      Category = #23376#20219#21153
+      Caption = #21462#28040#20869#23481
+      OnExecute = actDetail_CancelExecute
+      OnUpdate = actDetail_CancelUpdate
     end
   end
   object cdsPlanStauts: TClientDataSet
