@@ -1,22 +1,15 @@
 inherited PlanManageClientDlg: TPlanManageClientDlg
-  Left = 155
-  Top = 71
+  Left = 161
+  Top = 165
   Width = 1043
   Caption = #39033#30446#35745#21010
   OldCreateOrder = True
   PixelsPerInch = 96
   TextHeight = 15
-  object spl1: TSplitter
-    Left = 185
-    Top = 73
-    Width = 10
-    Height = 533
-    Beveled = True
-  end
   object pnlonvisible: TPanel
     Left = 0
     Top = 0
-    Width = 1035
+    Width = 1027
     Height = 73
     Align = alTop
     Caption = 'pnlonvisible'
@@ -24,10 +17,10 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
     Visible = False
   end
   object pnl1: TPanel
-    Left = 195
+    Left = 0
     Top = 73
-    Width = 840
-    Height = 533
+    Width = 1027
+    Height = 529
     Align = alClient
     BevelOuter = bvLowered
     Caption = 'pnl1'
@@ -35,20 +28,291 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
     object pgcplan: TPageControl
       Left = 1
       Top = 1
-      Width = 838
-      Height = 531
+      Width = 1025
+      Height = 527
       ActivePage = tsPlanItem
       Align = alClient
       TabOrder = 0
       OnChange = pgcplanChange
       OnChanging = pgcplanChanging
+      object tsProject: TTabSheet
+        Caption = #39033#30446#21015#34920
+        ImageIndex = 3
+        object pnl6: TPanel
+          Left = 0
+          Top = 456
+          Width = 1017
+          Height = 41
+          Align = alBottom
+          BevelOuter = bvNone
+          TabOrder = 0
+          object lblPlanPage: TLabel
+            Left = 436
+            Top = 14
+            Width = 88
+            Height = 15
+            Caption = 'lblPlanPage'
+          end
+          object btnPan_LastPage: TSpeedButton
+            Left = 317
+            Top = 8
+            Width = 100
+            Height = 25
+            Action = actPan_LastPage
+            Glyph.Data = {
+              36040000424D3604000000000000360000002800000010000000100000000100
+              2000000000000004000000000000000000000000000000000000FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF000000000000000000FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00000000000000FF00000000000000
+              0000FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00000000000000FF000000FF000000
+              FF000000000000000000FF00FF00FF00FF00FF00FF00FF00FF00000000000000
+              000000000000000000000000000000000000000000000000FF000000FF000000
+              FF000000FF000000FF000000000000000000FF00FF00FF00FF00000000000000
+              FF000000FF000000FF000000FF000000FF000000FF000000FF000000FF000000
+              FF000000FF000000FF000000FF000000FF000000000000000000000000000000
+              000000000000000000000000000000000000000000000000FF000000FF000000
+              FF000000FF000000FF000000000000000000FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00000000000000FF000000FF000000
+              FF000000000000000000FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00000000000000FF00000000000000
+              0000FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF000000000000000000FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00}
+            ParentShowHint = False
+            ShowHint = True
+          end
+          object btnPan_NextPage: TSpeedButton
+            Left = 213
+            Top = 8
+            Width = 100
+            Height = 25
+            Action = actPan_NextPage
+            Glyph.Data = {
+              36040000424D3604000000000000360000002800000010000000100000000100
+              2000000000000004000000000000000000000000000000000000FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF0000000000FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF0000000000FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00000000000000FF0000000000FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00000000000000FF0000000000FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00000000000000FF000000FF000000FF000000
+              0000FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00000000000000FF000000FF000000FF000000
+              0000FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00000000000000FF000000FF000000FF000000FF000000
+              FF0000000000FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00000000000000FF000000FF000000FF000000FF000000
+              FF0000000000FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00000000000000FF000000FF000000FF000000FF000000FF000000
+              FF000000FF0000000000FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00000000000000000000000000000000000000FF00000000000000
+              00000000000000000000FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00000000000000FF0000000000FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00000000000000FF0000000000FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00000000000000FF0000000000FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00000000000000FF0000000000FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00000000000000FF0000000000FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00000000000000000000000000FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00}
+            ParentShowHint = False
+            ShowHint = True
+          end
+          object btnPan_Propage: TSpeedButton
+            Left = 109
+            Top = 8
+            Width = 100
+            Height = 25
+            Action = actPan_Propage
+            Glyph.Data = {
+              36040000424D3604000000000000360000002800000010000000100000000100
+              2000000000000004000000000000000000000000000000000000FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00000000000000000000000000FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00000000000000FF0000000000FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00000000000000FF0000000000FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00000000000000FF0000000000FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00000000000000FF0000000000FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00000000000000FF0000000000FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00000000000000000000000000000000000000FF00000000000000
+              00000000000000000000FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00000000000000FF000000FF000000FF000000FF000000FF000000
+              FF000000FF0000000000FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00000000000000FF000000FF000000FF000000FF000000
+              FF0000000000FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00000000000000FF000000FF000000FF000000FF000000
+              FF0000000000FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00000000000000FF000000FF000000FF000000
+              0000FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00000000000000FF000000FF000000FF000000
+              0000FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00000000000000FF0000000000FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00000000000000FF0000000000FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF0000000000FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF0000000000FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00}
+            ParentShowHint = False
+            ShowHint = True
+          end
+          object btnPan_FirstPage: TSpeedButton
+            Left = 5
+            Top = 8
+            Width = 100
+            Height = 25
+            Action = actPan_FirstPage
+            Glyph.Data = {
+              36040000424D3604000000000000360000002800000010000000100000000100
+              2000000000000004000000000000000000000000000000000000FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00000000000000
+              0000FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF0000000000000000000000FF000000
+              0000FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF0000000000000000000000FF000000FF000000FF000000
+              0000FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF0000000000000000000000FF000000FF000000FF000000FF000000FF000000
+              0000000000000000000000000000000000000000000000000000000000000000
+              00000000FF000000FF000000FF000000FF000000FF000000FF000000FF000000
+              FF000000FF000000FF000000FF000000FF000000FF0000000000FF00FF00FF00
+              FF0000000000000000000000FF000000FF000000FF000000FF000000FF000000
+              0000000000000000000000000000000000000000000000000000FF00FF00FF00
+              FF00FF00FF00FF00FF0000000000000000000000FF000000FF000000FF000000
+              0000FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF0000000000000000000000FF000000
+              0000FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00000000000000
+              0000FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00}
+            ParentShowHint = False
+            ShowHint = True
+          end
+        end
+        object pnl7: TPanel
+          Left = 0
+          Top = 0
+          Width = 1017
+          Height = 41
+          Align = alTop
+          BevelOuter = bvNone
+          Caption = 'pnl6'
+          TabOrder = 1
+          object btnPan_Open: TBitBtn
+            Left = 16
+            Top = 8
+            Width = 100
+            Height = 25
+            Action = actPan_Open
+            Caption = #25171#24320#39033#30446
+            TabOrder = 0
+          end
+        end
+        object dbgrdPlan: TDBGrid
+          Left = 0
+          Top = 41
+          Width = 1017
+          Height = 415
+          Align = alClient
+          DataSource = dsPlan
+          Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
+          ReadOnly = True
+          TabOrder = 2
+          TitleFont.Charset = GB2312_CHARSET
+          TitleFont.Color = clWindowText
+          TitleFont.Height = -15
+          TitleFont.Name = #23435#20307
+          TitleFont.Style = []
+          OnDrawColumnCell = dbgrdPlanDrawColumnCell
+          Columns = <
+            item
+              Expanded = False
+              FieldName = 'ZID'
+              Title.Alignment = taCenter
+              Title.Caption = #32534#21495
+              Visible = True
+            end
+            item
+              Expanded = False
+              FieldName = 'ZNAME'
+              Title.Alignment = taCenter
+              Title.Caption = #39033#30446#21517#31216
+              Width = 420
+              Visible = True
+            end
+            item
+              Expanded = False
+              FieldName = 'ZSTATUS'
+              Title.Alignment = taCenter
+              Title.Caption = #29366#24577
+              Visible = True
+            end
+            item
+              Expanded = False
+              FieldName = 'ZPM'
+              Title.Alignment = taCenter
+              Title.Caption = #39033#30446#32463#29702
+              Width = 80
+              Visible = True
+            end
+            item
+              Expanded = False
+              FieldName = 'ZMEMBER'
+              Title.Alignment = taCenter
+              Title.Caption = #39033#30446#25104#21592
+              Width = 200
+              Visible = True
+            end>
+        end
+      end
       object tsPlanItem: TTabSheet
         Caption = #39033#30446#20219#21153
         ImageIndex = 1
         object dbtxtZNAME: TDBText
           Left = 0
           Top = 40
-          Width = 830
+          Width = 1017
           Height = 17
           Align = alTop
           Color = clNavy
@@ -65,13 +329,13 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
         object pnlPlanItemTop: TPanel
           Left = 0
           Top = 0
-          Width = 830
+          Width = 1017
           Height = 40
           Align = alTop
           BevelOuter = bvNone
           TabOrder = 0
           DesignSize = (
-            830
+            1017
             40)
           object btnItem_Add: TBitBtn
             Left = 8
@@ -110,7 +374,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
             TabOrder = 3
           end
           object dbedtZSORT: TDBEdit
-            Left = 753
+            Left = 948
             Top = 8
             Width = 72
             Height = 23
@@ -142,8 +406,8 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
         object dbgrdPlanItem: TDBGrid
           Left = 0
           Top = 57
-          Width = 830
-          Height = 404
+          Width = 1017
+          Height = 400
           Align = alClient
           DataSource = dsPlanItem
           Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
@@ -240,8 +504,8 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
         end
         object pnlPlanPage: TPanel
           Left = 0
-          Top = 461
-          Width = 830
+          Top = 457
+          Width = 1017
           Height = 40
           Align = alBottom
           BevelOuter = bvNone
@@ -304,12 +568,12 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
         Caption = #20219#21153#20869#23481
         ImageIndex = 2
         DesignSize = (
-          830
-          501)
+          1017
+          497)
         object dbtxtZNAME1: TDBText
           Left = 0
           Top = 0
-          Width = 830
+          Width = 1017
           Height = 17
           Align = alTop
           Color = clNavy
@@ -325,8 +589,8 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
         end
         object spl2: TSplitter
           Left = 0
-          Top = 172
-          Width = 830
+          Top = 189
+          Width = 1017
           Height = 10
           Cursor = crVSplit
           Align = alTop
@@ -335,8 +599,8 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
         object scrlbx1: TScrollBox
           Left = 0
           Top = 17
-          Width = 830
-          Height = 155
+          Width = 1017
+          Height = 172
           Align = alTop
           TabOrder = 0
           object lbl8: TLabel
@@ -383,7 +647,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
           end
           object lbl14: TLabel
             Left = 10
-            Top = 125
+            Top = 149
             Width = 45
             Height = 15
             Caption = #22791#27880#65306
@@ -401,6 +665,13 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
             Width = 68
             Height = 15
             Caption = #35745#21010#24037#26399':'
+          end
+          object lbl25: TLabel
+            Left = 8
+            Top = 124
+            Width = 68
+            Height = 15
+            Caption = #21019#24314#26085#26399':'
           end
           object dbedtZNAME1: TDBEdit
             Left = 109
@@ -436,18 +707,18 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
             DataSource = dsPlanItem
             ReadOnly = True
             TabOrder = 2
+            OnDblClick = dbedtZFBDATEDblClick
           end
           object dbedtZFBDATE1: TDBEdit
             Left = 109
             Top = 63
             Width = 180
             Height = 23
-            Color = clBtnFace
             DataField = 'ZFBDATE'
             DataSource = dsPlanItem
-            ImeName = #26497#21697#20116#31508#36755#20837#27861
             ReadOnly = True
             TabOrder = 3
+            OnDblClick = dbedtZFBDATEDblClick
           end
           object dbedtZFEDATE: TDBEdit
             Left = 447
@@ -458,22 +729,22 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
             DataSource = dsPlanItem
             ReadOnly = True
             TabOrder = 4
+            OnDblClick = dbedtZFBDATEDblClick
           end
           object dbedtZFBDATE2: TDBEdit
             Left = 447
             Top = 63
             Width = 180
             Height = 23
-            Color = clBtnFace
             DataField = 'ZFEDATE'
             DataSource = dsPlanItem
-            ImeName = #26497#21697#20116#31508#36755#20837#27861
             ReadOnly = True
             TabOrder = 5
+            OnDblClick = dbedtZFBDATEDblClick
           end
           object dbedtZREMARK: TDBEdit
             Left = 108
-            Top = 121
+            Top = 145
             Width = 520
             Height = 23
             DataField = 'ZREMARK'
@@ -535,15 +806,25 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
             Height = 23
             DataField = 'ZPROJECTTIME'
             DataSource = dsPlanItem
-            ImeName = #26497#21697#20116#31508#36755#20837#27861
             TabOrder = 12
+          end
+          object dbedtZCREATEDATE: TDBEdit
+            Left = 109
+            Top = 119
+            Width = 180
+            Height = 23
+            DataField = 'ZCREATEDATE'
+            DataSource = dsPlanItem
+            ReadOnly = True
+            TabOrder = 13
+            OnDblClick = dbedtZFBDATEDblClick
           end
         end
         object pnlPlanDetail: TPanel
           Left = 0
-          Top = 182
-          Width = 830
-          Height = 319
+          Top = 199
+          Width = 1017
+          Height = 298
           Align = alClient
           BevelOuter = bvNone
           Caption = 'pnlPlanDetail'
@@ -552,13 +833,13 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
             Left = 247
             Top = 40
             Width = 10
-            Height = 279
+            Height = 258
             Beveled = True
           end
           object pnlPlanDetailTop: TPanel
             Left = 0
             Top = 0
-            Width = 830
+            Width = 1017
             Height = 40
             Align = alTop
             BevelOuter = bvLowered
@@ -627,7 +908,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
             Left = 0
             Top = 40
             Width = 247
-            Height = 279
+            Height = 258
             Align = alLeft
             DataSource = dsPlanDetail
             Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
@@ -661,8 +942,8 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
           object pnl3: TPanel
             Left = 257
             Top = 40
-            Width = 573
-            Height = 279
+            Width = 760
+            Height = 258
             Align = alClient
             BevelOuter = bvNone
             Caption = 'pnl3'
@@ -670,8 +951,8 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
             object dbmmoZCONTENT: TDBMemo
               Left = 0
               Top = 65
-              Width = 573
-              Height = 174
+              Width = 653
+              Height = 153
               Align = alClient
               DataField = 'ZCONTENT'
               DataSource = dsPlanDetail
@@ -682,13 +963,13 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
             object pnl5: TPanel
               Left = 0
               Top = 0
-              Width = 573
+              Width = 760
               Height = 65
               Align = alTop
               BevelOuter = bvNone
               TabOrder = 1
               DesignSize = (
-                573
+                760
                 65)
               object lbl18: TLabel
                 Left = 8
@@ -721,7 +1002,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
               object dbtxtZSTATUSNAME1: TDBText
                 Left = 529
                 Top = 33
-                Width = 32
+                Width = 227
                 Height = 17
                 Anchors = [akLeft, akTop, akRight]
                 Color = clGray
@@ -749,7 +1030,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
               object dbedtZNAME2: TDBEdit
                 Left = 64
                 Top = 5
-                Width = 498
+                Width = 693
                 Height = 23
                 Anchors = [akLeft, akTop, akRight]
                 DataField = 'ZNAME'
@@ -771,8 +1052,8 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
             end
             object pnlTestCase: TPanel
               Left = 0
-              Top = 239
-              Width = 573
+              Top = 218
+              Width = 760
               Height = 40
               Align = alBottom
               BevelOuter = bvNone
@@ -780,7 +1061,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
               ShowHint = True
               TabOrder = 2
               DesignSize = (
-                573
+                760
                 40)
               object lbl23: TLabel
                 Left = 8
@@ -792,7 +1073,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
               object dbedtZTESTCASE: TDBEdit
                 Left = 81
                 Top = 8
-                Width = 380
+                Width = 575
                 Height = 23
                 Hint = #22810#20010#29992#20998#21495'(;)'#20998#24320' '#20363#22914' $234;$123;$567'
                 Anchors = [akLeft, akTop, akRight]
@@ -802,7 +1083,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
                 TabOrder = 0
               end
               object btnGotoTest: TBitBtn
-                Left = 468
+                Left = 663
                 Top = 8
                 Width = 100
                 Height = 25
@@ -812,10 +1093,22 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
                 OnClick = btnGotoTestClick
               end
             end
+            object lvAttach: TListView
+              Left = 653
+              Top = 65
+              Width = 107
+              Height = 153
+              Align = alRight
+              Columns = <>
+              LargeImages = ilAttach
+              PopupMenu = pmAttach
+              TabOrder = 3
+              OnDblClick = lvAttachDblClick
+            end
           end
         end
         object chkEdit: TCheckBox
-          Left = 768
+          Left = 963
           Top = 0
           Width = 55
           Height = 17
@@ -837,8 +1130,8 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
         Caption = #39033#30446#20449#24687
         object pnlPlanBottom: TPanel
           Left = 0
-          Top = 461
-          Width = 830
+          Top = 457
+          Width = 1017
           Height = 40
           Align = alBottom
           BevelOuter = bvNone
@@ -893,14 +1186,14 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
         object pnl4: TPanel
           Left = 0
           Top = 0
-          Width = 830
-          Height = 461
+          Width = 1017
+          Height = 457
           Align = alClient
           BevelOuter = bvNone
           TabOrder = 1
           DesignSize = (
-            830
-            461)
+            1017
+            457)
           object dbtxtZID: TDBText
             Left = 88
             Top = 8
@@ -1040,7 +1333,6 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
             DataField = 'ZPMNAME'
             DataSource = dsPlan
             DropDownRows = 30
-            ImeName = #26497#21697#20116#31508#36755#20837#27861
             KeyField = 'ZID'
             ListField = 'ZNAME'
             ListSource = DM.dsUsers
@@ -1049,7 +1341,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
           object dbmmoZSUMTEXT: TDBMemo
             Left = 14
             Top = 188
-            Width = 785
+            Width = 980
             Height = 264
             Anchors = [akLeft, akTop, akRight, akBottom]
             DataField = 'ZSUMTEXT'
@@ -1094,244 +1386,10 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
       end
     end
   end
-  object pnl2: TPanel
-    Left = 0
-    Top = 73
-    Width = 185
-    Height = 533
-    Align = alLeft
-    BevelOuter = bvLowered
-    Caption = 'pnl2'
-    TabOrder = 2
-    object pgc1: TPageControl
-      Left = 1
-      Top = 1
-      Width = 183
-      Height = 531
-      ActivePage = ts1
-      Align = alClient
-      TabOrder = 0
-      object ts1: TTabSheet
-        Caption = #39033#30446#21015#34920
-        object tvPlan: TTreeView
-          Left = 0
-          Top = 0
-          Width = 175
-          Height = 461
-          Align = alClient
-          HideSelection = False
-          Images = DM.ImageListTree
-          Indent = 19
-          ReadOnly = True
-          RowSelect = True
-          ShowLines = False
-          ShowRoot = False
-          TabOrder = 0
-          ToolTips = False
-          OnChange = tvPlanChange
-          OnChanging = tvPlanChanging
-          OnCustomDrawItem = tvPlanCustomDrawItem
-        end
-        object pnlpageIndex: TPanel
-          Left = 0
-          Top = 461
-          Width = 175
-          Height = 40
-          Align = alBottom
-          BevelOuter = bvNone
-          TabOrder = 1
-          object btnPan_FirstPage: TSpeedButton
-            Left = 5
-            Top = 8
-            Width = 23
-            Height = 22
-            Action = actPan_FirstPage
-            Glyph.Data = {
-              36040000424D3604000000000000360000002800000010000000100000000100
-              2000000000000004000000000000000000000000000000000000FF00FF00FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00000000000000
-              0000FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF0000000000000000000000FF000000
-              0000FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-              FF00FF00FF00FF00FF0000000000000000000000FF000000FF000000FF000000
-              0000FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-              FF0000000000000000000000FF000000FF000000FF000000FF000000FF000000
-              0000000000000000000000000000000000000000000000000000000000000000
-              00000000FF000000FF000000FF000000FF000000FF000000FF000000FF000000
-              FF000000FF000000FF000000FF000000FF000000FF0000000000FF00FF00FF00
-              FF0000000000000000000000FF000000FF000000FF000000FF000000FF000000
-              0000000000000000000000000000000000000000000000000000FF00FF00FF00
-              FF00FF00FF00FF00FF0000000000000000000000FF000000FF000000FF000000
-              0000FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF0000000000000000000000FF000000
-              0000FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00000000000000
-              0000FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00}
-            ParentShowHint = False
-            ShowHint = True
-          end
-          object btnPan_Propage: TSpeedButton
-            Left = 32
-            Top = 8
-            Width = 23
-            Height = 22
-            Action = actPan_Propage
-            Glyph.Data = {
-              36040000424D3604000000000000360000002800000010000000100000000100
-              2000000000000004000000000000000000000000000000000000FF00FF00FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF00000000000000000000000000FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF00000000000000FF0000000000FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF00000000000000FF0000000000FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF00000000000000FF0000000000FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF00000000000000FF0000000000FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF00000000000000FF0000000000FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-              FF00FF00FF00000000000000000000000000000000000000FF00000000000000
-              00000000000000000000FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-              FF00FF00FF00000000000000FF000000FF000000FF000000FF000000FF000000
-              FF000000FF0000000000FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-              FF00FF00FF00FF00FF00000000000000FF000000FF000000FF000000FF000000
-              FF0000000000FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-              FF00FF00FF00FF00FF00000000000000FF000000FF000000FF000000FF000000
-              FF0000000000FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-              FF00FF00FF00FF00FF00FF00FF00000000000000FF000000FF000000FF000000
-              0000FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-              FF00FF00FF00FF00FF00FF00FF00000000000000FF000000FF000000FF000000
-              0000FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF00000000000000FF0000000000FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF00000000000000FF0000000000FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF0000000000FF00FF00FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF0000000000FF00FF00FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00}
-            ParentShowHint = False
-            ShowHint = True
-          end
-          object btnPan_NextPage: TSpeedButton
-            Left = 59
-            Top = 8
-            Width = 23
-            Height = 22
-            Action = actPan_NextPage
-            Glyph.Data = {
-              36040000424D3604000000000000360000002800000010000000100000000100
-              2000000000000004000000000000000000000000000000000000FF00FF00FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF0000000000FF00FF00FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF0000000000FF00FF00FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF00000000000000FF0000000000FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF00000000000000FF0000000000FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-              FF00FF00FF00FF00FF00FF00FF00000000000000FF000000FF000000FF000000
-              0000FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-              FF00FF00FF00FF00FF00FF00FF00000000000000FF000000FF000000FF000000
-              0000FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-              FF00FF00FF00FF00FF00000000000000FF000000FF000000FF000000FF000000
-              FF0000000000FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-              FF00FF00FF00FF00FF00000000000000FF000000FF000000FF000000FF000000
-              FF0000000000FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-              FF00FF00FF00000000000000FF000000FF000000FF000000FF000000FF000000
-              FF000000FF0000000000FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-              FF00FF00FF00000000000000000000000000000000000000FF00000000000000
-              00000000000000000000FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF00000000000000FF0000000000FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF00000000000000FF0000000000FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF00000000000000FF0000000000FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF00000000000000FF0000000000FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF00000000000000FF0000000000FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF00000000000000000000000000FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00}
-            ParentShowHint = False
-            ShowHint = True
-          end
-          object btnPan_LastPage: TSpeedButton
-            Left = 86
-            Top = 8
-            Width = 23
-            Height = 22
-            Action = actPan_LastPage
-            Glyph.Data = {
-              36040000424D3604000000000000360000002800000010000000100000000100
-              2000000000000004000000000000000000000000000000000000FF00FF00FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF000000000000000000FF00FF00FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF00000000000000FF00000000000000
-              0000FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF00000000000000FF000000FF000000
-              FF000000000000000000FF00FF00FF00FF00FF00FF00FF00FF00000000000000
-              000000000000000000000000000000000000000000000000FF000000FF000000
-              FF000000FF000000FF000000000000000000FF00FF00FF00FF00000000000000
-              FF000000FF000000FF000000FF000000FF000000FF000000FF000000FF000000
-              FF000000FF000000FF000000FF000000FF000000000000000000000000000000
-              000000000000000000000000000000000000000000000000FF000000FF000000
-              FF000000FF000000FF000000000000000000FF00FF00FF00FF00FF00FF00FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF00000000000000FF000000FF000000
-              FF000000000000000000FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF00000000000000FF00000000000000
-              0000FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF000000000000000000FF00FF00FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00}
-            ParentShowHint = False
-            ShowHint = True
-          end
-          object lblPlanPage: TLabel
-            Left = 114
-            Top = 11
-            Width = 88
-            Height = 15
-            Caption = 'lblPlanPage'
-          end
-        end
-      end
-    end
-  end
   object cdsPlan: TClientDataSet
     Aggregates = <>
     Params = <>
     BeforePost = cdsPlanBeforePost
-    AfterScroll = cdsPlanAfterScroll
     OnNewRecord = cdsPlanNewRecord
     Left = 24
     Top = 8
@@ -1371,6 +1429,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
     end
     object actPan_FirstPage: TAction
       Category = #39033#30446
+      Caption = #31532#19968#39029
       Hint = #31532#19968#39029
       ImageIndex = 0
       OnExecute = actPan_FirstPageExecute
@@ -1378,6 +1437,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
     end
     object actPan_Propage: TAction
       Category = #39033#30446
+      Caption = #19978#19968#39029
       Hint = #19978#19968#39029
       ImageIndex = 3
       OnExecute = actPan_PropageExecute
@@ -1385,6 +1445,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
     end
     object actPan_NextPage: TAction
       Category = #39033#30446
+      Caption = #19979#19968#39029
       Hint = #19979#19968#39029
       ImageIndex = 2
       OnExecute = actPan_NextPageExecute
@@ -1392,6 +1453,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
     end
     object actPan_LastPage: TAction
       Category = #39033#30446
+      Caption = #26368#21518#19968#39029
       Hint = #26368#21518#19968#39029
       ImageIndex = 1
       OnExecute = actPan_LastPageExecute
@@ -1523,6 +1585,24 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
       Caption = #20219#21153#31561#24453#20013
       OnExecute = actItem_WaitingExecute
       OnUpdate = actItem_WaitingUpdate
+    end
+    object actPan_Open: TAction
+      Category = #39033#30446
+      Caption = #25171#24320#39033#30446
+      OnExecute = actPan_OpenExecute
+      OnUpdate = actPan_OpenUpdate
+    end
+    object actAttach_Addfile: TAction
+      Category = #38468#20214
+      Caption = #22686#21152#38468#20214
+      OnExecute = actAttach_AddfileExecute
+      OnUpdate = actAttach_AddfileUpdate
+    end
+    object actAttach_downfile: TAction
+      Category = #38468#20214
+      Caption = #19979#36733#38468#20214'('#21452#20987')...'
+      OnExecute = actAttach_downfileExecute
+      OnUpdate = actAttach_downfileUpdate
     end
   end
   object cdsPlanStauts: TClientDataSet
@@ -1962,6 +2042,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
     Aggregates = <>
     Params = <>
     BeforePost = cdsPlanDetailBeforePost
+    AfterScroll = cdsPlanDetailAfterScroll
     OnNewRecord = cdsPlanDetailNewRecord
     Left = 144
     Top = 8
@@ -1970,5 +2051,30 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
     DataSet = cdsPlanDetail
     Left = 144
     Top = 40
+  end
+  object ilAttach: TImageList
+    Height = 32
+    Width = 32
+    Left = 288
+    Top = 8
+  end
+  object dlgOpen1: TOpenDialog
+    Left = 632
+    Top = 16
+  end
+  object dlgSave1: TSaveDialog
+    Left = 664
+    Top = 16
+  end
+  object pmAttach: TPopupMenu
+    AutoHotkeys = maManual
+    Left = 696
+    Top = 16
+    object N1: TMenuItem
+      Action = actAttach_Addfile
+    end
+    object N2: TMenuItem
+      Action = actAttach_downfile
+    end
   end
 end

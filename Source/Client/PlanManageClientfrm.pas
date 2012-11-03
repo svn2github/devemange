@@ -18,7 +18,7 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, BaseChildfrm, ExtCtrls, Grids, DBGrids, ComCtrls, DB, DBClient,
   ActnList, StdCtrls, Buttons, DBCtrls, Mask, dbcgrids, ImgList,
-  ClientTypeUnits;
+  ClientTypeUnits, Menus;
 
 type
   TPlanStatus = (ps_doing,ps_success,ps_over,ps_close,ps_waiting,ps_reaction);
@@ -41,9 +41,16 @@ type
     fGUID : string;
   end;
 
+  PAttachFileRec  = ^TAttachFileRec;
+  TAttachFileRec = record
+    fName : string;
+    ffileid : Integer;
+    fFileExt : string;
+  end;
+
+
   TPlanManageClientDlg = class(TBaseChildDlg)
     pnlonvisible: TPanel;
-    spl1: TSplitter;
     pnl1: TPanel;
     pgcplan: TPageControl;
     tsPlanItem: TTabSheet;
@@ -62,7 +69,6 @@ type
     cdsPlanStauts: TClientDataSet;
     actPan_Save: TAction;
     btnPan_Save: TBitBtn;
-    pnl2: TPanel;
     cdsPlanItem: TClientDataSet;
     cdstemp: TClientDataSet;
     actPan_FirstPage: TAction;
@@ -156,15 +162,6 @@ type
     lbl19: TLabel;
     dbtxtZSTATUSNAME1: TDBText;
     lstPlanGUID: TListBox;
-    pgc1: TPageControl;
-    ts1: TTabSheet;
-    tvPlan: TTreeView;
-    pnlpageIndex: TPanel;
-    btnPan_FirstPage: TSpeedButton;
-    btnPan_Propage: TSpeedButton;
-    btnPan_NextPage: TSpeedButton;
-    btnPan_LastPage: TSpeedButton;
-    lblPlanPage: TLabel;
     lbl21: TLabel;
     dbedtZMEMBER: TDBEdit;
     lbl22: TLabel;
@@ -192,6 +189,28 @@ type
     chkEdit: TCheckBox;
     lbl24: TLabel;
     dbedtZPROJECTT: TDBEdit;
+    tsProject: TTabSheet;
+    pnl6: TPanel;
+    pnl7: TPanel;
+    lblPlanPage: TLabel;
+    btnPan_LastPage: TSpeedButton;
+    btnPan_NextPage: TSpeedButton;
+    btnPan_Propage: TSpeedButton;
+    btnPan_FirstPage: TSpeedButton;
+    dbgrdPlan: TDBGrid;
+    btnPan_Open: TBitBtn;
+    actPan_Open: TAction;
+    lbl25: TLabel;
+    dbedtZCREATEDATE: TDBEdit;
+    lvAttach: TListView;
+    ilAttach: TImageList;
+    actAttach_Addfile: TAction;
+    dlgOpen1: TOpenDialog;
+    dlgSave1: TSaveDialog;
+    pmAttach: TPopupMenu;
+    N1: TMenuItem;
+    actAttach_downfile: TAction;
+    N2: TMenuItem;
     procedure cdsPlanNewRecord(DataSet: TDataSet);
     procedure actPan_SaveUpdate(Sender: TObject);
     procedure actPan_SaveExecute(Sender: TObject);
@@ -250,12 +269,6 @@ type
     procedure actPan_CLOSEExecute(Sender: TObject);
     procedure actPan_ActionUpdate(Sender: TObject);
     procedure actPan_ActionExecute(Sender: TObject);
-    procedure cdsPlanAfterScroll(DataSet: TDataSet);
-    procedure tvPlanChange(Sender: TObject; Node: TTreeNode);
-    procedure tvPlanChanging(Sender: TObject; Node: TTreeNode;
-      var AllowChange: Boolean);
-    procedure tvPlanCustomDrawItem(Sender: TCustomTreeView;
-      Node: TTreeNode; State: TCustomDrawState; var DefaultDraw: Boolean);
     procedure dblkcbb1CloseUp(Sender: TObject);
     procedure actItem_firstPageExecute(Sender: TObject);
     procedure actItem_firstPageUpdate(Sender: TObject);
@@ -273,10 +286,23 @@ type
     procedure actItem_WaitingExecute(Sender: TObject);
     procedure actItem_WaitingUpdate(Sender: TObject);
     procedure chkEditClick(Sender: TObject);
+    procedure dbgrdPlanDrawColumnCell(Sender: TObject; const Rect: TRect;
+      DataCol: Integer; Column: TColumn; State: TGridDrawState);
+    procedure actPan_OpenExecute(Sender: TObject);
+    procedure actPan_OpenUpdate(Sender: TObject);
+    procedure dbedtZFBDATEDblClick(Sender: TObject);
+    procedure cdsPlanDetailAfterScroll(DataSet: TDataSet);
+    procedure actAttach_AddfileExecute(Sender: TObject);
+    procedure actAttach_AddfileUpdate(Sender: TObject);
+    procedure actAttach_downfileExecute(Sender: TObject);
+    procedure actAttach_downfileUpdate(Sender: TObject);
+    procedure lvAttachDblClick(Sender: TObject);
   private
     { Private declarations }
     fPlanPageRec : TPlanPageRec;
     fPlanItemPageRec : TPlanItemPageRec;
+
+    fFileIconIndexList : TStringList; //附件的图示
 
     //加载项目
     procedure LoadPlan(APageIndex: integer; Awhere: String);
@@ -288,6 +314,12 @@ type
 
     //直接显示子任务用
     procedure WMShowPlanItem(var msg:TMessage); message gcMSG_GetPlanItem;
+
+     //加载附件
+    procedure LoadAttach(APlanID:Integer);  //TB_PLAN_DETAIL.ZID
+    //取文件的图标
+    function GetFileIconIndex(FileName:string;AImageList:TImageList):integer;
+    procedure ClearAttachFile(); //清空附件
    
 
   public
@@ -302,6 +334,8 @@ type
 
 implementation
 uses
+  TickDateTimefrm,
+  ShellAPI,
   ClinetSystemUnits, DmUints;
 
 {$R *.dfm}
@@ -317,7 +351,8 @@ end;
 procedure TPlanManageClientDlg.freeBase;
 begin
   inherited;
-
+  ClearAttachFile();
+  fFileIconIndexList.Free;
 end;
 
 class function TPlanManageClientDlg.GetModuleID: integer;
@@ -464,18 +499,14 @@ begin
     end;
     cdsPlanItem.CreateDataSet;
 
-    if cdsPlan.RecordCount > 0 then
-    begin
-      fPlanItemPageRec.fPageindex := 1;
-      fPlanItemPageRec.fwhere  := format('ZPLAN_GUID=''''%s''''',[
-        cdsPlan.FieldByName('ZGUID').AsString]);
-      fPlanItemPageRec.fCount := GetPlanItemPageCount(fPlanItemPageRec.fPageindex,
-        fPlanItemPageRec.fwhere);
-      lblItemPage.Caption := format('%d/%d',[1,fPlanItemPageRec.fCount]);
-      LoadPlanItem(fPlanItemPageRec.fPageindex,
-        fPlanItemPageRec.fwhere);
-    end;
-    
+    fPlanItemPageRec.fPageindex := 1;
+    fPlanItemPageRec.fwhere  := '1=1';//format('ZPLAN_GUID=''''%s''''',[cdsPlan.FieldByName('ZGUID').AsString]);
+    fPlanItemPageRec.fCount := GetPlanItemPageCount(fPlanItemPageRec.fPageindex,
+      fPlanItemPageRec.fwhere);
+    lblItemPage.Caption := format('%d/%d',[1,fPlanItemPageRec.fCount]);
+    LoadPlanItem(fPlanItemPageRec.fPageindex,fPlanItemPageRec.fwhere);
+
+
   finally
     mycds2.Free;
   end;
@@ -535,6 +566,8 @@ begin
   finally
     mycds2.Free;
   end;
+
+  fFileIconIndexList := TStringList.Create;
 end;
 
 procedure TPlanManageClientDlg.Showfrm;
@@ -545,11 +578,13 @@ end;
 
 procedure TPlanManageClientDlg.cdsPlanNewRecord(DataSet: TDataSet);
 begin
+
   if fLoading then Exit;
   DataSet.FieldByName('ZGUID').AsString := NewGuid;
   DataSet.FieldByName('ZBUILDDATE').AsDateTime := ClientSystem.fDbOpr.GetSysDateTime;
   DataSet.FieldByName('ZSTATUS').AsInteger := Ord(ps_doing);
   DataSet.FieldByName('ZISNEW').AsBoolean := True;
+  
 end;
 
 procedure TPlanManageClientDlg.actPan_SaveUpdate(Sender: TObject);
@@ -609,7 +644,6 @@ begin
       ]);
     ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
     DataSet.FieldByName('ZISNEW').AsBoolean := False;
-    tvPlan.Items.AddChild(nil,DataSet.FieldByName('ZNAME').AsString);
     lstPlanGUID.Items.Add(DataSet.FieldByName('ZGUID').AsString);
   end
   else begin
@@ -635,8 +669,7 @@ begin
 
     ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
 
-    if Assigned(tvPlan.Selected) then
-      tvPlan.Selected.Text := DataSet.FieldByName('ZNAME').AsString;
+
   end;
 end;
 
@@ -686,14 +719,13 @@ begin
   fLoading := True;
   cdsPlan.DisableControls;
   lstPlanGUID.Items.Clear;
-  tvPlan.Items.BeginUpdate;
+
 
 
   ShowProgress('读取数据...',0);
   
   try
-    tvPlan.Items.Clear;
-    lblPlanPage.Caption := format('%d/%d',[fPlanPageRec.fPageindex,
+     lblPlanPage.Caption := format('%d/%d',[fPlanPageRec.fPageindex,
       fPlanPageRec.fCount]);
       
     if cdsTemp.Active then cdsTemp.Close;
@@ -724,10 +756,7 @@ begin
       end;
 
       lstPlanGUID.Items.Add(cdstemp.FieldByName('ZGUID').AsString);
-      myNode := tvPlan.Items.AddChild(nil,cdstemp.FieldByName('ZNAME').AsString);
-      myNode.ImageIndex := 0;
-      myNode.SelectedIndex := 7;
-      myNode.Data := PInteger(cdstemp.FieldByName('ZSTATUS').AsInteger);
+
 
       cdsPlan.Append;
       cdsPlan.FieldByName('ZISNEW').AsBoolean := False;
@@ -749,7 +778,6 @@ begin
     cdsPlan.EnableControls;
     fLoading := myb;
     HideProgress;
-    tvPlan.Items.EndUpdate;
   end;
 end;
 
@@ -809,12 +837,12 @@ var
 const
   glSQL = 'exec pt_SplitPage ''TB_PLAN_ITEM'',' +
           '''ZGUID,ZPLAN_GUID,ZNAME,ZSTATUS,ZPBDATE,ZPEDATE,ZFBDATE,ZFEDATE,'+
-          'ZCHILDCOUNT,ZPASSCOUNT,ZMAINDEVE,ZSORT,ZREMARK,ZPROJECTTIME'', ' +
-          '''%s'',20,%d,%d,0,''%s''';
+          'ZCHILDCOUNT,ZPASSCOUNT,ZMAINDEVE,ZSORT,ZREMARK,ZPROJECTTIME,ZCREATEDATE'', ' +
+          '''%s'',20,%d,%d,1,''%s''';
 begin
 
   mySQL := format(glSQL,[
-      'ZSORT',
+      'ZCREATEDATE',
       APageIndex,
       0,Awhere]);
 
@@ -877,6 +905,7 @@ begin
   DataSet.FieldByName('ZPBDATE').AsDateTime := ClientSystem.fDbOpr.GetSysDateTime;
   DataSet.FieldByName('ZFBDATE').AsDateTime := DataSet.FieldByName('ZPBDATE').AsDateTime;
   DataSet.FieldByName('ZISNEW').AsBoolean := True;
+  DataSet.FieldByName('ZCREATEDATE').AsDateTime := DataSet.FieldByName('ZPBDATE').AsDateTime;
 end;
 
 procedure TPlanManageClientDlg.actItem_AddUpdate(Sender: TObject);
@@ -891,7 +920,7 @@ begin
   cdsPlanDetail.First;
   while not cdsPlanDetail.Eof do
     cdsPlanDetail.Delete;
-  pgcplan.ActivePageIndex := 1;
+  pgcplan.ActivePageIndex := 2;
 end;
 
 procedure TPlanManageClientDlg.pgcplanChanging(Sender: TObject;
@@ -949,11 +978,11 @@ var
   mySQL : string;
 const
   gl_SQLTXT1 = 'insert TB_PLAN_ITEM (ZGUID,ZPLAN_GUID,ZNAME,ZSTATUS,' +
-    'ZPBDATE,ZPEDATE,ZFBDATE,ZFEDATE,ZCHILDCOUNT,ZPASSCOUNT,ZMAINDEVE,ZSORT,ZREMARK,ZPROJECTTIME ) '+
-    'values(''%s'',''%s'',''%s'',%d,''%s'',''%s'',''%s'',''%s'',%d,%d,%d,%d,''%s'',%f)';
+    'ZPBDATE,ZPEDATE,ZFBDATE,ZFEDATE,ZCHILDCOUNT,ZPASSCOUNT,ZMAINDEVE,ZSORT,ZREMARK,ZPROJECTTIME,ZCREATEDATE ) '+
+    'values(''%s'',''%s'',''%s'',%d,''%s'',''%s'',''%s'',''%s'',%d,%d,%d,%d,''%s'',%f,''%s'')';
   gl_SQLTXT2 = 'update TB_PLAN_ITEM set ZPLAN_GUID=''%s'',ZNAME=''%s'',ZSTATUS=%d, ' +
     'ZPBDATE=''%s'',ZPEDATE=''%s'',ZFBDATE=''%s'',ZFEDATE=''%s'',ZCHILDCOUNT=%d, ' +
-    'ZPASSCOUNT=%d,ZMAINDEVE=%d,ZSORT=%d,ZREMARK=''%s'',ZPROJECTTIME=%f where ZGUID=''%s''';
+    'ZPASSCOUNT=%d,ZMAINDEVE=%d,ZSORT=%d,ZREMARK=''%s'',ZPROJECTTIME=%f,ZCREATEDATE=''%s'' where ZGUID=''%s''';
 begin
   //
   if fLoading then Exit;
@@ -974,7 +1003,8 @@ begin
       DataSet.FieldByName('ZMAINDEVE').AsInteger,
       DataSet.FieldByName('ZSORT').AsInteger,
       DataSet.FieldByName('ZREMARK').AsString,
-      DataSet.FieldByName('ZPROJECTTIME').AsFloat]);
+      DataSet.FieldByName('ZPROJECTTIME').AsFloat,
+      DataSet.FieldByName('ZCREATEDATE').AsString]);
     ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
     DataSet.FieldByName('ZISNEW').AsBoolean := False;
   end
@@ -993,6 +1023,7 @@ begin
       DataSet.FieldByName('ZSORT').AsInteger,
       DataSet.FieldByName('ZREMARK').AsString,
       DataSet.FieldByName('ZPROJECTTIME').AsFloat,
+      DataSet.FieldByName('ZCREATEDATE').AsString,
       DataSet.FieldByName('ZGUID').AsString]);
     ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
   end;
@@ -1147,12 +1178,18 @@ begin
       cdsPlanDetail.Post;
       cdsTemp.Next;
     end;
+
     cdsPlanDetail.First;
 
   finally
     cdsPlanDetail.EnableControls;
     fLoading := myb;
   end;
+
+
+  //为了加载附件
+  cdsPlanDetailAfterScroll(cdsPlanDetail);
+
 end;
 
 procedure TPlanManageClientDlg.cdsPlanDetailNewRecord(DataSet: TDataSet);
@@ -1335,14 +1372,11 @@ end;
 
 procedure TPlanManageClientDlg.pgcplanChange(Sender: TObject);
 begin
-  if pgcplan.ActivePageIndex = 1 then
+  if pgcplan.ActivePageIndex = 2 then
   begin
-    if cdsPlanItem.IsEmpty then
-    begin
-      pgcplan.ActivePageIndex := 0;
-      Exit;
-    end;
 
+    if cdsPlanItem.IsEmpty then
+      Exit;
     LoadPlanDetail(cdsPlanItem.FieldByName('ZGUID').AsString);
   end;
 end;
@@ -1477,8 +1511,6 @@ begin
   cdsPlan.Edit;
   cdsPlan.FieldByName('ZSTATUS').AsInteger := Ord(ps_close);
   cdsPlan.Post;
-  if Assigned(tvPlan.Selected) then
-    tvPlan.Selected.Data := PInteger(ord(ps_close));
 end;
 
 procedure TPlanManageClientDlg.actPan_ActionUpdate(Sender: TObject);
@@ -1492,76 +1524,7 @@ begin
   cdsPlan.Edit;
   cdsPlan.FieldByName('ZSTATUS').AsInteger := Ord(ps_doing);
   cdsPlan.Post;
-  if Assigned(tvPlan.Selected) then
-    tvPlan.Selected.Data := PInteger(ord(ps_doing));
-end;
 
-procedure TPlanManageClientDlg.cdsPlanAfterScroll(DataSet: TDataSet);
-begin
-  if fLoading then Exit;
-  //先取出总数
-  fPlanItemPageRec.fwhere := format('ZPLAN_GUID=''''%s''''',[
-    DataSet.FieldByName('ZGUID').AsString]);
-  fPlanItemPageRec.fPageindex := 1;
-  fPlanItemPageRec.fCount := GetPlanItemPageCount(
-    fPlanItemPageRec.fPageindex,
-    fPlanItemPageRec.fwhere);
-  lblItemPage.Caption := format('%d/%d',[1,fPlanItemPageRec.fCount]);
-  LoadPlanItem(fPlanItemPageRec.fPageindex,
-    fPlanItemPageRec.fwhere);
-end;
-
-procedure TPlanManageClientDlg.tvPlanChange(Sender: TObject;
-  Node: TTreeNode);
-var
-  myGUID : string;
-begin
-  //
-  if fLoading then Exit;
-
-  if Node.Index >=0 then
-  begin
-    myGUID := lstPlanGUID.Items[Node.Index];
-    cdsPlan.Locate('ZGUID',myGUID,[loPartialKey]);
-  end;
-end;
-
-procedure TPlanManageClientDlg.tvPlanChanging(Sender: TObject;
-  Node: TTreeNode; var AllowChange: Boolean);
-begin
-  if pgcplan.ActivePageIndex = 1 then
-  begin
-    AllowChange:= False;
-    MessageBox(Handle,'任务内容不能选择。','提示',MB_ICONWARNING+MB_OK);
-  end
-  else
-    AllowChange := True;
-end;
-
-procedure TPlanManageClientDlg.tvPlanCustomDrawItem(
-  Sender: TCustomTreeView; Node: TTreeNode; State: TCustomDrawState;
-  var DefaultDraw: Boolean);
-var
-  BoundRect : TRect;
-  mySTATUS : integer;
-  mybmp : TBitmap;
-begin
-  inherited;
-  BoundRect := Node.DisplayRect(False);
-  mySTATUS := integer(Node.data);
-  if mySTATUS=Ord(ps_close) then
-    Sender.Canvas.Font.Color := clblue;
-
-  mybmp := TBitmap.Create;
-  if Node.Selected then
-    DM.ImageListTree.GetBitmap(Node.SelectedIndex,mybmp)
-  else
-    DM.ImageListTree.GetBitmap(Node.ImageIndex,mybmp);
-    
-  Sender.Canvas.Draw(BoundRect.Left,BoundRect.Top,mybmp);
-  Sender.Canvas.TextOut(BoundRect.Left+mybmp.Width,BoundRect.Top,Node.Text);
-  DefaultDraw := False;
-  mybmp.Free;
 end;
 
 procedure TPlanManageClientDlg.dblkcbb1CloseUp(Sender: TObject);
@@ -1719,7 +1682,6 @@ begin
     if lstPlanGUID.Items[i] = myPGUID then
     begin
       pgcplan.ActivePageIndex := 0;
-      tvPlan.Items[i].Selected := True;
 
       //子项目
       if cdsPlanItem.Locate('ZGUID',myGUID,[loPartialKey]) then
@@ -1740,13 +1702,15 @@ end;
 
 procedure TPlanManageClientDlg.actItem_StartingExecute(Sender: TObject);
 begin
+  {
   if (cdsPlanItem.FieldByName('ZMAINDEVE').AsInteger <>
      ClientSystem.fEditer_id) then
   begin
     MessageBox(Handle,'不是你的任务不能点开始执行','提示',MB_ICONERROR);
     Exit;
   end;
-
+  }
+  
   if MessageBox(Handle,'确定你要开始执行这个任务?','询问',
     MB_ICONQUESTION+MB_YESNO)=IDNO then
     Exit;
@@ -1806,6 +1770,235 @@ begin
   dblkcbbZSTATUSNAME.ReadOnly := not myEdit;
   dbmmoZCONTENT.ReadOnly := not myEdit;
   dbedtZTESTCASE.ReadOnly := not myEdit;
+  dbedtZCREATEDATE.ReadOnly := not myEdit;
+  dbedtZFBDATE1.ReadOnly := not myEdit;
+  dbedtZFBDATE2.ReadOnly := not myEdit;
+
+end;
+
+procedure TPlanManageClientDlg.dbgrdPlanDrawColumnCell(Sender: TObject;
+  const Rect: TRect; DataCol: Integer; Column: TColumn;
+  State: TGridDrawState);
+begin
+  if (cdsPlan.RecNo mod 2  = 0) and not ( gdSelected in State)  then
+    dbgrdPlan.Canvas.Brush.Color := clSilver;
+
+  if (cdsPlan.FieldByName('ZSTATUS').AsInteger = Ord(ps_close)) then
+  begin
+    dbgrdPlan.Canvas.Font.Color := clblue;
+  end
+  else if (cdsPlan.FieldByName('ZSTATUS').AsInteger = Ord(ps_waiting)) then
+    dbgrdPlan.Canvas.Font.Style := [fsItalic];
+
+  dbgrdPlan.DefaultDrawColumnCell(Rect,DataCol,Column,State);
+end;
+
+procedure TPlanManageClientDlg.actPan_OpenExecute(Sender: TObject);
+begin
+  fPlanItemPageRec.fwhere := format('ZPLAN_GUID=''''%s''''',[
+  cdsPlan.FieldByName('ZGUID').AsString]);
+  fPlanItemPageRec.fPageindex := 1;
+  fPlanItemPageRec.fCount := GetPlanItemPageCount(
+    fPlanItemPageRec.fPageindex,
+    fPlanItemPageRec.fwhere);
+  lblItemPage.Caption := format('%d/%d',[1,fPlanItemPageRec.fCount]);
+  LoadPlanItem(fPlanItemPageRec.fPageindex,
+    fPlanItemPageRec.fwhere);
+    pgcplan.ActivePageIndex := 1;
+end;
+
+procedure TPlanManageClientDlg.actPan_OpenUpdate(Sender: TObject);
+begin
+  (Sender as TAction).Enabled := not cdsPlanItem.IsEmpty;
+end;
+
+procedure TPlanManageClientDlg.dbedtZFBDATEDblClick(Sender: TObject);
+var
+  myform : TTickDateTimeDlg;
+begin
+  myform := TTickDateTimeDlg.Create(nil);
+  myform.cal1.Date := Now();
+  if myform.ShowModal = mrOk then
+  begin
+    if not (cdsPlanItem.State in [dsEdit,dsInsert]) then
+      cdsPlanItem.Edit;
+     cdsPlanItem.FieldByName((Sender as TDBEdit).DataField).AsString :=
+      DateTimeToStr(myform.cal1.Date);
+  end;
+  myform.Free;
+end;
+
+
+procedure TPlanManageClientDlg.LoadAttach(APlanID: Integer);
+var
+  mycds : TClientDataSet;
+  mySQL : string;
+  myItem : TListItem;
+  myData : PAttachFileRec;
+  myb : Boolean;
+  myExt : string;
+const
+  glSQL = 'select * from  TB_FILE_ITEM where ZCONTENTID=%d and ZSTYPE=5 Order by ZEDITDATETIME';
+begin
+  mycds := TClientDataSet.Create(nil);
+  myb := fLoading;
+  fLoading := True;
+  lvAttach.Items.BeginUpdate;
+  try
+
+    ClearAttachFile;
+    mySQL := format(glSQL,[APlanID]);
+    mycds.Data := ClientSystem.fDbOpr.ReadDataSet(PChar(mySQL));
+    if mycds.RecordCount > 0 then
+    begin
+      mycds.First;
+      while not mycds.Eof do
+      begin
+        myItem := lvAttach.Items.Add;
+        myItem.Caption := mycds.FieldByName('ZNAME').AsString;
+        myExt := mycds.FieldByname('ZEXT').AsString;
+        if fFileIconIndexList.IndexOfName(myExt) >=0 then
+          myItem.ImageIndex := StrToIntDef(fFileIconIndexList.Values[myExt],0)
+        else begin
+          myItem.ImageIndex := GetFileIconIndex('c:\' + myItem.Caption,ilAttach);
+          fFileIconIndexList.Add(Format('%s=%d',[myExt,myItem.ImageIndex]));
+        end;
+
+        New(myData);
+        myData^.fName   := myItem.Caption;
+        mydata^.ffileid := mycds.FieldByName('ZID').AsInteger;
+        myData^.fFileExt := mycds.FieldByname('ZEXT').AsString;
+        myItem.Data    := mydata;
+
+        mycds.Next;
+      end;
+    end;
+
+  finally
+    mycds.Free;
+    lvAttach.Items.EndUpdate;
+    fLoading := myb;
+  end;
+
+end;
+
+
+procedure TPlanManageClientDlg.ClearAttachFile;
+var
+  i : Integer;
+  myItem : PAttachFileRec;
+begin
+  for i:=0 to lvAttach.Items.Count -1 do
+  begin
+    myItem := lvAttach.Items[i].Data;
+    Dispose(myItem);
+  end;
+  lvAttach.Clear;
+end;
+
+function TPlanManageClientDlg.GetFileIconIndex(FileName: string;
+  AImageList: TImageList): integer;
+var
+  sinfo:SHFILEINFO;
+  myIcon:TIcon;
+  nIndex : integer;
+begin
+  Result  := -1;
+  FillChar(sinfo, SizeOf(sinfo),0);
+  SHGetFileInfo(PChar(FileName),FILE_ATTRIBUTE_NORMAL,sinfo,SizeOf(sInfo),
+  SHGFI_USEFILEATTRIBUTES or SHGFI_ICON or SHGFI_LARGEICON{SHGFI_SMALLICON});
+  if sinfo.hIcon>0 then
+  begin
+    myIcon:=TIcon.Create;
+    myIcon.Handle:=sinfo.hIcon;
+    nIndex:= AImageList.AddIcon(myIcon);
+    myIcon.Free;
+    Result := nIndex;
+  end;
+end;
+
+procedure TPlanManageClientDlg.cdsPlanDetailAfterScroll(DataSet: TDataSet);
+begin
+  if fLoading then Exit;
+  if DataSet.RecordCount > 0 then
+    LoadAttach(DataSet.FieldByName('ZID').AsInteger)
+  else
+    ClearAttachFile;
+end;
+
+procedure TPlanManageClientDlg.actAttach_AddfileExecute(Sender: TObject);
+var
+  myfilename : string;
+  myBugid : Integer;
+  myid : Integer;
+begin
+  //UPFILE
+  if not dlgOpen1.Execute then Exit;
+
+  myfilename := dlgOpen1.FileName;
+
+  myBugid := cdsPlanDetail.FieldByName('ZID').AsInteger;
+
+  //上传中
+  ShowProgress('上传文件中...',0);
+  try
+    myid := ClientSystem.fDbOpr.UpFile(5,myBugid,myfilename);
+  finally
+    HideProgress;
+  end;
+
+  if myid = 0 then
+  begin
+    LoadAttach(myBugid);
+  end
+  else
+    Application.MessageBox(PChar('上传失败,错误号:' +inttostr(myid) ),'提示',
+      MB_ICONERROR);
+
+end;
+
+
+procedure TPlanManageClientDlg.actAttach_AddfileUpdate(Sender: TObject);
+begin
+ (Sender as TAction).Enabled := cdsPlanDetail.State = dsBrowse;
+end;
+
+procedure TPlanManageClientDlg.actAttach_downfileExecute(Sender: TObject);
+var
+  myfilename : string;
+  myData : PAttachFileRec;
+  myi : Integer;
+begin
+  //
+  myData := lvAttach.Selected.Data;
+  dlgSave1.Filter := Format('*%s|*%s',[myData^.fFileExt,myData^.fFileExt]);
+  dlgSave1.FileName := myData^.fName;
+  dlgSave1.DefaultExt := myData^.fFileExt;
+  
+  if not dlgSave1.Execute then
+    Exit;
+  myfilename := dlgSave1.FileName;
+  myi := ClientSystem.fDbOpr.DownFile(myData^.ffileid,myfilename);
+  if myi = 0 then
+  begin
+    Application.MessageBox('下载成功','提示',MB_ICONQUESTION);
+  end
+  else
+    Application.MessageBox(PChar('下载失败,错误号:' + inttostr(myi)),'提示',MB_ICONERROR);
+end;
+
+
+procedure TPlanManageClientDlg.actAttach_downfileUpdate(Sender: TObject);
+begin
+  (Sender as TAction).Enabled := Assigned(lvAttach.Selected) and
+  Assigned(lvAttach.Selected.Data);
+end;
+
+procedure TPlanManageClientDlg.lvAttachDblClick(Sender: TObject);
+begin
+  if Assigned(lvAttach.Selected) and
+    Assigned(lvAttach.Selected.Data) then
+    actAttach_downfileExecute(nil);
 end;
 
 end.
