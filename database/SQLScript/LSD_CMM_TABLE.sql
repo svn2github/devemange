@@ -58,7 +58,7 @@ go
 
 create table TB_FILE_ITEM(
 	ZTREE_ID       int not null,           /*树ID*/
-        ZSTYPE         int not null,           /*类型，分文件管理=0，bug管理=1，项目文档=2 测试管理=4*/ 
+        ZSTYPE         int not null,           /*类型，分文件管理=0，bug管理=1，项目文档=2 测试管理=4 项目计划=5*/ 
 	ZID	       int not null,           /*文件id*/
 	ZVER           int not null,           /*文件的版本号*/
 	ZNAME          varchar(200) not null,  /*名称*/
@@ -567,6 +567,7 @@ create table TB_PLAN_ITEM(
 	ZSORT        int ,                                          /*排序号*/ 
 	ZREMARK      varchar(255),                                  /*备注*/
 	ZPROJECTTIME float default 0,                               /*工期*/
+	ZCREATEDATE  datetime,                                      /*创建日期*/ 
 	
 
 	constraint PK_TB_PLAN_ITEM primary key(ZGUID,ZPLAN_GUID)  
