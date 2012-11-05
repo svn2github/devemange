@@ -568,6 +568,7 @@ create table TB_PLAN_ITEM(
 	ZREMARK      varchar(255),                                  /*备注*/
 	ZPROJECTTIME float default 0,                               /*工期*/
 	ZCREATEDATE  datetime,                                      /*创建日期*/ 
+	ZMAILTO      varchar(200),                                  /*邮件通知其他人*/
 	
 
 	constraint PK_TB_PLAN_ITEM primary key(ZGUID,ZPLAN_GUID)  
