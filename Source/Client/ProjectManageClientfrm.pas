@@ -1113,6 +1113,8 @@ begin
       cdsTask.Post;
 
       //执行邮件通知
+      //去掉，不必要，太多了 2012-11-05
+      {
       if myform.chkSelf.Checked then
       begin
         ShowProgress('邮件通知...',0);
@@ -1121,11 +1123,13 @@ begin
           //cdsTask.FieldByName('ZBEGINDATE').AsString :=
           //formatdatetime('yyyy-mm-dd hh:ss:mm',ClientSystem.SysNow);
           //cdsTask.Post;
-          ClientSystem.fDbOpr.MailTo(1,cdsTask.FieldByName('ZCODE').AsString,-1);
+
+          //ClientSystem.fDbOpr.MailTo(1,cdsTask.FieldByName('ZCODE').AsString,-1);
         finally
           HideProgress;
         end;
       end;
+      }
       
     end
     else
@@ -1321,8 +1325,10 @@ begin
           end;
         end;
         //执行邮件通知
+        {
         UpdateProgressTitle('邮件通知...');
         ClientSystem.fDbOpr.MailTo(1,cdsTask.FieldByName('ZCODE').AsString,-1);
+        }
       finally
         HideProgress();
       end;
@@ -1618,8 +1624,10 @@ begin
         cdsTask.FieldByName('ZDAY').AsInteger := Trunc(mydate2-mydate1)+1;
         cdsTask.Post;
         //执行邮件通知
+        {
         UpdateProgressTitle('邮件通知...');
         ClientSystem.fDbOpr.MailTo(1,cdsTask.FieldByName('ZCODE').AsString,-1);
+        }
       finally
         HideProgress;
       end;
@@ -1663,8 +1671,10 @@ begin
         //formatdatetime('yyyy-mm-dd hh:ss:mm',ClientSystem.SysNow);
         cdsTask.Post;
         //执行邮件通知
+        {
         UpdateProgressTitle('邮件通知...');
         ClientSystem.fDbOpr.MailTo(1,cdsTask.FieldByName('ZCODE').AsString,-1);
+        }
       finally
         HideProgress;
       end;
@@ -1703,8 +1713,10 @@ begin
       cdsTask.FieldByName('ZSTATUS').AsInteger := Ord(tsing);
       cdsTask.Post;
       //执行邮件通知
+      {
       UpdateProgressTitle('邮件通知...');
       ClientSystem.fDbOpr.MailTo(1,cdsTask.FieldByName('ZCODE').AsString,-1);
+      }
     finally
       HideProgress;
     end;
