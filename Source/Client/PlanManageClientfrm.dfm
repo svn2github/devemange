@@ -1,6 +1,6 @@
 inherited PlanManageClientDlg: TPlanManageClientDlg
-  Left = 155
-  Top = 136
+  Left = 144
+  Top = 244
   Width = 1043
   Caption = #39033#30446#35745#21010
   OldCreateOrder = True
@@ -643,10 +643,17 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
           end
           object lbl25: TLabel
             Left = 8
-            Top = 124
+            Top = 122
             Width = 68
             Height = 15
             Caption = #21019#24314#26085#26399':'
+          end
+          object lbl26: TLabel
+            Left = 311
+            Top = 121
+            Width = 120
+            Height = 15
+            Caption = #37038#31665#36890#30693#20854#20182#20154#65306
           end
           object dbedtZNAME1: TDBEdit
             Left = 109
@@ -793,6 +800,36 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
             ReadOnly = True
             TabOrder = 13
             OnDblClick = dbedtZFBDATEDblClick
+          end
+          object btnItem_SendMail: TBitBtn
+            Left = 647
+            Top = 124
+            Width = 100
+            Height = 25
+            Action = actItem_SendMail
+            Caption = #37038#20214#36890#30693
+            TabOrder = 14
+          end
+          object dbedtZMAILTO: TDBEdit
+            Left = 427
+            Top = 117
+            Width = 114
+            Height = 23
+            DataField = 'ZMAILTO'
+            DataSource = dsPlanItem
+            TabOrder = 15
+          end
+          object dblkcbbSelectUsermail: TDBLookupComboBox
+            Left = 545
+            Top = 116
+            Width = 80
+            Height = 23
+            DropDownRows = 25
+            KeyField = 'ZID'
+            ListField = 'ZNAME'
+            ListSource = DM.dsUsers
+            TabOrder = 16
+            OnCloseUp = dblkcbbSelectUsermailCloseUp
           end
         end
         object pnlPlanDetail: TPanel
@@ -1567,6 +1604,7 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
     object actItem_Waiting: TAction
       Category = #39033#30446#20219#21153
       Caption = #20219#21153#31561#24453#20013
+      Visible = False
       OnExecute = actItem_WaitingExecute
       OnUpdate = actItem_WaitingUpdate
     end
@@ -1593,6 +1631,12 @@ inherited PlanManageClientDlg: TPlanManageClientDlg
       Caption = #21462#28040#20869#23481
       OnExecute = actDetail_CancelExecute
       OnUpdate = actDetail_CancelUpdate
+    end
+    object actItem_SendMail: TAction
+      Category = #39033#30446#20219#21153
+      Caption = #37038#20214#36890#30693
+      OnExecute = actItem_SendMailExecute
+      OnUpdate = actItem_SendMailUpdate
     end
   end
   object cdsPlanStauts: TClientDataSet

@@ -212,6 +212,11 @@ type
     N2: TMenuItem;
     btnDetail_Cancel: TBitBtn;
     actDetail_Cancel: TAction;
+    actItem_SendMail: TAction;
+    btnItem_SendMail: TBitBtn;
+    lbl26: TLabel;
+    dbedtZMAILTO: TDBEdit;
+    dblkcbbSelectUsermail: TDBLookupComboBox;
     procedure cdsPlanNewRecord(DataSet: TDataSet);
     procedure actPan_SaveUpdate(Sender: TObject);
     procedure actPan_SaveExecute(Sender: TObject);
@@ -300,6 +305,9 @@ type
     procedure lvAttachDblClick(Sender: TObject);
     procedure actDetail_CancelUpdate(Sender: TObject);
     procedure actDetail_CancelExecute(Sender: TObject);
+    procedure actItem_SendMailExecute(Sender: TObject);
+    procedure actItem_SendMailUpdate(Sender: TObject);
+    procedure dblkcbbSelectUsermailCloseUp(Sender: TObject);
   private
     { Private declarations }
     fPlanPageRec : TPlanPageRec;
@@ -840,7 +848,7 @@ var
 const
   glSQL = 'exec pt_SplitPage ''TB_PLAN_ITEM'',' +
           '''ZGUID,ZPLAN_GUID,ZNAME,ZSTATUS,ZPBDATE,ZPEDATE,ZFBDATE,ZFEDATE,'+
-          'ZCHILDCOUNT,ZPASSCOUNT,ZMAINDEVE,ZSORT,ZREMARK,ZPROJECTTIME,ZCREATEDATE'', ' +
+          'ZCHILDCOUNT,ZPASSCOUNT,ZMAINDEVE,ZSORT,ZREMARK,ZPROJECTTIME,ZCREATEDATE,ZMAILTO'', ' +
           '''%s'',20,%d,%d,1,''%s''';
 begin
 
@@ -981,11 +989,11 @@ var
   mySQL : string;
 const
   gl_SQLTXT1 = 'insert TB_PLAN_ITEM (ZGUID,ZPLAN_GUID,ZNAME,ZSTATUS,' +
-    'ZPBDATE,ZPEDATE,ZFBDATE,ZFEDATE,ZCHILDCOUNT,ZPASSCOUNT,ZMAINDEVE,ZSORT,ZREMARK,ZPROJECTTIME,ZCREATEDATE ) '+
-    'values(''%s'',''%s'',''%s'',%d,''%s'',''%s'',''%s'',''%s'',%d,%d,%d,%d,''%s'',%f,''%s'')';
+    'ZPBDATE,ZPEDATE,ZFBDATE,ZFEDATE,ZCHILDCOUNT,ZPASSCOUNT,ZMAINDEVE,ZSORT,ZREMARK,ZPROJECTTIME,ZCREATEDATE,ZMAILTO) '+
+    'values(''%s'',''%s'',''%s'',%d,''%s'',''%s'',''%s'',''%s'',%d,%d,%d,%d,''%s'',%f,''%s'',''%s'')';
   gl_SQLTXT2 = 'update TB_PLAN_ITEM set ZPLAN_GUID=''%s'',ZNAME=''%s'',ZSTATUS=%d, ' +
     'ZPBDATE=''%s'',ZPEDATE=''%s'',ZFBDATE=''%s'',ZFEDATE=''%s'',ZCHILDCOUNT=%d, ' +
-    'ZPASSCOUNT=%d,ZMAINDEVE=%d,ZSORT=%d,ZREMARK=''%s'',ZPROJECTTIME=%f,ZCREATEDATE=''%s'' where ZGUID=''%s''';
+    'ZPASSCOUNT=%d,ZMAINDEVE=%d,ZSORT=%d,ZREMARK=''%s'',ZPROJECTTIME=%f,ZCREATEDATE=''%s'',ZMAILTO=''%s'' where ZGUID=''%s''';
 begin
   //
   if fLoading then Exit;
@@ -1007,7 +1015,8 @@ begin
       DataSet.FieldByName('ZSORT').AsInteger,
       DataSet.FieldByName('ZREMARK').AsString,
       DataSet.FieldByName('ZPROJECTTIME').AsFloat,
-      DataSet.FieldByName('ZCREATEDATE').AsString]);
+      DataSet.FieldByName('ZCREATEDATE').AsString,
+      DataSet.FieldByName('ZMAILTO').AsString]);
     ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
     DataSet.FieldByName('ZISNEW').AsBoolean := False;
   end
@@ -1027,6 +1036,7 @@ begin
       DataSet.FieldByName('ZREMARK').AsString,
       DataSet.FieldByName('ZPROJECTTIME').AsFloat,
       DataSet.FieldByName('ZCREATEDATE').AsString,
+      DataSet.FieldByName('ZMAILTO').AsString,
       DataSet.FieldByName('ZGUID').AsString]);
     ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
   end;
@@ -2016,5 +2026,94 @@ begin
   inherited;
   cdsPlanDetail.Cancel;
 end;
+
+procedure TPlanManageClientDlg.actItem_SendMailExecute(Sender: TObject);
+var
+  myto : string;
+  mytitle : string;
+  mycontent : string;
+  mystr : string;
+  c : Integer;
+begin
+
+  ShowProgress('发送邮件...',0);
+  try
+    mytitle := cdsPlanItem.FieldByName('ZNAME').AsString;
+
+    mystr   := Format('%s(%d)',[
+      cdsPlanItem.FieldByName('ZMAINDEVENAME').AsString,
+      cdsPlanItem.FieldByName('ZMAINDEVE').AsInteger]);
+    //查子任务的人
+    cdsPlanDetail.EnableConstraints;
+    try
+      mycontent := '计划开始时间:' + cdsPlanItem.FieldByName('ZPBDATE').AsString + ' 计划结束时间:' + cdsPlanItem.FieldByName('ZPEDATE').AsString + #13#10 +
+                   '工期要求(工日):' +  cdsPlanItem.FieldByName('ZPROJECTTIME').AsString;
+      cdsPlanDetail.First;
+      c := 0;
+      while not cdsPlanDetail.Eof do
+      begin
+        mystr := mystr + ';'+ Format('%s(%d)',[
+          cdsPlanDetail.FieldByName('ZDEVENAME').AsString,
+          cdsPlanDetail.FieldByName('ZDEVE').AsInteger]);
+
+        inc(c);
+        mycontent := mycontent + #13#10  +
+          IntToStr(c) +'.=================================================================' + #13#10 
+          + cdsPlanDetail.FieldByName('ZNAME').AsString + #10#13
+          + '负责人:' + cdsPlanDetail.fieldByName('ZDEVENAME').AsString + #13#10
+          +  cdsPlanDetail.FieldByName('ZCONTENT').AsString;
+
+        cdsPlanDetail.Next;
+      end;
+    finally
+      cdsPlanDetail.DisableConstraints;
+    end;
+    mycontent := mycontent + #13#10 + '此邮件由开发管理系统发出，请勿直接回复！';
+
+    //其他人
+    if cdsPlanItem.FieldByName('ZMAILTO').AsString <> '' then
+      mystr := mystr + ';' + cdsPlanItem.FieldByName('ZMAILTO').AsString;
+
+    myto    := GetMailAdder(mystr);
+
+    ClientSystem.fDbOpr.MailToEx(myto,
+      PChar('(项目计划)' + mytitle),PChar(mycontent));
+  finally
+    HideProgress;
+  end;
+end;
+
+procedure TPlanManageClientDlg.actItem_SendMailUpdate(Sender: TObject);
+begin
+  (Sender as TAction).Enabled := cdsPlanItem.State in [dsBrowse];
+end;
+
+procedure TPlanManageClientDlg.dblkcbbSelectUsermailCloseUp(
+  Sender: TObject);
+var
+  mystr : String;
+  myaddstr : string;
+begin
+  if (Sender as TDBLookupComboBox).Text = '' then Exit;
+
+  if cdsPlanItem.State in [dsBrowse] then
+    cdsPlanItem.Edit;
+
+  myaddstr := format('%s(%d)',[
+      DM.cdsUser.FieldByName('ZNAME').AsString,
+      DM.cdsUser.FieldByName('ZID').AsInteger]);
+
+  myStr := cdsPlanItem.FieldByName('ZMAILTO').AsString;
+  if mystr <> '' then
+  begin
+    if Pos(myaddstr,mystr) <= 0 then
+      myStr := myStr + ';' + myaddstr;
+  end
+  else
+    myStr := myStr + myaddstr;
+
+  cdsPlanItem.FieldByName('ZMAILTO').AsString := myStr;
+end;
+
 
 end.
