@@ -1586,6 +1586,11 @@ inherited BugManageDlg: TBugManageDlg
       OnExecute = actAttach_downfileExecute
       OnUpdate = actAttach_downfileUpdate
     end
+    object actAttach_BitToDesktop: TAction
+      Category = #38468#20214
+      Caption = #25130#22270'...'
+      OnExecute = actAttach_BitToDesktopExecute
+    end
   end
   object pmBugTree: TPopupMenu
     AutoHotkeys = maManual
@@ -1779,6 +1784,9 @@ inherited BugManageDlg: TBugManageDlg
     end
     object N16: TMenuItem
       Action = actAttach_downfile
+    end
+    object N17: TMenuItem
+      Action = actAttach_BitToDesktop
     end
   end
   object ilAttach: TImageList
