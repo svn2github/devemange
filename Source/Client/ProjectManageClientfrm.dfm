@@ -1,6 +1,6 @@
 inherited ProjectManageClientDlg: TProjectManageClientDlg
-  Left = 98
-  Top = 90
+  Left = 53
+  Top = 53
   Width = 1272
   Height = 660
   Caption = #39033#30446#31649#29702
@@ -786,7 +786,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
             Top = 0
             Width = 731
             Height = 457
-            ActivePage = tsDesign
+            ActivePage = tsPanl2
             Align = alClient
             TabOrder = 0
             TabPosition = tpBottom
@@ -1248,7 +1248,7 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
                   Width = 330
                   Height = 173
                   Align = alBottom
-                  Date = 40763.600531273150000000
+                  Date = 40763.790959444440000000
                   ParentShowHint = False
                   ShowHint = False
                   TabOrder = 2
@@ -1569,10 +1569,9 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
                   Color = clBtnFace
                   DataField = 'ZPRO_ID'
                   DataSource = dsTask
-                  ImeName = #26497#21697#20116#31508#36755#20837#27861
                   KeyField = 'ZID'
                   ListField = 'ZNAME'
-                  ListSource = dsProjectItem
+                  ListSource = dsCloneProjectItem
                   ReadOnly = True
                   TabOrder = 11
                 end
@@ -1590,12 +1589,12 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
     BeforeDelete = cdsProjectItemBeforeDelete
     OnNewRecord = cdsProjectItemNewRecord
     Left = 24
-    Top = 8
+    Top = 5
   end
   object dsProjectItem: TDataSource
     DataSet = cdsProjectItem
     Left = 24
-    Top = 32
+    Top = 35
   end
   object ActionList1: TActionList
     Images = DM.ImageList1
@@ -1988,5 +1987,19 @@ inherited ProjectManageClientDlg: TProjectManageClientDlg
       Caption = #25335#36125#25991#26412
       OnClick = mniN8CopyTxtClick
     end
+  end
+  object cdsCloneProjectItem: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    BeforePost = cdsProjectItemBeforePost
+    BeforeDelete = cdsProjectItemBeforeDelete
+    OnNewRecord = cdsProjectItemNewRecord
+    Left = 61
+    Top = 5
+  end
+  object dsCloneProjectItem: TDataSource
+    DataSet = cdsCloneProjectItem
+    Left = 64
+    Top = 35
   end
 end

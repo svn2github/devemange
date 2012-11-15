@@ -241,6 +241,8 @@ type
     mniN8CopyTxt: TMenuItem;
     btnTask_Finally: TBitBtn;
     lbl6: TLabel;
+    cdsCloneProjectItem: TClientDataSet;
+    dsCloneProjectItem: TDataSource;
     procedure actPro_AddExecute(Sender: TObject);
     procedure cbEditProItemClick(Sender: TObject);
     procedure actPro_AddUpdate(Sender: TObject);
@@ -1046,6 +1048,9 @@ begin
         mycds.Next;
       end;
       cdsProjectItem.First;
+
+      cdsCloneProjectItem.CloneCursor(cdsProjectItem,True);
+
     finally
       cdsProjectItem.EnableControls;
     end;
@@ -1075,7 +1080,8 @@ begin
     cdsProjectItem.FieldByName('ZID').AsInteger,
     atInsert) then
     Exit;
-
+  
+  
   myform := TNewTaskDlg.Create(nil);
   try
     myform.cdsCloneProjectName.CloneCursor(cdsProjectItem,True);
