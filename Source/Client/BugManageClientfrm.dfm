@@ -679,7 +679,7 @@ inherited BugManageDlg: TBugManageDlg
               end
               object Label11: TLabel
                 Left = 301
-                Top = 60
+                Top = 56
                 Width = 38
                 Height = 15
                 Anchors = [akLeft, akBottom]
@@ -687,7 +687,7 @@ inherited BugManageDlg: TBugManageDlg
               end
               object DBText3: TDBText
                 Left = 343
-                Top = 60
+                Top = 56
                 Width = 476
                 Height = 17
                 Cursor = crHandPoint
@@ -708,7 +708,7 @@ inherited BugManageDlg: TBugManageDlg
               end
               object Label12: TLabel
                 Left = 7
-                Top = 59
+                Top = 56
                 Width = 45
                 Height = 15
                 Anchors = [akLeft, akBottom]
@@ -716,7 +716,7 @@ inherited BugManageDlg: TBugManageDlg
               end
               object DBText4: TDBText
                 Left = 52
-                Top = 59
+                Top = 56
                 Width = 195
                 Height = 17
                 Anchors = [akLeft, akBottom]
@@ -752,7 +752,7 @@ inherited BugManageDlg: TBugManageDlg
               end
               object dbtxtZFILESAVE: TDBText
                 Left = 728
-                Top = 60
+                Top = 56
                 Width = 89
                 Height = 17
                 Cursor = crHandPoint
