@@ -114,7 +114,6 @@ type
     actSvnLog_LastPage: TAction;
     actSvnLog_AllProject: TAction;
     btnSvnLog_AllProject: TBitBtn;
-    btnEditSVNRUL: TBitBtn;
     cdsCloneAntList: TClientDataSet;
     act_ApplyBuild: TAction;
     btnApplyBuild: TBitBtn;
@@ -158,6 +157,8 @@ type
     actSvnLog_FindAuthor: TAction;
     pm1: TPopupMenu;
     N1: TMenuItem;
+    lbl15: TLabel;
+    btnEditSVNRUL: TBitBtn;
     procedure act_ProAddExecute(Sender: TObject);
     procedure cdsAntListNewRecord(DataSet: TDataSet);
     procedure act_ProSaveUpdate(Sender: TObject);

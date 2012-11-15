@@ -1,6 +1,6 @@
 inherited AntManageClientDlg: TAntManageClientDlg
-  Left = 171
-  Top = 213
+  Left = 141
+  Top = 126
   Width = 1066
   Height = 588
   Caption = #32534#35793#37096#32626
@@ -451,6 +451,13 @@ inherited AntManageClientDlg: TAntManageClientDlg
           Height = 15
           Caption = '(java'#39033#30446#20889'build.xml'#36335#24452')'
         end
+        object lbl15: TLabel
+          Left = 376
+          Top = 135
+          Width = 47
+          Height = 15
+          Caption = #21462'SVN:'
+        end
         object dbedtZNAME: TDBEdit
           Left = 81
           Top = 11
@@ -557,21 +564,12 @@ inherited AntManageClientDlg: TAntManageClientDlg
         object dbedtZSVN_URL: TDBEdit
           Left = 82
           Top = 130
-          Width = 722
+          Width = 279
           Height = 23
           DataField = 'ZSVN_URL'
           DataSource = dsAntList
           TabOrder = 11
           Visible = False
-        end
-        object btnEditSVNRUL: TBitBtn
-          Left = 80
-          Top = 129
-          Width = 726
-          Height = 25
-          Caption = #32534#36753#36335#24452
-          TabOrder = 12
-          OnClick = btnEditSVNRULClick
         end
         object dbedtZWEBURL: TDBEdit
           Left = 364
@@ -580,7 +578,7 @@ inherited AntManageClientDlg: TAntManageClientDlg
           Height = 23
           DataField = 'ZWEBURL'
           DataSource = dsAntList
-          TabOrder = 13
+          TabOrder = 12
         end
         object dblkcbbZLANGTYPE: TDBLookupComboBox
           Left = 81
@@ -592,7 +590,7 @@ inherited AntManageClientDlg: TAntManageClientDlg
           KeyField = 'LangID'
           ListField = 'LangName'
           ListSource = dsLangType
-          TabOrder = 14
+          TabOrder = 13
         end
         object dbedtZGUID: TDBEdit
           Left = 813
@@ -601,19 +599,28 @@ inherited AntManageClientDlg: TAntManageClientDlg
           Height = 23
           DataField = 'ZGUID'
           DataSource = dsAntList
-          TabOrder = 15
+          TabOrder = 14
           Visible = False
         end
         object dbedtZLOCALSVNBAT: TDBEdit
-          Left = 811
-          Top = 158
-          Width = 121
+          Left = 426
+          Top = 131
+          Width = 375
           Height = 23
           Hint = #29992#20110#33258#21160#33719#21462'SVN'#20195#30721#20043#29992#26159'bat'#25991#20214
           DataField = 'ZLOCALSVNBAT'
           DataSource = dsAntList
-          TabOrder = 16
+          TabOrder = 15
           Visible = False
+        end
+        object btnEditSVNRUL: TBitBtn
+          Left = 80
+          Top = 129
+          Width = 726
+          Height = 25
+          Caption = #32534#36753#36335#24452
+          TabOrder = 16
+          OnClick = btnEditSVNRULClick
         end
       end
     end
