@@ -350,6 +350,27 @@ begin
                   WinExecExW(PChar(GetShortName(fPyDir+'\dosvn.bat ' + myCompilever)),PChar(GetShortName(fPyDir)),0)
                 end;
 
+                mysvnbat := mycommandsl.Values['SvnBat'];
+                if FileExists(mysvnbat) then
+                begin
+                  //1.更新svn内容
+                  //GetShortName(mybfile)
+                  mysvndir := ExtractFileDir(mysvnbat);
+                  SetCurrentDir(mysvndir); //设置当前目录
+                  if FileExists(mysvndir+'\b.txt') then
+                    DeleteFile(mysvndir+'\b.txt');
+                    
+                  if WinExecAndWait32_v1(PChar(GetShortName(mysvnbat)+ ' ' + myCompilever)
+                      ,SW_HIDE)<> 0 then
+                  begin
+                    AThread.Connection.WriteLn('取SVN出错，无法取出...');
+                    mycommandsl.free;
+                    Exit;
+                  end;
+                  SetCurrentDir(fPyDir); //设置当前目录
+                end;
+                
+
                 if myCompilever <> '' then
                   cmdcommand := Format('cmd /c %s %s %s > %s',[edt1.Text,
                     GetShortName(mybat), myCompilever,GetShortName(mybfile)])
