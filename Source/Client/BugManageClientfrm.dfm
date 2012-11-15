@@ -805,8 +805,8 @@ inherited BugManageDlg: TBugManageDlg
           object lbBugCaption: TLabel
             Left = 0
             Top = 0
-            Width = 96
-            Height = 15
+            Width = 725
+            Height = 18
             Align = alClient
             Caption = 'lbBugCaption'
             Color = clGray
@@ -1591,6 +1591,12 @@ inherited BugManageDlg: TBugManageDlg
       Caption = #25130#22270'...'
       OnExecute = actAttach_BitToDesktopExecute
     end
+    object actAttach_Openfile: TAction
+      Category = #38468#20214
+      Caption = #25171#24320#25991#20214'...'
+      OnExecute = actAttach_OpenfileExecute
+      OnUpdate = actAttach_OpenfileUpdate
+    end
   end
   object pmBugTree: TPopupMenu
     AutoHotkeys = maManual
@@ -1784,6 +1790,9 @@ inherited BugManageDlg: TBugManageDlg
     end
     object N16: TMenuItem
       Action = actAttach_downfile
+    end
+    object N18: TMenuItem
+      Action = actAttach_Openfile
     end
     object N17: TMenuItem
       Action = actAttach_BitToDesktop

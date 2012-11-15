@@ -4,7 +4,6 @@ uses
   FastMM4,
   FastCode,
   FastMove,
-
   Forms,
   Mainfrm in 'Mainfrm.pas' {MainDlg},
   ClinetSystemUnits in 'ClinetSystemUnits.pas',
@@ -34,7 +33,8 @@ uses
   ExtendWebManagefrm in 'ExtendWebManagefrm.pas' {ExtendWebManageDlg},
   DeveCalendarfrm in 'DeveCalendarfrm.pas' {DeveCalendarDlg},
   Activationfrm in 'Activationfrm.pas' {ActivationDlg},
-  WarnBuckleScoreClientfrm in 'WarnBuckleScoreClientfrm.pas' {WarnBuckleScoreClientDlg};
+  WarnBuckleScoreClientfrm in 'WarnBuckleScoreClientfrm.pas' {WarnBuckleScoreClientDlg},
+  BitmapFromDesktopfrm in 'BitmapFromDesktopfrm.pas' {BitmapFromDesktopfrmDlg};
 
 {$R *.res}
 {$R resource.res}

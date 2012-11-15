@@ -234,6 +234,8 @@ type
     edtBugCode: TEdit;
     actAttach_BitToDesktop: TAction;
     N17: TMenuItem;
+    actAttach_Openfile: TAction;
+    N18: TMenuItem;
     procedure actBug_AddDirExecute(Sender: TObject);
     procedure tvProjectExpanding(Sender: TObject; Node: TTreeNode;
       var AllowExpansion: Boolean);
@@ -319,6 +321,8 @@ type
     procedure edtBugCodeKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure actAttach_BitToDesktopExecute(Sender: TObject);
+    procedure actAttach_OpenfileUpdate(Sender: TObject);
+    procedure actAttach_OpenfileExecute(Sender: TObject);
   private
     fPageType : TPageTypeRec; //分页处理
     fHighQuery : TBugHighQueryDlg;
@@ -3303,7 +3307,8 @@ end;
 
 procedure TBugManageDlg.actAttach_AddFileUpdate(Sender: TObject);
 begin
-  (Sender as TAction).Enabled := cdsBugItem.State = dsBrowse;
+  (Sender as TAction).Enabled := cdsBugItem.Active and
+  (cdsBugItem.State = dsBrowse);
 end;
 
 procedure TBugManageDlg.actAttach_downfileExecute(Sender: TObject);
@@ -3413,5 +3418,39 @@ begin
   end;
 
 end;
+
+procedure TBugManageDlg.actAttach_OpenfileUpdate(Sender: TObject);
+begin
+  (Sender as TAction).Enabled := Assigned(lvAttach.Selected) and
+  Assigned(lvAttach.Selected.Data);
+end;
+
+procedure TBugManageDlg.actAttach_OpenfileExecute(Sender: TObject);
+var
+  myfilename : string;
+  myData : PAttachFileRec;
+  myi : Integer;
+  r    : HINST;
+begin
+  myData := lvAttach.Selected.Data;
+  myfilename := ClientSystem.fTempDir + '\' + myData^.fName;
+
+  myi := ClientSystem.fDbOpr.DownFile(myData^.ffileid,myfilename);
+  if myi = 0 then
+  begin
+    ClientSystem.fDeleteFiles.Add(myfilename); //加载清空文件的内容.
+    //打开文件
+    r:=ShellExecute(Handle,'open',PChar(myfilename),
+      nil,PChar(ExtractFileDir(myfilename)),SW_SHOW);
+
+    //调用打开方式对话框
+    if r =SE_ERR_NOASSOC then//如果没有关联的打开方式
+      ShellExecute(Handle, 'open', 'Rundll32.exe',
+        PChar('shell32.dll,OpenAs_RunDLL ' + myfilename), nil, SW_SHOWNORMAL);
+  end
+  else
+    Application.MessageBox(PChar('下载失败,错误号:' + inttostr(myi)),'提示',MB_ICONERROR);
+end;
+
 
 end.
