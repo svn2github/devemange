@@ -12,17 +12,17 @@ type
     idtcpsrvr1: TIdTCPServer;
     grp2: TGroupBox;
     btn2: TButton;
-    mmo1: TMemo;
     edt2: TEdit;
     edt3: TEdit;
     btn4: TButton;
     btn7: TButton;
-    lbl1: TLabel;
-    lbl2: TLabel;
     pm1: TPopupMenu;
     N1: TMenuItem;
     edt1: TEdit;
     lbl3: TLabel;
+    mmo1: TMemo;
+    lbl2: TLabel;
+    lbl1: TLabel;
     procedure idtcpsrvr1Connect(AThread: TIdPeerThread);
     procedure btn2Click(Sender: TObject);
     procedure idtcpsrvr1Exception(AThread: TIdPeerThread;
@@ -194,7 +194,7 @@ var
 begin
   if not AThread.Terminated and AThread.Connection.Connected then
    begin
-
+      mylog := TStringList.Create;
       try
         mycommand := AThread.Connection.ReadLnWait(100);
         mmo1.Lines.Add( AThread.Connection.Socket.Binding.PeerIP + ':' +mycommand );
@@ -210,18 +210,20 @@ begin
               //java
               if (mycommandsl.Count >1) and (strtointdef(mycommandsl.Values['Lang'],0) = 1) then
               begin
-                mylog := TStringList.Create;
-                //1.取出snv
-                mysvnbat := ExtractFileDir(mycommandsl.Values['SvnBat']) + '\b.txt';
-                if FileExists(mysvnbat) then
-                begin
-                  mylog.LoadFromFile(mysvnbat);
-                end;
 
-                //2.取出build.xml
+
                 mybat := mycommandsl.Values['PYFILE'];
                 if mybat <> '' then
                   fPyDir := ExtractFileDir(mybat);
+
+                //1.取出snv
+                //mysvnbat := ExtractFileDir(mycommandsl.Values['SvnBat']) + '\b.txt';
+                if FileExists(fPyDir+'\svn_log.txt') then
+                begin
+                  mylog.LoadFromFile(fPyDir+'\svn_log.txt');
+                end;
+
+                //2.取出build.xml
                 mybfile := fPyDir + '\b.txt';
                 mysl := TStringList.Create;
                 if FileExists(mybfile) then
@@ -247,14 +249,23 @@ begin
                   mybat := mycommandsl.Values['PYFILE'];
                   if mybat <> '' then
                     fPyDir := ExtractFileDir(mybat);
+
+                  if FileExists(fPyDir+'\svn_log.txt') then
+                  begin
+                    mylog.LoadFromFile(fPyDir+'\svn_log.txt');
+                  end;
+
                   mybfile := fPyDir + '\b.txt';
                   mysl := TStringList.Create;
                   if FileExists(mybfile) then
                   begin
                     mysl.LoadFromFile(mybfile);
-                    AThread.Connection.WriteInteger(mysl.Count);
-                    for i:=0 to mysl.Count-1  do
-                      AThread.Connection.WriteLn(mysl.Strings[i]);
+                    for i:=0 to mysl.Count -1 do
+                      mylog.Add(mysl.Strings[i]);
+
+                    AThread.Connection.WriteInteger(mylog.Count);
+                    for i:=0 to mylog.Count-1  do
+                      AThread.Connection.WriteLn(mylog.Strings[i]);
                   end
                   else begin
                     mmo1.Lines.Add(Format('无法找到编译结果文件 %s，可能还没有编译完，请稍候...',[mybfile]));
@@ -267,14 +278,22 @@ begin
                   mybat := Copy(mycommand,2,maxint);
                   if mybat <> '' then
                     fPyDir := ExtractFileDir(mybat);
+                  if FileExists(fPyDir+'\svn_log.txt') then
+                  begin
+                    mylog.LoadFromFile(fPyDir+'\svn_log.txt');
+                  end;
+
                   mybfile := fPyDir + '\b.txt';
                   mysl := TStringList.Create;
                   if FileExists(mybfile) then
                   begin
                     mysl.LoadFromFile(mybfile);
-                    AThread.Connection.WriteInteger(mysl.Count);
-                    for i:=0 to mysl.Count-1  do
-                      AThread.Connection.WriteLn(mysl.Strings[i]);
+                    for i:=0 to mysl.Count -1 do
+                      mylog.Add(mysl.Strings[i]);
+
+                    AThread.Connection.WriteInteger(mylog.Count);
+                    for i:=0 to mylog.Count-1  do
+                      AThread.Connection.WriteLn(mylog.Strings[i]);
                   end
                   else begin
                     mmo1.Lines.Add(Format('无法找到编译结果文件 %s，可能还没有编译完，请稍候...',[mybfile]));
@@ -289,6 +308,7 @@ begin
               //
               // 转过来的是一个TStringList.txt 值  2012-7-2
               //
+              mylog.Clear;
               if mycommandsl.Values['CPyFileName'] <> '' then
                 mybat := mycommandsl.Values['CPyFileName']
               else
@@ -328,6 +348,11 @@ begin
                     mycommandsl.free;
                     Exit;
                   end;
+                  if FileExists(mysvndir+'\b.txt') then
+                  begin
+                    mylog.LoadFromFile(mysvndir+'\b.txt');
+                    mylog.SaveToFile(fPyDir+'\svn_log.txt');
+                  end;
                   SetCurrentDir(fPyDir); //设置当前目录
                 end;
 
@@ -366,6 +391,11 @@ begin
                     AThread.Connection.WriteLn('取SVN出错，无法取出...');
                     mycommandsl.free;
                     Exit;
+                  end;
+                  if FileExists(mysvndir+'\b.txt') then
+                  begin
+                    mylog.LoadFromFile(mysvndir+'\b.txt');
+                    mylog.SaveToFile(fPyDir+'\svn_log.txt');
                   end;
                   SetCurrentDir(fPyDir); //设置当前目录
                 end;
@@ -408,6 +438,7 @@ begin
         AThread.Connection.WriteLn('编译出错...');
       end;
 
+      mylog.Free;
 
    end;
 end;
