@@ -638,7 +638,22 @@ create table TB_ANT(
 	ZLOCALSVNBAT varchar(200),       --svn更新bat文件。
 
 	
+	
 	constraint PK_TB_ANT primary key(ZGUID)  
+)
+go
+
+/*编译日志 2013-6-20*/
+create table TB_ANT_LOG(
+	ZID  int IDENTITY (1, 1) not null,
+	ZANT_GUID varchar(36) not null,
+	ZPRO_ID int,        --对应的项目
+	ZUSER_ID int ,      --谁在编译
+	ZVERSION int,       --编译版本号
+	ZDATE  datetime,    --编译时间
+	ZLOG text,          --编译日志，最好是结果就行，不要太多，只记出错的内容 
+
+	constraint PK_TB_ANT_LOG primary key(ZID,ZANT_GUID) 
 )
 go
 
@@ -925,6 +940,16 @@ create table TB_MSG(
 )
 go
 
+
+/*题库表*/
+
+
+/*题库内容表*/
+
+
+/*研发人员等级表*/
+
+/*等级对应的题库表*/
 
 
 
