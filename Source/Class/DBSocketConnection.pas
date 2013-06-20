@@ -125,7 +125,7 @@ resourcestring
     try
       p := Pointer(Integer(Data.Memory) + Data.BytesReserved);
       Size := PInteger(p)^;
-      if (Size = 0) or (Size<100) then Exit;
+      if (Size = 0) or (Size<=100) then Exit;
       p := Pointer(Integer(p) + SizeOf(Size));
       InStream.Write(p^, Data.Size - SizeOf(Size));
       OutStream := TMemoryStream.Create;
@@ -160,7 +160,7 @@ resourcestring
     try
       InStream.Write(Pointer(Integer(Data.Memory) + Data.BytesReserved)^, Data.Size);
       Size := InStream.Size;
-      if (Size = 0) or (Size<100) then Exit;
+      if (Size = 0) or (Size<=100) then Exit;
       OutStream := TMemoryStream.Create;
       try
         ZStream := TZCompressionStream.Create(OutStream,zcFastest);

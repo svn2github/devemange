@@ -159,6 +159,16 @@ type
     N1: TMenuItem;
     lbl15: TLabel;
     btnEditSVNRUL: TBitBtn;
+    dbgrdAntLog: TDBGrid;
+    spl5: TSplitter;
+    btnAntLog: TBitBtn;
+    act_BuildAntLog: TAction;
+    cdsAntLog: TClientDataSet;
+    dsAntLog: TDataSource;
+    act_BuildAntLog_All: TAction;
+    pmAntLog: TPopupMenu;
+    N2: TMenuItem;
+    pnl8: TPanel;
     procedure act_ProAddExecute(Sender: TObject);
     procedure cdsAntListNewRecord(DataSet: TDataSet);
     procedure act_ProSaveUpdate(Sender: TObject);
@@ -213,6 +223,11 @@ type
     procedure actSvnLog_FindTxtExecute(Sender: TObject);
     procedure actSvnLog_FindAuthorUpdate(Sender: TObject);
     procedure actSvnLog_FindAuthorExecute(Sender: TObject);
+    procedure act_BuildAntLogExecute(Sender: TObject);
+    procedure dbgrdAntLogDrawColumnCell(Sender: TObject; const Rect: TRect;
+      DataCol: Integer; Column: TColumn; State: TGridDrawState);
+    procedure act_BuildAntLog_AllUpdate(Sender: TObject);
+    procedure act_BuildAntLog_AllExecute(Sender: TObject);
   private
     { Private declarations }
     fSVNCommitPageRec :TSVNCommitPageRec;
@@ -510,6 +525,7 @@ var
   myUStr : string;
 const
   gl_SQLTXT = 'update TB_STATE set ZSTATECODE=%d where ZID=%d';
+  gl_SQLTXT2 = 'insert TB_ANT_LOG(ZANT_GUID,ZPRO_ID,ZUSER_ID,ZVERSION,ZDATE,ZLOG) values(''%s'',%d,%d,%d,''%s'',''%s'')';
 begin
   mystr := 'A=A;' + 'PYFILE=' + cdsAntList.FieldByName('ZPYFILE').AsString + ';' +
            'SvnBat=' + cdsAntList.FieldByName('ZLOCALSVNBAT').AsString + ';' +
@@ -601,8 +617,19 @@ begin
   end;
   lstResult.ItemIndex := linenum;
   lstResult.Tag := linenum;
-
   lstResult.Items.EndUpdate;
+
+  //保存编译结果到日志内
+  mySQL := Format(gl_SQLTXT2,[
+    cdsAntList.FieldByName('ZGUID').AsString,
+    cdsAntList.FieldByName('ZPRO_ID').AsInteger,
+    ClientSystem.fEditer_id,
+    cdsAntList.FieldByName('ZSVN').AsInteger,
+    DateTimeToStr(ClientSystem.SysNow),
+    lstErrors.Items.Text]);
+
+  ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
+
 end;
 
 procedure TAntManageClientDlg.act_BuildProjectExecute(Sender: TObject);
@@ -1496,6 +1523,139 @@ begin
   fSVNCommitPageRec.fWhere := mystr;  
   fSVNCommitPagerec.fcount := GetSvnCommitPageCount(mystr);
   LoadSvnCommit(mystr,fSVNCommitPageRec.findex);
+end;
+
+procedure TAntManageClientDlg.act_BuildAntLogExecute(Sender: TObject);
+var
+  mysql : string;
+  mycds : TClientDataSet;
+  myfield : TFieldDef;
+  i : Integer;
+const
+  gl_SQLTXT = 'select top 20 ZPRO_ID,ZUSER_ID,ZVERSION,ZDATE,ZLOG from TB_ANT_LOG where ZANT_GUID=''%s'' order by ZID';
+begin
+  //
+  mycds := TClientDataSet.Create(nil);
+  try
+
+    mysql := Format(gl_SQLTXT,[cdsAntList.FieldByName('ZGUID').AsString]);
+    mycds.data := ClientSystem.fDbOpr.ReadDataSet(PChar(mysql));
+    if cdsAntLog.Fields.Count=0 then
+    begin
+      if cdsAntLog.Active then
+        cdsAntLog.Close;
+      cdsAntLog.Fields.Clear;
+      cdsAntLog.FieldDefs.Assign(mycds.FieldDefs);
+
+      for i:=0 to cdsAntLog.FieldDefs.Count -1 do
+      begin
+        cdsAntLog.FieldDefs[i].CreateField(cdsAntLog).Alignment := taLeftJustify;
+      end;
+
+      //由谁创建
+      with cdsAntLog do
+      begin
+        myfield := FieldDefs.AddFieldDef;
+        myfield.Name :='ZNAME';
+        myfield.DataType := ftString;
+        myfield.Size := 50;
+        with myfield.CreateField(cdsAntLog) do
+        begin
+          FieldKind := fkLookup;
+          KeyFields := 'ZUSER_ID';
+          LookupDataSet := DM.cdsUserAll;
+          LookupKeyFields := 'ZID';
+          LookupResultField := 'ZNAME';
+        end;
+      end;
+
+      cdsAntLog.CreateDataSet;
+      
+    end;
+
+
+    cdsAntLog.First;
+    while not cdsAntLog.Eof do
+      cdsAntLog.Delete;
+
+    //写入数据
+    mycds.First;
+    while not mycds.Eof do
+    begin
+      cdsAntLog.Append;
+      for i:=0 to mycds.Fields.Count -1 do
+      begin
+        cdsAntLog.FieldByName(mycds.Fields[i].FieldName).AsVariant :=
+          mycds.fieldByName(mycds.Fields[i].FieldName).AsVariant;
+      end;
+      cdsAntLog.Post;
+      mycds.Next;
+    end;
+        
+
+
+  finally
+    mycds.Free;
+  end;
+  
+end;
+
+
+procedure TAntManageClientDlg.dbgrdAntLogDrawColumnCell(Sender: TObject;
+  const Rect: TRect; DataCol: Integer; Column: TColumn;
+  State: TGridDrawState);
+begin
+  if (cdsAntLog.RecNo mod 2  = 0) and not ( gdSelected in State)  then
+    dbgrdAntLog.Canvas.Brush.Color := clSilver;
+
+  dbgrdAntLog.DefaultDrawColumnCell(Rect,DataCol,Column,State);
+end;
+
+procedure TAntManageClientDlg.act_BuildAntLog_AllUpdate(Sender: TObject);
+begin
+  (Sender as TAction).Enabled := cdsAntLog.Fields.Count >0;
+end;
+
+procedure TAntManageClientDlg.act_BuildAntLog_AllExecute(Sender: TObject);
+var
+  mysql : string;
+  mycds : TClientDataSet;
+  i : Integer;
+const
+  gl_SQLTXT = 'select ZPRO_ID,ZUSER_ID,ZVERSION,ZDATE,ZLOG from TB_ANT_LOG where ZANT_GUID=''%s'' order by ZID';
+begin
+  //
+  mycds := TClientDataSet.Create(nil);
+  ShowProgress('读取数据...',0);
+  try
+
+    mysql := Format(gl_SQLTXT,[cdsAntList.FieldByName('ZGUID').AsString]);
+    mycds.data := ClientSystem.fDbOpr.ReadDataSet(PChar(mysql));
+
+
+    cdsAntLog.First;
+    while not cdsAntLog.Eof do
+      cdsAntLog.Delete;
+
+    //写入数据
+    mycds.First;
+    while not mycds.Eof do
+    begin
+      cdsAntLog.Append;
+      for i:=0 to mycds.Fields.Count -1 do
+      begin
+        cdsAntLog.FieldByName(mycds.Fields[i].FieldName).AsVariant :=
+          mycds.fieldByName(mycds.Fields[i].FieldName).AsVariant;
+      end;
+      cdsAntLog.Post;
+      mycds.Next;
+    end;
+
+  finally
+    mycds.Free;
+    HideProgress;
+  end;
+  
 end;
 
 end.

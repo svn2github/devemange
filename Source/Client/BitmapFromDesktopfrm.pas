@@ -104,7 +104,12 @@ begin
   ReleaseDC(GetDesktopWindow, DC);
 //  Result := Bitmap;
   //----------------
-  if GetObject(Bitmap, SizeOf(TBitmap), @BM) = 0 then Exit; //GetObject 返回的对象赋给对象变量
+  if GetObject(Bitmap, SizeOf(TBitmap), @BM) = 0 then
+  begin
+    Result := False;
+    Exit; //GetObject 返回的对象赋给对象变量
+  end;
+
   BitCount := ABitCount;
   {
   case cbb1.ItemIndex of
@@ -174,6 +179,7 @@ begin
   //Form1.Image1.Picture.Bitmap.LoadFromStream(Stream);
   //Stream.SaveToFile('测试.bmp');
   //Stream.Free;
+  Result := True;
 end;
 
 
@@ -198,6 +204,7 @@ begin
       5: myBitCount:=32;
     end;
 
+    myBitCount := 0;
     if GetAPIBitmapFromDesktop(myms,myBitCount) then
     begin
       myms.Position := 0;

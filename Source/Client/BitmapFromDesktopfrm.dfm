@@ -4,6 +4,7 @@ inherited BitmapFromDesktopfrmDlg: TBitmapFromDesktopfrmDlg
   Width = 845
   Height = 542
   Caption = #25130#22270
+  OldCreateOrder = True
   PixelsPerInch = 96
   TextHeight = 15
   object img1: TImage

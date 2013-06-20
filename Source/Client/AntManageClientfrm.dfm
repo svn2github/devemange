@@ -1,8 +1,8 @@
 inherited AntManageClientDlg: TAntManageClientDlg
-  Left = 141
-  Top = 126
-  Width = 1066
-  Height = 588
+  Left = 24
+  Top = 154
+  Width = 1195
+  Height = 722
   Caption = #32534#35793#37096#32626
   OldCreateOrder = True
   PixelsPerInch = 96
@@ -10,9 +10,9 @@ inherited AntManageClientDlg: TAntManageClientDlg
   object pgcAnt: TPageControl
     Left = 0
     Top = 69
-    Width = 1050
-    Height = 481
-    ActivePage = ts1
+    Width = 1179
+    Height = 615
+    ActivePage = ts2
     Align = alClient
     TabOrder = 0
     OnChange = pgcAntChange
@@ -22,7 +22,7 @@ inherited AntManageClientDlg: TAntManageClientDlg
       object pnl2: TPanel
         Left = 0
         Top = 0
-        Width = 1042
+        Width = 1171
         Height = 40
         Align = alTop
         BevelOuter = bvNone
@@ -40,8 +40,8 @@ inherited AntManageClientDlg: TAntManageClientDlg
       object dbgrd1: TDBGrid
         Left = 0
         Top = 40
-        Width = 1042
-        Height = 371
+        Width = 1171
+        Height = 505
         Align = alClient
         DataSource = dsAntList
         Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
@@ -119,8 +119,8 @@ inherited AntManageClientDlg: TAntManageClientDlg
       end
       object pnl7: TPanel
         Left = 0
-        Top = 411
-        Width = 1042
+        Top = 545
+        Width = 1171
         Height = 40
         Align = alBottom
         TabOrder = 2
@@ -184,7 +184,7 @@ inherited AntManageClientDlg: TAntManageClientDlg
       object dbtxtZNAME: TDBText
         Left = 0
         Top = 0
-        Width = 1042
+        Width = 1171
         Height = 17
         Align = alTop
         Color = clGreen
@@ -201,7 +201,7 @@ inherited AntManageClientDlg: TAntManageClientDlg
       object spl1: TSplitter
         Left = 0
         Top = 264
-        Width = 1042
+        Width = 1171
         Height = 10
         Cursor = crVSplit
         Align = alTop
@@ -210,28 +210,37 @@ inherited AntManageClientDlg: TAntManageClientDlg
       object pnl1: TPanel
         Left = 0
         Top = 274
-        Width = 1042
-        Height = 177
+        Width = 1171
+        Height = 311
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 0
         object spl4: TSplitter
           Left = 0
-          Top = 112
-          Width = 1042
+          Top = 246
+          Width = 1171
           Height = 3
           Cursor = crVSplit
           Align = alBottom
         end
+        object spl5: TSplitter
+          Left = 716
+          Top = 40
+          Height = 206
+          Align = alRight
+        end
         object pnl3: TPanel
           Left = 0
           Top = 0
-          Width = 1042
+          Width = 1171
           Height = 40
           Align = alTop
           BevelOuter = bvNone
           Color = clGreen
           TabOrder = 0
+          DesignSize = (
+            1171
+            40)
           object bvl1: TBevel
             Left = 442
             Top = 1
@@ -302,14 +311,23 @@ inherited AntManageClientDlg: TAntManageClientDlg
             Caption = #36816#34892'Web'#39033#30446
             TabOrder = 6
           end
+          object btnAntLog: TBitBtn
+            Left = 961
+            Top = 8
+            Width = 200
+            Height = 25
+            Action = act_BuildAntLog
+            Anchors = [akTop, akRight]
+            Caption = #32534#35793#35760#24405'('#21069'20'#26465')'
+            TabOrder = 7
+          end
         end
         object lstResult: TListBox
-          Left = 0
+          Left = -448
           Top = 40
-          Width = 1042
-          Height = 72
+          Width = 1002
+          Height = 484
           Style = lbOwnerDrawFixed
-          Align = alClient
           ItemHeight = 16
           TabOrder = 1
           OnDrawItem = lstResultDrawItem
@@ -325,8 +343,8 @@ inherited AntManageClientDlg: TAntManageClientDlg
         end
         object lstErrors: TListBox
           Left = 0
-          Top = 115
-          Width = 1042
+          Top = 249
+          Width = 1171
           Height = 62
           Align = alBottom
           Font.Charset = GB2312_CHARSET
@@ -339,11 +357,61 @@ inherited AntManageClientDlg: TAntManageClientDlg
           TabOrder = 3
           OnClick = lstErrorsClick
         end
+        object dbgrdAntLog: TDBGrid
+          Left = 904
+          Top = 40
+          Width = 267
+          Height = 206
+          Align = alRight
+          DataSource = dsAntLog
+          Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
+          PopupMenu = pmAntLog
+          ReadOnly = True
+          TabOrder = 4
+          TitleFont.Charset = GB2312_CHARSET
+          TitleFont.Color = clWindowText
+          TitleFont.Height = -15
+          TitleFont.Name = #23435#20307
+          TitleFont.Style = []
+          OnDrawColumnCell = dbgrdAntLogDrawColumnCell
+          Columns = <
+            item
+              Expanded = False
+              FieldName = 'ZNAME'
+              Title.Caption = #32534#35793#20154
+              Width = 67
+              Visible = True
+            end
+            item
+              Expanded = False
+              FieldName = 'ZVERSION'
+              Title.Caption = #32534#35793#29256#26412
+              Width = 68
+              Visible = True
+            end
+            item
+              Expanded = False
+              FieldName = 'ZDATE'
+              Title.Caption = #32534#35793#26102#38388
+              Width = 170
+              Visible = True
+            end>
+        end
+        object pnl8: TPanel
+          Left = 719
+          Top = 40
+          Width = 185
+          Height = 206
+          Align = alRight
+          BevelOuter = bvNone
+          Caption = 'pnl8'
+          TabOrder = 5
+        end
       end
       object scrlbx1: TScrollBox
         Left = 0
         Top = 17
-        Width = 1042
+        Width = 1171
         Height = 247
         Align = alTop
         TabOrder = 1
@@ -629,8 +697,8 @@ inherited AntManageClientDlg: TAntManageClientDlg
       ImageIndex = 2
       object spl2: TSplitter
         Left = 0
-        Top = 275
-        Width = 1042
+        Top = 409
+        Width = 1171
         Height = 8
         Cursor = crVSplit
         Align = alBottom
@@ -638,7 +706,7 @@ inherited AntManageClientDlg: TAntManageClientDlg
       object dbtxtZNAME1: TDBText
         Left = 0
         Top = 0
-        Width = 1042
+        Width = 1171
         Height = 17
         Align = alTop
         Color = clGreen
@@ -655,7 +723,7 @@ inherited AntManageClientDlg: TAntManageClientDlg
       object pnl4: TPanel
         Left = 0
         Top = 17
-        Width = 1042
+        Width = 1171
         Height = 40
         Align = alTop
         BevelOuter = bvNone
@@ -734,8 +802,8 @@ inherited AntManageClientDlg: TAntManageClientDlg
       end
       object dbgrdSvnChanges: TDBGrid
         Left = 0
-        Top = 283
-        Width = 1042
+        Top = 417
+        Width = 1171
         Height = 168
         Align = alBottom
         DataSource = dsSvnChanges
@@ -784,16 +852,16 @@ inherited AntManageClientDlg: TAntManageClientDlg
       object pnl5: TPanel
         Left = 0
         Top = 57
-        Width = 1042
-        Height = 218
+        Width = 1171
+        Height = 352
         Align = alClient
         BevelOuter = bvNone
         Caption = 'pnl5'
         TabOrder = 2
         object spl3: TSplitter
           Left = 0
-          Top = 121
-          Width = 1042
+          Top = 255
+          Width = 1171
           Height = 8
           Cursor = crVSplit
           Align = alBottom
@@ -801,8 +869,8 @@ inherited AntManageClientDlg: TAntManageClientDlg
         object dbgrdSvnCommits: TDBGrid
           Left = 0
           Top = 0
-          Width = 1042
-          Height = 121
+          Width = 1171
+          Height = 255
           Align = alClient
           DataSource = dsSvnCommits
           Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
@@ -859,8 +927,8 @@ inherited AntManageClientDlg: TAntManageClientDlg
         end
         object dbmmoZMESSAGE: TDBMemo
           Left = 0
-          Top = 129
-          Width = 1042
+          Top = 263
+          Width = 1171
           Height = 89
           Align = alBottom
           DataField = 'ZMESSAGE'
@@ -875,7 +943,7 @@ inherited AntManageClientDlg: TAntManageClientDlg
   object pnl6: TPanel
     Left = 0
     Top = 0
-    Width = 1050
+    Width = 1179
     Height = 69
     Align = alTop
     TabOrder = 1
@@ -1014,6 +1082,17 @@ inherited AntManageClientDlg: TAntManageClientDlg
       OnExecute = actSvnLog_FindAuthorExecute
       OnUpdate = actSvnLog_FindAuthorUpdate
     end
+    object act_BuildAntLog: TAction
+      Category = #32534#35793
+      Caption = #32534#35793#35760#24405'('#21069'20'#26465')'
+      OnExecute = act_BuildAntLogExecute
+    end
+    object act_BuildAntLog_All: TAction
+      Category = #32534#35793
+      Caption = #32534#35793#35760#24405#20840#37096
+      OnExecute = act_BuildAntLog_AllExecute
+      OnUpdate = act_BuildAntLog_AllUpdate
+    end
   end
   object idtcpclnt1: TIdTCPClient
     MaxLineAction = maException
@@ -1097,10 +1176,28 @@ inherited AntManageClientDlg: TAntManageClientDlg
   end
   object pm1: TPopupMenu
     AutoHotkeys = maManual
-    Left = 312
-    Top = 16
+    Left = 306
+    Top = 8
     object N1: TMenuItem
       Action = actSvnLog_FindAuthor
+    end
+  end
+  object cdsAntLog: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 344
+    Top = 8
+  end
+  object dsAntLog: TDataSource
+    DataSet = cdsAntLog
+    Left = 344
+    Top = 40
+  end
+  object pmAntLog: TPopupMenu
+    Left = 384
+    Top = 16
+    object N2: TMenuItem
+      Action = act_BuildAntLog_All
     end
   end
 end
