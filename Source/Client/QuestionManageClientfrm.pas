@@ -797,10 +797,10 @@ begin
   end;
 
 
-  dbedtZQTITLE.ReadOnly := chkEditQustion.Checked;
-  dbmmoZQCENTENT.ReadOnly := chkEditQustion.Checked;
-  dbmmoZANSWER.ReadOnly := chkEditQustion.Checked;
-  dbchkZSORT.ReadOnly := chkEditQustion.Checked;
+  dbedtZQTITLE.ReadOnly := not chkEditQustion.Checked;
+  dbmmoZQCENTENT.ReadOnly := not chkEditQustion.Checked;
+  dbmmoZANSWER.ReadOnly := not chkEditQustion.Checked;
+  dbchkZSORT.ReadOnly := not chkEditQustion.Checked;
 end;
 
 end.
