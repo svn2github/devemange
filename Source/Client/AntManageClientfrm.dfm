@@ -12,7 +12,7 @@ inherited AntManageClientDlg: TAntManageClientDlg
     Top = 69
     Width = 1179
     Height = 615
-    ActivePage = ts2
+    ActivePage = ts1
     Align = alClient
     TabOrder = 0
     OnChange = pgcAntChange
@@ -224,7 +224,7 @@ inherited AntManageClientDlg: TAntManageClientDlg
           Align = alBottom
         end
         object spl5: TSplitter
-          Left = 716
+          Left = 829
           Top = 40
           Height = 206
           Align = alRight
@@ -323,11 +323,12 @@ inherited AntManageClientDlg: TAntManageClientDlg
           end
         end
         object lstResult: TListBox
-          Left = -448
+          Left = 0
           Top = 40
-          Width = 1002
-          Height = 484
+          Width = 829
+          Height = 206
           Style = lbOwnerDrawFixed
+          Align = alClient
           ItemHeight = 16
           TabOrder = 1
           OnDrawItem = lstResultDrawItem
@@ -357,55 +358,65 @@ inherited AntManageClientDlg: TAntManageClientDlg
           TabOrder = 3
           OnClick = lstErrorsClick
         end
-        object dbgrdAntLog: TDBGrid
-          Left = 904
-          Top = 40
-          Width = 267
-          Height = 206
-          Align = alRight
-          DataSource = dsAntLog
-          Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
-          PopupMenu = pmAntLog
-          ReadOnly = True
-          TabOrder = 4
-          TitleFont.Charset = GB2312_CHARSET
-          TitleFont.Color = clWindowText
-          TitleFont.Height = -15
-          TitleFont.Name = #23435#20307
-          TitleFont.Style = []
-          OnDrawColumnCell = dbgrdAntLogDrawColumnCell
-          Columns = <
-            item
-              Expanded = False
-              FieldName = 'ZNAME'
-              Title.Caption = #32534#35793#20154
-              Width = 67
-              Visible = True
-            end
-            item
-              Expanded = False
-              FieldName = 'ZVERSION'
-              Title.Caption = #32534#35793#29256#26412
-              Width = 68
-              Visible = True
-            end
-            item
-              Expanded = False
-              FieldName = 'ZDATE'
-              Title.Caption = #32534#35793#26102#38388
-              Width = 170
-              Visible = True
-            end>
-        end
         object pnl8: TPanel
-          Left = 719
+          Left = 832
           Top = 40
-          Width = 185
+          Width = 339
           Height = 206
           Align = alRight
           BevelOuter = bvNone
           Caption = 'pnl8'
-          TabOrder = 5
+          TabOrder = 4
+          object dbgrdAntLog: TDBGrid
+            Left = 0
+            Top = 0
+            Width = 339
+            Height = 136
+            Align = alClient
+            DataSource = dsAntLog
+            Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
+            PopupMenu = pmAntLog
+            ReadOnly = True
+            TabOrder = 0
+            TitleFont.Charset = GB2312_CHARSET
+            TitleFont.Color = clWindowText
+            TitleFont.Height = -15
+            TitleFont.Name = #23435#20307
+            TitleFont.Style = []
+            OnDrawColumnCell = dbgrdAntLogDrawColumnCell
+            Columns = <
+              item
+                Expanded = False
+                FieldName = 'ZNAME'
+                Title.Caption = #32534#35793#20154
+                Width = 67
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'ZVERSION'
+                Title.Caption = #32534#35793#29256#26412
+                Width = 65
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'ZDATE'
+                Title.Caption = #32534#35793#26102#38388
+                Width = 170
+                Visible = True
+              end>
+          end
+          object dbmmoLOG: TDBMemo
+            Left = 0
+            Top = 136
+            Width = 339
+            Height = 70
+            Align = alBottom
+            DataField = 'ZLOG'
+            DataSource = dsAntLog
+            TabOrder = 1
+          end
         end
       end
       object scrlbx1: TScrollBox
@@ -562,6 +573,7 @@ inherited AntManageClientDlg: TAntManageClientDlg
           DataField = 'ZPYFILE'
           DataSource = dsAntList
           TabOrder = 3
+          Visible = False
         end
         object btnProSave: TBitBtn
           Left = 818

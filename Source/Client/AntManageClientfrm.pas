@@ -159,7 +159,6 @@ type
     N1: TMenuItem;
     lbl15: TLabel;
     btnEditSVNRUL: TBitBtn;
-    dbgrdAntLog: TDBGrid;
     spl5: TSplitter;
     btnAntLog: TBitBtn;
     act_BuildAntLog: TAction;
@@ -169,6 +168,8 @@ type
     pmAntLog: TPopupMenu;
     N2: TMenuItem;
     pnl8: TPanel;
+    dbgrdAntLog: TDBGrid;
+    dbmmoLOG: TDBMemo;
     procedure act_ProAddExecute(Sender: TObject);
     procedure cdsAntListNewRecord(DataSet: TDataSet);
     procedure act_ProSaveUpdate(Sender: TObject);
@@ -808,7 +809,7 @@ begin
     cdsTemp.First;
     while not cdsTemp.Eof do
     begin
-      cdsSvnCommits.Append;                                   
+      cdsSvnCommits.Append;
       for i:=0 to cdsTemp.FieldDefs.Count -1 do
       begin
         if  cdsTemp.FieldDefs[i].Name = 'ZID' then
@@ -1244,6 +1245,7 @@ begin
   dbedtZGUID.Visible := True;
   dbedtZLOCALSVNBAT.Visible := True;
   btnEditSVNRUL.Visible := False;
+  dbedtZPYFILE.Visible := True;
 end;
 
 procedure TAntManageClientDlg.act_ApplyBuildUpdate(Sender: TObject);
@@ -1507,7 +1509,8 @@ end;
 procedure TAntManageClientDlg.actSvnLog_FindAuthorUpdate(Sender: TObject);
 begin
   //
-  (Sender as TAction).Enabled := cdsSvnCommits.RecordCount>0;
+  (Sender as TAction).Enabled := cdsSvnCommits.Active and
+    (cdsSvnCommits.RecordCount>0);
 end;
 
 procedure TAntManageClientDlg.actSvnLog_FindAuthorExecute(Sender: TObject);
@@ -1591,6 +1594,8 @@ begin
       cdsAntLog.Post;
       mycds.Next;
     end;
+
+    cdsAntLog.First;
         
 
 
@@ -1651,6 +1656,7 @@ begin
       mycds.Next;
     end;
 
+    cdsAntLog.First;
   finally
     mycds.Free;
     HideProgress;
