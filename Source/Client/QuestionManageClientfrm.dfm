@@ -4,6 +4,7 @@ inherited QuestionManageClientDlg: TQuestionManageClientDlg
   Width = 966
   Height = 679
   Caption = #31561#32423#39064#24211
+  OldCreateOrder = True
   PixelsPerInch = 96
   TextHeight = 15
   object pgcQuestion: TPageControl
@@ -89,7 +90,7 @@ inherited QuestionManageClientDlg: TQuestionManageClientDlg
         Left = 0
         Top = 41
         Width = 942
-        Height = 448
+        Height = 383
         Align = alClient
         DataSource = dsQuestionClass
         Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
@@ -136,6 +137,17 @@ inherited QuestionManageClientDlg: TQuestionManageClientDlg
             Title.Caption = #25490#24207#21495
             Visible = True
           end>
+      end
+      object dbmmoZNOTE: TDBMemo
+        Left = 0
+        Top = 424
+        Width = 942
+        Height = 65
+        Align = alBottom
+        DataField = 'ZNOTE'
+        DataSource = dsQuestionClass
+        ScrollBars = ssVertical
+        TabOrder = 3
       end
     end
     object tsQuest: TTabSheet

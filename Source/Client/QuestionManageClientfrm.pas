@@ -74,6 +74,7 @@ type
     lbl4: TLabel;
     lblQuestionCount: TLabel;
     chkEditQustion: TCheckBox;
+    dbmmoZNOTE: TDBMemo;
     procedure act_ReLoadClassExecute(Sender: TObject);
     procedure dbgrdQuestionClassDrawColumnCell(Sender: TObject;
       const Rect: TRect; DataCol: Integer; Column: TColumn;
