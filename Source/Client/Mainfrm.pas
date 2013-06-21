@@ -106,6 +106,8 @@ type
     act_WarnBuckleScore: TAction;
     btnWarnBuckleScore: TToolButton;
     mniWarnBuckleScore: TMenuItem;
+    actQuestion: TAction;
+    N23: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure actmod_FilesExecute(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -144,6 +146,7 @@ type
     procedure chkShowCancelClick(Sender: TObject);
     procedure actMod_SVNExecute(Sender: TObject);
     procedure act_WarnBuckleScoreExecute(Sender: TObject);
+    procedure actQuestionExecute(Sender: TObject);
   private
     fChildform : TList; //所有子窗口的对象
     fCurrentChildform : TBaseChildDlg;
@@ -214,6 +217,7 @@ uses
   ExtendWebManagefrm,      {扩展应用管理}
   SvnManageClientfrm,        {SVN管理}
   WarnBuckleScoreClientfrm, {投诉扣分}
+  QuestionManageClientfrm,  {等级题库}
   SetSysParamsfrm, DeveCalendarfrm;
 
 {$R *.dfm}
@@ -1100,6 +1104,11 @@ end;
 procedure TMainDlg.act_WarnBuckleScoreExecute(Sender: TObject);
 begin
   DoChangeClient(TWarnBuckleScoreClientDlg);
+end;
+
+procedure TMainDlg.actQuestionExecute(Sender: TObject);
+begin
+  DoChangeClient(TQuestionManageClientDlg);
 end;
 
 end.

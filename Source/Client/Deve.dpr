@@ -34,7 +34,8 @@ uses
   DeveCalendarfrm in 'DeveCalendarfrm.pas' {DeveCalendarDlg},
   Activationfrm in 'Activationfrm.pas' {ActivationDlg},
   WarnBuckleScoreClientfrm in 'WarnBuckleScoreClientfrm.pas' {WarnBuckleScoreClientDlg},
-  BitmapFromDesktopfrm in 'BitmapFromDesktopfrm.pas' {BitmapFromDesktopfrmDlg};
+  BitmapFromDesktopfrm in 'BitmapFromDesktopfrm.pas' {BitmapFromDesktopfrmDlg},
+  QuestionManageClientfrm in 'QuestionManageClientfrm.pas' {QuestionManageClientDlg};
 
 {$R *.res}
 {$R resource.res}

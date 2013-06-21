@@ -389,6 +389,11 @@ object MainDlg: TMainDlg
       ImageIndex = 17
       OnExecute = act_WarnBuckleScoreExecute
     end
+    object actQuestion: TAction
+      Category = #19994#21153
+      Caption = #31561#32423#39064#24211
+      OnExecute = actQuestionExecute
+    end
   end
   object ImageList1: TImageList
     Left = 112
@@ -1115,6 +1120,9 @@ object MainDlg: TMainDlg
       end
       object mniWarnBuckleScore: TMenuItem
         Action = act_WarnBuckleScore
+      end
+      object N23: TMenuItem
+        Action = actQuestion
       end
       object N15: TMenuItem
         Caption = '-'

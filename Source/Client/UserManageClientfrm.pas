@@ -625,7 +625,14 @@ begin
     dgUsers.Canvas.Font.Color := clred;
     dgUsers.Canvas.Font.Style := [fsStrikeOut];
   end;
-  dgUsers.DefaultDrawColumnCell(Rect,DataCol,Column,State);
+
+  if Column.FieldName = 'ZPASS' then
+  begin
+    dgUsers.Canvas.FillRect(Rect);
+    dgUsers.Canvas.TextRect( Rect,Rect.Left,Rect.Top, '******');
+  end
+  else
+    dgUsers.DefaultDrawColumnCell(Rect,DataCol,Column,State);
 end;
 
 procedure TUserManageClientDlg.dgUserPrivDrawColumnCell(Sender: TObject;

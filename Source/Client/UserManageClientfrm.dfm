@@ -9,8 +9,8 @@ inherited UserManageClientDlg: TUserManageClientDlg
   object plCenter: TPanel
     Left = 0
     Top = 0
-    Width = 862
-    Height = 764
+    Width = 854
+    Height = 760
     Align = alClient
     BevelInner = bvLowered
     BevelOuter = bvNone
@@ -19,7 +19,7 @@ inherited UserManageClientDlg: TUserManageClientDlg
     object plnoVisible: TPanel
       Left = 1
       Top = 1
-      Width = 860
+      Width = 852
       Height = 64
       Align = alTop
       Caption = 'plnoVisible'
@@ -29,8 +29,8 @@ inherited UserManageClientDlg: TUserManageClientDlg
     object PageControl1: TPageControl
       Left = 1
       Top = 65
-      Width = 860
-      Height = 698
+      Width = 852
+      Height = 694
       ActivePage = tsUser
       Align = alClient
       TabOrder = 1
@@ -41,8 +41,8 @@ inherited UserManageClientDlg: TUserManageClientDlg
         object dgUsers: TDBGrid
           Left = 0
           Top = 40
-          Width = 852
-          Height = 628
+          Width = 844
+          Height = 624
           Align = alClient
           DataSource = dsUsers
           Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
@@ -137,7 +137,7 @@ inherited UserManageClientDlg: TUserManageClientDlg
         object plUserTop: TPanel
           Left = 0
           Top = 0
-          Width = 852
+          Width = 844
           Height = 40
           Align = alTop
           BevelOuter = bvNone
@@ -204,7 +204,7 @@ inherited UserManageClientDlg: TUserManageClientDlg
         object DBText1: TDBText
           Left = 0
           Top = 40
-          Width = 852
+          Width = 844
           Height = 17
           Align = alTop
           Color = clGray
@@ -220,8 +220,8 @@ inherited UserManageClientDlg: TUserManageClientDlg
         end
         object Splitter1: TSplitter
           Left = 0
-          Top = 470
-          Width = 852
+          Top = 466
+          Width = 844
           Height = 10
           Cursor = crVSplit
           Align = alBottom
@@ -231,7 +231,7 @@ inherited UserManageClientDlg: TUserManageClientDlg
         object plUserProvTool: TPanel
           Left = 0
           Top = 0
-          Width = 852
+          Width = 844
           Height = 40
           Align = alTop
           BevelOuter = bvNone
@@ -293,8 +293,8 @@ inherited UserManageClientDlg: TUserManageClientDlg
         object dgUserPriv: TDBGrid
           Left = 0
           Top = 57
-          Width = 472
-          Height = 413
+          Width = 464
+          Height = 409
           Align = alClient
           DataSource = dsUserPriv
           Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
@@ -340,10 +340,10 @@ inherited UserManageClientDlg: TUserManageClientDlg
             end>
         end
         object plUserPrivEdit: TPanel
-          Left = 472
+          Left = 464
           Top = 57
           Width = 380
-          Height = 413
+          Height = 409
           Align = alRight
           BevelOuter = bvNone
           Color = clMoneyGreen
@@ -490,11 +490,10 @@ inherited UserManageClientDlg: TUserManageClientDlg
         end
         object Memo1: TMemo
           Left = 0
-          Top = 480
-          Width = 852
+          Top = 476
+          Width = 844
           Height = 188
           Align = alBottom
-          ImeName = #26497#21697#20116#31508#36755#20837#27861
           Lines.Strings = (
             '#######################'
             '# '#39033#30446#25991#26723' '
@@ -507,6 +506,7 @@ inherited UserManageClientDlg: TUserManageClientDlg
             '######################'
             #27169#22359'=200'
             '1.'#26641#26435#38480#23376#27169#22359'=1'
+            ''
             ''
             '######################'
             '# '#25991#20214#31649#29702
@@ -527,7 +527,14 @@ inherited UserManageClientDlg: TUserManageClientDlg
             '######################'
             #27169#22359'=700'
             #23376#27169#22359'=1 ,'#25805#20316#23545#35937#39033#30446'ID'#21495
-            '')
+            ''
+            ''
+            '######################'
+            '# '#31561#32423#39064#24211
+            '######################'
+            #27169#22359'=1100'
+            #23376#27169#22359'=1 ,'#25805#20316#23545#35937#39033#30446'ID=0'
+            #20363#22914': 1100 , 1, 0, 15')
           ScrollBars = ssBoth
           TabOrder = 3
         end
