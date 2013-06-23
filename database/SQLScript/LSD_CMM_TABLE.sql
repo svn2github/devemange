@@ -941,16 +941,84 @@ create table TB_MSG(
 go
 
 
-/*题库表*/
+/*题库类*/
+create table TB_QUESTION_CLASS(
+	ZGUID varchar(36) not null,
+	ZCODE varchar(20) not null,    --题库号
+	ZTITLE varchar(200),           --能力要求
+	ZNOTE varchar(250) ,           --题库描述 
+	ZPOWER varchar(250),           --多个以;分开是用户名称，表示有权力看到题目
+	ZSORT int default 0,           --排序号
 
+	constraint PK_TB_QUESTIONCLASS primary key(ZGUID)  	
+)
+go
 
 /*题库内容表*/
+create table TB_QUESTION(
+	ZCLASS_GUID varchar(36) not null,  --题库的GUID
+	ZQCODE varchar(50) not null,       --题目代码号,最好是自动生成的. ZCODE-0001 的格式.
+	ZQTITLE varchar(200) not null,     --提目的标题
+	ZQCENTENT text ,                   --提目的内容
+	ZANSWER text,                      --答案
+	ZUSER_ID int  not null,            --创建人ID
+	ZDATETIME datetime,                --创建时间
+	ZSTOP bit default 0,               --=Ture 表示不再使用
+	ZIDX int default 1,                --索引号, 用于生成 ZCODE-0001 后面的数字
 
-
-/*研发人员等级表*/
+	constraint PK_TB_QUESTION primary key(ZCLASS_GUID,ZQCODE) 
+)
+go
 
 /*等级对应的题库表*/
+create table TB_QUESTION_DEVELEVEL(
+	ZID       int IDENTITY (1, 1) not null,	 --主键
+	ZDEVENAME  varchar(50) not null,         --等级名称
+	ZSORT     int default 0,                 --排序号
+	ZQUCLASS_CODE_1 varchar(20),
+	ZQUCLASS_NUM_1 int default 0,
+	ZQUCLASS_SCORE_1 int default 0,         --每道得分
 
+	ZQUCLASS_CODE_2 varchar(20),
+	ZQUCLASS_NUM_2 int default 0,
+	ZQUCLASS_SCORE_2 int default 0,
+
+	ZQUCLASS_CODE_3 varchar(20),
+	ZQUCLASS_NUM_3 int default 0,
+	ZQUCLASS_SCORE_3 int default 0,
+
+	ZQUCLASS_CODE_4 varchar(20),
+	ZQUCLASS_NUM_4 int default 0,
+	ZQUCLASS_SCORE_4 int default 0,
+
+	ZQUCLASS_CODE_5 varchar(20),
+	ZQUCLASS_NUM_5 int default 0,
+	ZQUCLASS_SCORE_5 int default 0,
+
+	ZQUCLASS_CODE_6 varchar(20),
+	ZQUCLASS_NUM_6 int default 0,
+	ZQUCLASS_SCORE_6 int default 0,
+
+	ZQUCLASS_CODE_7 varchar(20),
+	ZQUCLASS_NUM_7 int default 0,
+	ZQUCLASS_SCORE_7 int default 0,
+
+	ZQUCLASS_CODE_8 varchar(20),
+	ZQUCLASS_NUM_8 int default 0,
+	ZQUCLASS_SCORE_8 int default 0,
+
+	ZQUCLASS_CODE_9 varchar(20),
+	ZQUCLASS_NUM_9 int default 0,
+	ZQUCLASS_SCORE_9 int default 0,
+
+	ZQUCLASS_CODE_10 varchar(20),
+	ZQUCLASS_NUM_10 int default 0,
+	ZQUCLASS_SCORE_10 int default 0,
+
+	constraint PK_TB_QUESTION_DEVELEVEL primary key(ZID) 
+
+)
+go
 
 
 

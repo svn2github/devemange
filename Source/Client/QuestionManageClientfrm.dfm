@@ -1,7 +1,7 @@
 inherited QuestionManageClientDlg: TQuestionManageClientDlg
-  Left = 165
-  Top = 152
-  Width = 966
+  Left = 259
+  Top = 208
+  Width = 1004
   Height = 679
   Caption = #31561#32423#39064#24211
   OldCreateOrder = True
@@ -10,7 +10,7 @@ inherited QuestionManageClientDlg: TQuestionManageClientDlg
   object pgcQuestion: TPageControl
     Left = 0
     Top = 81
-    Width = 950
+    Width = 988
     Height = 560
     ActivePage = tsQuestionClass
     Align = alClient
@@ -22,7 +22,7 @@ inherited QuestionManageClientDlg: TQuestionManageClientDlg
       object pnl1: TPanel
         Left = 0
         Top = 0
-        Width = 942
+        Width = 980
         Height = 41
         Align = alTop
         BevelOuter = bvNone
@@ -67,7 +67,7 @@ inherited QuestionManageClientDlg: TQuestionManageClientDlg
       object pnl2: TPanel
         Left = 0
         Top = 489
-        Width = 942
+        Width = 980
         Height = 41
         Align = alBottom
         BevelOuter = bvNone
@@ -89,7 +89,7 @@ inherited QuestionManageClientDlg: TQuestionManageClientDlg
       object dbgrdQuestionClass: TDBGrid
         Left = 0
         Top = 41
-        Width = 942
+        Width = 980
         Height = 383
         Align = alClient
         DataSource = dsQuestionClass
@@ -141,7 +141,7 @@ inherited QuestionManageClientDlg: TQuestionManageClientDlg
       object dbmmoZNOTE: TDBMemo
         Left = 0
         Top = 424
-        Width = 942
+        Width = 980
         Height = 65
         Align = alBottom
         DataField = 'ZNOTE'
@@ -199,7 +199,7 @@ inherited QuestionManageClientDlg: TQuestionManageClientDlg
       object pnl4: TPanel
         Left = 0
         Top = 489
-        Width = 942
+        Width = 980
         Height = 41
         Align = alBottom
         BevelOuter = bvNone
@@ -260,7 +260,7 @@ inherited QuestionManageClientDlg: TQuestionManageClientDlg
       object pnl5: TPanel
         Left = 268
         Top = 0
-        Width = 674
+        Width = 712
         Height = 489
         Align = alClient
         BevelOuter = bvNone
@@ -323,7 +323,7 @@ inherited QuestionManageClientDlg: TQuestionManageClientDlg
         object pnl6: TPanel
           Left = 0
           Top = 0
-          Width = 674
+          Width = 712
           Height = 41
           Align = alTop
           Color = clGray
@@ -427,11 +427,741 @@ inherited QuestionManageClientDlg: TQuestionManageClientDlg
         end
       end
     end
+    object ts1: TTabSheet
+      Caption = #33021#21147#31561#32423#39064#30446
+      ImageIndex = 2
+      object spl2: TSplitter
+        Left = 353
+        Top = 0
+        Height = 489
+      end
+      object pnl7: TPanel
+        Left = 0
+        Top = 489
+        Width = 980
+        Height = 41
+        Align = alBottom
+        BevelOuter = bvNone
+        TabOrder = 0
+        object btnDeveLeve_ReLoad: TBitBtn
+          Left = 13
+          Top = 8
+          Width = 100
+          Height = 25
+          Action = act_DeveLeve_ReLoad
+          Caption = #21047#26032#25968#25454
+          TabOrder = 0
+        end
+        object btnDeveLeve_Build: TBitBtn
+          Left = 117
+          Top = 8
+          Width = 284
+          Height = 25
+          Action = act_DeveLeve_Build
+          Caption = #29983#25104#35797#21367
+          TabOrder = 1
+        end
+      end
+      object dbgrdLeve: TDBGrid
+        Left = 0
+        Top = 0
+        Width = 353
+        Height = 489
+        Align = alLeft
+        DataSource = dsDeveLeve
+        Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
+        TabOrder = 1
+        TitleFont.Charset = GB2312_CHARSET
+        TitleFont.Color = clWindowText
+        TitleFont.Height = -15
+        TitleFont.Name = #23435#20307
+        TitleFont.Style = []
+        OnDrawColumnCell = dbgrdLeveDrawColumnCell
+        Columns = <
+          item
+            Expanded = False
+            FieldName = 'ZINDEX'
+            Title.Caption = #24207#21495
+            Width = 43
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'ZDEVENAME'
+            Title.Caption = #33021#21147#31561#32423
+            Width = 176
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'ZSORT'
+            Title.Caption = #25490#24207#21495
+            Visible = True
+          end>
+      end
+      object pnl8: TPanel
+        Left = 356
+        Top = 0
+        Width = 624
+        Height = 489
+        Align = alClient
+        BevelOuter = bvNone
+        TabOrder = 2
+        object lbl8: TLabel
+          Left = 10
+          Top = 72
+          Width = 75
+          Height = 15
+          Caption = #33021#21147#31561#32423#65306
+        end
+        object lbl9: TLabel
+          Left = 330
+          Top = 72
+          Width = 60
+          Height = 15
+          Caption = #25490#24207#21495#65306
+        end
+        object grp1: TGroupBox
+          Left = 8
+          Top = 117
+          Width = 577
+          Height = 57
+          Caption = #39064#30446#24211'1'
+          TabOrder = 0
+          object lbl5: TLabel
+            Left = 13
+            Top = 28
+            Width = 60
+            Height = 15
+            Caption = #39064#24211#21495#65306
+          end
+          object lbl6: TLabel
+            Left = 333
+            Top = 28
+            Width = 38
+            Height = 15
+            Caption = #39064#25968':'
+          end
+          object lbl7: TLabel
+            Left = 441
+            Top = 27
+            Width = 68
+            Height = 15
+            Caption = #27599#39064#24471#20998':'
+          end
+          object dblkcbbZQUCLASS_CODE_NAME_1: TDBLookupComboBox
+            Left = 76
+            Top = 24
+            Width = 250
+            Height = 23
+            DataField = 'ZQUCLASS_CODE_NAME_1'
+            DataSource = dsDeveLeve
+            DropDownRows = 20
+            TabOrder = 0
+          end
+          object dbedtZQUCLASS_NUM_1: TDBEdit
+            Left = 377
+            Top = 24
+            Width = 61
+            Height = 23
+            DataField = 'ZQUCLASS_NUM_1'
+            DataSource = dsDeveLeve
+            TabOrder = 1
+          end
+          object dbedtZQUCLASS_SCORE_1: TDBEdit
+            Left = 511
+            Top = 24
+            Width = 56
+            Height = 23
+            DataField = 'ZQUCLASS_SCORE_1'
+            DataSource = dsDeveLeve
+            TabOrder = 2
+          end
+        end
+        object grp2: TGroupBox
+          Left = 8
+          Top = 178
+          Width = 577
+          Height = 57
+          Caption = #39064#30446#24211'2'
+          TabOrder = 1
+          object lbl10: TLabel
+            Left = 13
+            Top = 28
+            Width = 60
+            Height = 15
+            Caption = #39064#24211#21495#65306
+          end
+          object lbl11: TLabel
+            Left = 333
+            Top = 28
+            Width = 38
+            Height = 15
+            Caption = #39064#25968':'
+          end
+          object lbl12: TLabel
+            Left = 441
+            Top = 27
+            Width = 68
+            Height = 15
+            Caption = #27599#39064#24471#20998':'
+          end
+          object dblkcbbZQUCLASS_CODE_NAME_2: TDBLookupComboBox
+            Left = 76
+            Top = 24
+            Width = 250
+            Height = 23
+            DataField = 'ZQUCLASS_CODE_NAME_2'
+            DataSource = dsDeveLeve
+            DropDownRows = 20
+            TabOrder = 0
+          end
+          object dbedtZQUCLASS_NUM_2: TDBEdit
+            Left = 377
+            Top = 24
+            Width = 61
+            Height = 23
+            DataField = 'ZQUCLASS_NUM_2'
+            DataSource = dsDeveLeve
+            TabOrder = 1
+          end
+          object dbedtZQUCLASS_SCORE_2: TDBEdit
+            Left = 511
+            Top = 24
+            Width = 56
+            Height = 23
+            DataField = 'ZQUCLASS_SCORE_2'
+            DataSource = dsDeveLeve
+            TabOrder = 2
+          end
+        end
+        object grp3: TGroupBox
+          Left = 8
+          Top = 239
+          Width = 577
+          Height = 57
+          Caption = #39064#30446#24211'3'
+          TabOrder = 2
+          object Label1: TLabel
+            Left = 13
+            Top = 28
+            Width = 60
+            Height = 15
+            Caption = #39064#24211#21495#65306
+          end
+          object Label2: TLabel
+            Left = 333
+            Top = 28
+            Width = 38
+            Height = 15
+            Caption = #39064#25968':'
+          end
+          object Label3: TLabel
+            Left = 441
+            Top = 27
+            Width = 68
+            Height = 15
+            Caption = #27599#39064#24471#20998':'
+          end
+          object dblkcbbZQUCLASS_CODE_NAME_3: TDBLookupComboBox
+            Left = 76
+            Top = 24
+            Width = 250
+            Height = 23
+            DataField = 'ZQUCLASS_CODE_NAME_3'
+            DataSource = dsDeveLeve
+            DropDownRows = 20
+            TabOrder = 0
+          end
+          object dbedtZQUCLASS_NUM_3: TDBEdit
+            Left = 377
+            Top = 24
+            Width = 61
+            Height = 23
+            DataField = 'ZQUCLASS_NUM_3'
+            DataSource = dsDeveLeve
+            TabOrder = 1
+          end
+          object dbedtZQUCLASS_SCORE_3: TDBEdit
+            Left = 511
+            Top = 24
+            Width = 56
+            Height = 23
+            DataField = 'ZQUCLASS_SCORE_3'
+            DataSource = dsDeveLeve
+            TabOrder = 2
+          end
+        end
+        object grp4: TGroupBox
+          Left = 8
+          Top = 300
+          Width = 577
+          Height = 57
+          Caption = #39064#30446#24211'4'
+          TabOrder = 3
+          object Label4: TLabel
+            Left = 13
+            Top = 28
+            Width = 60
+            Height = 15
+            Caption = #39064#24211#21495#65306
+          end
+          object Label5: TLabel
+            Left = 333
+            Top = 28
+            Width = 38
+            Height = 15
+            Caption = #39064#25968':'
+          end
+          object Label6: TLabel
+            Left = 441
+            Top = 27
+            Width = 68
+            Height = 15
+            Caption = #27599#39064#24471#20998':'
+          end
+          object dblkcbbZQUCLASS_CODE_NAME_4: TDBLookupComboBox
+            Left = 76
+            Top = 24
+            Width = 250
+            Height = 23
+            DataField = 'ZQUCLASS_CODE_NAME_4'
+            DataSource = dsDeveLeve
+            DropDownRows = 20
+            TabOrder = 0
+          end
+          object dbedtZQUCLASS_NUM_4: TDBEdit
+            Left = 377
+            Top = 24
+            Width = 61
+            Height = 23
+            DataField = 'ZQUCLASS_NUM_4'
+            DataSource = dsDeveLeve
+            TabOrder = 1
+          end
+          object dbedtZQUCLASS_SCORE_4: TDBEdit
+            Left = 511
+            Top = 24
+            Width = 56
+            Height = 23
+            DataField = 'ZQUCLASS_SCORE_4'
+            DataSource = dsDeveLeve
+            TabOrder = 2
+          end
+        end
+        object grp5: TGroupBox
+          Left = 8
+          Top = 361
+          Width = 577
+          Height = 57
+          Caption = #39064#30446#24211'5'
+          TabOrder = 4
+          object Label7: TLabel
+            Left = 13
+            Top = 28
+            Width = 60
+            Height = 15
+            Caption = #39064#24211#21495#65306
+          end
+          object Label8: TLabel
+            Left = 333
+            Top = 28
+            Width = 38
+            Height = 15
+            Caption = #39064#25968':'
+          end
+          object Label9: TLabel
+            Left = 441
+            Top = 27
+            Width = 68
+            Height = 15
+            Caption = #27599#39064#24471#20998':'
+          end
+          object dblkcbbZQUCLASS_CODE_NAME_5: TDBLookupComboBox
+            Left = 76
+            Top = 24
+            Width = 250
+            Height = 23
+            DataField = 'ZQUCLASS_CODE_NAME_5'
+            DataSource = dsDeveLeve
+            DropDownRows = 20
+            TabOrder = 0
+          end
+          object dbedtZQUCLASS_NUM_5: TDBEdit
+            Left = 377
+            Top = 24
+            Width = 61
+            Height = 23
+            DataField = 'ZQUCLASS_NUM_5'
+            DataSource = dsDeveLeve
+            TabOrder = 1
+          end
+          object dbedtZQUCLASS_SCORE_5: TDBEdit
+            Left = 511
+            Top = 24
+            Width = 56
+            Height = 23
+            DataField = 'ZQUCLASS_SCORE_5'
+            DataSource = dsDeveLeve
+            TabOrder = 2
+          end
+        end
+        object GroupBox1: TGroupBox
+          Left = 8
+          Top = 422
+          Width = 577
+          Height = 57
+          Caption = #39064#30446#24211'6'
+          TabOrder = 5
+          object Label10: TLabel
+            Left = 13
+            Top = 28
+            Width = 60
+            Height = 15
+            Caption = #39064#24211#21495#65306
+          end
+          object Label11: TLabel
+            Left = 333
+            Top = 28
+            Width = 38
+            Height = 15
+            Caption = #39064#25968':'
+          end
+          object Label12: TLabel
+            Left = 441
+            Top = 27
+            Width = 68
+            Height = 15
+            Caption = #27599#39064#24471#20998':'
+          end
+          object dblkcbbZQUCLASS_CODE_NAME_6: TDBLookupComboBox
+            Left = 76
+            Top = 24
+            Width = 250
+            Height = 23
+            DataField = 'ZQUCLASS_CODE_NAME_6'
+            DataSource = dsDeveLeve
+            DropDownRows = 20
+            TabOrder = 0
+          end
+          object dbedtZQUCLASS_NUM_6: TDBEdit
+            Left = 377
+            Top = 24
+            Width = 61
+            Height = 23
+            DataField = 'ZQUCLASS_NUM_6'
+            DataSource = dsDeveLeve
+            TabOrder = 1
+          end
+          object dbedtZQUCLASS_SCORE_6: TDBEdit
+            Left = 511
+            Top = 24
+            Width = 56
+            Height = 23
+            DataField = 'ZQUCLASS_SCORE_6'
+            DataSource = dsDeveLeve
+            TabOrder = 2
+          end
+        end
+        object grp6: TGroupBox
+          Left = 8
+          Top = 483
+          Width = 577
+          Height = 57
+          Caption = #39064#30446#24211'7'
+          TabOrder = 6
+          object Label13: TLabel
+            Left = 13
+            Top = 28
+            Width = 60
+            Height = 15
+            Caption = #39064#24211#21495#65306
+          end
+          object Label14: TLabel
+            Left = 333
+            Top = 28
+            Width = 38
+            Height = 15
+            Caption = #39064#25968':'
+          end
+          object Label15: TLabel
+            Left = 441
+            Top = 27
+            Width = 68
+            Height = 15
+            Caption = #27599#39064#24471#20998':'
+          end
+          object dblkcbbZQUCLASS_CODE_NAME_7: TDBLookupComboBox
+            Left = 76
+            Top = 24
+            Width = 250
+            Height = 23
+            DataField = 'ZQUCLASS_CODE_NAME_7'
+            DataSource = dsDeveLeve
+            DropDownRows = 20
+            TabOrder = 0
+          end
+          object dbedtZQUCLASS_NUM_7: TDBEdit
+            Left = 377
+            Top = 24
+            Width = 61
+            Height = 23
+            DataField = 'ZQUCLASS_NUM_7'
+            DataSource = dsDeveLeve
+            TabOrder = 1
+          end
+          object dbedtZQUCLASS_SCORE_7: TDBEdit
+            Left = 511
+            Top = 24
+            Width = 56
+            Height = 23
+            DataField = 'ZQUCLASS_SCORE_7'
+            DataSource = dsDeveLeve
+            TabOrder = 2
+          end
+        end
+        object grp7: TGroupBox
+          Left = 8
+          Top = 544
+          Width = 577
+          Height = 57
+          Caption = #39064#30446#24211'8'
+          TabOrder = 7
+          object Label16: TLabel
+            Left = 13
+            Top = 28
+            Width = 60
+            Height = 15
+            Caption = #39064#24211#21495#65306
+          end
+          object Label17: TLabel
+            Left = 333
+            Top = 28
+            Width = 38
+            Height = 15
+            Caption = #39064#25968':'
+          end
+          object Label18: TLabel
+            Left = 441
+            Top = 27
+            Width = 68
+            Height = 15
+            Caption = #27599#39064#24471#20998':'
+          end
+          object dblkcbbZQUCLASS_CODE_NAME_8: TDBLookupComboBox
+            Left = 76
+            Top = 24
+            Width = 250
+            Height = 23
+            DataField = 'ZQUCLASS_CODE_NAME_8'
+            DataSource = dsDeveLeve
+            DropDownRows = 20
+            TabOrder = 0
+          end
+          object dbedtZQUCLASS_NUM_8: TDBEdit
+            Left = 377
+            Top = 24
+            Width = 61
+            Height = 23
+            DataField = 'ZQUCLASS_NUM_8'
+            DataSource = dsDeveLeve
+            TabOrder = 1
+          end
+          object dbedtZQUCLASS_SCORE_8: TDBEdit
+            Left = 511
+            Top = 24
+            Width = 56
+            Height = 23
+            DataField = 'ZQUCLASS_SCORE_8'
+            DataSource = dsDeveLeve
+            TabOrder = 2
+          end
+        end
+        object grp8: TGroupBox
+          Left = 8
+          Top = 605
+          Width = 577
+          Height = 57
+          Caption = #39064#30446#24211'9'
+          TabOrder = 8
+          object Label19: TLabel
+            Left = 13
+            Top = 28
+            Width = 60
+            Height = 15
+            Caption = #39064#24211#21495#65306
+          end
+          object Label20: TLabel
+            Left = 333
+            Top = 28
+            Width = 38
+            Height = 15
+            Caption = #39064#25968':'
+          end
+          object Label21: TLabel
+            Left = 441
+            Top = 27
+            Width = 68
+            Height = 15
+            Caption = #27599#39064#24471#20998':'
+          end
+          object dblkcbbZQUCLASS_CODE_NAME_9: TDBLookupComboBox
+            Left = 76
+            Top = 24
+            Width = 250
+            Height = 23
+            DataField = 'ZQUCLASS_CODE_NAME_9'
+            DataSource = dsDeveLeve
+            DropDownRows = 20
+            TabOrder = 0
+          end
+          object dbedtZQUCLASS_NUM_9: TDBEdit
+            Left = 377
+            Top = 24
+            Width = 61
+            Height = 23
+            DataField = 'ZQUCLASS_NUM_9'
+            DataSource = dsDeveLeve
+            TabOrder = 1
+          end
+          object dbedtZQUCLASS_SCORE_9: TDBEdit
+            Left = 511
+            Top = 24
+            Width = 56
+            Height = 23
+            DataField = 'ZQUCLASS_SCORE_9'
+            DataSource = dsDeveLeve
+            TabOrder = 2
+          end
+        end
+        object grp9: TGroupBox
+          Left = 8
+          Top = 669
+          Width = 577
+          Height = 57
+          Caption = #39064#30446#24211'10'
+          TabOrder = 9
+          object Label22: TLabel
+            Left = 13
+            Top = 28
+            Width = 60
+            Height = 15
+            Caption = #39064#24211#21495#65306
+          end
+          object Label23: TLabel
+            Left = 333
+            Top = 28
+            Width = 38
+            Height = 15
+            Caption = #39064#25968':'
+          end
+          object Label24: TLabel
+            Left = 441
+            Top = 27
+            Width = 68
+            Height = 15
+            Caption = #27599#39064#24471#20998':'
+          end
+          object dblkcbbZQUCLASS_CODE_NAME_10: TDBLookupComboBox
+            Left = 76
+            Top = 24
+            Width = 250
+            Height = 23
+            DataField = 'ZQUCLASS_CODE_NAME_10'
+            DataSource = dsDeveLeve
+            DropDownRows = 20
+            TabOrder = 0
+          end
+          object dbedtZQUCLASS_NUM_10: TDBEdit
+            Left = 377
+            Top = 24
+            Width = 61
+            Height = 23
+            DataField = 'ZQUCLASS_NUM_10'
+            DataSource = dsDeveLeve
+            TabOrder = 1
+          end
+          object dbedtZQUCLASS_SCORE_10: TDBEdit
+            Left = 511
+            Top = 24
+            Width = 56
+            Height = 23
+            DataField = 'ZQUCLASS_SCORE_10'
+            DataSource = dsDeveLeve
+            TabOrder = 2
+          end
+        end
+        object pnl9: TPanel
+          Left = 0
+          Top = 0
+          Width = 624
+          Height = 41
+          Align = alTop
+          BevelOuter = bvNone
+          Color = clTeal
+          TabOrder = 10
+          object btnDeveLeve_Add: TBitBtn
+            Left = 10
+            Top = 8
+            Width = 100
+            Height = 25
+            Action = act_DeveLeve_Add
+            Caption = #22686#21152#33021#21147#31561#32423
+            TabOrder = 0
+          end
+          object btnDeveLeve_Save: TBitBtn
+            Left = 114
+            Top = 8
+            Width = 100
+            Height = 25
+            Action = act_DeveLeve_Save
+            Caption = #20445#23384
+            TabOrder = 1
+          end
+          object btnDeveLeve_Cancel: TBitBtn
+            Left = 218
+            Top = 8
+            Width = 100
+            Height = 25
+            Action = act_DeveLeve_Cancel
+            Caption = #21462#28040
+            TabOrder = 2
+          end
+          object chkEditDeveLeve: TCheckBox
+            Left = 368
+            Top = 12
+            Width = 97
+            Height = 17
+            Caption = #32534#36753
+            TabOrder = 3
+            OnClick = chkEditDeveLeveClick
+          end
+        end
+        object dbedtZDEVENAME: TDBEdit
+          Left = 85
+          Top = 68
+          Width = 209
+          Height = 23
+          DataField = 'ZDEVENAME'
+          DataSource = dsDeveLeve
+          TabOrder = 11
+        end
+        object dbedtZSORT: TDBEdit
+          Left = 388
+          Top = 68
+          Width = 121
+          Height = 23
+          DataField = 'ZSORT'
+          DataSource = dsDeveLeve
+          TabOrder = 12
+        end
+      end
+    end
   end
   object pnl3: TPanel
     Left = 0
     Top = 0
-    Width = 950
+    Width = 988
     Height = 81
     Align = alTop
     Caption = #19981#21487#35270
@@ -518,6 +1248,34 @@ inherited QuestionManageClientDlg: TQuestionManageClientDlg
       OnExecute = act_Question_CancelExecute
       OnUpdate = act_Question_CancelUpdate
     end
+    object act_DeveLeve_Add: TAction
+      Category = #33021#21147#31561#32423
+      Caption = #22686#21152#33021#21147#31561#32423
+      OnExecute = act_DeveLeve_AddExecute
+      OnUpdate = act_DeveLeve_AddUpdate
+    end
+    object act_DeveLeve_Save: TAction
+      Category = #33021#21147#31561#32423
+      Caption = #20445#23384
+      OnExecute = act_DeveLeve_SaveExecute
+      OnUpdate = act_DeveLeve_SaveUpdate
+    end
+    object act_DeveLeve_Cancel: TAction
+      Category = #33021#21147#31561#32423
+      Caption = #21462#28040
+      OnExecute = act_DeveLeve_CancelExecute
+      OnUpdate = act_DeveLeve_CancelUpdate
+    end
+    object act_DeveLeve_ReLoad: TAction
+      Category = #33021#21147#31561#32423
+      Caption = #21047#26032#25968#25454
+      OnExecute = act_DeveLeve_ReLoadExecute
+      OnUpdate = act_DeveLeve_ReLoadUpdate
+    end
+    object act_DeveLeve_Build: TAction
+      Category = #33021#21147#31561#32423
+      Caption = #29983#25104#35797#21367
+    end
   end
   object cdsQuestion: TClientDataSet
     Aggregates = <>
@@ -530,5 +1288,23 @@ inherited QuestionManageClientDlg: TQuestionManageClientDlg
     DataSet = cdsQuestion
     Left = 64
     Top = 40
+  end
+  object dsDeveLeve: TDataSource
+    DataSet = cdsDeveLeve
+    Left = 152
+    Top = 40
+  end
+  object cdsDeveLeve: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    OnNewRecord = cdsDeveLeveNewRecord
+    Left = 152
+    Top = 8
+  end
+  object cdsQuestionClass_bak: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 200
+    Top = 8
   end
 end

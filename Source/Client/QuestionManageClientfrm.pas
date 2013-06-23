@@ -19,6 +19,8 @@ type
     fWhereStr : string; //分页的where条件
   end;
 
+  PPageTypeRec = ^TPageTypeRec;
+
   TQuestionManageClientDlg = class(TBaseChildDlg)
     pgcQuestion: TPageControl;
     tsQuestionClass: TTabSheet;
@@ -75,6 +77,100 @@ type
     lblQuestionCount: TLabel;
     chkEditQustion: TCheckBox;
     dbmmoZNOTE: TDBMemo;
+    ts1: TTabSheet;
+    pnl7: TPanel;
+    dbgrdLeve: TDBGrid;
+    spl2: TSplitter;
+    pnl8: TPanel;
+    dsDeveLeve: TDataSource;
+    cdsDeveLeve: TClientDataSet;
+    grp1: TGroupBox;
+    grp2: TGroupBox;
+    grp3: TGroupBox;
+    grp4: TGroupBox;
+    grp5: TGroupBox;
+    GroupBox1: TGroupBox;
+    grp6: TGroupBox;
+    grp7: TGroupBox;
+    grp8: TGroupBox;
+    grp9: TGroupBox;
+    dblkcbbZQUCLASS_CODE_NAME_1: TDBLookupComboBox;
+    lbl5: TLabel;
+    dbedtZQUCLASS_NUM_1: TDBEdit;
+    lbl6: TLabel;
+    lbl7: TLabel;
+    dbedtZQUCLASS_SCORE_1: TDBEdit;
+    pnl9: TPanel;
+    btnDeveLeve_Add: TBitBtn;
+    btnDeveLeve_Save: TBitBtn;
+    cdsQuestionClass_bak: TClientDataSet;
+    dbedtZDEVENAME: TDBEdit;
+    dbedtZSORT: TDBEdit;
+    lbl8: TLabel;
+    lbl9: TLabel;
+    btnDeveLeve_Cancel: TBitBtn;
+    act_DeveLeve_Add: TAction;
+    act_DeveLeve_Save: TAction;
+    act_DeveLeve_Cancel: TAction;
+    chkEditDeveLeve: TCheckBox;
+    act_DeveLeve_ReLoad: TAction;
+    btnDeveLeve_ReLoad: TBitBtn;
+    btnDeveLeve_Build: TBitBtn;
+    lbl10: TLabel;
+    dblkcbbZQUCLASS_CODE_NAME_2: TDBLookupComboBox;
+    lbl11: TLabel;
+    dbedtZQUCLASS_NUM_2: TDBEdit;
+    lbl12: TLabel;
+    dbedtZQUCLASS_SCORE_2: TDBEdit;
+    Label1: TLabel;
+    dblkcbbZQUCLASS_CODE_NAME_3: TDBLookupComboBox;
+    Label2: TLabel;
+    dbedtZQUCLASS_NUM_3: TDBEdit;
+    Label3: TLabel;
+    dbedtZQUCLASS_SCORE_3: TDBEdit;
+    Label4: TLabel;
+    dblkcbbZQUCLASS_CODE_NAME_4: TDBLookupComboBox;
+    Label5: TLabel;
+    dbedtZQUCLASS_NUM_4: TDBEdit;
+    Label6: TLabel;
+    dbedtZQUCLASS_SCORE_4: TDBEdit;
+    Label7: TLabel;
+    dblkcbbZQUCLASS_CODE_NAME_5: TDBLookupComboBox;
+    Label8: TLabel;
+    dbedtZQUCLASS_NUM_5: TDBEdit;
+    Label9: TLabel;
+    dbedtZQUCLASS_SCORE_5: TDBEdit;
+    Label10: TLabel;
+    dblkcbbZQUCLASS_CODE_NAME_6: TDBLookupComboBox;
+    Label11: TLabel;
+    dbedtZQUCLASS_NUM_6: TDBEdit;
+    Label12: TLabel;
+    dbedtZQUCLASS_SCORE_6: TDBEdit;
+    Label13: TLabel;
+    dblkcbbZQUCLASS_CODE_NAME_7: TDBLookupComboBox;
+    Label14: TLabel;
+    dbedtZQUCLASS_NUM_7: TDBEdit;
+    Label15: TLabel;
+    dbedtZQUCLASS_SCORE_7: TDBEdit;
+    Label16: TLabel;
+    dblkcbbZQUCLASS_CODE_NAME_8: TDBLookupComboBox;
+    Label17: TLabel;
+    dbedtZQUCLASS_NUM_8: TDBEdit;
+    Label18: TLabel;
+    dbedtZQUCLASS_SCORE_8: TDBEdit;
+    Label19: TLabel;
+    dblkcbbZQUCLASS_CODE_NAME_9: TDBLookupComboBox;
+    Label20: TLabel;
+    dbedtZQUCLASS_NUM_9: TDBEdit;
+    Label21: TLabel;
+    dbedtZQUCLASS_SCORE_9: TDBEdit;
+    Label22: TLabel;
+    dblkcbbZQUCLASS_CODE_NAME_10: TDBLookupComboBox;
+    Label23: TLabel;
+    dbedtZQUCLASS_NUM_10: TDBEdit;
+    Label24: TLabel;
+    dbedtZQUCLASS_SCORE_10: TDBEdit;
+    act_DeveLeve_Build: TAction;
     procedure act_ReLoadClassExecute(Sender: TObject);
     procedure dbgrdQuestionClassDrawColumnCell(Sender: TObject;
       const Rect: TRect; DataCol: Integer; Column: TColumn;
@@ -111,14 +207,28 @@ type
       State: TGridDrawState);
     procedure act_Question_SaveUpdate(Sender: TObject);
     procedure chkEditQustionClick(Sender: TObject);
+    procedure act_DeveLeve_AddUpdate(Sender: TObject);
+    procedure act_DeveLeve_AddExecute(Sender: TObject);
+    procedure act_DeveLeve_SaveExecute(Sender: TObject);
+    procedure cdsDeveLeveNewRecord(DataSet: TDataSet);
+    procedure act_DeveLeve_SaveUpdate(Sender: TObject);
+    procedure act_DeveLeve_CancelUpdate(Sender: TObject);
+    procedure act_DeveLeve_CancelExecute(Sender: TObject);
+    procedure dbgrdLeveDrawColumnCell(Sender: TObject; const Rect: TRect;
+      DataCol: Integer; Column: TColumn; State: TGridDrawState);
+    procedure act_DeveLeve_ReLoadExecute(Sender: TObject);
+    procedure act_DeveLeve_ReLoadUpdate(Sender: TObject);
+    procedure chkEditDeveLeveClick(Sender: TObject);
   private
     { Private declarations }
 
-    fPageTypeList : array of TPageTypeRec;
-    fCurPageType : TPageTypeRec;
-    
+    fPageTypeList : TList;
+    fCurPageType : PPageTypeRec;
+
+    procedure ClearPageTypeList(); //清空
     procedure LoadQustionClass();
-    function GetPageType(ACode: string): TPageTypeRec;  //加载题库目录
+    procedure LoadDeveLeve();
+    function GetPageType(ACode: string): PPageTypeRec;  //加载题库目录
 
 
   public
@@ -132,7 +242,7 @@ type
 
     function  GetQuestionCount(AWhereStr:String):integer; //取出页总数
     procedure LoadQuestionList(APageIndex:integer;AWhereStr:String);
-    property PageType[ACode:string]: TPageTypeRec read GetPageType;
+    property PageType[ACode:string]: PPageTypeRec read GetPageType;
   end;
 
 
@@ -154,7 +264,8 @@ end;
 procedure TQuestionManageClientDlg.freeBase;
 begin
   inherited;
-  SetLength(fPageTypeList,0);
+  ClearPageTypeList();
+  fPageTypeList.Free;
 end;
 
 class function TQuestionManageClientDlg.GetModuleID: integer;
@@ -173,8 +284,11 @@ var
 const
   gc_SQLTXT = 'select * from TB_QUESTION where 1=0';
   gc_SQLTXT2 = 'select isnull(count(ZQCODE),0) from TB_QUESTION';
+  gc_SQLTXT3 = 'select * from TB_QUESTION_DEVELEVEL where 1=0';
 begin
 
+  fPageTypeList := TList.Create;
+  //cdsDeveLeve
   LoadQustionClass();
 
   mycount := ClientSystem.fDbOpr.ReadInt(PChar(gc_SQLTXT2));
@@ -229,6 +343,76 @@ begin
       cdsQuestion.CreateDataSet;
     end;
 
+
+
+    myField := cdsQuestionClass_bak.FieldDefs.AddFieldDef;
+    myfield.Name := 'ZCODE';
+    myfield.DataType := ftString;
+    myfield.Size := 50;
+
+    myField := cdsQuestionClass_bak.FieldDefs.AddFieldDef;
+    myfield.Name := 'ZTITLE';
+    myfield.DataType := ftString;
+    myfield.Size := 100;
+    cdsQuestionClass_bak.CreateDataSet;
+
+
+    //能力等级
+    mycds.Data := ClientSystem.fDbOpr.ReadDataSet(PChar(gc_SQLTXT3));
+    if cdsDeveLeve.Fields.Count = 0 then
+    begin
+      if cdsDeveLeve.Active then
+        cdsDeveLeve.Close;
+      cdsDeveLeve.FieldDefs.Clear;
+      cdsDeveLeve.FieldDefs.Assign(mycds.FieldDefs);
+      with cdsDeveLeve.FieldDefs do
+      begin
+        myField := AddFieldDef;
+        myField.Name := 'ZAUTOID';   //是否是新增
+        myField.DataType := ftInteger;
+
+        myField := AddFieldDef;
+        myField.Name := 'ZISNEW';   //是否是新增
+        myField.DataType := ftBoolean;
+
+        myField := AddFieldDef;
+        myField.Name := 'ZINDEX';
+        myField.DataType := ftString;
+      end;
+
+      for i:=0 to cdsDeveLeve.FieldDefs.Count -1 do
+      begin
+        cdsDeveLeve.FieldDefs[i].CreateField(cdsDeveLeve).Alignment := taLeftJustify;
+      end;
+
+
+      //定名称
+      //ZQUCLASS_CODE_1
+      for i:=1 to 10 do
+      begin
+        //由谁创建
+        with cdsDeveLeve do
+        begin
+          myfield := FieldDefs.AddFieldDef;
+          myfield.Name := Format('ZQUCLASS_CODE_NAME_%d',[i]);
+          myfield.DataType := ftString;
+          myfield.Size := 50;
+          with myfield.CreateField(cdsDeveLeve) do
+          begin
+            FieldKind := fkLookup;
+            KeyFields := Format('ZQUCLASS_CODE_%d',[i]);
+            LookupDataSet := cdsQuestionClass_bak;
+            LookupKeyFields := 'ZCODE';
+            LookupResultField := 'ZTITLE';
+          end;
+        end;
+      end;
+
+
+      cdsDeveLeve.CreateDataSet;
+
+    end;
+
   finally
     mycds.Free;
     fLoading := myb;
@@ -243,12 +427,13 @@ var
   mywhere : string;
   i,c : Integer;
   myb : Boolean;
+  myPageType : PPageTypeRec;
 const
   glSQL1 = 'select * from TB_QUESTION_CLASS order by ZSORT ';
 begin
   inherited;
 
-  SetLength(fPageTypeList,0);
+  ClearPageTypeList();
 
   mycds := TClientDataSet.Create(nil);
   myb := fLoading;
@@ -285,15 +470,16 @@ begin
     c := 0;
 
     //生成页索引的参数
-    SetLength(fPageTypeList,mycds.RecordCount);
 
     while not mycds.Eof do
     begin
       Inc(c);
-      fPageTypeList[c-1].fClassCode := mycds.fieldByName('ZCODE').AsString;
-      fPageTypeList[c-1].fIndex     := 1;
-      fPageTypeList[c-1].fIndexCount := 1;
-      fPageTypeList[c-1].fWhereStr  := Format('ZCLASS_GUID=''''%s''''',[mycds.FieldByName('ZGUID').AsString]);
+      New(myPageType);
+      fPageTypeList.Add(myPageType);
+      myPageType^.fClassCode := mycds.fieldByName('ZCODE').AsString;
+      myPageType^.fIndex     := 1;
+      myPageType^.fIndexCount := 1;
+      myPageType^.fWhereStr  := Format('ZCLASS_GUID=''''%s''''',[mycds.FieldByName('ZGUID').AsString]);
 
       cdsQuestionClass.Append;
       for i:=0 to mycds.Fields.Count -1 do
@@ -431,11 +617,17 @@ begin
 end;
 
 procedure TQuestionManageClientDlg.chkEditorClick(Sender: TObject);
+var
+  myb : Boolean;
 begin
+  if fLoading then Exit;
   //权限
   if not HasModuleActionByShow(1,0,atInsert) then
   begin
+    myb := fLoading;
+    fLoading := True;
     chkEditor.Checked := False;
+    fLoading := myb;
     Exit;
   end;
 
@@ -545,6 +737,7 @@ end;
 procedure TQuestionManageClientDlg.pgcQuestionChange(Sender: TObject);
 var
   i : Integer;
+  mycds : TClientDataSet;
 begin
   if fLoading then Exit;
   if pgcQuestion.ActivePageIndex = 1 then
@@ -553,16 +746,46 @@ begin
     fCurPageType.fIndexCount := GetQuestionCount(fCurPageType.fWhereStr);
     LoadQuestionList(fCurPageType.fIndex,fCurPageType.fWhereStr);
   end;
+
+  if (pgcQuestion.ActivePageIndex = 2)  then
+  begin
+    mycds := TClientDataSet.Create(nil);
+    try
+    //cdsQuestionClass_bak
+      while cdsQuestionClass_bak.RecordCount > 0 do
+        cdsQuestionClass_bak.Delete;
+
+      mycds.CloneCursor(cdsQuestionClass,False,False);
+      mycds.First;
+      while not mycds.Eof do
+      begin
+        cdsQuestionClass_bak.Append;
+        cdsQuestionClass_bak.FieldByName('ZCODE').AsString := mycds.FieldByName('ZCODE').AsString;
+        cdsQuestionClass_bak.FieldByName('ZTITLE').AsString := mycds.FieldByName('ZCODE').AsString + ' ' +
+          mycds.FieldByName('ZTITLE').AsString;
+        cdsQuestionClass_bak.Post;
+
+        mycds.Next;
+      end;
+
+    finally
+      mycds.Free;
+    end;
+    if (cdsDeveLeve.RecordCount =0) then
+      LoadDeveLeve();
+  end;
+
 end;
 
-function TQuestionManageClientDlg.GetPageType(ACode: string): TPageTypeRec;
+function TQuestionManageClientDlg.GetPageType(ACode: string): PPageTypeRec;
 var
   i : Integer;
-  myPageIndex : TPageTypeRec;
+  myPageIndex : PPageTypeRec;
 begin
-  for i := 0 to Length(fPageTypeList) -1 do
+  Result := nil;
+  for i := 0 to fPageTypeList.Count -1 do
   begin
-    myPageIndex := fPageTypeList[i];
+    myPageIndex := fPageTypeList.Items[i];
     if CompareText(myPageIndex.fClassCode,ACode) = 0 then
     begin
       Result := myPageIndex;
@@ -575,7 +798,7 @@ procedure TQuestionManageClientDlg.act_Question_ReLoadExecute(
   Sender: TObject);
 var
   i : Integer;
-  myPageIndex : TPageTypeRec;
+  myPageIndex : PPageTypeRec;
 begin
   myPageIndex := PageType[cdsQuestionClass.FieldByName('ZCODE').AsString];
   LoadQuestionList(myPageIndex.fIndex,myPageIndex.fWhereStr);
@@ -787,12 +1010,18 @@ begin
 end;
 
 procedure TQuestionManageClientDlg.chkEditQustionClick(Sender: TObject);
+var
+  myb : Boolean;
 begin
+  if fLoading then Exit;
 
    //权限
   if  not HasModuleActionByShow(1,0,atInsert) then
   begin
+    myb := fLoading;
+    fLoading := True;
     chkEditQustion.Checked := False;
+    fLoading := myb;
     Exit;
   end;
 
@@ -801,6 +1030,304 @@ begin
   dbmmoZQCENTENT.ReadOnly := not chkEditQustion.Checked;
   dbmmoZANSWER.ReadOnly := not chkEditQustion.Checked;
   dbchkZSORT.ReadOnly := not chkEditQustion.Checked;
+end;
+
+procedure TQuestionManageClientDlg.LoadDeveLeve;
+var
+  mycds : TClientDataSet;
+  myfield : TFieldDef;
+  mywhere : string;
+  i,c : Integer;
+  myb : Boolean;
+const
+  glSQL1 = 'select * from TB_QUESTION_DEVELEVEL order by ZSORT ';
+begin
+  inherited;
+
+
+  mycds := TClientDataSet.Create(nil);
+  myb := fLoading;
+  fLoading := True;
+  try
+    mycds.data := ClientSystem.fDbOpr.ReadDataSet(PChar(glSQL1));
+
+    cdsDeveLeve.First;
+    while not cdsDeveLeve.Eof do
+      cdsDeveLeve.Delete;
+
+    //写入数据
+    mycds.First;
+    c := 0;
+
+
+    while not mycds.Eof do
+    begin
+      Inc(c);
+
+      cdsDeveLeve.Append;
+      for i:=0 to mycds.Fields.Count -1 do
+      begin
+        if mycds.Fields[i].FieldName = 'ZID' then
+        begin
+          cdsDeveLeve.FieldByName('ZAUTOID').AsInteger :=
+            mycds.fieldByName('ZID').AsInteger;
+        end
+        else begin
+          cdsDeveLeve.FieldByName(mycds.Fields[i].FieldName).AsVariant :=
+            mycds.fieldByName(mycds.Fields[i].FieldName).AsVariant;
+        end;
+
+      end;
+      cdsDeveLeve.FieldByName('ZINDEX').AsString  := IntToStr(c);
+      cdsDeveLeve.FieldByName('ZISNEW').AsBoolean := False;
+
+      cdsDeveLeve.Post;
+      mycds.Next;
+    end;
+
+    cdsDeveLeve.First;
+
+  finally
+    mycds.Free;
+    fLoading := myb;
+  end;
+end;
+
+procedure TQuestionManageClientDlg.ClearPageTypeList;
+var
+  i : Integer;
+  myPageType : PPageTypeRec;
+begin
+  for i:=0 to fPageTypeList.Count -1 do
+  begin
+    myPageType := fPageTypeList.Items[i];
+    Dispose(myPageType);
+  end;
+  fPageTypeList.Clear;
+end;
+
+procedure TQuestionManageClientDlg.act_DeveLeve_AddUpdate(Sender: TObject);
+begin
+  (Sender as TAction).Enabled := cdsDeveLeve.Active and
+  (cdsDeveLeve.State in [dsBrowse]) and chkEditDeveLeve.Checked;
+end;
+
+procedure TQuestionManageClientDlg.act_DeveLeve_AddExecute(
+  Sender: TObject);
+begin
+  cdsDeveLeve.Append;
+end;
+
+procedure TQuestionManageClientDlg.act_DeveLeve_SaveExecute(
+  Sender: TObject);
+var
+  mySQL : string;
+const
+  gl_SQLTXT = 'insert into TB_QUESTION_DEVELEVEL (ZDEVENAME,ZSORT, ' +
+    ' ZQUCLASS_CODE_1, ZQUCLASS_NUM_1, ZQUCLASS_SCORE_1, ' +
+    ' ZQUCLASS_CODE_2, ZQUCLASS_NUM_2, ZQUCLASS_SCORE_2, ' +
+    ' ZQUCLASS_CODE_3, ZQUCLASS_NUM_3, ZQUCLASS_SCORE_3, ' +
+    ' ZQUCLASS_CODE_4, ZQUCLASS_NUM_4, ZQUCLASS_SCORE_4, ' +
+    ' ZQUCLASS_CODE_5, ZQUCLASS_NUM_5, ZQUCLASS_SCORE_5, ' +
+    ' ZQUCLASS_CODE_6, ZQUCLASS_NUM_6, ZQUCLASS_SCORE_6, ' +
+    ' ZQUCLASS_CODE_7, ZQUCLASS_NUM_7, ZQUCLASS_SCORE_7, ' +
+    ' ZQUCLASS_CODE_8, ZQUCLASS_NUM_8, ZQUCLASS_SCORE_8, ' +
+    ' ZQUCLASS_CODE_9, ZQUCLASS_NUM_9, ZQUCLASS_SCORE_9, ' +
+    ' ZQUCLASS_CODE_10,ZQUCLASS_NUM_10,ZQUCLASS_SCORE_10' +
+    ' ) Values(''%s'',%d , ' +
+
+    ' ''%s'', %d,%g, ' +  //1
+    ' ''%s'', %d,%g, ' +  //2
+    ' ''%s'', %d,%g, ' +  //3
+    ' ''%s'', %d,%g, ' +  //4
+    ' ''%s'', %d,%g, ' +  //5
+    ' ''%s'', %d,%g, ' +  //6
+    ' ''%s'', %d,%g, ' +  //7
+    ' ''%s'', %d,%g, ' +  //8
+    ' ''%s'', %d,%g, ' +  //9
+    ' ''%s'', %d,%g  ' +  //10
+    ' )';
+  gl_SQLTXT2 =  'update TB_QUESTION_DEVELEVEL set ZDEVENAME=''%s'', ZSORT=%d, ' +
+    'ZQUCLASS_CODE_1=''%s'', ZQUCLASS_NUM_1=%d, ZQUCLASS_SCORE_1=%g , '  +
+    'ZQUCLASS_CODE_2=''%s'', ZQUCLASS_NUM_2=%d, ZQUCLASS_SCORE_2=%g , '  +
+    'ZQUCLASS_CODE_3=''%s'', ZQUCLASS_NUM_3=%d, ZQUCLASS_SCORE_3=%g , '  +
+    'ZQUCLASS_CODE_4=''%s'', ZQUCLASS_NUM_4=%d, ZQUCLASS_SCORE_4=%g , '  +
+    'ZQUCLASS_CODE_5=''%s'', ZQUCLASS_NUM_5=%d, ZQUCLASS_SCORE_5=%g , '  +
+    'ZQUCLASS_CODE_6=''%s'', ZQUCLASS_NUM_6=%d, ZQUCLASS_SCORE_6=%g , '  +
+    'ZQUCLASS_CODE_7=''%s'', ZQUCLASS_NUM_7=%d, ZQUCLASS_SCORE_7=%g , '  +
+    'ZQUCLASS_CODE_8=''%s'', ZQUCLASS_NUM_8=%d, ZQUCLASS_SCORE_8=%g , '  +
+    'ZQUCLASS_CODE_9=''%s'', ZQUCLASS_NUM_9=%d, ZQUCLASS_SCORE_9=%g , '  +
+    'ZQUCLASS_CODE_10=''%s'', ZQUCLASS_NUM_10=%d, ZQUCLASS_SCORE_10=%g  ' +
+    'where ZID=%d';
+
+  gl_SQLTXT3 = 'select ZID from TB_QUESTION_DEVELEVEL where ZDEVENAME=''%s'' and ZSORT=%d ';
+
+begin
+  //新增
+  if cdsDeveLeve.FieldByName('ZISNEW').AsBoolean then
+  begin
+    mySQL := Format(gl_SQLTXT,[
+      cdsDeveLeve.FieldByName('ZDEVENAME').AsString,
+      cdsDeveLeve.FieldByName('ZSORT').AsInteger,
+      cdsDeveLeve.FieldByName('ZQUCLASS_CODE_1').AsString,cdsDeveLeve.FieldByName('ZQUCLASS_NUM_1').AsInteger,cdsDeveLeve.FieldByName('ZQUCLASS_SCORE_1').AsFloat,
+      cdsDeveLeve.FieldByName('ZQUCLASS_CODE_2').AsString,cdsDeveLeve.FieldByName('ZQUCLASS_NUM_2').AsInteger,cdsDeveLeve.FieldByName('ZQUCLASS_SCORE_2').AsFloat,
+      cdsDeveLeve.FieldByName('ZQUCLASS_CODE_3').AsString,cdsDeveLeve.FieldByName('ZQUCLASS_NUM_3').AsInteger,cdsDeveLeve.FieldByName('ZQUCLASS_SCORE_3').AsFloat,
+      cdsDeveLeve.FieldByName('ZQUCLASS_CODE_4').AsString,cdsDeveLeve.FieldByName('ZQUCLASS_NUM_4').AsInteger,cdsDeveLeve.FieldByName('ZQUCLASS_SCORE_4').AsFloat,
+      cdsDeveLeve.FieldByName('ZQUCLASS_CODE_5').AsString,cdsDeveLeve.FieldByName('ZQUCLASS_NUM_5').AsInteger,cdsDeveLeve.FieldByName('ZQUCLASS_SCORE_5').AsFloat,
+      cdsDeveLeve.FieldByName('ZQUCLASS_CODE_6').AsString,cdsDeveLeve.FieldByName('ZQUCLASS_NUM_6').AsInteger,cdsDeveLeve.FieldByName('ZQUCLASS_SCORE_6').AsFloat,
+      cdsDeveLeve.FieldByName('ZQUCLASS_CODE_7').AsString,cdsDeveLeve.FieldByName('ZQUCLASS_NUM_7').AsInteger,cdsDeveLeve.FieldByName('ZQUCLASS_SCORE_7').AsFloat,
+      cdsDeveLeve.FieldByName('ZQUCLASS_CODE_8').AsString,cdsDeveLeve.FieldByName('ZQUCLASS_NUM_8').AsInteger,cdsDeveLeve.FieldByName('ZQUCLASS_SCORE_8').AsFloat,
+      cdsDeveLeve.FieldByName('ZQUCLASS_CODE_9').AsString,cdsDeveLeve.FieldByName('ZQUCLASS_NUM_9').AsInteger,cdsDeveLeve.FieldByName('ZQUCLASS_SCORE_9').AsFloat,
+      cdsDeveLeve.FieldByName('ZQUCLASS_CODE_10').AsString,cdsDeveLeve.FieldByName('ZQUCLASS_NUM_10').AsInteger,cdsDeveLeve.FieldByName('ZQUCLASS_SCORE_10').AsFloat
+    ]);
+  end
+  //修改
+  else begin
+    mySQL := Format(gl_SQLTXT2,[
+      cdsDeveLeve.FieldByName('ZDEVENAME').AsString,
+      cdsDeveLeve.FieldByName('ZSORT').AsInteger,
+      cdsDeveLeve.FieldByName('ZQUCLASS_CODE_1').AsString,cdsDeveLeve.FieldByName('ZQUCLASS_NUM_1').AsInteger,cdsDeveLeve.FieldByName('ZQUCLASS_SCORE_1').AsFloat,
+      cdsDeveLeve.FieldByName('ZQUCLASS_CODE_2').AsString,cdsDeveLeve.FieldByName('ZQUCLASS_NUM_2').AsInteger,cdsDeveLeve.FieldByName('ZQUCLASS_SCORE_2').AsFloat,
+      cdsDeveLeve.FieldByName('ZQUCLASS_CODE_3').AsString,cdsDeveLeve.FieldByName('ZQUCLASS_NUM_3').AsInteger,cdsDeveLeve.FieldByName('ZQUCLASS_SCORE_3').AsFloat,
+      cdsDeveLeve.FieldByName('ZQUCLASS_CODE_4').AsString,cdsDeveLeve.FieldByName('ZQUCLASS_NUM_4').AsInteger,cdsDeveLeve.FieldByName('ZQUCLASS_SCORE_4').AsFloat,
+      cdsDeveLeve.FieldByName('ZQUCLASS_CODE_5').AsString,cdsDeveLeve.FieldByName('ZQUCLASS_NUM_5').AsInteger,cdsDeveLeve.FieldByName('ZQUCLASS_SCORE_5').AsFloat,
+      cdsDeveLeve.FieldByName('ZQUCLASS_CODE_6').AsString,cdsDeveLeve.FieldByName('ZQUCLASS_NUM_6').AsInteger,cdsDeveLeve.FieldByName('ZQUCLASS_SCORE_6').AsFloat,
+      cdsDeveLeve.FieldByName('ZQUCLASS_CODE_7').AsString,cdsDeveLeve.FieldByName('ZQUCLASS_NUM_7').AsInteger,cdsDeveLeve.FieldByName('ZQUCLASS_SCORE_7').AsFloat,
+      cdsDeveLeve.FieldByName('ZQUCLASS_CODE_8').AsString,cdsDeveLeve.FieldByName('ZQUCLASS_NUM_8').AsInteger,cdsDeveLeve.FieldByName('ZQUCLASS_SCORE_8').AsFloat,
+      cdsDeveLeve.FieldByName('ZQUCLASS_CODE_9').AsString,cdsDeveLeve.FieldByName('ZQUCLASS_NUM_9').AsInteger,cdsDeveLeve.FieldByName('ZQUCLASS_SCORE_9').AsFloat,
+      cdsDeveLeve.FieldByName('ZQUCLASS_CODE_10').AsString,cdsDeveLeve.FieldByName('ZQUCLASS_NUM_10').AsInteger,cdsDeveLeve.FieldByName('ZQUCLASS_SCORE_10').AsFloat,
+      cdsDeveLeve.FieldByName('ZAUTOID').AsInteger
+    ]);
+
+  end;
+
+  if ClientSystem.fDbOpr.ExeSQL(PChar(mySQL)) then
+  begin
+    //取出主键，否则再修改无法保存
+    if cdsDeveLeve.FieldByName('ZISNEW').AsBoolean then
+    begin
+      mySQL := Format(gl_SQLTXT3,[cdsDeveLeve.FieldByName('ZDEVENAME').AsString,
+      cdsDeveLeve.FieldByName('ZSORT').AsInteger]);
+      cdsDeveLeve.FieldByName('ZAUTOID').AsInteger := ClientSystem.fDbOpr.ReadInt(PChar(mySQL));
+    end;
+    cdsDeveLeve.FieldByName('ZISNEW').AsBoolean := False;
+    cdsDeveLeve.Post;
+  end;
+
+end;
+
+procedure TQuestionManageClientDlg.cdsDeveLeveNewRecord(DataSet: TDataSet);
+begin
+  DataSet.FieldByName('ZISNEW').AsBoolean := True;
+end;
+
+procedure TQuestionManageClientDlg.act_DeveLeve_SaveUpdate(
+  Sender: TObject);
+begin
+  (Sender as TAction).Enabled := cdsDeveLeve.Active and
+  (cdsDeveLeve.State in [dsEdit,dsInsert]) and
+  chkEditDeveLeve.Checked;
+end;
+
+procedure TQuestionManageClientDlg.act_DeveLeve_CancelUpdate(
+  Sender: TObject);
+begin
+  (Sender as TAction).Enabled := cdsDeveLeve.Active and
+  (cdsDeveLeve.State in [dsEdit,dsInsert]) and
+  chkEditDeveLeve.Checked;
+end;
+
+procedure TQuestionManageClientDlg.act_DeveLeve_CancelExecute(
+  Sender: TObject);
+begin
+  cdsDeveLeve.Cancel;
+end;
+
+procedure TQuestionManageClientDlg.dbgrdLeveDrawColumnCell(Sender: TObject;
+  const Rect: TRect; DataCol: Integer; Column: TColumn;
+  State: TGridDrawState);
+begin
+  if (cdsDeveLeve.RecNo mod 2  = 0) and not ( gdSelected in State)  then
+    dbgrdLeve.Canvas.Brush.Color := clSilver;
+  dbgrdLeve.DefaultDrawColumnCell(Rect,DataCol,Column,State);
+end;
+
+procedure TQuestionManageClientDlg.act_DeveLeve_ReLoadExecute(
+  Sender: TObject);
+begin
+  LoadDeveLeve;
+end;
+
+procedure TQuestionManageClientDlg.act_DeveLeve_ReLoadUpdate(
+  Sender: TObject);
+begin
+  (Sender as TAction).Enabled := cdsDeveLeve.Active and
+  (cdsDeveLeve.State = dsBrowse);
+
+end;
+
+procedure TQuestionManageClientDlg.chkEditDeveLeveClick(Sender: TObject);
+var
+  myb : Boolean;
+begin
+  if fLoading then Exit;
+   //权限
+  if  not HasModuleActionByShow(1,0,atInsert) then
+  begin
+
+    myb := fLoading;
+    fLoading := True;
+    chkEditDeveLeve.Checked := False;
+    fLoading := myb;
+    Exit;
+  end;
+
+
+  dbedtZDEVENAME.ReadOnly := not chkEditDeveLeve.Checked;
+  dbedtZSORT.ReadOnly := not chkEditDeveLeve.Checked;
+
+
+  dblkcbbZQUCLASS_CODE_NAME_1.ReadOnly := not chkEditDeveLeve.Checked;
+  dbedtZQUCLASS_NUM_1.ReadOnly := not chkEditDeveLeve.Checked;
+  dbedtZQUCLASS_SCORE_1.ReadOnly := not chkEditDeveLeve.Checked;
+
+  dblkcbbZQUCLASS_CODE_NAME_2.ReadOnly := not chkEditDeveLeve.Checked;
+  dbedtZQUCLASS_NUM_2.ReadOnly := not chkEditDeveLeve.Checked;
+  dbedtZQUCLASS_SCORE_2.ReadOnly := not chkEditDeveLeve.Checked;
+
+  dblkcbbZQUCLASS_CODE_NAME_3.ReadOnly := not chkEditDeveLeve.Checked;
+  dbedtZQUCLASS_NUM_3.ReadOnly := not chkEditDeveLeve.Checked;
+  dbedtZQUCLASS_SCORE_3.ReadOnly := not chkEditDeveLeve.Checked;
+
+  dblkcbbZQUCLASS_CODE_NAME_4.ReadOnly := not chkEditDeveLeve.Checked;
+  dbedtZQUCLASS_NUM_4.ReadOnly := not chkEditDeveLeve.Checked;
+  dbedtZQUCLASS_SCORE_4.ReadOnly := not chkEditDeveLeve.Checked;
+
+  dblkcbbZQUCLASS_CODE_NAME_5.ReadOnly := not chkEditDeveLeve.Checked;
+  dbedtZQUCLASS_NUM_5.ReadOnly := not chkEditDeveLeve.Checked;
+  dbedtZQUCLASS_SCORE_5.ReadOnly := not chkEditDeveLeve.Checked;
+
+  dblkcbbZQUCLASS_CODE_NAME_6.ReadOnly := not chkEditDeveLeve.Checked;
+  dbedtZQUCLASS_NUM_6.ReadOnly := not chkEditDeveLeve.Checked;
+  dbedtZQUCLASS_SCORE_6.ReadOnly := not chkEditDeveLeve.Checked;
+
+  dblkcbbZQUCLASS_CODE_NAME_7.ReadOnly := not chkEditDeveLeve.Checked;
+  dbedtZQUCLASS_NUM_7.ReadOnly := not chkEditDeveLeve.Checked;
+  dbedtZQUCLASS_SCORE_7.ReadOnly := not chkEditDeveLeve.Checked;
+
+  dblkcbbZQUCLASS_CODE_NAME_8.ReadOnly := not chkEditDeveLeve.Checked;
+  dbedtZQUCLASS_NUM_8.ReadOnly := not chkEditDeveLeve.Checked;
+  dbedtZQUCLASS_SCORE_8.ReadOnly := not chkEditDeveLeve.Checked;
+
+  dblkcbbZQUCLASS_CODE_NAME_9.ReadOnly := not chkEditDeveLeve.Checked;
+  dbedtZQUCLASS_NUM_9.ReadOnly := not chkEditDeveLeve.Checked;
+  dbedtZQUCLASS_SCORE_9.ReadOnly := not chkEditDeveLeve.Checked;
+
+  dblkcbbZQUCLASS_CODE_NAME_10.ReadOnly := not chkEditDeveLeve.Checked;
+  dbedtZQUCLASS_NUM_10.ReadOnly := not chkEditDeveLeve.Checked;
+  dbedtZQUCLASS_SCORE_10.ReadOnly := not chkEditDeveLeve.Checked;
+
+
 end;
 
 end.
