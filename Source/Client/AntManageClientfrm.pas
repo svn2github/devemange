@@ -1535,7 +1535,7 @@ var
   myfield : TFieldDef;
   i : Integer;
 const
-  gl_SQLTXT = 'select top 20 ZPRO_ID,ZUSER_ID,ZVERSION,ZDATE,ZLOG from TB_ANT_LOG where ZANT_GUID=''%s'' order by ZID';
+  gl_SQLTXT = 'select top 20 ZPRO_ID,ZUSER_ID,ZVERSION,ZDATE,ZLOG from TB_ANT_LOG where ZANT_GUID=''%s'' order by ZID desc';
 begin
   //
   mycds := TClientDataSet.Create(nil);
@@ -1627,7 +1627,7 @@ var
   mycds : TClientDataSet;
   i : Integer;
 const
-  gl_SQLTXT = 'select ZPRO_ID,ZUSER_ID,ZVERSION,ZDATE,ZLOG from TB_ANT_LOG where ZANT_GUID=''%s'' order by ZID';
+  gl_SQLTXT = 'select ZPRO_ID,ZUSER_ID,ZVERSION,ZDATE,ZLOG from TB_ANT_LOG where ZANT_GUID=''%s'' order by ZID desc';
 begin
   //
   mycds := TClientDataSet.Create(nil);

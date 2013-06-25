@@ -379,7 +379,7 @@ begin
     Exit;
   end;
 
-  {
+
   //管理员有全部的权限
   if ClientSystem.fEditerType = etAdmin then
   begin
@@ -387,7 +387,7 @@ begin
     Exit;
   end;
 
-  }
+  
   
   Result := False;
   fcdsUsePriv.First;

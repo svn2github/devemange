@@ -171,6 +171,7 @@ type
     Label24: TLabel;
     dbedtZQUCLASS_SCORE_10: TDBEdit;
     act_DeveLeve_Build: TAction;
+    dlgSave1: TSaveDialog;
     procedure act_ReLoadClassExecute(Sender: TObject);
     procedure dbgrdQuestionClassDrawColumnCell(Sender: TObject;
       const Rect: TRect; DataCol: Integer; Column: TColumn;
@@ -219,6 +220,7 @@ type
     procedure act_DeveLeve_ReLoadExecute(Sender: TObject);
     procedure act_DeveLeve_ReLoadUpdate(Sender: TObject);
     procedure chkEditDeveLeveClick(Sender: TObject);
+    procedure act_DeveLeve_BuildExecute(Sender: TObject);
   private
     { Private declarations }
 
@@ -510,8 +512,15 @@ begin
 end;
 
 procedure TQuestionManageClientDlg.act_ReLoadClassExecute(Sender: TObject);
+var
+  mysql : string;
+  mycount : Integer;
+const
+  gc_SQLTXT2 = 'select isnull(count(ZQCODE),0) from TB_QUESTION';
 begin
   LoadQustionClass();
+  mycount := ClientSystem.fDbOpr.ReadInt(PChar(gc_SQLTXT2));
+  lblQuestionCount.Caption := Format('总题目数:%d',[mycount]);
 end;
 
 procedure TQuestionManageClientDlg.dbgrdQuestionClassDrawColumnCell(
@@ -915,7 +924,7 @@ var
   mySQL : string;
   myCode : string;  //编号
 const
-  gl_SQLTXT = 'select isnull(max(ZIDX)+1,1) from TB_QUESTION';
+  gl_SQLTXT = 'select isnull(max(ZIDX)+1,1) from TB_QUESTION where ZQCODE like ''%%%s-%%'' ';
   gl_SQLTXT2 = 'insert into TB_QUESTION(ZCLASS_GUID,ZQCODE,ZQTITLE,ZQCENTENT,ZANSWER,'+
                ' ZUSER_ID,ZDATETIME,ZIDX) values(''%s'',''%s'',''%s'',''%s'',''%s'',%d,''%s'',%d) ';
 
@@ -926,7 +935,7 @@ begin
 
   if cdsQuestion.FieldByName('ZISNEW').AsBoolean then
   begin
-    myIdx := ClientSystem.fDbOpr.ReadInt(PChar(gl_SQLTXT));
+    myIdx := ClientSystem.fDbOpr.ReadInt(PChar(Format(gl_SQLTXT,[cdsQuestionClass.FieldByName('ZCODE').AsString])));
     if myIdx < 10 then
       myCode := '00' + IntToStr(myIdx)
     else if  (myIdx >=10) and (myIdx <100) then
@@ -1327,6 +1336,123 @@ begin
   dbedtZQUCLASS_NUM_10.ReadOnly := not chkEditDeveLeve.Checked;
   dbedtZQUCLASS_SCORE_10.ReadOnly := not chkEditDeveLeve.Checked;
 
+
+end;
+
+procedure TQuestionManageClientDlg.act_DeveLeve_BuildExecute(
+  Sender: TObject);
+var
+  myfilename : string;
+  myfilename2 : string;
+  i,j,myc,mya : Integer;
+  mycount : Integer;
+  myCode : string;
+  mycds : TClientDataSet;
+  mysql : string;
+  mysl  : TStringList;  //已取出来的编号
+  myslQuistion : TStringList;
+  myslAnswer : TStringList;
+  myUserName : string;
+  myindex : Integer;
+const
+  gl_SQLTXT = 'select count(*) from TB_QUESTION where ZQCODE Like ''%%%s-%%'' ';
+  gc_SQLTXT2 = 'select * from TB_QUESTION where (ZQCODE Like ''%%%s-%%'') and (ZSTOP=0)';
+begin
+  //生成试题
+  dlgSave1.FileName := cdsDeveLeve.FieldByName('ZDEVENAME').AsString;
+  if not dlgSave1.Execute then
+    Exit;
+
+  myfilename := dlgSave1.FileName;
+  myfilename2 := ChangeFileExt(myfilename,'.答案.txt');
+
+  ShowProgress('生成试题',10);
+
+  mysl  := TStringList.Create;  //已取出来的编号
+  myslQuistion := TStringList.Create;
+  myslAnswer := TStringList.Create;
+
+  mycds := TClientDataSet.Create(nil);
+
+  myindex := 1;
+
+  Randomize;
+  try
+    for i:=1 to  10 do
+    begin
+      UpdateProgress(i);
+      myCode := cdsDeveLeve.FieldByName(format('ZQUCLASS_CODE_%d',[i])).AsString;
+
+      mysql := Format(gl_SQLTXT,[myCode]);
+      mycount := ClientSystem.fDbOpr.ReadInt(PChar(mysql));
+      mysql := Format(gc_SQLTXT2,[myCode]);
+
+
+      for j:=0 to cdsDeveLeve.FieldByName(format('ZQUCLASS_NUM_%d',[i])).AsInteger -1 do
+      begin
+        //随机取文件
+        myc := Random(mycount);
+        while (mysl.IndexOf(IntToStr(myc)) >=0) and (mysl.Count<mycount) do
+        begin
+          myc := Random(mycount);
+        end;
+
+
+        mycds.Data := ClientSystem.fDbOpr.ReadDataSet(PChar(mysql));
+        mycds.First;
+        mya := 0;
+        while not mycds.Eof do
+        begin
+          if mya = myc then
+          begin
+            myslQuistion.Add('=========================================================');
+            myslQuistion.Add(IntToStr(myindex) +'、' +  mycds.FieldByName('ZQTITLE').AsString +
+
+               format('(%g分)',[cdsDeveLeve.FieldByName(format('ZQUCLASS_SCORE_%d',[i])).AsFloat]) +  #13#10 +
+               mycds.fieldByName('ZQCENTENT').AsString);
+
+            DM.cdsUserAll.First;
+            while not DM.cdsUserAll.Eof do
+            begin
+              if DM.cdsUserAll.FieldByName('ZID').AsInteger = mycds.FieldByName('ZUSER_ID').AsInteger then
+              begin
+                myUserName :=  DM.cdsUserAll.FieldByName('ZNAME').AsString;
+                Break;
+              end;
+              DM.cdsUserAll.Next;
+            end;
+            myslAnswer.Add('=========================================================');
+            myslAnswer.Add(IntToStr(myindex) +'、' + '作者:'+ myUserName +  #13#10 + mycds.FieldByName('ZANSWER').AsString);
+            inc(myindex);
+            mysl.Add(IntToStr(myc)); //记下编号
+            Break;
+          end;
+          inc(mya);
+          mycds.Next;
+        end;
+
+        if mysl.Count = mycount then
+        begin
+          ShowMessage('############试题不够了########');
+          Exit;
+        end;
+
+      end;
+    end;
+
+    //写入到本地
+    myslQuistion.SaveToFile(myfilename);
+    myslAnswer.SaveToFile(myfilename2);
+    HideProgress;
+    ShowMessage('生成文件，会生成两个文件一个是试题，一个答案的txt文件');
+  finally
+    mycds.Free;
+    HideProgress;
+
+    mysl.Free;
+    myslQuistion.Free;
+    myslAnswer.Free;
+  end;
 
 end;
 

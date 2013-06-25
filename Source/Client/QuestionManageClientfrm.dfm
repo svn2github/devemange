@@ -1275,6 +1275,7 @@ inherited QuestionManageClientDlg: TQuestionManageClientDlg
     object act_DeveLeve_Build: TAction
       Category = #33021#21147#31561#32423
       Caption = #29983#25104#35797#21367
+      OnExecute = act_DeveLeve_BuildExecute
     end
   end
   object cdsQuestion: TClientDataSet
@@ -1305,6 +1306,12 @@ inherited QuestionManageClientDlg: TQuestionManageClientDlg
     Aggregates = <>
     Params = <>
     Left = 200
+    Top = 8
+  end
+  object dlgSave1: TSaveDialog
+    DefaultExt = 'txt'
+    Filter = '*.txt|*.txt'
+    Left = 256
     Top = 8
   end
 end
