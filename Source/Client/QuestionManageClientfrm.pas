@@ -1387,7 +1387,7 @@ begin
       mycount := ClientSystem.fDbOpr.ReadInt(PChar(mysql));
       mysql := Format(gc_SQLTXT2,[myCode]);
 
-
+      mysl.Clear;
       for j:=0 to cdsDeveLeve.FieldByName(format('ZQUCLASS_NUM_%d',[i])).AsInteger -1 do
       begin
         //随机取文件
@@ -1433,7 +1433,7 @@ begin
 
         if mysl.Count = mycount then
         begin
-          ShowMessage('############试题不够了########');
+          ShowMessage(format('############试题库:%s 不够了########',[myCode]));
           Exit;
         end;
 
@@ -1444,7 +1444,7 @@ begin
     myslQuistion.SaveToFile(myfilename);
     myslAnswer.SaveToFile(myfilename2);
     HideProgress;
-    ShowMessage('生成文件，会生成两个文件一个是试题，一个答案的txt文件');
+    ShowMessage('生成文件成功，两个文件一个是试题，一个答案的txt文件。');
   finally
     mycds.Free;
     HideProgress;
