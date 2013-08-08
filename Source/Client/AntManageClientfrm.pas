@@ -170,6 +170,14 @@ type
     pnl8: TPanel;
     dbgrdAntLog: TDBGrid;
     dbmmoLOG: TDBMemo;
+    lbl16: TLabel;
+    dbedtParam: TDBEdit;
+    lbl17: TLabel;
+    edtAntFind: TEdit;
+    act_ProFindTxt: TAction;
+    btnProFindTxt: TBitBtn;
+    act_ProAllData: TAction;
+    btnProAllData: TBitBtn;
     procedure act_ProAddExecute(Sender: TObject);
     procedure cdsAntListNewRecord(DataSet: TDataSet);
     procedure act_ProSaveUpdate(Sender: TObject);
@@ -229,6 +237,8 @@ type
       DataCol: Integer; Column: TColumn; State: TGridDrawState);
     procedure act_BuildAntLog_AllUpdate(Sender: TObject);
     procedure act_BuildAntLog_AllExecute(Sender: TObject);
+    procedure act_ProFindTxtExecute(Sender: TObject);
+    procedure act_ProAllDataExecute(Sender: TObject);
   private
     { Private declarations }
     fSVNCommitPageRec :TSVNCommitPageRec;
@@ -265,6 +275,7 @@ type
     fLangType : Integer;  //什么语言的
     fSvnbat   : string;   //svn的更新 bat文件
     fAction : TAction;
+    ComplieParam : string; //编译参数
 
     procedure BeginAnimate();
     procedure EndAnimate();
@@ -449,10 +460,10 @@ procedure TAntManageClientDlg.cdsAntListBeforePost(DataSet: TDataSet);
 var
   mySQL : string;
 const
-  gl_SQL1 = 'insert TB_ANT(ZGUID,ZNAME,ZPRO_ID,ZIP,ZPYFILE,ZREMARK,ZDATE,ZSVN,ZVERSION,ZSVN_URL,ZSVN_LATEST_VERSION,ZLANGTYPE,ZWEBURL,ZLOCALSVNBAT)' +
-       ' values(''%s'',''%s'',%d,''%s'',''%s'',''%s'',''%s'',%d,''%s'',''%s'',%d,%d,''%s'',''%s'')';
+  gl_SQL1 = 'insert TB_ANT(ZGUID,ZNAME,ZPRO_ID,ZIP,ZPYFILE,ZREMARK,ZDATE,ZSVN,ZVERSION,ZSVN_URL,ZSVN_LATEST_VERSION,ZLANGTYPE,ZWEBURL,ZLOCALSVNBAT,ZCOMPLIEPARAM)' +
+       ' values(''%s'',''%s'',%d,''%s'',''%s'',''%s'',''%s'',%d,''%s'',''%s'',%d,%d,''%s'',''%s'',''%s'')';
   gl_SQL2 = 'update TB_ANT set ZNAME=''%s'',ZPRO_ID=%d,ZIP=''%s'',ZPYFILE=''%s'', ' +
-      'ZREMARK=''%s'',ZDATE=''%s'',ZSVN=%d,ZVERSION=''%s'',ZSVN_URL=''%s'',ZSVN_LATEST_VERSION=%d,ZLANGTYPE=%d,ZWEBURL=''%s'',ZLOCALSVNBAT=''%s'' where ZGUID=''%s''';
+      'ZREMARK=''%s'',ZDATE=''%s'',ZSVN=%d,ZVERSION=''%s'',ZSVN_URL=''%s'',ZSVN_LATEST_VERSION=%d,ZLANGTYPE=%d,ZWEBURL=''%s'',ZLOCALSVNBAT=''%s'',ZCOMPLIEPARAM=''%s'' where ZGUID=''%s''';
 begin
   if fLoading then Exit;
 
@@ -473,7 +484,8 @@ begin
       DataSet.FieldByName('ZSVN_LATEST_VERSION').AsInteger,
       DataSet.FieldByName('ZLANGTYPE').AsInteger,
       DataSet.FieldByName('ZWEBURL').AsString,
-      DataSet.FieldByName('ZLOCALSVNBAT').AsString
+      DataSet.FieldByName('ZLOCALSVNBAT').AsString,
+      DataSet.FieldByName('ZCOMPLIEPARAM').AsString
       ]);                                        
     ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
 
@@ -494,6 +506,7 @@ begin
       DataSet.FieldByName('ZLANGTYPE').AsInteger,
       DataSet.FieldByName('ZWEBURL').AsString,
       DataSet.FieldByName('ZLOCALSVNBAT').AsString,
+      DataSet.FieldByName('ZCOMPLIEPARAM').AsString,
       DataSet.FieldByName('ZGUID').AsString]);
     ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
   end;
@@ -627,7 +640,7 @@ begin
     ClientSystem.fEditer_id,
     cdsAntList.FieldByName('ZSVN').AsInteger,
     DateTimeToStr(ClientSystem.SysNow),
-    lstErrors.Items.Text]);
+    '编译参数:' + dbedtParam.Text +'>>>>'+lstErrors.Items.Text]);
 
   ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
 
@@ -965,7 +978,7 @@ const
   //glSQL = 'select * from TB_ANT order by ZDATE desc';  //ZID desc
   glSQL = 'exec pt_SplitPage ''TB_ANT '',' +
           '''ZGUID,ZID,ZNAME,ZPRO_ID,ZIP,ZPYFILE,ZREMARK, ' +
-          'ZDATE,ZSVN,ZVERSION,ZSVN_URL,ZSVN_LATEST_VERSION,ZCOMPILETEXT,ZLANGTYPE,ZWEBURL,ZLOCALSVNBAT'',' +
+          'ZDATE,ZSVN,ZVERSION,ZSVN_URL,ZSVN_LATEST_VERSION,ZCOMPILETEXT,ZLANGTYPE,ZWEBURL,ZLOCALSVNBAT,ZCOMPLIEPARAM'',' +
           '''%s'',20,%d,%d,1,''%s''';
 
 begin
@@ -1035,6 +1048,7 @@ begin
   ComplieVer := fcds.FieldByName('ZSVN').AsInteger;
   fLangType  := fcds.FieldByName('ZLANGTYPE').AsInteger;
   fSvnbat    := fcds.FieldByName('ZLOCALSVNBAT').AsString;
+  ComplieParam := fcds.FieldByName('ZCOMPLIEPARAM').AsString;
   fAction.ImageIndex := 12;
   Application.ProcessMessages;
 end;
@@ -1076,6 +1090,7 @@ begin
     Synchronize(BeginAnimate);
     mystr := 'PyFileName='+PyFileName + ';' +
              'ComplieVer='+IntToStr(ComplieVer) + ';' +
+             'ComplieParam=' + ComplieParam + ';' +
              'Lang='+Inttostr(fLangType) + ';' +
              'SvnBat=' + fSvnbat;
     //mystr := Format('%s %d',[PyFileName,ComplieVer]);
@@ -1246,6 +1261,10 @@ begin
   dbedtZLOCALSVNBAT.Visible := True;
   btnEditSVNRUL.Visible := False;
   dbedtZPYFILE.Visible := True;
+  lbl15.Visible := True;
+  lbl10.Visible := True;
+  lbl4.Visible := True;
+  lbl14.Visible := True;
 end;
 
 procedure TAntManageClientDlg.act_ApplyBuildUpdate(Sender: TObject);
@@ -1662,6 +1681,32 @@ begin
     HideProgress;
   end;
   
+end;
+
+procedure TAntManageClientDlg.act_ProFindTxtExecute(Sender: TObject);
+var
+  mystr: string;
+begin
+  mystr := format('(ZNAME like ''''%%%s%%'''')',[edtAntFind.Text]);
+  fPageType.fWhereStr := mystr;
+  fPageType.fIndex := 1;
+  fPageType.fIndexCount := GetAntPageCount(fPageType.fWhereStr);
+  LoadAntList(fPageType.fIndex,fPageType.fWhereStr);
+  lblPageCount.Caption := format('%d/%d',[1,
+  fPageType.fIndexCount]);
+end;
+
+
+procedure TAntManageClientDlg.act_ProAllDataExecute(Sender: TObject);
+var
+  mystr: string;
+begin
+  mystr := '(1=1)';
+  fPageType.fWhereStr := mystr;
+  fPageType.fIndex := 1;
+  fPageType.fIndexCount := GetAntPageCount(fPageType.fWhereStr);
+  LoadAntList(fPageType.fIndex,fPageType.fWhereStr);
+  lblPageCount.Caption := format('%d/%d',[1,fPageType.fIndexCount]);
 end;
 
 end.

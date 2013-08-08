@@ -1,6 +1,6 @@
 inherited AntManageClientDlg: TAntManageClientDlg
-  Left = 24
-  Top = 154
+  Left = 65
+  Top = 201
   Width = 1195
   Height = 722
   Caption = #32534#35793#37096#32626
@@ -35,6 +35,31 @@ inherited AntManageClientDlg: TAntManageClientDlg
           Action = act_ProAdd
           Caption = #22686#21152#39033#30446
           TabOrder = 0
+        end
+        object edtAntFind: TEdit
+          Left = 137
+          Top = 9
+          Width = 193
+          Height = 23
+          TabOrder = 1
+        end
+        object btnProFindTxt: TBitBtn
+          Left = 336
+          Top = 8
+          Width = 100
+          Height = 25
+          Action = act_ProFindTxt
+          Caption = #26597#25214
+          TabOrder = 2
+        end
+        object btnProAllData: TBitBtn
+          Left = 440
+          Top = 8
+          Width = 100
+          Height = 25
+          Action = act_ProAllData
+          Caption = #20840#37096#25968#25454
+          TabOrder = 3
         end
       end
       object dbgrd1: TDBGrid
@@ -448,15 +473,16 @@ inherited AntManageClientDlg: TAntManageClientDlg
           Caption = #32534#35793#26381#21153#22120#65306
         end
         object lbl4: TLabel
-          Left = 8
-          Top = 74
+          Left = 816
+          Top = 152
           Width = 75
           Height = 15
           Caption = #32534#35793#33050#26412#65306
+          Visible = False
         end
         object lbl5: TLabel
           Left = 8
-          Top = 190
+          Top = 158
           Width = 75
           Height = 15
           Caption = #32534#35793#35828#26126#65306
@@ -477,28 +503,29 @@ inherited AntManageClientDlg: TAntManageClientDlg
         end
         object lbl8: TLabel
           Left = 8
-          Top = 105
+          Top = 73
           Width = 75
           Height = 15
           Caption = #32534#35793#29256#26412#65306
         end
         object lbl9: TLabel
           Left = 557
-          Top = 104
+          Top = 72
           Width = 62
           Height = 15
           Caption = 'SVN'#29256#26412':'
         end
         object lbl10: TLabel
-          Left = 8
-          Top = 135
+          Left = 816
+          Top = 98
           Width = 62
           Height = 15
           Caption = 'SVN'#36335#24452':'
+          Visible = False
         end
         object lbl11: TLabel
           Left = 267
-          Top = 104
+          Top = 72
           Width = 241
           Height = 15
           Caption = '('#27599#27425#32534#35793#26102#24517#39035#22635#20889#32534#35793#30340#29256#26412#21495')'
@@ -511,31 +538,47 @@ inherited AntManageClientDlg: TAntManageClientDlg
         end
         object lbl12: TLabel
           Left = 8
-          Top = 163
+          Top = 131
           Width = 75
           Height = 15
           Caption = #24320#21457#35821#35328#65306
         end
         object lbl13: TLabel
           Left = 251
-          Top = 163
+          Top = 131
           Width = 109
           Height = 15
           Caption = 'Web'#26381#21153#22120'HOST:'
         end
         object lbl14: TLabel
-          Left = 554
-          Top = 70
+          Left = 893
+          Top = 177
           Width = 195
           Height = 15
           Caption = '(java'#39033#30446#20889'build.xml'#36335#24452')'
+          Visible = False
         end
         object lbl15: TLabel
-          Left = 376
-          Top = 135
+          Left = 816
+          Top = 74
           Width = 47
           Height = 15
           Caption = #21462'SVN:'
+          Visible = False
+        end
+        object lbl16: TLabel
+          Left = 8
+          Top = 102
+          Width = 75
+          Height = 15
+          Caption = #32534#35793#21442#25968#65306
+        end
+        object lbl17: TLabel
+          Left = 536
+          Top = 101
+          Width = 281
+          Height = 15
+          Caption = '('#22810#20010#20197#31354#26684#26684#24335#65292#20174'%2'#24320#22987#22312'bat'#20869#24341#29992')'
         end
         object dbedtZNAME: TDBEdit
           Left = 81
@@ -566,9 +609,9 @@ inherited AntManageClientDlg: TAntManageClientDlg
           TabOrder = 2
         end
         object dbedtZPYFILE: TDBEdit
-          Left = 82
-          Top = 69
-          Width = 451
+          Left = 890
+          Top = 149
+          Width = 356
           Height = 23
           DataField = 'ZPYFILE'
           DataSource = dsAntList
@@ -595,9 +638,9 @@ inherited AntManageClientDlg: TAntManageClientDlg
         end
         object dbmmoZREMARK: TDBMemo
           Left = 81
-          Top = 185
+          Top = 153
           Width = 722
-          Height = 56
+          Height = 84
           DataField = 'ZREMARK'
           DataSource = dsAntList
           ScrollBars = ssVertical
@@ -623,7 +666,7 @@ inherited AntManageClientDlg: TAntManageClientDlg
         end
         object dbedtZSVN: TDBEdit
           Left = 82
-          Top = 101
+          Top = 69
           Width = 180
           Height = 23
           DataField = 'ZSVN'
@@ -632,7 +675,7 @@ inherited AntManageClientDlg: TAntManageClientDlg
         end
         object dbedtZSVN_LATEST_VERSION: TDBEdit
           Left = 624
-          Top = 101
+          Top = 69
           Width = 180
           Height = 23
           Color = clBtnFace
@@ -642,9 +685,9 @@ inherited AntManageClientDlg: TAntManageClientDlg
           TabOrder = 10
         end
         object dbedtZSVN_URL: TDBEdit
-          Left = 82
-          Top = 130
-          Width = 279
+          Left = 890
+          Top = 93
+          Width = 356
           Height = 23
           DataField = 'ZSVN_URL'
           DataSource = dsAntList
@@ -653,7 +696,7 @@ inherited AntManageClientDlg: TAntManageClientDlg
         end
         object dbedtZWEBURL: TDBEdit
           Left = 364
-          Top = 158
+          Top = 126
           Width = 438
           Height = 23
           DataField = 'ZWEBURL'
@@ -662,7 +705,7 @@ inherited AntManageClientDlg: TAntManageClientDlg
         end
         object dblkcbbZLANGTYPE: TDBLookupComboBox
           Left = 81
-          Top = 158
+          Top = 126
           Width = 152
           Height = 23
           DataField = 'ZLANGTYPE'
@@ -673,9 +716,9 @@ inherited AntManageClientDlg: TAntManageClientDlg
           TabOrder = 13
         end
         object dbedtZGUID: TDBEdit
-          Left = 813
-          Top = 129
-          Width = 121
+          Left = 890
+          Top = 121
+          Width = 356
           Height = 23
           DataField = 'ZGUID'
           DataSource = dsAntList
@@ -683,9 +726,9 @@ inherited AntManageClientDlg: TAntManageClientDlg
           Visible = False
         end
         object dbedtZLOCALSVNBAT: TDBEdit
-          Left = 426
-          Top = 131
-          Width = 375
+          Left = 890
+          Top = 67
+          Width = 356
           Height = 23
           Hint = #29992#20110#33258#21160#33719#21462'SVN'#20195#30721#20043#29992#26159'bat'#25991#20214
           DataField = 'ZLOCALSVNBAT'
@@ -694,13 +737,22 @@ inherited AntManageClientDlg: TAntManageClientDlg
           Visible = False
         end
         object btnEditSVNRUL: TBitBtn
-          Left = 80
-          Top = 129
-          Width = 726
+          Left = 959
+          Top = 204
+          Width = 153
           Height = 25
           Caption = #32534#36753#36335#24452
           TabOrder = 16
           OnClick = btnEditSVNRULClick
+        end
+        object dbedtParam: TDBEdit
+          Left = 82
+          Top = 97
+          Width = 451
+          Height = 23
+          DataField = 'ZCOMPLIEPARAM'
+          DataSource = dsAntList
+          TabOrder = 17
         end
       end
     end
@@ -1104,6 +1156,16 @@ inherited AntManageClientDlg: TAntManageClientDlg
       Caption = #32534#35793#35760#24405#20840#37096
       OnExecute = act_BuildAntLog_AllExecute
       OnUpdate = act_BuildAntLog_AllUpdate
+    end
+    object act_ProFindTxt: TAction
+      Category = #39033#30446#37197#32622
+      Caption = #26597#25214
+      OnExecute = act_ProFindTxtExecute
+    end
+    object act_ProAllData: TAction
+      Category = #39033#30446#37197#32622
+      Caption = #20840#37096#25968#25454
+      OnExecute = act_ProAllDataExecute
     end
   end
   object idtcpclnt1: TIdTCPClient
