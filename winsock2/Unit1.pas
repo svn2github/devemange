@@ -192,6 +192,7 @@ var
   mysvnbat : string;
   mysvndir : string;
   mylog : TStringList;
+  mystart,myend : LongWord; //编译的花时
 begin
   if not AThread.Terminated and AThread.Connection.Connected then
    begin
@@ -309,6 +310,7 @@ begin
               //
               // 转过来的是一个TStringList.txt 值  2012-7-2
               //
+              mystart := GetTickCount;
               mylog.Clear;
               if mycommandsl.Values['CPyFileName'] <> '' then
                 mybat := mycommandsl.Values['CPyFileName']
@@ -366,8 +368,10 @@ begin
                 if WinExecAndWait32_v1(PChar(cmdcommand),0) <> 0 then
                 //if WinExecExW(PChar(cmdcommand),PChar(fPyDir),0)<>0 then
                   AThread.Connection.WriteLn('编译进度出错...')
-                else
-                  AThread.Connection.WriteLn('编译完成。');
+                else  begin
+                  myend := GetTickCount;
+                  AThread.Connection.WriteLn('编译完成。' + '花时(秒):' + IntToStr(Round(Abs(myend-mystart)/1000)));
+                end;
 
               end //end java
               else begin
@@ -453,8 +457,10 @@ begin
                   if WinExecExW(PChar(cmdcommand),PChar(fPyDir),0)<>0 then
                     AThread.Connection.WriteLn('编译进度出错...');
                 end
-                else
-                  AThread.Connection.WriteLn('编译完成。');
+                else begin
+                  myend := GetTickCount;
+                  AThread.Connection.WriteLn('编译完成。'+ '花时(秒):' + IntToStr(Round(Abs(myend-mystart)/1000)));
+                end;
               end; //end delphi
             end;
         end; //end case
