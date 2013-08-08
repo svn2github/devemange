@@ -636,6 +636,7 @@ create table TB_ANT(
 	ZLANGTYPE int default 0,         -- 0 = Delphi 1=Java 2012-6-30
 	ZWEBURL varchar(200),            -- web项目的url路径，用于直接连过去 2012-6-30 
 	ZLOCALSVNBAT varchar(200),       --svn更新bat文件。
+	ZCOMPLIEPARAM varchar(100),      --编译参数，转到服务器区分是要编译哪个子模块 2013-8-8
 
 	
 	
