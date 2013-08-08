@@ -46,7 +46,7 @@ object Form1: TForm1
       Top = 141
       Width = 306
       Height = 12
-      Caption = #24037#20855#26159#37197#21512#24320#21457#31649#29702#31995#32479#20351#29992#12290#20316#32773#65306#40857#20181#20113' 2012-11-15'
+      Caption = #24037#20855#26159#37197#21512#24320#21457#31649#29702#31995#32479#20351#29992#12290#20316#32773#65306#40857#20181#20113' 2013-08-08'
     end
     object btn2: TButton
       Left = 32
@@ -104,8 +104,8 @@ object Form1: TForm1
   end
   object mmo1: TMemo
     Left = 0
-    Top = 192
-    Width = 863
+    Top = 181
+    Width = 855
     Height = 158
     Align = alBottom
     Anchors = [akLeft, akTop, akRight, akBottom]

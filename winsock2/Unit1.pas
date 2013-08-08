@@ -188,6 +188,7 @@ var
   cmdcommand : string;
   mycommandsl : TStringList;
   myCompilever : string; //编译版本
+  myCompileParam : string; //编译参数  2013-8-8
   mysvnbat : string;
   mysvndir : string;
   mylog : TStringList;
@@ -326,8 +327,11 @@ begin
                 DeleteFile(mybfile);
 
               myCompilever := '';
-                if mycommandsl.Values['ComplieVer'] <> '' then
-                  myCompilever := mycommandsl.Values['ComplieVer'];
+              if mycommandsl.Values['ComplieVer'] <> '' then
+                myCompilever := mycommandsl.Values['ComplieVer'];
+              myCompileParam := '';
+              if mycommandsl.Values['ComplieParam'] <> '' then
+                myCompileParam := mycommandsl.Values['ComplieParam'];
 
               //如是java时处理
               if strtointdef(mycommandsl.Values['Lang'],0) = 1 then
@@ -341,7 +345,7 @@ begin
                   SetCurrentDir(mysvndir); //设置当前目录
                   if FileExists(mysvndir+'\b.txt') then
                     DeleteFile(mysvndir+'\b.txt');
-                  if WinExecAndWait32_v1(PChar(GetShortName(mysvnbat)+ ' ' + myCompilever)
+                  if WinExecAndWait32_v1(PChar(GetShortName(mysvnbat)+ ' ' + myCompilever + ' ' +myCompileParam)
                       ,SW_HIDE)<> 0 then
                   begin
                     AThread.Connection.WriteLn('取SVN出错，无法取出...');
@@ -385,7 +389,7 @@ begin
                   if FileExists(mysvndir+'\b.txt') then
                     DeleteFile(mysvndir+'\b.txt');
                     
-                  if WinExecAndWait32_v1(PChar(GetShortName(mysvnbat)+ ' ' + myCompilever)
+                  if WinExecAndWait32_v1(PChar(GetShortName(mysvnbat)+ ' ' + myCompilever + ' ' + myCompileParam)
                       ,SW_HIDE)<> 0 then
                   begin
                     AThread.Connection.WriteLn('取SVN出错，无法取出...');
@@ -402,8 +406,17 @@ begin
                 
 
                 if myCompilever <> '' then
-                  cmdcommand := Format('cmd /c %s %s %s > %s',[edt1.Text,
-                    GetShortName(mybat), myCompilever,GetShortName(mybfile)])
+                begin
+                  if myCompileParam <> '' then
+                  begin
+                    cmdcommand := Format('cmd /c %s %s %s %s > %s',[edt1.Text,
+                    GetShortName(mybat), myCompilever,myCompileParam,GetShortName(mybfile)])
+                  end
+                  else begin
+                    cmdcommand := Format('cmd /c %s %s %s > %s',[edt1.Text,
+                      GetShortName(mybat), myCompilever,GetShortName(mybfile)])
+                  end;
+                end
                 else
                   cmdcommand := Format('cmd /c %s %s > %s',[edt1.Text,
                     GetShortName(mybat),GetShortName(mybfile)]);
@@ -420,8 +433,22 @@ begin
                   // 经以前的用过程中,b.txt 可能锁了,产生的问题
                   //
                   mybfile := fPyDir + '\b1.txt';
-                  cmdcommand := Format('cmd /c %s %s > %s',[edt1.Text,
-                    GetShortName(mybat),GetShortName(mybfile)]);
+                  if myCompilever <> '' then
+                  begin
+                    if myCompileParam <> '' then
+                    begin
+                      cmdcommand := Format('cmd /c %s %s %s %s > %s',[edt1.Text,
+                      GetShortName(mybat), myCompilever,myCompileParam,GetShortName(mybfile)])
+                    end
+                    else begin
+                      cmdcommand := Format('cmd /c %s %s %s > %s',[edt1.Text,
+                        GetShortName(mybat), myCompilever,GetShortName(mybfile)])
+                    end;
+                  end
+                  else
+                    cmdcommand := Format('cmd /c %s %s > %s',[edt1.Text,
+                      GetShortName(mybat),GetShortName(mybfile)]);
+
                   mmo1.Lines.Add(cmdcommand);
                   if WinExecExW(PChar(cmdcommand),PChar(fPyDir),0)<>0 then
                     AThread.Connection.WriteLn('编译进度出错...');
