@@ -236,6 +236,9 @@ type
     N17: TMenuItem;
     actAttach_Openfile: TAction;
     N18: TMenuItem;
+    actAttach_QQCutPic: TAction;
+    actAttach_PastPic: TAction;
+    N19: TMenuItem;
     procedure actBug_AddDirExecute(Sender: TObject);
     procedure tvProjectExpanding(Sender: TObject; Node: TTreeNode;
       var AllowExpansion: Boolean);
@@ -323,6 +326,9 @@ type
     procedure actAttach_BitToDesktopExecute(Sender: TObject);
     procedure actAttach_OpenfileUpdate(Sender: TObject);
     procedure actAttach_OpenfileExecute(Sender: TObject);
+    procedure actAttach_QQCutPicExecute(Sender: TObject);
+    procedure actAttach_PastPicExecute(Sender: TObject);
+    procedure actAttach_PastPicUpdate(Sender: TObject);
   private
     fPageType : TPageTypeRec; //分页处理
     fHighQuery : TBugHighQueryDlg;
@@ -367,6 +373,7 @@ uses
   BugAeplyfrm,
   ComObj,
   BitmapFromDesktopfrm,       {截图}
+  Clipbrd,
   DmUints;
 
 {$R *.dfm}
@@ -3452,5 +3459,57 @@ begin
     Application.MessageBox(PChar('下载失败,错误号:' + inttostr(myi)),'提示',MB_ICONERROR);
 end;
 
+
+procedure TBugManageDlg.actAttach_QQCutPicExecute(Sender: TObject);
+begin
+  keybd_event(17,0,0,0); //Ctrl
+  keybd_event(18,0,0,0); //alt
+  keybd_event(65,0,0,0);// a
+
+  keybd_event(65,0,KEYEVENTF_KEYUP,0);
+  keybd_event(18,0,KEYEVENTF_KEYUP,0);
+  keybd_event(17,0,KEYEVENTF_KEYUP,0);
+end;
+
+procedure TBugManageDlg.actAttach_PastPicExecute(Sender: TObject);
+var
+  myfilename : string;
+  myBugid : Integer;
+  myid : Integer;
+  mybmp : TBitmap;
+begin
+  //UPFILE
+  mybmp := TBitmap.Create;
+  mybmp.LoadFromClipboardFormat(CF_BitMap,ClipBoard.GetAsHandle(CF_BitMap),0);
+  myfilename := ClientSystem.fTempDir + Format('QQ截图-#%d.jpg',[cdsBugItem.FieldByName('ZID').AsInteger]);
+  mybmp.SaveToFile(myfilename);
+  ClientSystem.fDeleteFiles.Add(myfilename);
+  mybmp.Free;
+
+  myBugid := cdsBugItem.FieldByName('ZID').AsInteger;
+
+  //上传中
+  ShowProgress('上传文件中...',0);
+  try
+    myid := ClientSystem.fDbOpr.UpFile(1,myBugid,myfilename);
+  finally
+    HideProgress;
+  end;
+
+  if myid = 0 then
+  begin
+    LoadAttach(myBugid);
+  end
+  else
+    Application.MessageBox(PChar('上传失败,错误号:' +inttostr(myid) ),'提示',
+      MB_ICONERROR);
+
+end;
+
+
+procedure TBugManageDlg.actAttach_PastPicUpdate(Sender: TObject);
+begin
+  (Sender as TAction).Enabled := Clipboard.HasFormat(CF_PICTURE);
+end;
 
 end.

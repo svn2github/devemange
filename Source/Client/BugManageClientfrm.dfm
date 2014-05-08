@@ -1,6 +1,6 @@
 inherited BugManageDlg: TBugManageDlg
-  Left = 173
-  Top = 66
+  Left = 170
+  Top = 167
   Width = 1024
   Height = 652
   Caption = #38169#35823#31649#29702
@@ -805,8 +805,8 @@ inherited BugManageDlg: TBugManageDlg
           object lbBugCaption: TLabel
             Left = 0
             Top = 0
-            Width = 725
-            Height = 18
+            Width = 96
+            Height = 15
             Align = alClient
             Caption = 'lbBugCaption'
             Color = clGray
@@ -1597,6 +1597,17 @@ inherited BugManageDlg: TBugManageDlg
       OnExecute = actAttach_OpenfileExecute
       OnUpdate = actAttach_OpenfileUpdate
     end
+    object actAttach_QQCutPic: TAction
+      Category = #38468#20214
+      Caption = 'QQ'#25130#22270'(Ctrl+Alt+A)'
+      OnExecute = actAttach_QQCutPicExecute
+    end
+    object actAttach_PastPic: TAction
+      Category = #38468#20214
+      Caption = #31896#36148#22270#29255
+      OnExecute = actAttach_PastPicExecute
+      OnUpdate = actAttach_PastPicUpdate
+    end
   end
   object pmBugTree: TPopupMenu
     AutoHotkeys = maManual
@@ -1795,7 +1806,10 @@ inherited BugManageDlg: TBugManageDlg
       Action = actAttach_Openfile
     end
     object N17: TMenuItem
-      Action = actAttach_BitToDesktop
+      Action = actAttach_QQCutPic
+    end
+    object N19: TMenuItem
+      Action = actAttach_PastPic
     end
   end
   object ilAttach: TImageList
