@@ -1,6 +1,6 @@
 object MainDlg: TMainDlg
   Left = 248
-  Top = 83
+  Top = 170
   Width = 870
   Height = 640
   Caption = 'DeveManage'
@@ -393,6 +393,11 @@ object MainDlg: TMainDlg
       Category = #19994#21153
       Caption = #31561#32423#39064#24211
       OnExecute = actQuestionExecute
+    end
+    object actMod_Prototype: TAction
+      Category = #19994#21153
+      Caption = #20135#21697#21407#22411
+      OnExecute = actMod_PrototypeExecute
     end
   end
   object ImageList1: TImageList
@@ -1123,6 +1128,9 @@ object MainDlg: TMainDlg
       end
       object N23: TMenuItem
         Action = actQuestion
+      end
+      object N24: TMenuItem
+        Action = actMod_Prototype
       end
       object N15: TMenuItem
         Caption = '-'

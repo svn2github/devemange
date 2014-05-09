@@ -1586,11 +1586,6 @@ inherited BugManageDlg: TBugManageDlg
       OnExecute = actAttach_downfileExecute
       OnUpdate = actAttach_downfileUpdate
     end
-    object actAttach_BitToDesktop: TAction
-      Category = #38468#20214
-      Caption = #25130#22270'...'
-      OnExecute = actAttach_BitToDesktopExecute
-    end
     object actAttach_Openfile: TAction
       Category = #38468#20214
       Caption = #25171#24320#25991#20214'...'

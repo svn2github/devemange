@@ -232,7 +232,6 @@ type
     actAttach_downfile: TAction;
     N16: TMenuItem;
     edtBugCode: TEdit;
-    actAttach_BitToDesktop: TAction;
     N17: TMenuItem;
     actAttach_Openfile: TAction;
     N18: TMenuItem;
@@ -323,7 +322,6 @@ type
     procedure lvAttachDblClick(Sender: TObject);
     procedure edtBugCodeKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
-    procedure actAttach_BitToDesktopExecute(Sender: TObject);
     procedure actAttach_OpenfileUpdate(Sender: TObject);
     procedure actAttach_OpenfileExecute(Sender: TObject);
     procedure actAttach_QQCutPicExecute(Sender: TObject);
@@ -372,7 +370,6 @@ uses
   SelectBugStatusfrm,
   BugAeplyfrm,
   ComObj,
-  BitmapFromDesktopfrm,       {截图}
   Clipbrd,
   DmUints;
 
@@ -3385,45 +3382,6 @@ begin
 
     fPageType.fType := myType;
   end;
-end;
-
-procedure TBugManageDlg.actAttach_BitToDesktopExecute(Sender: TObject);
-var
-  myms : TMemoryStream;
-  myBugid,myid : Integer;
-  myfilename : string;
-begin
-  myms := TMemoryStream.Create;
-  try
-    if ShowBitmapFromDesktopfrmDlg(myms)  then
-    begin
-      myBugid := cdsBugItem.FieldByName('ZID').AsInteger;
-
-      myfilename := ClientSystem.fTempDir +  '截图' + FormatDateTime('yyyy-mm-dd-hh-mm-ss',Now())+'.jpg';
-      myms.SaveToFile(myfilename);
-      //上传中
-      ShowProgress('上传文件中...',0);
-      try
-        myid := ClientSystem.fDbOpr.UpFile(1,myBugid,myfilename);
-      finally
-        HideProgress;
-      end;
-
-      if myid = 0 then
-      begin
-        LoadAttach(myBugid);
-      end
-      else
-        Application.MessageBox(PChar('上传失败,错误号:' +inttostr(myid) ),'提示',
-          MB_ICONERROR);
-
-    end;
-
-  finally
-    myms.Free;
-    DeleteFile(myfilename);
-  end;
-
 end;
 
 procedure TBugManageDlg.actAttach_OpenfileUpdate(Sender: TObject);
