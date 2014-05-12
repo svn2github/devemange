@@ -642,7 +642,7 @@ var
   myData : PBugTreeNode;
   mySQL  : string;
 const
-  glSQL  = 'update TB_BUG_TREE set ZNAME=''%s'',ZPRO_ID=%d,ZSORT=%d,ZADDDATE=''%s'' '+
+  glSQL  = 'update TB_BUG_TREE set ZNAME=''%s'',ZPRO_ID=%d,ZSORT=%d,ZADDDATE=''%s'',ZPID=%d '+
            'where ZID=%d';
 begin
   myData := tvProject.Selected.data;
@@ -651,10 +651,18 @@ begin
   with TAddBugTreeNodeDlg.Create(nil) do
   try
     GroupBox1.Visible := False;
+
+    //修改的根节点  2014-5-12 龙仕云
+    edtParentCode.Visible := True;
+    lbl1.Visible := True;
+    lbl2.Visible := True;
+    //end
+
     edName.Text := myData^.fName;
     edPROID.Text := inttostr(myData^.fPRO_ID);
     edSort.Text  := inttostr(myData^.fSort);
     dpAddDate.DateTime := myData^.fAddDate;
+    edtParentCode.Text := IntToStr(myData^.fPID);
 
     if ShowModal = mrOK then
     begin
@@ -665,7 +673,10 @@ begin
           strtoint(edPROID.text),
           strtoint(edSort.text),
           datetimetostr(dpAddDate.DateTime),
-          myData^.fID]);
+          StrToIntDef(edtParentCode.Text,myData^.fPID),
+          myData^.fID
+          ]);
+          
         ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
         mydata^.fName := edName.Text;
         mydata^.fPRO_ID := strtoint(edPROID.Text);

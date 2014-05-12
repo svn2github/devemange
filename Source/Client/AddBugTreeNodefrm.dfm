@@ -5,6 +5,7 @@ inherited AddBugTreeNodeDlg: TAddBugTreeNodeDlg
   Caption = #22686#21152#39033#30446
   ClientHeight = 336
   ClientWidth = 508
+  OldCreateOrder = True
   Position = poMainFormCenter
   PixelsPerInch = 96
   TextHeight = 15
@@ -54,7 +55,7 @@ inherited AddBugTreeNodeDlg: TAddBugTreeNodeDlg
     Left = 16
     Top = 88
     Width = 473
-    Height = 177
+    Height = 193
     Caption = #20869#23481
     TabOrder = 3
     object Label1: TLabel
@@ -84,6 +85,22 @@ inherited AddBugTreeNodeDlg: TAddBugTreeNodeDlg
       Width = 75
       Height = 15
       Caption = #21019#24314#26085#26399#65306
+    end
+    object lbl1: TLabel
+      Left = 29
+      Top = 155
+      Width = 75
+      Height = 15
+      Caption = #19978#32423#32534#21495#65306
+      Visible = False
+    end
+    object lbl2: TLabel
+      Left = 240
+      Top = 154
+      Width = 84
+      Height = 15
+      Caption = '-1 '#20026#26681#32467#28857
+      Visible = False
     end
     object edName: TEdit
       Left = 104
@@ -115,14 +132,19 @@ inherited AddBugTreeNodeDlg: TAddBugTreeNodeDlg
       Top = 122
       Width = 333
       Height = 23
-      CalAlignment = dtaLeft
-      Date = 39408.4506664005
-      Time = 39408.4506664005
-      DateFormat = dfShort
-      DateMode = dmComboBox
-      Kind = dtkDate
-      ParseInput = False
+      Date = 39408.450666400500000000
+      Time = 39408.450666400500000000
       TabOrder = 3
+    end
+    object edtParentCode: TEdit
+      Left = 105
+      Top = 151
+      Width = 121
+      Height = 23
+      TabOrder = 4
+      Text = 'edtParentCode'
+      Visible = False
+      OnKeyPress = edtParentCodeKeyPress
     end
   end
 end
