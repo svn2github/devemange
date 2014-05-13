@@ -1021,6 +1021,20 @@ create table TB_QUESTION_DEVELEVEL(
 )
 go
 
+/*产品原型*/
+/*题库内容表*/
+create table TB_PROTOTYPE(
+	PRTY_GUID varchar(36) not null,    --产品原型的GUID
+	PRTY_NAME varchar(200) not null,   --原型名称
+	ZUSER_ID int  not null,            --创建人ID
+	PRTY_DATETIME datetime,            --创建时间
+	PRTY_DIRNAME varchar(100),         --目录名称,用于指定浏览的文件地址
+  	
+	constraint PK_TB_PROTOTYPE primary key(PRTY_GUID) 
+)
+go
+
+
 
 
 

@@ -35,7 +35,7 @@ type
     actManage_User: TAction;
     CoolBar1: TCoolBar;
     ToolBarmain: TToolBar;
-    ToolButton1: TToolButton;
+    btnMod_Prototype: TToolButton;
     ToolButton2: TToolButton;
     ToolButton3: TToolButton;
     MainMenu1: TMainMenu;
