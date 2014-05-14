@@ -3007,6 +3007,13 @@ procedure TBugManageDlg.act_AllDataExecute(Sender: TObject);
   const
     glSQL  = 'select ZID,ZNAME,ZPRO_ID from TB_BUG_TREE Order by ZSORT';
   begin
+    tvProject.Items.BeginUpdate;
+    try
+      tvProject.FullExpand;
+      tvProject.FullCollapse;
+    finally
+      tvProject.Items.EndUpdate;
+    end;
     myNode := tvProject.TopItem;
     while Assigned(myNode) do
     begin

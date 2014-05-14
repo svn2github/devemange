@@ -57,6 +57,8 @@ type
     btnProPage: TBitBtn;
     btnNextPage: TBitBtn;
     btnLastPage: TBitBtn;
+    act_RefreshData: TAction;
+    btnRefreshData: TBitBtn;
     procedure act_AddProExecute(Sender: TObject);
     procedure dbgrdListDrawColumnCell(Sender: TObject; const Rect: TRect;
       DataCol: Integer; Column: TColumn; State: TGridDrawState);
@@ -79,6 +81,7 @@ type
     procedure act_NextPageExecute(Sender: TObject);
     procedure act_LastPageUpdate(Sender: TObject);
     procedure act_LastPageExecute(Sender: TObject);
+    procedure act_RefreshDataExecute(Sender: TObject);
   private
     { Private declarations }
     fPageType : TPageTypeRec;
@@ -524,6 +527,16 @@ begin
   lblPageCount.Caption := format('%d/%d',[
       fPageType.fIndex,
       fPageType.fIndexCount]);
+
+end;
+
+procedure TPrototypeClientDlg.act_RefreshDataExecute(Sender: TObject);
+begin
+  LoaPrtyList(fPageType.fIndex,fPageType.fWhereStr);
+  lblPageCount.Caption := format('%d/%d',[
+      fPageType.fIndex,
+      fPageType.fIndexCount]);
+
 
 end;
 

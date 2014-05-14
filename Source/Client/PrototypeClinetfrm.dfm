@@ -153,6 +153,15 @@ inherited PrototypeClientDlg: TPrototypeClientDlg
           Caption = #26368#21518#19968#39029
           TabOrder = 3
         end
+        object btnRefreshData: TBitBtn
+          Left = 423
+          Top = 12
+          Width = 100
+          Height = 25
+          Action = act_RefreshData
+          Caption = #20840#37096#25968#25454
+          TabOrder = 4
+        end
       end
     end
     object tsEdit: TTabSheet
@@ -280,6 +289,10 @@ inherited PrototypeClientDlg: TPrototypeClientDlg
       Caption = #26368#21518#19968#39029
       OnExecute = act_LastPageExecute
       OnUpdate = act_LastPageUpdate
+    end
+    object act_RefreshData: TAction
+      Caption = #20840#37096#25968#25454
+      OnExecute = act_RefreshDataExecute
     end
   end
   object dsList: TDataSource
