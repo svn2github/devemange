@@ -784,6 +784,12 @@ begin
         myfield.DataType := ftBoolean;
         for i:=0 to FieldDefs.Count -1 do
         begin
+          //因为用户粘了很少的文字，结果保存丢了。2014-5-13
+          if FieldDefs[i].Name = 'ZTITLE' then
+          begin
+            FieldDefs[i].Size := 1000;
+          end;
+          //end 
           FieldDefs[i].CreateField(cdsBugItem).Alignment := taLeftJustify;
         end;
 
@@ -1388,6 +1394,7 @@ begin
   if fLoading then Exit;
 
   myBugData := tvProject.Selected.data;
+
   if not DataSet.FieldByName('ZISNEW').AsBoolean then
   begin
     if DataSet.FieldByName('ZASSIGNEDTO').AsInteger >=0 then
@@ -1505,6 +1512,13 @@ end;
 
 procedure TBugManageDlg.actBugItem_SaveExecute(Sender: TObject);
 begin
+  //标题如超过200字符会丢失
+  if Length(cdsBugItem.FieldByName('ZTITLE').AsString)>200 then
+  begin
+    MessageBox(Handle,'你的标题太长超过规定的100个汉字。',
+        '提示',MB_ICONWARNING+MB_OK);
+    Exit;
+  end;
   cdsBugItem.Post;
 end;
 
@@ -2487,6 +2501,11 @@ begin
       begin
 
         //优化，不需要从服务器上取数据了.
+        //要展开,目录是因为trproject的部分数据 2014-5-04
+        tvProject.FullExpand;
+        tvProject.FullCollapse;
+        //
+        
         myNode := tvProject.TopItem;
         while Assigned(myNode) do
         begin
@@ -2529,6 +2548,8 @@ begin
         cdsBugAdmder.CloneCursor(DM.cdsUser,True);
         cdsToWho.CloneCursor(DM.cdsUser,True);
         cdsSubToWho.CloneCursor(DM.cdsUser,True);
+        dtpverify.DateTime := now();  //审核时间
+        dtpverify2.DateTime := now();
         cbbTag.Items.Clear;
         DM.cdsTag.First;
         while not DM.cdsTag.Eof do

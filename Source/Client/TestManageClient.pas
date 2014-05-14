@@ -1553,6 +1553,10 @@ begin
     fHighQueryDlg.cdsCreateor.CloneCursor(DM.cdsUser,True);
     fHighQueryDlg.cdsCoser.CloneCursor(DM.cdsUser,True);
     fHighQueryDlg.cdssubmis.CloneCursor(DM.cdsUser,True);
+    fHighQueryDlg.dtpopendate.DateTime := now();
+    fHighQueryDlg.dtpopendate2.DateTime := Now();
+    fHighQueryDlg.dtpresultdate.DateTime := Now();
+    fHighQueryDlg.dtpresultdate2.DateTime := Now();
   end;
 
   if fHighQueryDlg.ShowModal = mrOK then

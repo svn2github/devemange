@@ -4,7 +4,8 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, BaseDialogfrm, StdCtrls, DBCtrls, Buttons, DB, DBClient;
+  Dialogs, BaseDialogfrm, StdCtrls, DBCtrls, Buttons, DB, DBClient,
+  ComCtrls;
 
 type
   TTestHighQueryDlg = class(TBaseDialog)
@@ -34,6 +35,12 @@ type
     dblkcbb4: TDBLookupComboBox;
     cdssubmis: TClientDataSet;
     dssubmis: TDataSource;
+    chkopendate: TCheckBox;
+    dtpopendate: TDateTimePicker;
+    dtpopendate2: TDateTimePicker;
+    chkresultdate: TCheckBox;
+    dtpresultdate: TDateTimePicker;
+    dtpresultdate2: TDateTimePicker;
     procedure edtCodeChange(Sender: TObject);
     procedure btnAllClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -55,11 +62,13 @@ implementation
 function TTestHighQueryDlg.GetwhereStr: string;
 var
   mystr : string;
+  mywhere : string;
 begin
   //
+  mywhere := '1=1';
   if fShowAllItem then
   begin
-    Result := '1=1';
+    Result := mywhere;
     Exit;
   end;
 
@@ -67,83 +76,91 @@ begin
   if chkCode.Checked then
   begin
     mystr := Format('ZID=%d',[StrToIntDef(edtCode.Text,-1)]);
+    if mystr <> '' then mywhere := mywhere + ' and ' + mystr;
   end;
 
+
+  mystr :='';
   if chkProject.Checked then
   begin
-    if mystr <> '' then
-      mystr := Format('%s and ZPRO_ID=%d ',[mystr,
-        cdsPros.FieldByName('ZID').AsInteger])
-    else
-      mystr :=   Format('ZPRO_ID=%d ',[
+    mystr :=   Format('ZPRO_ID=%d ',[
         cdsPros.FieldByName('ZID').AsInteger]);
 
+    if mystr <> '' then mywhere := mywhere + ' and ' + mystr;
   end;
 
+  mystr :='';
   if chkBuildUser.Checked then
   begin
-    if mystr <> '' then
-      mystr := Format('%s and ZOPENEDBY=%d ',[mystr,
-        cdsCreateor.FieldByName('ZID').AsInteger])
-    else
       mystr :=   Format('ZOPENEDBY=%d ',[
         cdsCreateor.FieldByName('ZID').AsInteger]);
+    if mystr <> '' then mywhere := mywhere + ' and ' + mystr;
   end;
 
+  mystr :='';
   if chkTestUser.Checked then
   begin
-    if mystr <> '' then
-      mystr := Format('%s and ZTESTRESULTBY=%d ',[mystr,
-        cdsCoser.FieldByName('ZID').AsInteger])
-    else
       mystr :=   Format('ZTESTRESULTBY=%d ',[
         cdsCoser.FieldByName('ZID').AsInteger]);
+    if mystr <> '' then mywhere := mywhere + ' and ' + mystr;
   end;
 
+  mystr :='';
   if chkStats.Checked and rbClosed.Checked then
   begin
-    if mystr <> '' then
-      mystr := Format('%s and ZSTATUS=3',[mystr])
-    else
-      mystr := 'ZSTATUS=3'
+     mystr := 'ZSTATUS=3';
+    if mystr <> '' then mywhere := mywhere + ' and ' + mystr;
   end;
 
+  mystr :='';
   if chkStats.Checked and rbOpen.Checked then
   begin
-    if mystr <> '' then
-      mystr := Format('%s and ZSTATUS<>3',[mystr])
-    else
-      mystr := 'ZSTATUS<>3'
-
+      mystr := 'ZSTATUS<>3';
+    if mystr <> '' then mywhere := mywhere + ' and ' + mystr;
   end;
 
+  mystr :='';
   if chkStats.Checked and rbSubmit.Checked then
   begin
-    if mystr <> '' then
-      mystr := Format('%s and ZSTATUS<>3',[mystr])
-    else
-      mystr := 'ZSTATUS=4'
+      mystr := 'ZSTATUS=4';
+      if mystr <> '' then mywhere := mywhere + ' and ' + mystr;
   end;
 
+  mystr :='';
   if chkStats.Checked and rbAction.Checked then
   begin
-    if mystr <> '' then
-      mystr := Format('%s and ((ZSTATUS=0) or (ZSTATUS=2))',[mystr])
-    else
-      mystr := '(ZSTATUS=0) or (ZSTATUS=2)'
+      mystr := '(ZSTATUS=0) or (ZSTATUS=2)';
+    if mystr <> '' then mywhere := mywhere + ' and ' + mystr;
   end;
 
+  mystr :='';
   if chkSubmis.Checked then
   begin
-    if mystr <> '' then
-      mystr := Format('%s and ZSUBMISBY=%d ',[mystr,
-        cdssubmis.FieldByName('ZID').AsInteger])
-    else
+
       mystr :=   Format('ZSUBMISBY=%d ',[
         cdssubmis.FieldByName('ZID').AsInteger]);
+    if mystr <> '' then mywhere := mywhere + ' and ' + mystr;
   end;
 
-  Result := mystr;
+  //创建时间
+  mystr := '';
+  if chkopendate.Checked then
+  begin
+    mystr := format('(ZOPENEDDATE between ''%s'' and ''%s'')  ',
+      [''''+datetostr(dtpopendate.Date)+'''',''''+datetostr(dtpopendate2.Date)+'''']);
+  end;
+  if mystr <> '' then mywhere := mywhere + ' and ' + mystr;
+
+  //完成时间
+  mystr := '';
+  if chkresultdate.Checked then
+  begin
+    mystr := format('(ZRESULTDATE between ''%s'' and ''%s'')  ',
+      [''''+datetostr(dtpresultdate.Date)+'''',''''+datetostr(dtpresultdate2.Date)+'''']);
+  end;
+  if mystr <> '' then mywhere := mywhere + ' and ' + mystr;
+
+  Result := mywhere;
 end;
 
 procedure TTestHighQueryDlg.edtCodeChange(Sender: TObject);

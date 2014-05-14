@@ -49,6 +49,14 @@ type
     act_Clance: TAction;
     act_PrtyView: TAction;
     btnPrtyView: TBitBtn;
+    act_FirstPage: TAction;
+    act_NextPage: TAction;
+    act_ProPage: TAction;
+    act_LastPage: TAction;
+    btnFirstPage: TBitBtn;
+    btnProPage: TBitBtn;
+    btnNextPage: TBitBtn;
+    btnLastPage: TBitBtn;
     procedure act_AddProExecute(Sender: TObject);
     procedure dbgrdListDrawColumnCell(Sender: TObject; const Rect: TRect;
       DataCol: Integer; Column: TColumn; State: TGridDrawState);
@@ -63,6 +71,14 @@ type
     procedure dbgrdListDblClick(Sender: TObject);
     procedure act_PrtyViewUpdate(Sender: TObject);
     procedure act_PrtyViewExecute(Sender: TObject);
+    procedure act_FirstPageExecute(Sender: TObject);
+    procedure act_FirstPageUpdate(Sender: TObject);
+    procedure act_ProPageExecute(Sender: TObject);
+    procedure act_ProPageUpdate(Sender: TObject);
+    procedure act_NextPageUpdate(Sender: TObject);
+    procedure act_NextPageExecute(Sender: TObject);
+    procedure act_LastPageUpdate(Sender: TObject);
+    procedure act_LastPageExecute(Sender: TObject);
   private
     { Private declarations }
     fPageType : TPageTypeRec;
@@ -450,6 +466,65 @@ begin
     MessageBox(Handle,'系统参数没有设参数(axure_web)','提示',MB_ICONERROR+MB_OK);
     Exit;
   end;
+end;
+
+procedure TPrototypeClientDlg.act_FirstPageExecute(Sender: TObject);
+begin
+  fPageType.fIndex := 1;
+  LoaPrtyList(fPageType.fIndex,fPageType.fWhereStr);
+  lblPageCount.Caption := format('%d/%d',[1,
+  fPageType.fIndexCount]);
+end;
+
+procedure TPrototypeClientDlg.act_FirstPageUpdate(Sender: TObject);
+begin
+  (Sender as TAction).Enabled := (fPageType.fIndex <> 1) and
+  (fPageType.fIndexCount > 1);
+end;
+
+procedure TPrototypeClientDlg.act_ProPageExecute(Sender: TObject);
+begin
+  fPageType.fIndex := fPageType.fIndex -1;
+  LoaPrtyList(fPageType.fIndex,fPageType.fWhereStr);
+  lblPageCount.Caption := format('%d/%d',[
+      fPageType.fIndex,
+      fPageType.fIndexCount]);
+
+  
+end;
+
+procedure TPrototypeClientDlg.act_ProPageUpdate(Sender: TObject);
+begin
+  (Sender as TAction).Enabled := (fPageType.fIndex > 1) ;
+end;
+
+procedure TPrototypeClientDlg.act_NextPageUpdate(Sender: TObject);
+begin
+ (Sender as TAction).Enabled := (fPageType.fIndex<fPageType.fIndexCount);
+end;
+
+procedure TPrototypeClientDlg.act_NextPageExecute(Sender: TObject);
+begin
+  fPageType.fIndex := fPageType.fIndex +1;
+  LoaPrtyList(fPageType.fIndex,fPageType.fWhereStr);
+  lblPageCount.Caption := format('%d/%d',[
+      fPageType.fIndex,
+      fPageType.fIndexCount]);
+end;
+
+procedure TPrototypeClientDlg.act_LastPageUpdate(Sender: TObject);
+begin
+  (Sender as TAction).Enabled := (fPageType.fIndex<fPageType.fIndexCount);
+end;
+
+procedure TPrototypeClientDlg.act_LastPageExecute(Sender: TObject);
+begin
+  fPageType.fIndex := fPageType.fIndexCount;
+  LoaPrtyList(fPageType.fIndex,fPageType.fWhereStr);
+  lblPageCount.Caption := format('%d/%d',[
+      fPageType.fIndex,
+      fPageType.fIndexCount]);
+
 end;
 
 end.

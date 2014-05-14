@@ -1,9 +1,9 @@
 inherited BugHighQueryDlg: TBugHighQueryDlg
-  Left = 357
-  Top = 136
+  Left = 336
+  Top = 262
   BorderStyle = bsDialog
   Caption = #39640#32423#26597#35810
-  ClientHeight = 544
+  ClientHeight = 574
   ClientWidth = 620
   OldCreateOrder = True
   Position = poMainFormCenter
@@ -11,7 +11,7 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
   TextHeight = 15
   object btn1: TBitBtn
     Left = 482
-    Top = 508
+    Top = 540
     Width = 100
     Height = 25
     TabOrder = 1
@@ -19,7 +19,7 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
   end
   object btn2: TBitBtn
     Left = 378
-    Top = 508
+    Top = 540
     Width = 100
     Height = 25
     TabOrder = 2
@@ -213,7 +213,7 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
   end
   object btnAll: TBitBtn
     Left = 274
-    Top = 508
+    Top = 540
     Width = 100
     Height = 25
     Caption = #20840#37096#38382#39064
@@ -446,7 +446,7 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
   end
   object btnSave: TBitBtn
     Left = 24
-    Top = 508
+    Top = 540
     Width = 100
     Height = 25
     Caption = #20445#23384#26597#35810'...'
@@ -487,6 +487,34 @@ inherited BugHighQueryDlg: TBugHighQueryDlg
     Items.Strings = (
       #21542
       #26159)
+  end
+  object chkverify: TCheckBox
+    Left = 31
+    Top = 496
+    Width = 97
+    Height = 17
+    Caption = #23457#26680#26102#38388#65306
+    TabOrder = 52
+  end
+  object dtpverify: TDateTimePicker
+    Left = 203
+    Top = 495
+    Width = 142
+    Height = 23
+    Date = 39648.739446967590000000
+    Time = 39648.739446967590000000
+    ImeName = #26497#21697#20116#31508#36755#20837#27861
+    TabOrder = 53
+  end
+  object dtpverify2: TDateTimePicker
+    Left = 349
+    Top = 495
+    Width = 118
+    Height = 23
+    Date = 39648.739446967590000000
+    Time = 39648.739446967590000000
+    ImeName = #26497#21697#20116#31508#36755#20837#27861
+    TabOrder = 54
   end
   object cdsProject: TClientDataSet
     Tag = -1

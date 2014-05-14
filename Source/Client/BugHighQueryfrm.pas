@@ -77,6 +77,9 @@ type
     edtMutilCreateor: TEdit;
     chkNeed: TCheckBox;
     cbbNeed: TComboBox;
+    chkverify: TCheckBox;
+    dtpverify: TDateTimePicker;
+    dtpverify2: TDateTimePicker;
     procedure chkmoduleClick(Sender: TObject);
     procedure btntodayClick(Sender: TObject);
     procedure btntodayBugClick(Sender: TObject);
@@ -374,6 +377,16 @@ begin
     mystr := Format('(ZNOTDEMAND=%d)',[cbbNeed.ItemIndex]);
   end;
   if mystr <> '' then mywhere := mywhere + ' and ' + mystr;
+
+  //…Û∫À ±º‰
+  mystr := '';
+  if chkverify.Checked then
+  begin
+    mystr := format('(ZVERIFYDATE between ''%s'' and ''%s'')  ',
+      [''''+datetostr(dtpverify.Date)+'''',''''+datetostr(dtpverify2.Date)+'''']);
+  end;
+  if mystr <> '' then mywhere := mywhere + ' and ' + mystr;
+
 
   Result := mywhere;
 

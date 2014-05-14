@@ -312,8 +312,8 @@ inherited TestManageChildfrm: TTestManageChildfrm
         object dbctrlgrd1: TDBCtrlGrid
           Left = 0
           Top = 40
-          Width = 1008
-          Height = 277
+          Width = 1007
+          Height = 276
           Align = alClient
           AllowDelete = False
           AllowInsert = False
@@ -551,7 +551,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
         object lblTitle: TLabel
           Left = 0
           Top = 0
-          Width = 984
+          Width = 64
           Height = 15
           Align = alClient
           Caption = 'lblTitle'

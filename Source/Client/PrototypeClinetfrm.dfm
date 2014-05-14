@@ -1,6 +1,6 @@
 inherited PrototypeClientDlg: TPrototypeClientDlg
-  Left = 282
-  Top = 256
+  Left = 359
+  Top = 260
   Width = 844
   Caption = #20135#21697#21407#22411
   OldCreateOrder = True
@@ -111,11 +111,47 @@ inherited PrototypeClientDlg: TPrototypeClientDlg
         BevelOuter = bvNone
         TabOrder = 2
         object lblpagecount: TLabel
-          Left = 552
+          Left = 592
           Top = 16
           Width = 96
           Height = 15
           Caption = 'lblpagecount'
+        end
+        object btnFirstPage: TBitBtn
+          Left = 7
+          Top = 12
+          Width = 100
+          Height = 25
+          Action = act_FirstPage
+          Caption = #31532#19968#39029
+          TabOrder = 0
+        end
+        object btnProPage: TBitBtn
+          Left = 111
+          Top = 12
+          Width = 100
+          Height = 25
+          Action = act_ProPage
+          Caption = #19978#19968#39029
+          TabOrder = 1
+        end
+        object btnNextPage: TBitBtn
+          Left = 215
+          Top = 12
+          Width = 100
+          Height = 25
+          Action = act_NextPage
+          Caption = #19979#19968#39029
+          TabOrder = 2
+        end
+        object btnLastPage: TBitBtn
+          Left = 319
+          Top = 12
+          Width = 100
+          Height = 25
+          Action = act_LastPage
+          Caption = #26368#21518#19968#39029
+          TabOrder = 3
         end
       end
     end
@@ -224,6 +260,26 @@ inherited PrototypeClientDlg: TPrototypeClientDlg
       Caption = #21407#22411#27983#35272
       OnExecute = act_PrtyViewExecute
       OnUpdate = act_PrtyViewUpdate
+    end
+    object act_FirstPage: TAction
+      Caption = #31532#19968#39029
+      OnExecute = act_FirstPageExecute
+      OnUpdate = act_FirstPageUpdate
+    end
+    object act_NextPage: TAction
+      Caption = #19979#19968#39029
+      OnExecute = act_NextPageExecute
+      OnUpdate = act_NextPageUpdate
+    end
+    object act_ProPage: TAction
+      Caption = #19978#19968#39029
+      OnExecute = act_ProPageExecute
+      OnUpdate = act_ProPageUpdate
+    end
+    object act_LastPage: TAction
+      Caption = #26368#21518#19968#39029
+      OnExecute = act_LastPageExecute
+      OnUpdate = act_LastPageUpdate
     end
   end
   object dsList: TDataSource

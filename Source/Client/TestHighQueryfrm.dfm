@@ -3,7 +3,7 @@ inherited TestHighQueryDlg: TTestHighQueryDlg
   Top = 224
   BorderStyle = bsDialog
   Caption = #39640#32423#26597#35810
-  ClientHeight = 274
+  ClientHeight = 364
   ClientWidth = 478
   OldCreateOrder = True
   Position = poMainFormCenter
@@ -65,16 +65,16 @@ inherited TestHighQueryDlg: TTestHighQueryDlg
     TabOrder = 5
   end
   object btn1: TBitBtn
-    Left = 351
-    Top = 237
+    Left = 353
+    Top = 316
     Width = 100
     Height = 25
     TabOrder = 6
     Kind = bkCancel
   end
   object btn2: TBitBtn
-    Left = 247
-    Top = 237
+    Left = 249
+    Top = 316
     Width = 100
     Height = 25
     TabOrder = 7
@@ -116,8 +116,8 @@ inherited TestHighQueryDlg: TTestHighQueryDlg
     TabOrder = 11
   end
   object btnAll: TBitBtn
-    Left = 143
-    Top = 236
+    Left = 145
+    Top = 315
     Width = 100
     Height = 25
     Caption = #20840#37096
@@ -168,48 +168,100 @@ inherited TestHighQueryDlg: TTestHighQueryDlg
     ListSource = dssubmis
     TabOrder = 17
   end
+  object chkopendate: TCheckBox
+    Left = 26
+    Top = 240
+    Width = 97
+    Height = 17
+    Caption = #21019#24314#26102#38388#65306
+    TabOrder = 18
+  end
+  object dtpopendate: TDateTimePicker
+    Left = 128
+    Top = 234
+    Width = 118
+    Height = 23
+    Date = 41773.469548101850000000
+    Time = 41773.469548101850000000
+    TabOrder = 19
+  end
+  object dtpopendate2: TDateTimePicker
+    Left = 250
+    Top = 234
+    Width = 118
+    Height = 23
+    Date = 41773.469548101850000000
+    Time = 41773.469548101850000000
+    TabOrder = 20
+  end
+  object chkresultdate: TCheckBox
+    Left = 26
+    Top = 271
+    Width = 97
+    Height = 17
+    Caption = #23436#25104#26102#38388#65306
+    TabOrder = 21
+  end
+  object dtpresultdate: TDateTimePicker
+    Left = 128
+    Top = 265
+    Width = 118
+    Height = 23
+    Date = 41773.469548101850000000
+    Time = 41773.469548101850000000
+    TabOrder = 22
+  end
+  object dtpresultdate2: TDateTimePicker
+    Left = 250
+    Top = 265
+    Width = 118
+    Height = 23
+    Date = 41773.469548101850000000
+    Time = 41773.469548101850000000
+    TabOrder = 23
+  end
   object cdsPros: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 8
-    Top = 233
+    Left = 10
+    Top = 312
   end
   object dsPros: TDataSource
     DataSet = cdsPros
-    Left = 43
-    Top = 233
+    Left = 45
+    Top = 312
   end
   object cdsCreateor: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 142
-    Top = 234
+    Left = 144
+    Top = 313
   end
   object dsCreateor: TDataSource
     DataSet = cdsCreateor
-    Left = 176
-    Top = 233
+    Left = 178
+    Top = 312
   end
   object cdsCoser: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 77
-    Top = 234
+    Left = 79
+    Top = 313
   end
   object dsCloser: TDataSource
     DataSet = cdsCoser
-    Left = 109
-    Top = 234
+    Left = 111
+    Top = 313
   end
   object cdssubmis: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 208
-    Top = 233
+    Left = 210
+    Top = 312
   end
   object dssubmis: TDataSource
     DataSet = cdssubmis
-    Left = 242
-    Top = 232
+    Left = 244
+    Top = 311
   end
 end
