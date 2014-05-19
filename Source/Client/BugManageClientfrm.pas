@@ -333,6 +333,7 @@ type
     fZRESOLVEDBY : Integer; //保存起来为激活用
     fBugAQuery : TAdvancedQueryArray; //错误管理内的高级查询
     fFileIconIndexList : TStringList; //附件的图示
+    fProjectTreeNodes : TList;        //保存权限节点的内容，注意只是用于全部情况，不要遍历树了。2014-5-19   
 
     procedure ClearNode(AParent:TTreeNode);
     function  GetBugItemPageCount(APageIndex:integer;AWhereStr:String):integer; //取出页总数
@@ -389,6 +390,10 @@ procedure TBugManageDlg.ClearNode(AParent: TTreeNode);
          Assigned(APNode.Item[i].data) then
       begin
         myBugData := APNode.Item[i].data;
+        if fProjectTreeNodes.IndexOf(myBugData) >=0 then
+        begin
+          fProjectTreeNodes.Delete(fProjectTreeNodes.IndexOf(myBugData));
+        end;
         Dispose(myBugData);
       end;
       if APNode.Item[i].HasChildren then
@@ -415,6 +420,10 @@ begin
         if Assigned(myChild.Data) then
         begin
           myBugData := myChild.Data;
+          if fProjectTreeNodes.IndexOf(myBugData) >=0 then
+          begin
+            fProjectTreeNodes.Delete(fProjectTreeNodes.IndexOf(myBugData));
+          end;
           Dispose(myBugData);
         end;
         myChild := myChild.GetNext;
@@ -435,6 +444,7 @@ procedure TBugManageDlg.initBase;
 const
   glSQL  = 'select ZID,ZNAME from TB_BUG_PARAMS where ZTYPE=%d';
 begin
+  fProjectTreeNodes := TList.Create;
   fFileIconIndexList := TStringList.Create;
   with ClientSystem.fDbOpr do
   begin
@@ -515,6 +525,8 @@ begin
         myNode.SelectedIndex := 1;
       end;
       cdsBugTree.Next;
+
+      fProjectTreeNodes.Add(myData);
     end;
 
   finally
@@ -2480,9 +2492,10 @@ end;
 
 procedure TBugManageDlg.actBug_HighQueryExecute(Sender: TObject);
 var
+  i : Integer;
   myPageIndex:integer;
   mywhere : String;
-  myNode : TTreeNode;
+  myNode,myCurrNode : TTreeNode;
   myData,myPData : PBugTreeNode;
 const
   glSQL  = 'select ZID,ZNAME,ZPRO_ID from TB_BUG_TREE Order by ZSORT';
@@ -2502,24 +2515,52 @@ begin
 
         //优化，不需要从服务器上取数据了.
         //要展开,目录是因为trproject的部分数据 2014-5-04
+        myCurrNode := tvProject.Selected;
         tvProject.FullExpand;
         tvProject.FullCollapse;
-        //
-        
+
         myNode := tvProject.TopItem;
         while Assigned(myNode) do
         begin
-          if Assigned(myNode.Data) then
+         if Assigned(myCurrNode.Parent) then
+         begin
+          myCurrNode.Parent.Expanded := True;
+            if Assigned(myCurrNode.Parent.Parent) then
+              myCurrNode.Parent.Parent.Expanded := True;
+         end;
+         myNode := myNode.GetNext;
+        end;
+
+        //
+        
+//        myNode := tvProject.TopItem;
+//        while Assigned(myNode) do
+//        begin
+//          if Assigned(myNode.Data) then
+//          begin
+//            myData := myNode.Data;
+//            cbbModule.Items.Add(Format('%s(%d)',[myData^.fName,myData^.fID]));
+//            cbbModuleID.Items.Add(IntToStr(myData^.fPRO_ID));
+//            cbbTreeID.Items.Add(IntToStr(myData^.fID));
+//          end;
+//          myNode := myNode.GetNext;
+//        end;
+
+        for i:=0 to fProjectTreeNodes.Count -1 do
+        begin
+          myData := fProjectTreeNodes.Items[i];
+          if Assigned(myData) then
           begin
-            myData := myNode.Data;
             cbbModule.Items.Add(Format('%s(%d)',[myData^.fName,myData^.fID]));
             cbbModuleID.Items.Add(IntToStr(myData^.fPRO_ID));
             cbbTreeID.Items.Add(IntToStr(myData^.fID));
           end;
-          myNode := myNode.GetNext;
+
         end;
 
-        {
+
+
+
         cdstemp.Data := ClientSystem.fDbOpr.ReadDataSet(PChar(glSQL));
         cdstemp.First;
         while not cdstemp.Eof do
@@ -2537,7 +2578,8 @@ begin
           cbbTreeID.Items.Add(cdstemp.FieldByName('ZID').AsString);
           cdstemp.Next;
         end;
-        }
+
+
         dtpAmod.DateTime   := now();
         dtpBugday.DateTime := now();
         dtpAmod2.DateTime   := now();
@@ -2599,6 +2641,7 @@ begin
   if Assigned(fHighQuery) then
     fHighQuery.Free;
   ClearAttachFile;
+  fProjectTreeNodes.Free;
   fFileIconIndexList.Free;
 end;
 
@@ -2999,33 +3042,54 @@ end;
 
 procedure TBugManageDlg.act_AllDataExecute(Sender: TObject);
 
+
   function GetwhereStr() : string;
   var
+    i : Integer;
     mystr : string;
     myData,myPData : PBugTreeNode;
     myNode : TTreeNode;
+    myCurrNode : TTreeNode;
   const
     glSQL  = 'select ZID,ZNAME,ZPRO_ID from TB_BUG_TREE Order by ZSORT';
   begin
+
+
     tvProject.Items.BeginUpdate;
     try
+      myCurrNode := tvProject.Selected;
       tvProject.FullExpand;
       tvProject.FullCollapse;
+      myNode := tvProject.TopItem;
+      while Assigned(myNode) do
+      begin
+        if myNode = myCurrNode then
+        begin
+          myCurrNode.Selected := True;
+          myCurrNode.Focused := True;
+          if Assigned(myCurrNode.Parent) then
+          begin
+            myCurrNode.Parent.Expanded := True;
+            if Assigned(myCurrNode.Parent.Parent) then
+              myCurrNode.Parent.Parent.Expanded := True;
+          end;
+
+          Break;
+        end;
+        myNode := myNode.GetNext;
+      end;
+
     finally
       tvProject.Items.EndUpdate;
     end;
-    myNode := tvProject.TopItem;
-    while Assigned(myNode) do
+
+    for i:=0 to fProjectTreeNodes.Count -1 do
     begin
-      if Assigned(myNode.Data) then
-      begin
-        myData := myNode.Data;
-        if mystr = '' then
-          mystr := format('ZTREE_ID=%d',[myData^.fID])
-        else
-          mystr := mystr + ' or ' + format('ZTREE_ID=%d',[myData^.fID]);
-      end;
-      myNode := myNode.GetNext;
+      myData := fProjectTreeNodes.Items[i];
+      if mystr = '' then
+        mystr := format('ZTREE_ID=%d',[myData^.fID])
+      else
+        mystr := mystr + ' or ' + format('ZTREE_ID=%d',[myData^.fID]);
     end;
 
     {

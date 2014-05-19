@@ -1,6 +1,6 @@
 inherited PrototypeClientDlg: TPrototypeClientDlg
-  Left = 359
-  Top = 260
+  Left = 306
+  Top = 75
   Width = 844
   Caption = #20135#21697#21407#22411
   OldCreateOrder = True
@@ -10,7 +10,7 @@ inherited PrototypeClientDlg: TPrototypeClientDlg
     Left = 0
     Top = 73
     Width = 828
-    Height = 529
+    Height = 528
     ActivePage = tsList
     Align = alClient
     TabOrder = 0
@@ -48,9 +48,10 @@ inherited PrototypeClientDlg: TPrototypeClientDlg
         Left = 0
         Top = 41
         Width = 820
-        Height = 417
+        Height = 416
         Align = alClient
         DataSource = dsList
+        ImeName = #20013#25991'('#31616#20307') - '#25628#29399#20116#31508#36755#20837#27861
         Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
         TabOrder = 1
         TitleFont.Charset = GB2312_CHARSET
@@ -104,7 +105,7 @@ inherited PrototypeClientDlg: TPrototypeClientDlg
       end
       object pnlPrtyBottom: TPanel
         Left = 0
-        Top = 458
+        Top = 457
         Width = 820
         Height = 41
         Align = alBottom
@@ -188,6 +189,7 @@ inherited PrototypeClientDlg: TPrototypeClientDlg
         Height = 23
         DataField = 'PRTY_NAME'
         DataSource = dsList
+        ImeName = #20013#25991'('#31616#20307') - '#25628#29399#20116#31508#36755#20837#27861
         TabOrder = 0
       end
       object dbedtPRTY_NAME1: TDBEdit
@@ -197,6 +199,7 @@ inherited PrototypeClientDlg: TPrototypeClientDlg
         Height = 23
         DataField = 'PRTY_DIRNAME'
         DataSource = dsList
+        ImeName = #20013#25991'('#31616#20307') - '#25628#29399#20116#31508#36755#20837#27861
         TabOrder = 1
       end
       object btnSavePro: TBitBtn
@@ -225,11 +228,11 @@ inherited PrototypeClientDlg: TPrototypeClientDlg
         Left = 0
         Top = 0
         Width = 820
-        Height = 499
+        Height = 498
         Align = alClient
         TabOrder = 0
         ControlData = {
-          4C000000C0540000933300000000000000000000000000000000000000000000
+          4C000000C0540000783300000000000000000000000000000000000000000000
           000000004C000000000000000000000001000000E0D057007335CF11AE690800
           2B2E126208000000000000004C0000000114020000000000C000000000000046
           8000000000000000000000000000000000000000000000000000000000000000

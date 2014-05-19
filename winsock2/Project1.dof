@@ -148,8 +148,8 @@ Count=1
 Item0=WinTypes=Windows;WinProcs=Windows;DbiTypes=BDE;DbiProcs=BDE;DbiErrs=BDE;
 [HistoryLists\hlSearchPath]
 Count=3
-Item0=..\Class
-Item1=../Class;../res
+Item0=../Class;../res
+Item1=..\Class
 Item2=../Class
 [HistoryLists\hlUnitOutputDirectory]
 Count=2

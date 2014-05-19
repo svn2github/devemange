@@ -433,6 +433,7 @@ procedure TPrototypeClientDlg.act_PrtyViewExecute(Sender: TObject);
 var
   myDirName : string;
   myURL : string;
+  flag : OleVariant;
 begin
   myDirName := cdsPrtyList.FieldByName('PRTY_DIRNAME').AsString;
   if myDirName = '' then
@@ -451,7 +452,12 @@ begin
   begin
     myURL := DM.cdsSysParams.FieldByName('ZVALUE').AsString;
     myURL := myURL + myDirName;
-    wbview.Navigate(myURL);
+    //当flags为navNoReadFromCache	或 4 时不从缓存中找
+    //当flags为navNoWriteToCache	或 8 时不将当前页放入缓存
+    wbview.offline:=true;
+    flag := 4;
+    wbview.Navigate(myURL,flag); //=4
+    wbview.offline:=false;
 
     (*while true do
     begin

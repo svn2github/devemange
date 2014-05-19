@@ -1,6 +1,6 @@
 inherited BugManageDlg: TBugManageDlg
-  Left = 148
-  Top = 254
+  Left = 228
+  Top = 0
   Width = 1024
   Height = 652
   Caption = #38169#35823#31649#29702
@@ -11,7 +11,7 @@ inherited BugManageDlg: TBugManageDlg
     Left = 0
     Top = 95
     Width = 1008
-    Height = 519
+    Height = 518
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
@@ -25,7 +25,7 @@ inherited BugManageDlg: TBugManageDlg
       Left = 0
       Top = 0
       Width = 1008
-      Height = 519
+      Height = 518
       ActivePage = tsBugItem
       Align = alClient
       TabOrder = 0
@@ -37,7 +37,7 @@ inherited BugManageDlg: TBugManageDlg
           Left = 185
           Top = 0
           Width = 10
-          Height = 489
+          Height = 488
           Beveled = True
           ResizeStyle = rsLine
         end
@@ -45,7 +45,7 @@ inherited BugManageDlg: TBugManageDlg
           Left = 195
           Top = 0
           Width = 805
-          Height = 489
+          Height = 488
           Align = alClient
           BevelOuter = bvNone
           Caption = 'plBugList'
@@ -70,9 +70,10 @@ inherited BugManageDlg: TBugManageDlg
             Left = 0
             Top = 55
             Width = 805
-            Height = 331
+            Height = 330
             Align = alClient
             DataSource = dsBugItem
+            ImeName = #20013#25991'('#31616#20307') - '#25628#29399#20116#31508#36755#20837#27861
             Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
             PopupMenu = pmBugItem
             TabOrder = 0
@@ -351,7 +352,7 @@ inherited BugManageDlg: TBugManageDlg
           end
           object plBugItemBottom: TPanel
             Left = 0
-            Top = 449
+            Top = 448
             Width = 805
             Height = 40
             Align = alBottom
@@ -434,6 +435,7 @@ inherited BugManageDlg: TBugManageDlg
               Font.Height = -15
               Font.Name = #23435#20307
               Font.Style = []
+              ImeName = #20013#25991'('#31616#20307') - '#25628#29399#20116#31508#36755#20837#27861
               ParentFont = False
               TabOrder = 6
               Text = #32534#21495#22238#36710#26597#25214
@@ -442,12 +444,13 @@ inherited BugManageDlg: TBugManageDlg
           end
           object dbmmoZTITLE: TDBMemo
             Left = 0
-            Top = 386
+            Top = 385
             Width = 805
             Height = 63
             Align = alBottom
             DataField = 'ZTITLEALL'
             DataSource = dsBugItem
+            ImeName = #20013#25991'('#31616#20307') - '#25628#29399#20116#31508#36755#20837#27861
             ReadOnly = True
             ScrollBars = ssVertical
             TabOrder = 3
@@ -457,13 +460,13 @@ inherited BugManageDlg: TBugManageDlg
           Left = 0
           Top = 0
           Width = 185
-          Height = 489
+          Height = 488
           Align = alLeft
           BevelOuter = bvNone
           TabOrder = 1
           object spl1: TSplitter
             Left = 0
-            Top = 386
+            Top = 385
             Width = 185
             Height = 3
             Cursor = crVSplit
@@ -471,11 +474,12 @@ inherited BugManageDlg: TBugManageDlg
           end
           object lstAdvancedQuery: TListBox
             Left = 0
-            Top = 389
+            Top = 388
             Width = 185
             Height = 100
             Hint = #26597#35810#21015#34920#65292#21487#20197#28857#39640#32423#26597#35810#65292#24377#20986#31383#21475#20445#23384#26597#35810#12290
             Align = alBottom
+            ImeName = #20013#25991'('#31616#20307') - '#25628#29399#20116#31508#36755#20837#27861
             ItemHeight = 15
             PopupMenu = pmAdvQuery
             TabOrder = 0
@@ -485,7 +489,7 @@ inherited BugManageDlg: TBugManageDlg
             Left = 0
             Top = 0
             Width = 185
-            Height = 386
+            Height = 385
             Align = alClient
             HideSelection = False
             Images = DM.ImageListTree
@@ -516,7 +520,7 @@ inherited BugManageDlg: TBugManageDlg
           Left = 0
           Top = 231
           Width = 1000
-          Height = 258
+          Height = 257
           Align = alClient
           BevelOuter = bvNone
           TabOrder = 0
@@ -612,7 +616,7 @@ inherited BugManageDlg: TBugManageDlg
             Left = 0
             Top = 40
             Width = 1000
-            Height = 218
+            Height = 217
             Align = alClient
             BevelOuter = bvLowered
             Caption = 'Panel1'
@@ -776,6 +780,7 @@ inherited BugManageDlg: TBugManageDlg
                 Anchors = [akLeft, akTop, akRight, akBottom]
                 DataField = 'ZCONTEXT'
                 DataSource = dsBugBugHistory
+                ImeName = #20013#25991'('#31616#20307') - '#25628#29399#20116#31508#36755#20837#27861
                 ScrollBars = ssVertical
                 TabOrder = 0
               end
@@ -1105,6 +1110,7 @@ inherited BugManageDlg: TBugManageDlg
             DataField = 'ZASSIGNEDTO'
             DataSource = dsBugItem
             DropDownRows = 25
+            ImeName = #20013#25991'('#31616#20307') - '#25628#29399#20116#31508#36755#20837#27861
             KeyField = 'ZID'
             ListField = 'ZNAME'
             ListSource = DM.dsUsers
@@ -1140,6 +1146,7 @@ inherited BugManageDlg: TBugManageDlg
             Color = clScrollBar
             DataField = 'ZRESOLVEDNAME'
             DataSource = dsBugItem
+            ImeName = #20013#25991'('#31616#20307') - '#25628#29399#20116#31508#36755#20837#27861
             ReadOnly = True
             TabOrder = 11
           end
@@ -1206,6 +1213,7 @@ inherited BugManageDlg: TBugManageDlg
             Width = 166
             Height = 23
             DropDownRows = 25
+            ImeName = #20013#25991'('#31616#20307') - '#25628#29399#20116#31508#36755#20837#27861
             KeyField = 'ZID'
             ListField = 'ZNAME'
             ListSource = DM.dsUsers
@@ -1228,6 +1236,7 @@ inherited BugManageDlg: TBugManageDlg
             Height = 23
             DataField = 'ZDEMAND_ID'
             DataSource = dsBugItem
+            ImeName = #20013#25991'('#31616#20307') - '#25628#29399#20116#31508#36755#20837#27861
             TabOrder = 19
           end
           object dbedtZNEDDDATE: TDBEdit
@@ -1237,6 +1246,7 @@ inherited BugManageDlg: TBugManageDlg
             Height = 23
             DataField = 'ZNEDDDATE'
             DataSource = dsBugItem
+            ImeName = #20013#25991'('#31616#20307') - '#25628#29399#20116#31508#36755#20837#27861
             TabOrder = 20
           end
           object BtnSelectedDataTime: TBitBtn
@@ -1293,6 +1303,7 @@ inherited BugManageDlg: TBugManageDlg
               Color = clScrollBar
               DataField = 'ZVERIF_NAME'
               DataSource = dsBugItem
+              ImeName = #20013#25991'('#31616#20307') - '#25628#29399#20116#31508#36755#20837#27861
               TabOrder = 1
             end
             object dbedtZVERIFYDATE: TDBEdit
@@ -1303,6 +1314,7 @@ inherited BugManageDlg: TBugManageDlg
               Color = clScrollBar
               DataField = 'ZVERIFYDATE'
               DataSource = dsBugItem
+              ImeName = #20013#25991'('#31616#20307') - '#25628#29399#20116#31508#36755#20837#27861
               TabOrder = 2
             end
             object dbedtZSCORE: TDBEdit
@@ -1313,6 +1325,7 @@ inherited BugManageDlg: TBugManageDlg
               Color = clScrollBar
               DataField = 'ZWORKSCORE'
               DataSource = dsBugItem
+              ImeName = #20013#25991'('#31616#20307') - '#25628#29399#20116#31508#36755#20837#27861
               TabOrder = 3
             end
           end
@@ -1324,6 +1337,7 @@ inherited BugManageDlg: TBugManageDlg
             Hint = #21487#20197#26159#23567#25968#20301' 0.5 '#23567#26102
             DataField = 'ZWORKTIME'
             DataSource = dsBugItem
+            ImeName = #20013#25991'('#31616#20307') - '#25628#29399#20116#31508#36755#20837#27861
             ParentShowHint = False
             ShowHint = True
             TabOrder = 23
@@ -1336,6 +1350,7 @@ inherited BugManageDlg: TBugManageDlg
             Hint = #33539#22260#20174'1 '#21040'1.5'
             DataField = 'ZWORKLEVEL'
             DataSource = dsBugItem
+            ImeName = #20013#25991'('#31616#20307') - '#25628#29399#20116#31508#36755#20837#27861
             ParentShowHint = False
             ShowHint = True
             TabOrder = 24
@@ -1348,6 +1363,7 @@ inherited BugManageDlg: TBugManageDlg
             DataField = 'ZSUBASSIGNEDTO'
             DataSource = dsBugItem
             DropDownRows = 25
+            ImeName = #20013#25991'('#31616#20307') - '#25628#29399#20116#31508#36755#20837#27861
             KeyField = 'ZID'
             ListField = 'ZNAME'
             ListSource = DM.dsUsers
