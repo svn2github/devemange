@@ -22,7 +22,7 @@ object MainDlg: TMainDlg
     Left = 0
     Top = 42
     Width = 854
-    Height = 521
+    Height = 520
     Align = alClient
     BevelOuter = bvLowered
     Caption = #27599#22825#19968#21477#12290
@@ -35,7 +35,7 @@ object MainDlg: TMainDlg
     TabOrder = 0
     object plupgrade: TPanel
       Left = 1
-      Top = 467
+      Top = 466
       Width = 852
       Height = 53
       Align = alBottom
@@ -203,7 +203,7 @@ object MainDlg: TMainDlg
   end
   object StatusBarMain: TStatusBar
     Left = 0
-    Top = 563
+    Top = 562
     Width = 854
     Height = 19
     Panels = <
@@ -400,12 +400,17 @@ object MainDlg: TMainDlg
       ImageIndex = 18
       OnExecute = actMod_PrototypeExecute
     end
+    object actTool_SetSelfSelectUser: TAction
+      Category = #24037#20855
+      Caption = #35774#32622#25105#30340#24120#29992#32852#31995#20154'...'
+      OnExecute = actTool_SetSelfSelectUserExecute
+    end
   end
   object ImageList1: TImageList
     Left = 112
     Top = 56
     Bitmap = {
-      494C010113001800040010001000FFFFFFFFFF00FFFFFFFFFFFFFFFF424D3600
+      494C010113001800040010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000006000000001002000000000000060
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -1201,7 +1206,8 @@ object MainDlg: TMainDlg
       C000E00FC00FC0030000C4478007C00300008C630003C00300009C730001C003
       00003FF98000C00300003EF9C000C00300003C7FE000C00300003C7FF000C003
       00013C41F801C00300039C61FC01C00300078C71FE01C003001FC441FF1FC003
-      007FE00DFFFFC00301FFF83FFFFFC003}
+      007FE00DFFFFC00301FFF83FFFFFC00300000000000000000000000000000000
+      000000000000}
   end
   object MainMenu1: TMainMenu
     AutoHotkeys = maManual
@@ -1291,6 +1297,9 @@ object MainDlg: TMainDlg
       object N12: TMenuItem
         Action = actTool_CheckFileContext
       end
+      object N25: TMenuItem
+        Action = actTool_SetSelfSelectUser
+      end
     end
     object P1: TMenuItem
       Caption = #23494#30721'(&P)'
@@ -1314,5 +1323,11 @@ object MainDlg: TMainDlg
     OnTimer = tmrBackTimer
     Left = 192
     Top = 58
+  end
+  object tmrsetselfSelectUser: TTimer
+    Interval = 5000
+    OnTimer = tmrsetselfSelectUserTimer
+    Left = 200
+    Top = 98
   end
 end

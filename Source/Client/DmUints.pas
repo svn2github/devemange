@@ -26,6 +26,7 @@ type
     fLoading : Boolean;
   public
     { Public declarations }
+    procedure LoadSelectUser(AFileName:string);
   end;
 
 var
@@ -42,6 +43,7 @@ procedure TDM.DataModuleCreate(Sender: TObject);
 var
   mycds : TClientDataSet;
   myField : TFieldDef;
+  myfilename : string;
 const
   glSQL  ='select ZID,ZNAME,ZEMAIL,ZCHECKTASK,ZTYPE from TB_USER_ITEM where ZSTOP=0 order by ZTYPE';
   glSQL2 = 'select ZID,ZNAME from TB_BUG_PARAMS where ZTYPE=%d';
@@ -53,8 +55,12 @@ begin
   fLoading := True;
   with ClientSystem.fDbOpr do
   begin
-    if cdsUSer.IsEmpty then
-      cdsUser.Data := ReadDataSet(PChar(glSQL));
+
+    //if cdsUSer.IsEmpty then
+    //  cdsUser.Data := ReadDataSet(PChar(glSQL));
+    myfilename := ClientSystem.fAppDir + '/' + gc_selectuser_file;
+    LoadSelectUser(myfilename);
+
     if cdsOS.IsEmpty then
       cdsOS.Data   := ReadDataSet(PChar(format(glSQL2,[3])));
     if cdsUserAll.IsEmpty then
@@ -123,6 +129,104 @@ begin
       ]);
     ClientSystem.fDbOpr.ExeSQL(PChar(mySQL));
 
+  end;
+end;
+
+procedure TDM.LoadSelectUser(AFileName: string);
+var
+  i,c : Integer;
+  mystr : string;
+  myname : string;
+  myid : string;
+  mysl : TStringList;
+  mycodes : TStringList;
+  mycds : TClientDataSet;
+  myField : TFieldDef;
+
+const
+  glSQL  ='select ZID,ZNAME,ZEMAIL,ZCHECKTASK,ZTYPE from TB_USER_ITEM where ZSTOP=0 order by ZTYPE';
+begin
+  mycds := TClientDataSet.Create(nil);
+  mysl := TStringList.Create;
+  mycodes := TStringList.Create;
+  try
+    mycds.Data := ClientSystem.fDbOpr.ReadDataSet(PChar(glSQL));
+
+    if cdsUser.Fields.Count = 0 then
+    begin
+      myField := cdsUser.FieldDefs.AddFieldDef;
+      myField.DataType := ftInteger;
+      myField.Name := 'ZID';
+
+      myField := cdsUser.FieldDefs.AddFieldDef;
+      myField.DataType := ftString;
+      myField.Size := 50;
+      myField.Name := 'ZNAME';
+
+      myField := cdsUser.FieldDefs.AddFieldDef;
+      myField.DataType := ftString;
+      myField.Size := 50;
+      myField.Name := 'ZEMAIL';
+
+      myField := cdsUser.FieldDefs.AddFieldDef;
+      myField.DataType := ftBoolean;
+      myField.Name := 'ZCHECKTASK';
+
+      myField := cdsUser.FieldDefs.AddFieldDef;
+      myField.DataType := ftInteger;
+      myField.Name := 'ZTYPE';
+
+
+      //cdsUser.FieldDefs.Assign(mycds.FieldDefs);
+      cdsUser.CreateDataSet; //
+    end;
+
+    //清空原来的数据
+    while not cdsUser.IsEmpty do
+    begin
+      cdsUser.Delete;
+    end;
+
+    if FileExists(AFileName) then
+    begin
+      mysl.LoadFromFile(AFileName);
+      for i:=0 to mysl.Count -1 do
+      begin
+        mystr := mysl.Strings[i];
+        myname := Copy(mystr,1,Pos('(',mystr)-1);
+        myid   := Copy(mystr,Pos('(',mystr)+1,Pos(')',mystr)-Pos('(',mystr)-1);
+        if mycds.Locate('ZID',StrToIntDef(myid,-1),[loPartialKey]) then
+        begin
+          cdsUser.Append;
+          for c := 0 to mycds.FieldDefs.Count -1 do
+            cdsUser.FieldByName(mycds.Fields[c].FieldName).AsVariant :=
+             mycds.FieldByName(mycds.Fields[c].FieldName).AsVariant;
+          mycodes.Add(myid);
+          cdsUser.Post;
+        end;
+
+      end;
+
+      //增加其他的内容
+      mycds.First;
+      while not mycds.Eof do
+      begin
+        if mycodes.IndexOf(mycds.FieldByName('ZID').AsString)<0 then
+        begin
+          cdsUser.Append;
+          for c := 0 to mycds.FieldDefs.Count -1 do
+            cdsUser.FieldByName(mycds.Fields[c].FieldName).AsVariant :=
+             mycds.FieldByName(mycds.Fields[c].FieldName).AsVariant;
+          cdsUser.Post;
+        end;
+        mycds.Next;
+      end;
+
+    end;
+  finally
+    mysl.Free;
+    mycds.Free;
+    mycodes.Free;
   end;
 end;
 

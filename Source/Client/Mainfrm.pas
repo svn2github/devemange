@@ -110,6 +110,9 @@ type
     N23: TMenuItem;
     actMod_Prototype: TAction;
     N24: TMenuItem;
+    tmrsetselfSelectUser: TTimer;
+    actTool_SetSelfSelectUser: TAction;
+    N25: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure actmod_FilesExecute(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -150,6 +153,8 @@ type
     procedure act_WarnBuckleScoreExecute(Sender: TObject);
     procedure actQuestionExecute(Sender: TObject);
     procedure actMod_PrototypeExecute(Sender: TObject);
+    procedure tmrsetselfSelectUserTimer(Sender: TObject);
+    procedure actTool_SetSelfSelectUserExecute(Sender: TObject);
   private
     fChildform : TList; //所有子窗口的对象
     fCurrentChildform : TBaseChildDlg;
@@ -222,6 +227,7 @@ uses
   WarnBuckleScoreClientfrm, {投诉扣分}
   QuestionManageClientfrm,  {等级题库}
   PrototypeClinetfrm,       {产品原形}
+  SelectUsersfrm,           {常用联系人}
   SetSysParamsfrm, DeveCalendarfrm;
 
 {$R *.dfm}
@@ -1118,6 +1124,49 @@ end;
 procedure TMainDlg.actMod_PrototypeExecute(Sender: TObject);
 begin
   DoChangeClient(TPrototypeClientDlg);
+end;
+
+procedure TMainDlg.tmrsetselfSelectUserTimer(Sender: TObject);
+var
+  myfilename : string;
+  mysl : TStringList;
+begin
+  tmrsetselfSelectUser.OnTimer := nil;
+  mysl := TStringList.Create;
+  try
+    myfilename := ClientSystem.fAppDir + '/' + gc_selectuser_file;
+    if FileExists(myfilename) then
+      mysl.LoadFromFile(myfilename);
+    if mysl.Count = 0 then
+    begin
+      actTool_SetSelfSelectUser.Execute;
+    end;
+
+  finally
+    mysl.Free;
+  end;
+end;
+
+procedure TMainDlg.actTool_SetSelfSelectUserExecute(Sender: TObject);
+var
+  mysl : TStringList;
+  myfilename : string;
+begin
+  myfilename := ClientSystem.fAppDir + '/' + gc_selectuser_file;
+  mysl := TStringList.Create;
+
+  try
+    if FileExists(myfilename) then
+      mysl.LoadFromFile(myfilename);
+    if SetSelfSelectUser() then
+    begin
+      DM.LoadSelectUser(myfilename); //更新数据源
+    end
+    else
+      mysl.SaveToFile(myfilename);
+  finally
+    mysl.Free;
+  end;
 end;
 
 end.

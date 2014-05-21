@@ -97,7 +97,12 @@ type
 var
   ClientSystem : TClinetSystem;
 
+
   function CreateBfssDBOpr():IDbOperator; stdcall; external 'lgDB.api';
+
+const
+  gc_selectuser_file = '经常联系人.txt';  
+
 
 implementation
 uses
