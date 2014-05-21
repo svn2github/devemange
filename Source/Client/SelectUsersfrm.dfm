@@ -1,6 +1,6 @@
 inherited SelectUsersDlg: TSelectUsersDlg
-  Left = 246
-  Top = 241
+  Left = 229
+  Top = 118
   BorderStyle = bsDialog
   Caption = #36873#25321#29992#25143
   ClientHeight = 479
@@ -86,10 +86,11 @@ inherited SelectUsersDlg: TSelectUsersDlg
     OnClick = btbnDelClick
   end
   object BitBtn1: TBitBtn
-    Left = 440
+    Left = 432
     Top = 441
     Width = 100
     Height = 25
+    Caption = #21462#28040
     TabOrder = 4
     Kind = bkCancel
   end
@@ -98,6 +99,7 @@ inherited SelectUsersDlg: TSelectUsersDlg
     Top = 441
     Width = 100
     Height = 25
+    Caption = #30830#23450
     TabOrder = 5
     Kind = bkOK
   end

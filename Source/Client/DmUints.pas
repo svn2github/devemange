@@ -27,6 +27,7 @@ type
   public
     { Public declarations }
     procedure LoadSelectUser(AFileName:string);
+
   end;
 
 var
@@ -58,13 +59,16 @@ begin
 
     //if cdsUSer.IsEmpty then
     //  cdsUser.Data := ReadDataSet(PChar(glSQL));
+
+    //if cdsUserAll.IsEmpty then
+      //cdsUserAll.Data := ReadDataSet(PChar(glSQL4));
+
     myfilename := ClientSystem.fAppDir + '/' + gc_selectuser_file;
     LoadSelectUser(myfilename);
 
     if cdsOS.IsEmpty then
       cdsOS.Data   := ReadDataSet(PChar(format(glSQL2,[3])));
-    if cdsUserAll.IsEmpty then
-      cdsUserAll.Data := ReadDataSet(PChar(glSQL4));
+
     if cdsSysParams.IsEmpty then
       cdsSysParams.Data := ReadDataSet(PChar(glSQL5));
       
@@ -140,17 +144,22 @@ var
   myid : string;
   mysl : TStringList;
   mycodes : TStringList;
-  mycds : TClientDataSet;
+  mycds,mycds2 : TClientDataSet;
   myField : TFieldDef;
 
 const
   glSQL  ='select ZID,ZNAME,ZEMAIL,ZCHECKTASK,ZTYPE from TB_USER_ITEM where ZSTOP=0 order by ZTYPE';
+  glSQL4 = 'select ZID,ZNAME,ZEMAIL,ZCHECKTASK,ZTYPE from TB_USER_ITEM order by ZTYPE';
+
 begin
   mycds := TClientDataSet.Create(nil);
+  mycds2 := TClientDataSet.Create(nil);
+
   mysl := TStringList.Create;
   mycodes := TStringList.Create;
   try
     mycds.Data := ClientSystem.fDbOpr.ReadDataSet(PChar(glSQL));
+    mycds2.Data := ClientSystem.fDbOpr.ReadDataSet(PChar(glSQL4));
 
     if cdsUser.Fields.Count = 0 then
     begin
@@ -181,10 +190,46 @@ begin
       cdsUser.CreateDataSet; //
     end;
 
+    if cdsUserAll.Fields.Count = 0 then
+    begin
+      myField := cdsUserAll.FieldDefs.AddFieldDef;
+      myField.DataType := ftInteger;
+      myField.Name := 'ZID';
+
+      myField := cdsUserAll.FieldDefs.AddFieldDef;
+      myField.DataType := ftString;
+      myField.Size := 50;
+      myField.Name := 'ZNAME';
+
+      myField := cdsUserAll.FieldDefs.AddFieldDef;
+      myField.DataType := ftString;
+      myField.Size := 50;
+      myField.Name := 'ZEMAIL';
+
+      myField := cdsUserAll.FieldDefs.AddFieldDef;
+      myField.DataType := ftBoolean;
+      myField.Name := 'ZCHECKTASK';
+
+      myField := cdsUserAll.FieldDefs.AddFieldDef;
+      myField.DataType := ftInteger;
+      myField.Name := 'ZTYPE';
+
+
+      //cdsUser.FieldDefs.Assign(mycds.FieldDefs);
+      cdsUserAll.CreateDataSet; //
+    end;
+
+
+
     //清空原来的数据
     while not cdsUser.IsEmpty do
     begin
       cdsUser.Delete;
+    end;
+
+    while not cdsUserAll.IsEmpty do
+    begin
+      cdsUserAll.Delete;
     end;
 
     if FileExists(AFileName) then
@@ -203,30 +248,58 @@ begin
              mycds.FieldByName(mycds.Fields[c].FieldName).AsVariant;
           mycodes.Add(myid);
           cdsUser.Post;
+
         end;
 
-      end;
-
-      //增加其他的内容
-      mycds.First;
-      while not mycds.Eof do
-      begin
-        if mycodes.IndexOf(mycds.FieldByName('ZID').AsString)<0 then
+        if mycds2.Locate('ZID',StrToIntDef(myid,-1),[loPartialKey]) then
         begin
-          cdsUser.Append;
-          for c := 0 to mycds.FieldDefs.Count -1 do
-            cdsUser.FieldByName(mycds.Fields[c].FieldName).AsVariant :=
-             mycds.FieldByName(mycds.Fields[c].FieldName).AsVariant;
-          cdsUser.Post;
+          cdsUserAll.Append;
+          for c := 0 to mycds2.FieldDefs.Count -1 do
+            cdsUserAll.FieldByName(mycds2.Fields[c].FieldName).AsVariant :=
+             mycds2.FieldByName(mycds2.Fields[c].FieldName).AsVariant;
+          cdsUserAll.Post;
         end;
-        mycds.Next;
+
       end;
+
+
 
     end;
+
+   //增加其他的内容
+    mycds.First;
+    while not mycds.Eof do
+    begin
+      if mycodes.IndexOf(mycds.FieldByName('ZID').AsString)<0 then
+      begin
+        cdsUser.Append;
+        for c := 0 to mycds.FieldDefs.Count -1 do
+          cdsUser.FieldByName(mycds.Fields[c].FieldName).AsVariant :=
+           mycds.FieldByName(mycds.Fields[c].FieldName).AsVariant;
+        cdsUser.Post;
+      end;
+      mycds.Next;
+    end;
+
+    mycds2.First;
+    while not mycds2.Eof do
+    begin
+      if mycodes.IndexOf(mycds2.FieldByName('ZID').AsString)<0 then
+      begin
+        cdsUserAll.Append;
+        for c := 0 to mycds2.FieldDefs.Count -1 do
+          cdsUserAll.FieldByName(mycds2.Fields[c].FieldName).AsVariant :=
+           mycds2.FieldByName(mycds2.Fields[c].FieldName).AsVariant;
+        cdsUserAll.Post;
+      end;
+      mycds2.Next;
+    end;
+
   finally
     mysl.Free;
     mycds.Free;
     mycodes.Free;
+    mycds2.Free;
   end;
 end;
 
