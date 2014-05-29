@@ -1,6 +1,6 @@
 inherited AntManageClientDlg: TAntManageClientDlg
-  Left = 65
-  Top = 201
+  Left = 58
+  Top = 141
   Width = 1195
   Height = 722
   Caption = #32534#35793#37096#32626
@@ -11,7 +11,7 @@ inherited AntManageClientDlg: TAntManageClientDlg
     Left = 0
     Top = 69
     Width = 1179
-    Height = 615
+    Height = 614
     ActivePage = ts1
     Align = alClient
     TabOrder = 0
@@ -41,6 +41,7 @@ inherited AntManageClientDlg: TAntManageClientDlg
           Top = 9
           Width = 193
           Height = 23
+          ImeName = #20013#25991'('#31616#20307') - '#25628#29399#20116#31508#36755#20837#27861
           TabOrder = 1
         end
         object btnProFindTxt: TBitBtn
@@ -66,9 +67,10 @@ inherited AntManageClientDlg: TAntManageClientDlg
         Left = 0
         Top = 40
         Width = 1171
-        Height = 505
+        Height = 504
         Align = alClient
         DataSource = dsAntList
+        ImeName = #20013#25991'('#31616#20307') - '#25628#29399#20116#31508#36755#20837#27861
         Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
         TabOrder = 1
         TitleFont.Charset = GB2312_CHARSET
@@ -144,7 +146,7 @@ inherited AntManageClientDlg: TAntManageClientDlg
       end
       object pnl7: TPanel
         Left = 0
-        Top = 545
+        Top = 544
         Width = 1171
         Height = 40
         Align = alBottom
@@ -236,13 +238,13 @@ inherited AntManageClientDlg: TAntManageClientDlg
         Left = 0
         Top = 274
         Width = 1171
-        Height = 311
+        Height = 310
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 0
         object spl4: TSplitter
           Left = 0
-          Top = 246
+          Top = 245
           Width = 1171
           Height = 3
           Cursor = crVSplit
@@ -251,7 +253,7 @@ inherited AntManageClientDlg: TAntManageClientDlg
         object spl5: TSplitter
           Left = 829
           Top = 40
-          Height = 206
+          Height = 205
           Align = alRight
         end
         object pnl3: TPanel
@@ -351,9 +353,10 @@ inherited AntManageClientDlg: TAntManageClientDlg
           Left = 0
           Top = 40
           Width = 829
-          Height = 206
+          Height = 205
           Style = lbOwnerDrawFixed
           Align = alClient
+          ImeName = #20013#25991'('#31616#20307') - '#25628#29399#20116#31508#36755#20837#27861
           ItemHeight = 16
           TabOrder = 1
           OnDrawItem = lstResultDrawItem
@@ -369,7 +372,7 @@ inherited AntManageClientDlg: TAntManageClientDlg
         end
         object lstErrors: TListBox
           Left = 0
-          Top = 249
+          Top = 248
           Width = 1171
           Height = 62
           Align = alBottom
@@ -378,6 +381,7 @@ inherited AntManageClientDlg: TAntManageClientDlg
           Font.Height = -15
           Font.Name = #23435#20307
           Font.Style = []
+          ImeName = #20013#25991'('#31616#20307') - '#25628#29399#20116#31508#36755#20837#27861
           ItemHeight = 15
           ParentFont = False
           TabOrder = 3
@@ -387,7 +391,7 @@ inherited AntManageClientDlg: TAntManageClientDlg
           Left = 832
           Top = 40
           Width = 339
-          Height = 206
+          Height = 205
           Align = alRight
           BevelOuter = bvNone
           Caption = 'pnl8'
@@ -396,9 +400,10 @@ inherited AntManageClientDlg: TAntManageClientDlg
             Left = 0
             Top = 0
             Width = 339
-            Height = 136
+            Height = 135
             Align = alClient
             DataSource = dsAntLog
+            ImeName = #20013#25991'('#31616#20307') - '#25628#29399#20116#31508#36755#20837#27861
             Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
             PopupMenu = pmAntLog
             ReadOnly = True
@@ -434,12 +439,13 @@ inherited AntManageClientDlg: TAntManageClientDlg
           end
           object dbmmoLOG: TDBMemo
             Left = 0
-            Top = 136
+            Top = 135
             Width = 339
             Height = 70
             Align = alBottom
             DataField = 'ZLOG'
             DataSource = dsAntLog
+            ImeName = #20013#25991'('#31616#20307') - '#25628#29399#20116#31508#36755#20837#27861
             TabOrder = 1
           end
         end
@@ -587,6 +593,7 @@ inherited AntManageClientDlg: TAntManageClientDlg
           Height = 23
           DataField = 'ZNAME'
           DataSource = dsAntList
+          ImeName = #20013#25991'('#31616#20307') - '#25628#29399#20116#31508#36755#20837#27861
           TabOrder = 0
         end
         object dbedtZPRO_ID: TDBEdit
@@ -596,6 +603,7 @@ inherited AntManageClientDlg: TAntManageClientDlg
           Height = 23
           DataField = 'ZPRO_ID'
           DataSource = dsAntList
+          ImeName = #20013#25991'('#31616#20307') - '#25628#29399#20116#31508#36755#20837#27861
           TabOrder = 1
         end
         object dbedtZIP: TDBEdit
@@ -615,6 +623,7 @@ inherited AntManageClientDlg: TAntManageClientDlg
           Height = 23
           DataField = 'ZPYFILE'
           DataSource = dsAntList
+          ImeName = #20013#25991'('#31616#20307') - '#25628#29399#20116#31508#36755#20837#27861
           TabOrder = 3
           Visible = False
         end
@@ -643,6 +652,7 @@ inherited AntManageClientDlg: TAntManageClientDlg
           Height = 84
           DataField = 'ZREMARK'
           DataSource = dsAntList
+          ImeName = #20013#25991'('#31616#20307') - '#25628#29399#20116#31508#36755#20837#27861
           ScrollBars = ssVertical
           TabOrder = 6
         end
@@ -653,6 +663,7 @@ inherited AntManageClientDlg: TAntManageClientDlg
           Height = 23
           DataField = 'ZDATE'
           DataSource = dsAntList
+          ImeName = #20013#25991'('#31616#20307') - '#25628#29399#20116#31508#36755#20837#27861
           TabOrder = 7
         end
         object dbedtZVERSION: TDBEdit
@@ -662,6 +673,7 @@ inherited AntManageClientDlg: TAntManageClientDlg
           Height = 23
           DataField = 'ZVERSION'
           DataSource = dsAntList
+          ImeName = #20013#25991'('#31616#20307') - '#25628#29399#20116#31508#36755#20837#27861
           TabOrder = 8
         end
         object dbedtZSVN: TDBEdit
@@ -671,6 +683,7 @@ inherited AntManageClientDlg: TAntManageClientDlg
           Height = 23
           DataField = 'ZSVN'
           DataSource = dsAntList
+          ImeName = #20013#25991'('#31616#20307') - '#25628#29399#20116#31508#36755#20837#27861
           TabOrder = 9
         end
         object dbedtZSVN_LATEST_VERSION: TDBEdit
@@ -681,6 +694,7 @@ inherited AntManageClientDlg: TAntManageClientDlg
           Color = clBtnFace
           DataField = 'ZSVN_LATEST_VERSION'
           DataSource = dsAntList
+          ImeName = #20013#25991'('#31616#20307') - '#25628#29399#20116#31508#36755#20837#27861
           ReadOnly = True
           TabOrder = 10
         end
@@ -691,6 +705,7 @@ inherited AntManageClientDlg: TAntManageClientDlg
           Height = 23
           DataField = 'ZSVN_URL'
           DataSource = dsAntList
+          ImeName = #20013#25991'('#31616#20307') - '#25628#29399#20116#31508#36755#20837#27861
           TabOrder = 11
           Visible = False
         end
@@ -701,6 +716,7 @@ inherited AntManageClientDlg: TAntManageClientDlg
           Height = 23
           DataField = 'ZWEBURL'
           DataSource = dsAntList
+          ImeName = #20013#25991'('#31616#20307') - '#25628#29399#20116#31508#36755#20837#27861
           TabOrder = 12
         end
         object dblkcbbZLANGTYPE: TDBLookupComboBox
@@ -710,6 +726,7 @@ inherited AntManageClientDlg: TAntManageClientDlg
           Height = 23
           DataField = 'ZLANGTYPE'
           DataSource = dsAntList
+          ImeName = #20013#25991'('#31616#20307') - '#25628#29399#20116#31508#36755#20837#27861
           KeyField = 'LangID'
           ListField = 'LangName'
           ListSource = dsLangType
@@ -722,6 +739,7 @@ inherited AntManageClientDlg: TAntManageClientDlg
           Height = 23
           DataField = 'ZGUID'
           DataSource = dsAntList
+          ImeName = #20013#25991'('#31616#20307') - '#25628#29399#20116#31508#36755#20837#27861
           TabOrder = 14
           Visible = False
         end
@@ -733,6 +751,7 @@ inherited AntManageClientDlg: TAntManageClientDlg
           Hint = #29992#20110#33258#21160#33719#21462'SVN'#20195#30721#20043#29992#26159'bat'#25991#20214
           DataField = 'ZLOCALSVNBAT'
           DataSource = dsAntList
+          ImeName = #20013#25991'('#31616#20307') - '#25628#29399#20116#31508#36755#20837#27861
           TabOrder = 15
           Visible = False
         end
@@ -752,6 +771,7 @@ inherited AntManageClientDlg: TAntManageClientDlg
           Height = 23
           DataField = 'ZCOMPLIEPARAM'
           DataSource = dsAntList
+          ImeName = #20013#25991'('#31616#20307') - '#25628#29399#20116#31508#36755#20837#27861
           TabOrder = 17
         end
       end
@@ -761,7 +781,7 @@ inherited AntManageClientDlg: TAntManageClientDlg
       ImageIndex = 2
       object spl2: TSplitter
         Left = 0
-        Top = 409
+        Top = 408
         Width = 1171
         Height = 8
         Cursor = crVSplit
@@ -845,19 +865,20 @@ inherited AntManageClientDlg: TAntManageClientDlg
           TabOrder = 4
         end
         object edtSvnFindTxt: TEdit
-          Left = 647
+          Left = 729
           Top = 8
-          Width = 121
+          Width = 125
           Height = 23
           Hint = #21487#20197#26597#35810#20316#32773#19982#20449#24687#20869#23481
+          ImeName = #20013#25991'('#31616#20307') - '#25628#29399#20116#31508#36755#20837#27861
           ParentShowHint = False
           ShowHint = True
           TabOrder = 5
         end
         object btnSvnLog_FindTxt: TBitBtn
-          Left = 776
+          Left = 858
           Top = 8
-          Width = 100
+          Width = 104
           Height = 25
           Action = actSvnLog_FindTxt
           Caption = #26597#35810
@@ -866,7 +887,7 @@ inherited AntManageClientDlg: TAntManageClientDlg
       end
       object dbgrdSvnChanges: TDBGrid
         Left = 0
-        Top = 417
+        Top = 416
         Width = 1171
         Height = 168
         Align = alBottom
@@ -917,14 +938,14 @@ inherited AntManageClientDlg: TAntManageClientDlg
         Left = 0
         Top = 57
         Width = 1171
-        Height = 352
+        Height = 351
         Align = alClient
         BevelOuter = bvNone
         Caption = 'pnl5'
         TabOrder = 2
         object spl3: TSplitter
           Left = 0
-          Top = 255
+          Top = 254
           Width = 1171
           Height = 8
           Cursor = crVSplit
@@ -934,9 +955,10 @@ inherited AntManageClientDlg: TAntManageClientDlg
           Left = 0
           Top = 0
           Width = 1171
-          Height = 255
+          Height = 254
           Align = alClient
           DataSource = dsSvnCommits
+          ImeName = #20013#25991'('#31616#20307') - '#25628#29399#20116#31508#36755#20837#27861
           Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
           PopupMenu = pm1
           ReadOnly = True
@@ -991,7 +1013,7 @@ inherited AntManageClientDlg: TAntManageClientDlg
         end
         object dbmmoZMESSAGE: TDBMemo
           Left = 0
-          Top = 263
+          Top = 262
           Width = 1171
           Height = 89
           Align = alBottom

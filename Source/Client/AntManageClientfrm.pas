@@ -242,6 +242,7 @@ type
   private
     { Private declarations }
     fSVNCommitPageRec :TSVNCommitPageRec;
+    fSVNCommitCount : Integer; //共多少条提交内容。
     fPageType : TPageTypeRec;
 
     function initconnection():Boolean; //连接服务器
@@ -332,6 +333,7 @@ begin
   inherited;
   fPySvning := False;
   ani1.ResName := 'MOV';
+  fSVNCommitCount :=0;
 
   //开发语言
   cdsLangType.Append;
@@ -766,8 +768,8 @@ begin
   ShowProgress('读取数据...',0);
 
   try
-    lblSvnPage.Caption := format('%d/%d',[fSVNCommitPageRec.findex,
-      fSVNCommitPageRec.fCount]);
+    lblSvnPage.Caption := format('%d/%d 共%d 条',[fSVNCommitPageRec.findex,
+      fSVNCommitPageRec.fCount,fSVNCommitCount]);
     if cdsTemp.Active then  cdsTemp.Close;
     cdsTemp.Data := ClientSystem.fDbOpr.ReadDataSet(PChar(mySQL));
 
@@ -875,6 +877,7 @@ begin
       1, //不是取总数
       mywhere]);
   myRowCount := ClientSystem.fDbOpr.ReadInt(PChar(mySQL));
+  fSVNCommitCount := myRowCount;
   Result := myRowCount div 20;
   if (myRowCount mod 20) > 0 then
     Result := Result + 1;
