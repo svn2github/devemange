@@ -139,6 +139,9 @@ const
   gcLogDir = 'Log'; //日志目录
   gcTagNewName = '新标签...';
 
+const
+  gc_action_img_Complie = 12 ;         //=12 表示在编译中的图标显示
+
 
 implementation
 

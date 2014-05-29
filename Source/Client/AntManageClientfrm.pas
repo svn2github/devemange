@@ -1052,7 +1052,7 @@ begin
   fLangType  := fcds.FieldByName('ZLANGTYPE').AsInteger;
   fSvnbat    := fcds.FieldByName('ZLOCALSVNBAT').AsString;
   ComplieParam := fcds.FieldByName('ZCOMPLIEPARAM').AsString;
-  fAction.ImageIndex := 12;
+  fAction.ImageIndex := gc_action_img_Complie; //12
   Application.ProcessMessages;
 end;
 

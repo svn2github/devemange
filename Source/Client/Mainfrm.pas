@@ -403,6 +403,13 @@ end;
 
 procedure TMainDlg.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 begin
+  if actMod_Ant.ImageIndex = gc_action_img_Complie then
+  begin
+    MessageBox(Handle,'你还在编译系统中，等编译结束方能结束。',
+      '错误',MB_ICONWARNING+MB_OK);
+    CanClose := False;
+    Exit;
+  end;
   freeform;
 end;
 
