@@ -42,6 +42,7 @@ type
     lbl4: TLabel;
     rbRule_2: TRadioButton;
     rbRule_3: TRadioButton;
+    chkflag: TCheckBox;
     procedure actStatExecute(Sender: TObject);
     procedure actExportExcelExecute(Sender: TObject);
     procedure actExportExcelUpdate(Sender: TObject);
@@ -71,7 +72,7 @@ implementation
 uses
   ClinetSystemUnits,
   StatChartExfrm,
-  ComObj;
+  ComObj, DmUints;
 
 const
   gcMotheday : array[1..12] of Integer = (31,28,31,30,31,30,31,31,30,31,30,31);
@@ -95,6 +96,29 @@ begin
         formatdatetime('yyyy-mm-dd',dtp1.Date),
         formatdatetime('yyyy-mm-dd',dtp2.Date)]);
       cdsData.Data := ClientSystem.fDbOpr.ReadDataSet(pchar(mySQL));
+
+      //只显示常用联系人的数据 2014-6-4
+      if chkflag.Checked then
+      begin
+        cdsData.DisableControls;
+        try
+          cdsData.First;
+          while not cdsData.Eof do
+          begin
+            if not DM.cdsUser.Locate('ZNAME;ZSELF',VarArrayOf([cdsData.FieldByName('ZUSERNAME').AsString
+              ,true]),[loPartialKey]) then
+            begin
+              cdsData.Delete;
+            end
+            else
+              cdsData.Next;
+          end;
+          cdsData.First;
+        finally
+          cdsData.EnableControls;
+        end;
+      end;
+      
       for i :=0 to cdsData.Fields.Count -1 do
       begin
         case i of

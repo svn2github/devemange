@@ -111,6 +111,7 @@ inherited StatChartDlg: TStatChartDlg
       Top = 40
       Width = 81
       Height = 23
+      ImeName = #20013#25991'('#31616#20307') - '#25628#29399#20116#31508#36755#20837#27861
       ReadOnly = True
       TabOrder = 8
     end
@@ -119,6 +120,7 @@ inherited StatChartDlg: TStatChartDlg
       Top = 40
       Width = 131
       Height = 23
+      ImeName = #20013#25991'('#31616#20307') - '#25628#29399#20116#31508#36755#20837#27861
       ReadOnly = True
       TabOrder = 9
     end
@@ -165,13 +167,16 @@ inherited StatChartDlg: TStatChartDlg
     Left = 0
     Top = 68
     Width = 992
-    Height = 473
+    Height = 472
     BackWall.Brush.Color = clWhite
     BackWall.Brush.Style = bsClear
     BackWall.Color = 8454016
     BackWall.Pen.Visible = False
     BottomWall.Color = clSilver
+    Foot.Font.Charset = DEFAULT_CHARSET
+    Foot.Font.Color = clRed
     Foot.Font.Height = -15
+    Foot.Font.Name = 'Arial'
     Foot.Font.Style = [fsBold]
     Foot.Frame.Color = clScrollBar
     LeftWall.Brush.Color = clWhite
@@ -180,13 +185,17 @@ inherited StatChartDlg: TStatChartDlg
     Title.Brush.Color = clWhite
     Title.Brush.Style = bsClear
     Title.Color = 16777088
+    Title.Font.Charset = DEFAULT_CHARSET
+    Title.Font.Color = clBlue
     Title.Font.Height = -16
+    Title.Font.Name = 'Arial'
     Title.Font.Style = [fsBold, fsItalic]
     Title.Frame.Color = 8421440
     Title.Frame.Width = 4
     Title.Text.Strings = (
       #20154#21592#24471#20998#23545#27604#34920)
     Title.Visible = False
+    BackColor = 8454016
     BottomAxis.Grid.Color = clScrollBar
     Chart3DPercent = 40
     ClipPoints = False
@@ -196,11 +205,12 @@ inherited StatChartDlg: TStatChartDlg
     Legend.Color = clAqua
     Legend.ColorWidth = 15
     Legend.Font.Charset = ANSI_CHARSET
+    Legend.Font.Color = clBlack
     Legend.Font.Height = -14
     Legend.Font.Name = #26032#23435#20307
+    Legend.Font.Style = []
     Legend.Frame.Color = clTeal
     Legend.Frame.Width = 4
-    Legend.Symbol.Width = 15
     Legend.TextStyle = ltsRightValue
     Legend.TopPos = 0
     RightAxis.Grid.Color = clScrollBar
@@ -211,104 +221,128 @@ inherited StatChartDlg: TStatChartDlg
     TabOrder = 1
     OnMouseMove = dbcht1MouseMove
     object brsrsSubmitBugCount: TBarSeries
-      Marks.Callout.Brush.Color = clBlack
+      Marks.ArrowLength = 20
       Marks.Style = smsValue
       Marks.Visible = True
       DataSource = cds1
+      SeriesColor = clRed
       Title = #25552#20132'Bug'#25968
       XLabelsSource = 'ZUSERNAME'
-      Gradient.Direction = gdTopBottom
+      XValues.DateTime = False
       XValues.Name = 'X'
+      XValues.Multiplier = 1.000000000000000000
       XValues.Order = loAscending
+      YValues.DateTime = False
       YValues.Name = 'Bar'
+      YValues.Multiplier = 1.000000000000000000
       YValues.Order = loNone
       YValues.ValueSource = 'ZSubmitBugCount'
     end
     object brsrsAnswerBugCount: TBarSeries
-      Marks.Callout.Brush.Color = clBlack
+      Marks.ArrowLength = 20
       Marks.Style = smsValue
       Marks.Visible = True
       DataSource = cds1
       SeriesColor = clBlue
       Title = #35299#20915'bug'#25968
-      Gradient.Direction = gdTopBottom
+      XValues.DateTime = False
       XValues.Name = 'X'
+      XValues.Multiplier = 1.000000000000000000
       XValues.Order = loAscending
+      YValues.DateTime = False
       YValues.Name = 'Bar'
+      YValues.Multiplier = 1.000000000000000000
       YValues.Order = loNone
       YValues.ValueSource = 'ZAnswerBugCount'
     end
     object brsrsBuildTestCount: TBarSeries
-      Marks.Callout.Brush.Color = clBlack
+      Marks.ArrowLength = 20
       Marks.Style = smsValue
       Marks.Visible = True
       DataSource = cds1
       SeriesColor = clYellow
       Title = #25552#20132#27979#35797#29992#20363
       XLabelsSource = 'ZUSERNAME'
-      Gradient.Direction = gdTopBottom
+      XValues.DateTime = False
       XValues.Name = 'X'
+      XValues.Multiplier = 1.000000000000000000
       XValues.Order = loAscending
+      YValues.DateTime = False
       YValues.Name = 'Bar'
+      YValues.Multiplier = 1.000000000000000000
       YValues.Order = loNone
       YValues.ValueSource = 'ZBuildTestCount'
     end
     object brsrsAnswerTestCount: TBarSeries
-      Marks.Callout.Brush.Color = clBlack
+      Marks.ArrowLength = 20
       Marks.Style = smsValue
       Marks.Visible = True
       DataSource = cds1
       SeriesColor = clWhite
       Title = #20851#38381#27979#35797#29992#20363
       XLabelsSource = 'ZUSERNAME'
-      Gradient.Direction = gdTopBottom
+      XValues.DateTime = False
       XValues.Name = 'X'
+      XValues.Multiplier = 1.000000000000000000
       XValues.Order = loAscending
+      YValues.DateTime = False
       YValues.Name = 'Bar'
+      YValues.Multiplier = 1.000000000000000000
       YValues.Order = loNone
       YValues.ValueSource = 'ZAnswerTestCount'
     end
     object brsrsZTaskFraction: TBarSeries
       Active = False
-      Marks.Callout.Brush.Color = clBlack
+      Marks.ArrowLength = 20
       Marks.Style = smsValue
       Marks.Visible = True
       DataSource = cds1
       SeriesColor = clGray
       Title = #20219#21153#21333#24471#20998
       XLabelsSource = 'ZUSERNAME'
-      Gradient.Direction = gdTopBottom
+      XValues.DateTime = False
       XValues.Name = 'X'
+      XValues.Multiplier = 1.000000000000000000
       XValues.Order = loAscending
+      YValues.DateTime = False
       YValues.Name = 'Bar'
+      YValues.Multiplier = 1.000000000000000000
       YValues.Order = loNone
       YValues.ValueSource = 'ZTaskFraction'
     end
     object brsrsWorkOverTime: TBarSeries
-      Marks.Callout.Brush.Color = clBlack
+      Marks.ArrowLength = 20
       Marks.Style = smsValue
       Marks.Visible = True
       DataSource = cds1
+      SeriesColor = clGreen
       Title = #21152#29677#26102#38388'('#23567#26102')'
       XLabelsSource = 'ZUSERNAME'
-      Gradient.Direction = gdTopBottom
+      XValues.DateTime = False
       XValues.Name = 'X'
+      XValues.Multiplier = 1.000000000000000000
       XValues.Order = loAscending
+      YValues.DateTime = False
       YValues.Name = 'Bar'
+      YValues.Multiplier = 1.000000000000000000
       YValues.Order = loNone
       YValues.ValueSource = 'calcHour'
     end
     object brsrsZSvnSubimtCount: TBarSeries
-      Marks.Callout.Brush.Color = clBlack
+      Marks.ArrowLength = 20
       Marks.Style = smsValue
       Marks.Visible = True
       DataSource = cds1
+      SeriesColor = clFuchsia
       Title = 'SVN'#25552#20132#25968
       XLabelsSource = 'ZUSERNAME'
-      Gradient.Direction = gdTopBottom
+      XValues.DateTime = False
       XValues.Name = 'X'
+      XValues.Multiplier = 1.000000000000000000
       XValues.Order = loAscending
+      YValues.DateTime = False
       YValues.Name = 'Bar'
+      YValues.Multiplier = 1.000000000000000000
       YValues.Order = loNone
       YValues.ValueSource = 'ZSvnSubimtCount'
     end

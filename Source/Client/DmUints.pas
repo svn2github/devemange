@@ -185,6 +185,10 @@ begin
       myField.DataType := ftInteger;
       myField.Name := 'ZTYPE';
 
+      myField := cdsUser.FieldDefs.AddFieldDef;
+      myField.DataType := ftBoolean;
+      myField.Name := 'ZSELF';   //==true 表示常用联系人
+
 
       //cdsUser.FieldDefs.Assign(mycds.FieldDefs);
       cdsUser.CreateDataSet; //
@@ -213,6 +217,10 @@ begin
       myField := cdsUserAll.FieldDefs.AddFieldDef;
       myField.DataType := ftInteger;
       myField.Name := 'ZTYPE';
+
+      myField := cdsUserAll.FieldDefs.AddFieldDef;
+      myField.DataType := ftBoolean;
+      myField.Name := 'ZSELF';   //==true 表示常用联系人
 
 
       //cdsUser.FieldDefs.Assign(mycds.FieldDefs);
@@ -246,6 +254,8 @@ begin
           for c := 0 to mycds.FieldDefs.Count -1 do
             cdsUser.FieldByName(mycds.Fields[c].FieldName).AsVariant :=
              mycds.FieldByName(mycds.Fields[c].FieldName).AsVariant;
+
+          cdsUser.FieldByName('ZSELF').AsBoolean := True;  //==true 常用联系人
           mycodes.Add(myid);
           cdsUser.Post;
 
@@ -257,6 +267,7 @@ begin
           for c := 0 to mycds2.FieldDefs.Count -1 do
             cdsUserAll.FieldByName(mycds2.Fields[c].FieldName).AsVariant :=
              mycds2.FieldByName(mycds2.Fields[c].FieldName).AsVariant;
+          cdsUserAll.FieldByName('ZSELF').AsBoolean := True;
           cdsUserAll.Post;
         end;
 
@@ -276,6 +287,8 @@ begin
         for c := 0 to mycds.FieldDefs.Count -1 do
           cdsUser.FieldByName(mycds.Fields[c].FieldName).AsVariant :=
            mycds.FieldByName(mycds.Fields[c].FieldName).AsVariant;
+
+        cdsUser.FieldByName('ZSELF').AsBoolean := False;
         cdsUser.Post;
       end;
       mycds.Next;
@@ -290,6 +303,8 @@ begin
         for c := 0 to mycds2.FieldDefs.Count -1 do
           cdsUserAll.FieldByName(mycds2.Fields[c].FieldName).AsVariant :=
            mycds2.FieldByName(mycds2.Fields[c].FieldName).AsVariant;
+
+        cdsUserAll.FieldByName('ZSELF').AsBoolean := False;
         cdsUserAll.Post;
       end;
       mycds2.Next;

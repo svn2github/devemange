@@ -1,8 +1,8 @@
 inherited StatManageClientDlg: TStatManageClientDlg
   Left = 143
   Top = 179
-  Width = 971
-  Height = 467
+  Width = 996
+  Height = 449
   Caption = #32479#35745#27719#24635
   OldCreateOrder = True
   PixelsPerInch = 96
@@ -10,7 +10,7 @@ inherited StatManageClientDlg: TStatManageClientDlg
   object pnlTool: TPanel
     Left = 0
     Top = 0
-    Width = 955
+    Width = 980
     Height = 40
     Align = alTop
     TabOrder = 0
@@ -36,6 +36,7 @@ inherited StatManageClientDlg: TStatManageClientDlg
       Date = 39627.739827650460000000
       Time = 39627.739827650460000000
       Color = clSkyBlue
+      ImeName = #20013#25991'('#31616#20307') - '#25628#29399#20116#31508#36755#20837#27861
       TabOrder = 0
     end
     object dtp2: TDateTimePicker
@@ -46,6 +47,7 @@ inherited StatManageClientDlg: TStatManageClientDlg
       Date = 39627.739903969910000000
       Time = 39627.739903969910000000
       Color = clSkyBlue
+      ImeName = #20013#25991'('#31616#20307') - '#25628#29399#20116#31508#36755#20837#27861
       TabOrder = 1
     end
     object btnStat: TBitBtn
@@ -106,8 +108,8 @@ inherited StatManageClientDlg: TStatManageClientDlg
   object tbc1: TTabControl
     Left = 0
     Top = 40
-    Width = 955
-    Height = 294
+    Width = 980
+    Height = 248
     Align = alClient
     TabOrder = 1
     Tabs.Strings = (
@@ -118,10 +120,11 @@ inherited StatManageClientDlg: TStatManageClientDlg
     object dbgrdData: TDBGrid
       Left = 4
       Top = 26
-      Width = 947
-      Height = 264
+      Width = 972
+      Height = 218
       Align = alClient
       DataSource = dsData
+      ImeName = #20013#25991'('#31616#20307') - '#25628#29399#20116#31508#36755#20837#27861
       Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
       ReadOnly = True
       TabOrder = 0
@@ -135,9 +138,9 @@ inherited StatManageClientDlg: TStatManageClientDlg
   end
   object pnl1: TPanel
     Left = 0
-    Top = 334
-    Width = 955
-    Height = 95
+    Top = 288
+    Width = 980
+    Height = 122
     Align = alBottom
     TabOrder = 2
     object lbl3: TLabel
@@ -167,6 +170,7 @@ inherited StatManageClientDlg: TStatManageClientDlg
       Top = 16
       Width = 121
       Height = 23
+      ImeName = #20013#25991'('#31616#20307') - '#25628#29399#20116#31508#36755#20837#27861
       TabOrder = 1
     end
     object edt2: TEdit
@@ -174,6 +178,7 @@ inherited StatManageClientDlg: TStatManageClientDlg
       Top = 48
       Width = 121
       Height = 23
+      ImeName = #20013#25991'('#31616#20307') - '#25628#29399#20116#31508#36755#20837#27861
       TabOrder = 2
     end
     object Button1: TButton
@@ -199,6 +204,14 @@ inherited StatManageClientDlg: TStatManageClientDlg
       Height = 17
       Caption = #26041#27861'3('#20170#26085#26085#24535#25171#20998' + Bug'#24471#20998')'
       TabOrder = 5
+    end
+    object chkflag: TCheckBox
+      Left = 16
+      Top = 81
+      Width = 192
+      Height = 17
+      Caption = #21482#26174#31034#24120#29992#32852#31995#20154#30340#25968#25454
+      TabOrder = 6
     end
   end
   object cdsData: TClientDataSet
