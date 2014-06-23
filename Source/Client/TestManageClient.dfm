@@ -1,6 +1,6 @@
 inherited TestManageChildfrm: TTestManageChildfrm
   Left = 123
-  Top = 168
+  Top = 14
   Width = 1139
   Height = 713
   Caption = #27979#35797#31649#29702
@@ -20,7 +20,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
     Left = 0
     Top = 68
     Width = 1123
-    Height = 607
+    Height = 606
     ActivePage = tsList
     Align = alClient
     TabOrder = 1
@@ -32,7 +32,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
         Left = 0
         Top = 40
         Width = 1115
-        Height = 434
+        Height = 433
         Align = alClient
         DataSource = dsTestItem
         Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
@@ -208,7 +208,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
       end
       object pnlTestBottom: TPanel
         Left = 0
-        Top = 537
+        Top = 536
         Width = 1115
         Height = 40
         Align = alBottom
@@ -277,7 +277,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
       end
       object dbmmoZNAME: TDBMemo
         Left = 0
-        Top = 474
+        Top = 473
         Width = 1115
         Height = 63
         Align = alBottom
@@ -305,7 +305,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
         Left = 0
         Top = 260
         Width = 1115
-        Height = 317
+        Height = 316
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 0
@@ -530,7 +530,7 @@ inherited TestManageChildfrm: TTestManageChildfrm
           Left = 1008
           Top = 40
           Width = 107
-          Height = 277
+          Height = 276
           Align = alRight
           Columns = <>
           LargeImages = ilAttach

@@ -72,6 +72,7 @@ type
     Label6: TLabel;
     Button1: TButton;
     actPriv_CopyByName: TAction;
+    chklear: TCheckBox;
     procedure cbEditUserClick(Sender: TObject);
     procedure actUser_AddUpdate(Sender: TObject);
     procedure actUser_DelUpdate(Sender: TObject);
@@ -488,6 +489,7 @@ var
   myb : Boolean;
 const
   glSQL  ='select * from TB_USER_ITEM';
+  glSQL2 = 'select * from TB_USER_ITEM where ZSTOP=0';
 begin
   //
   ClientSystem.BeginTickCount;
@@ -495,7 +497,10 @@ begin
   myb := fLoading;
   fLoading := True;
   try
-    mycds.Data := ClientSystem.fDbOpr.ReadDataSet(PChar(glSQL));
+    if chklear.Checked then
+      mycds.Data := ClientSystem.fDbOpr.ReadDataSet(PChar(glSQL2))
+    else
+      mycds.Data := ClientSystem.fDbOpr.ReadDataSet(PChar(glSQL));
     if cdsUsers.Fields.Count = 0 then
     begin
       with cdsUsers do

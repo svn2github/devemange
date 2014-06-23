@@ -1,7 +1,7 @@
 inherited UserManageClientDlg: TUserManageClientDlg
-  Left = 167
-  Top = 2
-  Height = 798
+  Left = 176
+  Top = 159
+  Height = 784
   Caption = #29992#25143#31649#29702
   OldCreateOrder = True
   PixelsPerInch = 96
@@ -10,7 +10,7 @@ inherited UserManageClientDlg: TUserManageClientDlg
     Left = 0
     Top = 0
     Width = 854
-    Height = 760
+    Height = 745
     Align = alClient
     BevelInner = bvLowered
     BevelOuter = bvNone
@@ -30,7 +30,7 @@ inherited UserManageClientDlg: TUserManageClientDlg
       Left = 1
       Top = 65
       Width = 852
-      Height = 694
+      Height = 679
       ActivePage = tsUser
       Align = alClient
       TabOrder = 1
@@ -42,7 +42,7 @@ inherited UserManageClientDlg: TUserManageClientDlg
           Left = 0
           Top = 40
           Width = 844
-          Height = 624
+          Height = 609
           Align = alClient
           DataSource = dsUsers
           Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
@@ -196,6 +196,14 @@ inherited UserManageClientDlg: TUserManageClientDlg
             Caption = #21047#26032#25968#25454
             TabOrder = 5
           end
+          object chklear: TCheckBox
+            Left = 606
+            Top = 10
+            Width = 97
+            Height = 17
+            Caption = #31163#32844#19981#26174#31034
+            TabOrder = 6
+          end
         end
       end
       object tsUserPriv: TTabSheet
@@ -220,7 +228,7 @@ inherited UserManageClientDlg: TUserManageClientDlg
         end
         object Splitter1: TSplitter
           Left = 0
-          Top = 466
+          Top = 451
           Width = 844
           Height = 10
           Cursor = crVSplit
@@ -294,7 +302,7 @@ inherited UserManageClientDlg: TUserManageClientDlg
           Left = 0
           Top = 57
           Width = 464
-          Height = 409
+          Height = 394
           Align = alClient
           DataSource = dsUserPriv
           Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
@@ -343,7 +351,7 @@ inherited UserManageClientDlg: TUserManageClientDlg
           Left = 464
           Top = 57
           Width = 380
-          Height = 409
+          Height = 394
           Align = alRight
           BevelOuter = bvNone
           Color = clMoneyGreen
@@ -490,7 +498,7 @@ inherited UserManageClientDlg: TUserManageClientDlg
         end
         object Memo1: TMemo
           Left = 0
-          Top = 476
+          Top = 461
           Width = 844
           Height = 188
           Align = alBottom

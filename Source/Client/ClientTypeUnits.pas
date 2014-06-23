@@ -96,6 +96,7 @@ type
     fhasLoad : Boolean; //表示已加载了子级
     fPageIndex : integer; //当前的页数,默认为1;
     fPageCount : integer; //页总数
+    fRowCount : Integer; // 总行数
   end;
 
   PProjectDoc = ^TProjectDoc;

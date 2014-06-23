@@ -31,6 +31,7 @@ type
     fCount : integer;
     fPageindex : integer;
     fwhere : string;
+    fRowCount : Integer; //共多少条
   end;
 
   PAttachFileRec  = ^TAttachFileRec;
@@ -346,6 +347,8 @@ begin
       1, //不是取总数
       mywhere]);
   myRowCount := ClientSystem.fDbOpr.ReadInt(PChar(mySQL));
+  fTestPageRec.fRowCount := myRowCount;
+  
   Result := myRowCount div 20;
   if (myRowCount mod 20) > 0 then
     Result := Result + 1;
@@ -516,6 +519,7 @@ begin
   end;
   fTestPageRec.fPageindex := 1;
   fTestPageRec.fwhere := '1=1';
+  fTestPageRec.fRowCount := 0;
   fTestPageRec.fCount := GetTestItemPageCount(1,'1=1');
   LoadTestItem(fTestPageRec.fPageindex,fTestPageRec.fwhere);
 end;
@@ -546,8 +550,8 @@ begin
   ShowProgress('读取数据...',0);
   ClientSystem.BeginTickCount;
   try
-    lblPage.Caption := format('%d/%d',[fTestPageRec.fPageindex,
-      fTestPageRec.fCount]);
+    lblPage.Caption := format('%d/%d 共%d',[fTestPageRec.fPageindex,
+      fTestPageRec.fCount,fTestPageRec.fRowCount]);
     if cdsTemp.Active then  cdsTemp.Close;
     cdsTemp.Data := ClientSystem.fDbOpr.ReadDataSet(PChar(mySQL));
 
@@ -1534,9 +1538,10 @@ begin
     mywhere := Format(fTestPageRec.fwhere,[ClientSystem.fEditer_id]);
     fTestPageRec.fCount := GetTestItemPageCount(myPageindex,myWhere);
     LoadTestItem(myPageindex,myWhere);
-    lblPage.Caption := format('%d/%d',[
+    lblPage.Caption := format('%d/%d 共%d',[
       fTestPageRec.fPageindex,
-      fTestPageRec.fCount]);
+      fTestPageRec.fCount,
+      fTestPageRec.fRowCount]);
   finally
     Self.HideProgress;
   end;
@@ -1575,9 +1580,10 @@ begin
         fTestPageRec.fwhere);
       
       LoadTestItem(fTestPageRec.fPageindex,fTestPageRec.fwhere);
-      lblPage.Caption := format('%d/%d',[
+      lblPage.Caption := format('%d/%d 共%d ',[
         fTestPageRec.fPageindex,
-        fTestPageRec.fCount]);
+        fTestPageRec.fCount,
+        fTestPageRec.fRowCount]);
     finally
       HideProgress;
     end;

@@ -23,6 +23,7 @@ type
     fIndex : Integer;
     fIndexCount : Integer;
     fWhereStr : string; //分页的where条件
+    fRowCount : Integer;
   end;
 
   PAttachFileRec  = ^TAttachFileRec;
@@ -336,7 +337,7 @@ type
     fProjectTreeNodes : TList;        //保存权限节点的内容，注意只是用于全部情况，不要遍历树了。2014-5-19   
 
     procedure ClearNode(AParent:TTreeNode);
-    function  GetBugItemPageCount(APageIndex:integer;AWhereStr:String):integer; //取出页总数
+    function  GetBugItemPageCount(APageIndex:integer;AWhereStr:String;var ARowCount:Integer):integer; //取出页总数
     procedure LoadBugItem(APageIndex:integer;AWhereStr:String);
     procedure LoadBugHistory(ABugID:integer); //加载bug的回复
     procedure LoadAttach(ABugID:Integer);     //加载附件
@@ -498,6 +499,7 @@ begin
       end
       else
         myData^.fParent := nil;
+
       myData^.fID  := cdsBugTree.FieldByName('ZID').AsInteger;
       myData^.fPID := cdsBugTree.FieldByName('ZPID').AsInteger;
       myData^.fPRO_ID := cdsBugTree.FieldByName('ZPRO_ID').AsInteger;
@@ -506,6 +508,7 @@ begin
       myData^.fhasChild := cdsBugTree.FieldByName('ZHASCHILD').AsBoolean;
       myData^.fPageIndex := 1;
       myData^.fPageCount := 1;
+      myData^.fRowCount := 0;
       myNode := tvProject.Items.AddChild(APNode,format('%s(%d)',[myData^.fName,myData^.fID]));
       myNode.Data := myData;
       if myData^.fhasChild then
@@ -712,6 +715,7 @@ var
   myPageIndex:integer;
   mywhere : String;
   myData : PBugTreeNode;
+  myRowCount : Integer;
 begin
   //
   //加载问题列表
@@ -735,10 +739,15 @@ begin
   fPageType.fWhereStr := 'ZTREE_ID=';
   myPageIndex := myData^.fPageIndex;
   mywhere := fPageType.fWhereStr {'ZTREE_ID='} + inttostr(myData^.fID);
-  myData^.fPageCount := GetBugItemPageCount(myPageindex,myWhere);
-  lbPageCount.Caption := format('%d/%d',[
+  myRowCount := 0;
+  myData^.fPageCount := GetBugItemPageCount(myPageindex,myWhere,myRowCount);
+  myData^.fRowCount := myRowCount;
+
+  lbPageCount.Caption := format('%d/%d 共%d',[
     myData^.fPageIndex,
-    myData^.fPageCount]);
+    myData^.fPageCount,
+    myData^.fRowCount]);
+
   LoadBugItem(myPageindex,myWhere);
   lbProjectName.Caption := format('%s  =>第%d共%d页',[
     myData^.fName,myData^.fPageIndex,myData^.fPageCount]);
@@ -983,9 +992,10 @@ begin
     mywhere := Format(fPageType.fWhereStr,[ClientSystem.fEditer_id,
       ClientSystem.fEditer_id]);
     LoadBugItem(myPageindex,myWhere);
-    lbPageCount.Caption := format('%d/%d',[
+    lbPageCount.Caption := format('%d/%d 共%d',[
       fPageType.fIndex,
-      fPageType.fIndexCount]);
+      fPageType.fIndexCount,
+      fPageType.fRowCount]);
     lbProjectName.Caption := format('%s  =>第%d共%d页',[
       fPageType.fName,fPageType.fIndex,fPageType.fIndexCount]);
   end
@@ -995,9 +1005,10 @@ begin
     myPageIndex := fPageType.fIndex;
     mywhere := fPageType.fWhereStr;
     LoadBugItem(myPageindex,myWhere);
-    lbPageCount.Caption := format('%d/%d',[
+    lbPageCount.Caption := format('%d/%d 共%d',[
       fPageType.fIndex,
-      fPageType.fIndexCount]);
+      fPageType.fIndexCount,
+      fPageType.fRowCount]);
     lbProjectName.Caption := format('%s  =>第%d共%d页',[
       fPageType.fName,fPageType.fIndex,fPageType.fIndexCount]);
   end
@@ -1007,9 +1018,11 @@ begin
     myPageIndex := myData^.fPageIndex;
     mywhere := 'ZTREE_ID=' + inttostr(myData^.fID);
     LoadBugItem(myPageindex,myWhere);
-    lbPageCount.Caption := format('%d/%d',[
+    lbPageCount.Caption := format('%d/%d 共%d',[
       myData^.fPageIndex,
-      myData^.fPageCount]);
+      myData^.fPageCount,
+      myData^.fRowCount]);
+      
     lbProjectName.Caption := format('%s  =>第%d共%d页',[
       myData^.fName,myData^.fPageIndex,myData^.fPageCount]);
   end;
@@ -1060,9 +1073,11 @@ begin
     mywhere := Format(fPageType.fWhereStr,[ClientSystem.fEditer_id,
       ClientSystem.fEditer_id]);
     LoadBugItem(myPageindex,myWhere);
-    lbPageCount.Caption := format('%d/%d',[
+    lbPageCount.Caption := format('%d/%d 共%d',[
       fPageType.fIndex,
-      fPageType.fIndexCount]);
+      fPageType.fIndexCount,
+      fPageType.fRowCount]);
+      
     lbProjectName.Caption := format('%s  =>第%d共%d页',[
       fPageType.fName,fPageType.fIndex,fPageType.fIndexCount]);
   end
@@ -1072,9 +1087,10 @@ begin
     myPageIndex := fPageType.fIndex;
     mywhere := fPageType.fWhereStr;
     LoadBugItem(myPageindex,myWhere);
-    lbPageCount.Caption := format('%d/%d',[
+    lbPageCount.Caption := format('%d/%d 共%d',[
       fPageType.fIndex,
-      fPageType.fIndexCount]);
+      fPageType.fIndexCount,
+      fPageType.fRowCount]);
     lbProjectName.Caption := format('%s  =>第%d共%d页',[
       fPageType.fName,fPageType.fIndex,fPageType.fIndexCount]);
   end
@@ -1084,16 +1100,18 @@ begin
     myPageIndex := myData^.fPageIndex;
     mywhere := 'ZTREE_ID=' + inttostr(myData^.fID);
     LoadBugItem(myPageindex,myWhere);
-    lbPageCount.Caption := format('%d/%d',[
+    lbPageCount.Caption := format('%d/%d 共%d',[
       myData^.fPageIndex,
-      myData^.fPageCount]);
+      myData^.fPageCount,
+      myData^.fRowCount]);
+      
     lbProjectName.Caption := format('%s  =>第%d共%d页',[
       myData^.fName,myData^.fPageIndex,myData^.fPageCount]);
   end;
 end;
 
 function TBugManageDlg.GetBugItemPageCount(APageIndex: integer;
-  AWhereStr: String): integer;
+  AWhereStr: String;var ARowCount:Integer): integer;
 var
   mySQL  : string;
   myRowCount : integer;
@@ -1120,6 +1138,8 @@ begin
       mywhere]);
 
   myRowCount := ClientSystem.fDbOpr.ReadInt(PChar(mySQL));
+  ARowCount := myRowCount;
+  
   Result := myRowCount div 20;
   if (myRowCount mod 20) > 0 then
     Result := Result + 1;
@@ -1156,9 +1176,10 @@ begin
     mywhere := Format(fPageType.fWhereStr,[ClientSystem.fEditer_id,
       ClientSystem.fEditer_id]);
     LoadBugItem(myPageindex,myWhere);
-    lbPageCount.Caption := format('%d/%d',[
+    lbPageCount.Caption := format('%d/%d 共%d',[
       1,
-      fPageType.fIndexCount]);
+      fPageType.fIndexCount,
+      fPageType.fRowCount]);
     lbProjectName.Caption := format('%s  =>第%d共%d页',[
       fPageType.fName,fPageType.fIndex,fPageType.fIndexCount]);
   end
@@ -1168,9 +1189,11 @@ begin
     myPageIndex := 1;
     mywhere := fPageType.fWhereStr;
     LoadBugItem(myPageindex,myWhere);
-    lbPageCount.Caption := format('%d/%d',[
+    lbPageCount.Caption := format('%d/%d 共%d',[
       1,
-      fPageType.fIndexCount]);
+      fPageType.fIndexCount,
+      fPageType.fRowCount]);
+
     lbProjectName.Caption := format('%s  =>第%d共%d页',[
       fPageType.fName,fPageType.fIndex,fPageType.fIndexCount]);
   end
@@ -1180,9 +1203,11 @@ begin
     myPageIndex := myData^.fPageIndex;
     mywhere := 'ZTREE_ID=' + inttostr(myData^.fID);
     LoadBugItem(myPageindex,myWhere);
-    lbPageCount.Caption := format('%d/%d',[
+    lbPageCount.Caption := format('%d/%d 共%d',[
       myData^.fPageIndex,
-      myData^.fPageCount]);
+      myData^.fPageCount,
+      myData^.fRowCount]);
+      
     lbProjectName.Caption := format('%s  =>第%d共%d页',[
       myData^.fName,myData^.fPageIndex,myData^.fPageCount]);
   end;
@@ -1218,9 +1243,11 @@ begin
     mywhere := Format(fPageType.fWhereStr,[ClientSystem.fEditer_id,
       ClientSystem.fEditer_id]);
     LoadBugItem(myPageindex,myWhere);
-    lbPageCount.Caption := format('%d/%d',[
+    lbPageCount.Caption := format('%d/%d 共%d',[
       fPageType.fIndex,
-      fPageType.fIndexCount]);
+      fPageType.fIndexCount,
+      fPageType.fRowCount]);
+
     lbProjectName.Caption := format('%s  =>第%d共%d页',[
       fPageType.fName,fPageType.fIndex,fPageType.fIndexCount]);
   end
@@ -1230,9 +1257,11 @@ begin
     myPageIndex := fPageType.fIndex;
     mywhere := fPageType.fWhereStr;
     LoadBugItem(myPageindex,myWhere);
-    lbPageCount.Caption := format('%d/%d',[
+    lbPageCount.Caption := format('%d/%d 共%d',[
       fPageType.fIndex,
-      fPageType.fIndexCount]);
+      fPageType.fIndexCount,
+      fPageType.fRowCount]);
+
     lbProjectName.Caption := format('%s  =>第%d共%d页',[
       fPageType.fName,fPageType.fIndex,fPageType.fIndexCount]);
   end
@@ -1242,9 +1271,10 @@ begin
     myPageIndex := myData^.fPageIndex;
     mywhere := 'ZTREE_ID=' + inttostr(myData^.fID);
     LoadBugItem(myPageindex,myWhere);
-    lbPageCount.Caption := format('%d/%d',[
+    lbPageCount.Caption := format('%d/%d 共%d',[
       myData^.fPageIndex,
-      myData^.fPageCount]);
+      myData^.fPageCount,
+      myData^.fRowCount]);
     lbProjectName.Caption := format('%s  =>第%d共%d页',[
       myData^.fName,myData^.fPageIndex,myData^.fPageCount]);
   end;
@@ -2198,6 +2228,7 @@ procedure TBugManageDlg.actBug_MeBuildExecute(Sender: TObject);
 var
   myPageIndex:integer;
   mywhere : String;
+  myRowCount : Integer;
 begin
 
   try
@@ -2208,11 +2239,17 @@ begin
     myPageIndex := 1;
     mywhere := format(fPageType.fWhereStr{'ZOPENEDBY=%d'},[ClientSystem.fEditer_id,
       ClientSystem.fEditer_id]);
-    fPageType.fIndexCount := GetBugItemPageCount(myPageindex,myWhere);
+
+    myRowCount := 0;
+    fPageType.fIndexCount := GetBugItemPageCount(myPageindex,myWhere,myRowCount);
+    fPageType.fRowCount := myRowCount;
+
     LoadBugItem(myPageindex,myWhere);
-    lbPageCount.Caption := format('%d/%d',[
+    lbPageCount.Caption := format('%d/%d 共%d',[
       fPageType.fIndex,
-      fPageType.fIndexCount]);
+      fPageType.fIndexCount,
+      fPageType.fRowCount]);
+
     lbProjectName.Caption := format('%s  =>第%d共%d页',[
       fPageType.fName,fPageType.fIndex,fPageType.fIndexCount]);
   finally
@@ -2224,6 +2261,7 @@ procedure TBugManageDlg.actBug_AssingToMeExecute(Sender: TObject);
 var
   myPageIndex:integer;
   mywhere : String;
+  myRowCount : Integer;
 begin
 
   try
@@ -2233,11 +2271,17 @@ begin
     fPageType.fIndex := 1;
     myPageIndex := 1;
     mywhere := format(fPageType.fWhereStr{'ZASSIGNEDTO=%d'},[ClientSystem.fEditer_id,ClientSystem.fEditer_id]);
-    fPageType.fIndexCount := GetBugItemPageCount(myPageindex,myWhere);
+
+    myRowCount := 0;
+    fPageType.fIndexCount := GetBugItemPageCount(myPageindex,myWhere,myRowCount);
+    fPageType.fRowCount := myRowCount;
+
     LoadBugItem(myPageindex,myWhere);
-    lbPageCount.Caption := format('%d/%d',[
+    lbPageCount.Caption := format('%d/%d 共%d',[
       fPageType.fIndex,
-      fPageType.fIndexCount]);
+      fPageType.fIndexCount,
+      fPageType.fRowCount]);
+      
     lbProjectName.Caption := format('%s  =>第%d共%d页',[
       fPageType.fName,fPageType.fIndex,fPageType.fIndexCount]);
   finally
@@ -2249,6 +2293,7 @@ procedure TBugManageDlg.actBug_ResoMeExecute(Sender: TObject);
 var
   myPageIndex:integer;
   mywhere : String;
+  myRowCount : Integer;
 begin
 
   try
@@ -2260,11 +2305,17 @@ begin
     myPageIndex := 1;
     mywhere := format(fPageType.fWhereStr{'ZRESOLVEDBY=%d'},[ClientSystem.fEditer_id,
       ClientSystem.fEditer_id]);
-    fPageType.fIndexCount:= GetBugItemPageCount(myPageindex,myWhere);
+
+    myRowCount := 0;
+    fPageType.fIndexCount:= GetBugItemPageCount(myPageindex,myWhere,myRowCount);
+    fPageType.fRowCount := myRowCount;
+
     LoadBugItem(myPageindex,myWhere);
-    lbPageCount.Caption := format('%d/%d',[
+    lbPageCount.Caption := format('%d/%d 共%d',[
       fPageType.fIndex,
-      fPageType.fIndexCount]);
+      fPageType.fIndexCount,
+      fPageType.fRowCount]);
+      
     lbProjectName.Caption := format('%s  =>第%d共%d页',[
       fPageType.fName,fPageType.fIndex,fPageType.fIndexCount]);
   finally
@@ -2322,6 +2373,8 @@ var
   myBugData : PBugTreeNode;
   myPageindex : integer;
   mywhere : String;
+  myRowcount : Integer;
+
 begin
 
   try
@@ -2330,11 +2383,16 @@ begin
       myPageindex := fPageType.fIndex;
       mywhere := Format(fPageType.fWhereStr,[ClientSystem.fEditer_id,
         ClientSystem.fEditer_id]);
-      fPageType.fIndexCount := GetBugItemPageCount(myPageindex,myWhere);
+      myRowcount := 0;
+      fPageType.fIndexCount := GetBugItemPageCount(myPageindex,mywhere,myRowcount);
+      fPageType.fRowCount := myRowcount;
+
       LoadBugItem(myPageindex,myWhere);
-      lbPageCount.Caption := format('%d/%d',[
+      lbPageCount.Caption := format('%d/%d 共%d',[
         fPageType.fIndex,
-        fPageType.fIndexCount]);
+        fPageType.fIndexCount,
+        fPageType.fRowCount]);
+
       lbProjectName.Caption := format('%s  =>第%d共%d页',[
         fPageType.fName,fPageType.fIndex,fPageType.fIndexCount]);
     end
@@ -2342,11 +2400,14 @@ begin
     begin
       myPageindex := fPageType.fIndex;
       mywhere := fPageType.fWhereStr;
-      fPageType.fIndexCount := GetBugItemPageCount(myPageindex,myWhere);
+      myRowcount :=0;
+      fPageType.fIndexCount := GetBugItemPageCount(myPageindex,myWhere,myRowcount);
       LoadBugItem(myPageindex,myWhere);
-      lbPageCount.Caption := format('%d/%d',[
+      lbPageCount.Caption := format('%d/%d 共%d',[
         fPageType.fIndex,
-        fPageType.fIndexCount]);
+        fPageType.fIndexCount,
+        fPageType.fRowCount]);
+
       lbProjectName.Caption := format('%s  =>第%d共%d页',[
         fPageType.fName,fPageType.fIndex,fPageType.fIndexCount]);
     end
@@ -2354,11 +2415,16 @@ begin
       myBugData := tvProject.Selected.data;
       myPageIndex := myBugData^.fPageIndex;
       mywhere := 'ZTREE_ID=' + inttostr(myBugData^.fID);
-      myBugData^.fPageCount := GetBugItemPageCount(myPageindex,myWhere);
+      myRowcount := 0;
+      myBugData^.fPageCount := GetBugItemPageCount(myPageindex,myWhere,myRowcount);
+      myBugData^.fRowCount := myRowcount;
+
       LoadBugItem(myPageindex,myWhere);
-      lbPageCount.Caption := format('%d/%d',[
+      lbPageCount.Caption := format('%d/%d 共%d',[
         myBugData^.fPageIndex,
-        myBugData^.fPageCount]);
+        myBugData^.fPageCount,
+        myBugData^.fRowCount]);
+
       lbProjectName.Caption := format('%s  =>第%d共%d页',[
         myBugData^.fName,myBugData^.fPageIndex,myBugData^.fPageCount]);
     end;
@@ -2497,6 +2563,7 @@ var
   mywhere : String;
   myNode,myCurrNode : TTreeNode;
   myData,myPData : PBugTreeNode;
+  myRowCount : Integer;
 const
   glSQL  = 'select ZID,ZNAME,ZPRO_ID from TB_BUG_TREE Order by ZSORT';
 begin
@@ -2620,11 +2687,15 @@ begin
         fPageType.fIndex := 1;
         fPageType.fName := '高级查询';
         myPageIndex := 1;
-        fPageType.fIndexCount := GetBugItemPageCount(1,myWhere);
+        myRowCount := 0;
+        fPageType.fIndexCount := GetBugItemPageCount(1,myWhere,myRowCount);
+        fPageType.fRowCount := myRowCount;
         LoadBugItem(myPageindex,myWhere);
-        lbPageCount.Caption := format('%d/%d',[
+        lbPageCount.Caption := format('%d/%d 共%d',[
           fPageType.fIndex,
-          fPageType.fIndexCount]);
+          fPageType.fIndexCount,
+          fPageType.fRowCount]);
+
         lbProjectName.Caption := format('%s  =>第%d共%d页',[
         fPageType.fName,fPageType.fIndex,fPageType.fIndexCount]);
       finally
@@ -2765,6 +2836,7 @@ var
   myindex : integer;
   mycount : integer;
   myType : TPageType;
+  myRowCount : Integer;
 begin
   //
   mywherestr := fPageType.fWhereStr;
@@ -2778,11 +2850,15 @@ begin
     fPageType.fIndex := 1;
     fPageType.fName := '高级查询';
     myPageIndex := 1;
-    fPageType.fIndexCount := GetBugItemPageCount(myPageindex,fPageType.fWhereStr);
+    myRowCount := 0;
+    fPageType.fIndexCount := GetBugItemPageCount(myPageindex,fPageType.fWhereStr,myRowCount);
+    fPageType.fRowCount := myRowCount;
     LoadBugItem(myPageindex,fPageType.fWhereStr);
-    lbPageCount.Caption := format('%d/%d',[
+    lbPageCount.Caption := format('%d/%d 共%d',[
       fPageType.fIndex,
-      fPageType.fIndexCount]);
+      fPageType.fIndexCount,
+      fPageType.fRowCount]);
+
       lbProjectName.Caption := format('%s  =>第%d共%d页',[
     fPageType.fName,fPageType.fIndex,fPageType.fIndexCount]);
 
@@ -3118,6 +3194,7 @@ procedure TBugManageDlg.act_AllDataExecute(Sender: TObject);
 
 var
   mywhere : string;
+  myRowCount : Integer;
 begin
   //
   // '(ZTREE_ID=1)'
@@ -3132,11 +3209,16 @@ begin
     fPageType.fIndex := 1;
     fPageType.fName := '高级查询';
 
-    fPageType.fIndexCount := GetBugItemPageCount(1,myWhere);
+    myRowCount := 0;
+    fPageType.fIndexCount := GetBugItemPageCount(1,myWhere,myRowCount);
+    fPageType.fRowCount := myRowCount;
+
     LoadBugItem(1,myWhere);
-    lbPageCount.Caption := format('%d/%d',[
+    lbPageCount.Caption := format('%d/%d 共%d',[
       fPageType.fIndex,
-      fPageType.fIndexCount]);
+      fPageType.fIndexCount,
+      fPageType.fRowCount]);
+      
     lbProjectName.Caption := format('%s  =>第%d共%d页',[
     fPageType.fName,fPageType.fIndex,fPageType.fIndexCount]);
   finally
@@ -3246,6 +3328,7 @@ var
   mysl : TStringList;
   mywhere : string;
   myPageIndex : Integer;
+  myRowCount : Integer;
 begin
   myindex := lstAdvancedQuery.ItemIndex;
   if (myindex >=0) and (myindex < Length(fBugAQuery)) then
@@ -3263,11 +3346,15 @@ begin
       fPageType.fIndex := 1;
       fPageType.fName := '高级查询';
       myPageIndex := 1;
-      fPageType.fIndexCount := GetBugItemPageCount(1,myWhere);
+      myRowCount := 0;
+      fPageType.fIndexCount := GetBugItemPageCount(1,myWhere,myRowCount);
+      fPageType.fRowCount := myRowCount;
+
       LoadBugItem(myPageindex,myWhere);
-      lbPageCount.Caption := format('%d/%d',[
+      lbPageCount.Caption := format('%d/%d 共%d',[
           fPageType.fIndex,
-          fPageType.fIndexCount]);
+          fPageType.fIndexCount,
+          fPageType.fRowCount]);
       lbProjectName.Caption := format('%s  =>第%d共%d页',[
       fPageType.fName,fPageType.fIndex,fPageType.fIndexCount]);
 
