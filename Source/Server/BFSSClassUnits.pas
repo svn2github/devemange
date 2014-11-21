@@ -58,7 +58,8 @@ type
     fUserName : String;
     fPassword : String;
     fHost     : String;
-    fPort     : integer;  
+    fPort     : integer;
+    fUserIndex : Integer; //如是多个账号，当前账是，可以 
   end;
 
 //
@@ -182,8 +183,9 @@ begin
     fSMTPParams.fAction   := ini.ReadBool('SMTP','Action',False);
     fSMTPParams.fHost     := ini.ReadString('SMTP','Host','');
     fSMTPParams.fPort     := ini.ReadInteger('SMTP','Port',25);
-    fSMTPParams.fUserName := ini.ReadString('SMTP','Name','');
+    fSMTPParams.fUserName := ini.ReadString('SMTP','Name',''); //多个以分号分号的可能情。
     fSMTPParams.fPassword := ini.ReadString('SMTP','Password','');
+    fSMTPParams.fUserIndex := 0;
   finally
     ini.Free;
   end;

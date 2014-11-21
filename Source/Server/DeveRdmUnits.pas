@@ -498,21 +498,47 @@ var
   myContext : String;  //内容
   myMailTo    : string;  //邮件的发送
   mySubject   : string;
+  mySTMPUserName  : string;
+  mysl : TStringList;
 const
   glSQL  = 'select ZTREEPATH,ZTITLE,ZOPENEDDATE from TB_BUG_ITEM where ZID=%d ';
   glSQL2 = 'select isnull(max(ZID),0) as v from TB_BUG_HISTORY where ZBUG_ID=%d';
   glSQL3 = 'select ZCONTEXT,ZUSER_ID from TB_BUG_HISTORY where ZID=%d';
 begin
+
   if not CurrBFSSSystem.fSMTPParams.fAction then Exit;
 
   if not SMTP.Connected  then
   begin
 
+    if Pos(';',CurrBFSSSystem.fSMTPParams.fUserName) > 0 then
+    begin
+      mysl := TStringList.Create;
+      mysl.Delimiter := ';';
+      mysl.DelimitedText := CurrBFSSSystem.fSMTPParams.fUserName;
+
+      if CurrBFSSSystem.fSMTPParams.fUserIndex < mysl.Count then
+      begin
+
+        mySTMPUserName := mysl.Strings[CurrBFSSSystem.fSMTPParams.fUserIndex];
+        if CurrBFSSSystem.fSMTPParams.fUserIndex = mysl.Count -1 then
+          CurrBFSSSystem.fSMTPParams.fUserIndex := 0
+        else
+          inc(CurrBFSSSystem.fSMTPParams.fUserIndex);
+
+      end;
+      mysl.Free;
+    end
+    else
+      mySTMPUserName := CurrBFSSSystem.fSMTPParams.fUserName;
+
+
     SMTP.AuthenticationType := atLogin;
     SMTP.Host     := CurrBFSSSystem.fSMTPParams.fHost;
     SMTP.Port     := CurrBFSSSystem.fSMTPParams.fPort;
-    SMTP.Username := CurrBFSSSystem.fSMTPParams.fUserName;
+    SMTP.Username := mySTMPUserName;
     SMTP.Password := CurrBFSSSystem.fSMTPParams.fPassword;
+
     try
       SMTP.Connect;
       if not SMTP.Connected then
@@ -636,7 +662,7 @@ begin
       IdMessage1.Encoding := (meUU);
       IdMessage1.ClearBody;
       IdMessage1.Body.Add(myContext);
-      IdMessage1.From.Text := CurrBFSSSystem.fSMTPParams.fUserName;
+      IdMessage1.From.Text := mySTMPUserName;// CurrBFSSSystem.fSMTPParams.fUserName;
       //回复地址
       //IdMessage1.ReplyTo.EMailAddresses := CurrBFSSSystem.fSMTPParams.fUserName;
       //
@@ -664,15 +690,41 @@ begin
 end;
 
 procedure TBFSSRDM.MailToEx(const MailTo, Title, Content: WideString);
+var
+  mySTMPUserName : string;
+  mysl : TStringList;
 begin
   if not CurrBFSSSystem.fSMTPParams.fAction then Exit;
 
   if not SMTP.Connected then
   begin
+
+    if Pos(';',CurrBFSSSystem.fSMTPParams.fUserName) > 0 then
+    begin
+      mysl := TStringList.Create;
+      mysl.Delimiter := ';';
+      mysl.DelimitedText := CurrBFSSSystem.fSMTPParams.fUserName;
+
+      if CurrBFSSSystem.fSMTPParams.fUserIndex < mysl.Count then
+      begin
+
+        mySTMPUserName := mysl.Strings[CurrBFSSSystem.fSMTPParams.fUserIndex];
+        if CurrBFSSSystem.fSMTPParams.fUserIndex = mysl.Count -1 then
+          CurrBFSSSystem.fSMTPParams.fUserIndex := 0
+        else
+          inc(CurrBFSSSystem.fSMTPParams.fUserIndex);
+
+      end;
+      mysl.Free;
+    end
+    else
+      mySTMPUserName := CurrBFSSSystem.fSMTPParams.fUserName;
+
+
     SMTP.AuthenticationType := atLogin;
     SMTP.Host     := CurrBFSSSystem.fSMTPParams.fHost;
     SMTP.Port     := CurrBFSSSystem.fSMTPParams.fPort;
-    SMTP.Username := CurrBFSSSystem.fSMTPParams.fUserName;
+    SMTP.Username := mySTMPUserName; //CurrBFSSSystem.fSMTPParams.fUserName;
     SMTP.Password := CurrBFSSSystem.fSMTPParams.fPassword;
     try
       SMTP.Connect;
@@ -701,7 +753,7 @@ begin
       IdMessage1.Encoding := (meUU);
       IdMessage1.ClearBody;
       IdMessage1.Body.Add(Content);
-      IdMessage1.From.Text := CurrBFSSSystem.fSMTPParams.fUserName;
+      IdMessage1.From.Text := mySTMPUserName;// CurrBFSSSystem.fSMTPParams.fUserName;
       //回复地址
       //IdMessage1.ReplyTo.EMailAddresses := CurrBFSSSystem.fSMTPParams.fUserName;
       //
